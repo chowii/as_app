@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#0074BF</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="splashBackground">#CCDFEF</color>
+    <color name="onBoardHeaderTextColor">#4A4A4A</color>
+    <color name="onBoardBodyTextColor">#994A4A4A</color>
+    <color name="onBoardFooterTextColor">#A9B2BC</color>
+
+
+    <color name="tabTopColor">#CCDFEF</color>
+    <color name="tabBackgroundColor">#F9FAFB</color>
+
+    <color name="tabSelectedColor">#0060AF</color>
+    <color name="tabUnselectedColor">#6E788D</color>
+
+</resources>

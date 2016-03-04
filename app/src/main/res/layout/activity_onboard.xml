@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp"
+    tools:context=".activities.OnBoardActivity">
+
+    <LinearLayout
+        android:id="@+id/on_board_layout_main"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:gravity="center">
+
+        <View android:layout_width="wrap_content" android:layout_height="39dp"/>
+
+        <ImageView
+            android:id="@+id/on_board_image_view_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/phone_happy"/>
+
+        <View android:layout_width="wrap_content" android:layout_height="39dp"/>
+
+        <FrameLayout
+            android:id="@+id/on_board_layout_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </FrameLayout>
+
+        <View android:layout_width="wrap_content" android:layout_height="39dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/on_board_layout_splash"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:background="@color/splashBackground">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/splash_logo"/>
+
+    </LinearLayout>
+
+
+</FrameLayout>
