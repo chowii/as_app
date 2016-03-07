@@ -37,6 +37,8 @@ public class SleepSenseDeviceService {
         return sSleepSenseDeviceService;
     }
 
+    private PublishSubject<String> mLogSubject = PublishSubject.create();
+
     private final Context mContext;
 
     private String mBaseDeviceAddress;
@@ -61,6 +63,10 @@ public class SleepSenseDeviceService {
 
     public TrackerDevice getTrackerDevice() {
         return mTrackerDevice;
+    }
+
+    public void log(int level, String message) {
+        mLogSubject.onNext(message);
     }
 
     public Observable<String> acquireDevices(long milliseconds) {
@@ -102,19 +108,27 @@ public class SleepSenseDeviceService {
 
                         BluetoothService.instance().stopScanning();
 
+                        log(Log.DEBUG,String.format("found %d devices while scanning...", devices.size()));
+
                         // Assign the closest of each device if we don't have one.
                         for (Device device : devices) {
+
                             if (mBaseDevice == null && device instanceof BaseDevice) {
                                 mBaseDevice = (BaseDevice) device;
-                                break;
+                                log(Log.DEBUG,"found BaseDevice...");
+                                continue;
                             }
+
                             if (mPumpDevice == null && device instanceof PumpDevice) {
                                 mPumpDevice = (PumpDevice) device;
-                                break;
+                                log(Log.DEBUG,"found PumpDevice...");
+                                continue;
                             }
+
                             if (mTrackerDevice == null && device instanceof TrackerDevice) {
                                 mTrackerDevice = (TrackerDevice) device;
-                                break;
+                                log(Log.DEBUG,"found TrackerDevice...");
+                                continue;
                             }
                         }
 
@@ -128,15 +142,15 @@ public class SleepSenseDeviceService {
     }
 
     public boolean hasBaseDevice() {
-        return mBaseDevice != null && mBaseDeviceAddress != null;
+        return mBaseDevice != null || mBaseDeviceAddress != null;
     }
 
     public boolean hasPumpDevice() {
-        return mPumpDevice != null && mPumpDeviceAddress != null;
+        return mPumpDevice != null || mPumpDeviceAddress != null;
     }
 
     public boolean hasTrackerDevice() {
-        return mTrackerDevice != null && mTrackerDeviceAddress != null;
+        return mTrackerDevice != null || mTrackerDeviceAddress != null;
     }
 
     public boolean hasAllDevices() {
@@ -157,6 +171,10 @@ public class SleepSenseDeviceService {
         return numberOfConnections;
     }
 
+    public Observable<String> getLogObservable() {
+        return mLogSubject;
+    }
+
     // The scanning filter.
     class ScanningFilter implements Func1<BluetoothScanEvent, Boolean> {
 
@@ -170,9 +188,12 @@ public class SleepSenseDeviceService {
                 BluetoothScanEvent.DeviceFoundEvent deviceFoundEvent =
                         (BluetoothScanEvent.DeviceFoundEvent) bluetoothScanEvent;
 
-                if (foundDevices.contains(deviceFoundEvent.getDevice().getAddress())) {
+                String deviceAddress = deviceFoundEvent.getDevice().getAddress();
+
+                if (foundDevices.contains(deviceAddress)) {
                     return false;
                 } else {
+                    foundDevices.add(deviceAddress);
                     return SleepSenseDeviceFactory.isSleepSenseDevice(deviceFoundEvent);
                 }
             }

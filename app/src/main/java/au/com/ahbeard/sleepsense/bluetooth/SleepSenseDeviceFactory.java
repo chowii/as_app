@@ -7,6 +7,7 @@ import java.util.List;
 
 import au.com.ahbeard.sleepsense.bluetooth.base.DummyBaseDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.DummyPumpDevice;
+import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.DummyTrackerDevice;
 
 /**
@@ -21,6 +22,14 @@ public class SleepSenseDeviceFactory {
             return true;
         }
 
+        if ("BLE Mini".equals(deviceFoundEvent.getDevice().getName())) {
+            return true;
+        }
+
+        if ("2618BL".equals(deviceFoundEvent.getDevice().getName())) {
+            return true;
+        }
+
         return false;
     }
 
@@ -28,14 +37,24 @@ public class SleepSenseDeviceFactory {
 
         List<Device> mDevices = new ArrayList<>();
 
-        if ( false ) {
-            new Device(context,deviceFoundEvent.getDevice());
+//        if ("ED:FD:CB:C2:05:91".equals(deviceFoundEvent.getDevice().getAddress())) {
+//            mDevices.add(new DummyBaseDevice());
+//            DummyPumpDevice dummyPumpDevice = new DummyPumpDevice();
+//            dummyPumpDevice.link(context,deviceFoundEvent.getDevice());
+//            mDevices.add(dummyPumpDevice);
+//            mDevices.add(new DummyTrackerDevice());
+//        }
+
+        if ("BLE Mini".equals(deviceFoundEvent.getDevice().getName())) {
+            DummyPumpDevice dummyPumpDevice = new DummyPumpDevice();
+            dummyPumpDevice.link(context,deviceFoundEvent.getDevice());
+            mDevices.add(dummyPumpDevice);
         }
 
-        if ("ED:FD:CB:C2:05:91".equals(deviceFoundEvent.getDevice().getAddress())) {
-            mDevices.add(new DummyBaseDevice());
-            mDevices.add(new DummyPumpDevice());
-            mDevices.add(new DummyTrackerDevice());
+        if ("2618BL".equals(deviceFoundEvent.getDevice().getName())) {
+            PumpDevice dummyPumpDevice = new PumpDevice();
+            dummyPumpDevice.link(context,deviceFoundEvent.getDevice());
+            mDevices.add(dummyPumpDevice);
         }
 
 

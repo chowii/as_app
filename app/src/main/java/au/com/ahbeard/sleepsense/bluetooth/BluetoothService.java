@@ -47,7 +47,7 @@ public class BluetoothService extends BluetoothGattCallback {
                 public void onLeScan(final BluetoothDevice device, int rssi,
                                      byte[] scanRecord) {
 
-                    Log.e(TAG, String.format("device: %s rssi: %d", device.getAddress(), rssi));
+                    Log.e(TAG, String.format("device: %s rssi: %d name: '%s'", device.getAddress(), rssi, device.getName()));
 
                     // Check the address of the device.
                     if (StringUtils.isNotEmpty(device.getName())) {

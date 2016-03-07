@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="16dp">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/pump_test_recycler_view_log"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+
+    <Button
+        android:id="@+id/pump_test_button_acquire"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Acquire"/>
+    <Button
+        android:id="@+id/pump_test_button_connect_disconnect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Connect"/>
+    <Button
+        android:id="@+id/pump_test_button_inflate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Inflate"/>
+    <Button
+        android:id="@+id/pump_test_button_deflate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Deflate"/>
+    <Button
+        android:id="@+id/pump_test_button_stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Stop"/>
+
+</LinearLayout>
+
