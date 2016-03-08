@@ -50,18 +50,17 @@ public class PumpTestFragment extends Fragment {
 
     @OnClick(R.id.pump_test_button_inflate)
     void inflate() {
-        mPumpDevice.inflate();
+        mPumpDevice.inflate(PumpDevice.Side.Left);
     }
 
     @OnClick(R.id.pump_test_button_deflate)
     void deflate() {
-        mPumpDevice.deflate();
+        mPumpDevice.deflate(PumpDevice.Side.Left);
     }
-
 
     @OnClick(R.id.pump_test_button_stop)
     void stop() {
-        mPumpDevice.stop();
+        mPumpDevice.stop(PumpDevice.Side.Left);
     }
 
     @Bind(R.id.pump_test_recycler_view_log)
@@ -82,11 +81,9 @@ public class PumpTestFragment extends Fragment {
     @Bind(R.id.pump_test_button_stop)
     Button mStopButton;
 
-
     public PumpTestFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -219,7 +216,7 @@ public class PumpTestFragment extends Fragment {
                                     new Action1<PumpEvent>() {
                                         @Override
                                         public void call(PumpEvent pumpEvent) {
-
+                                            mLogAdapter.log("PUMP EVENT: "+pumpEvent.toString());
                                         }
                                     });
 

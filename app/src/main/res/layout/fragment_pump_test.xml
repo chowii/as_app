@@ -1,15 +1,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:gravity="center"
               android:padding="16dp">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pump_test_recycler_view_log"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="10dp">
 
     </android.support.v7.widget.RecyclerView>
 
@@ -22,21 +22,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Acquire"/>
+
     <Button
         android:id="@+id/pump_test_button_connect_disconnect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Connect"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/pump_test_toggle_left"
+            android:layout_width="0dp"
+            android:text="Left"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/pump_test_toggle_right"
+            android:layout_width="0dp"
+            android:text="Right"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <au.com.ahbeard.sleepsense.widgets.FirmnessControlView
+        android:id="@+id/pump_test_firmness_acquire"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:levelDrawable="@drawable/firmness"
+        app:foregroundDrawable="@drawable/foreground"
+        app:knobDrawable="@drawable/knob"/>
+
     <Button
         android:id="@+id/pump_test_button_inflate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Inflate"/>
+
     <Button
         android:id="@+id/pump_test_button_deflate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Deflate"/>
+
     <Button
         android:id="@+id/pump_test_button_stop"
         android:layout_width="match_parent"

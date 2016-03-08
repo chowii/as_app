@@ -5,4 +5,10 @@
         <attr name="typeface" format="string"/>
     </declare-styleable>
 
+    <declare-styleable name="FirmnessControlView">
+        <attr name="levelDrawable" format="reference"/>
+        <attr name="foregroundDrawable" format="reference"/>
+        <attr name="knobDrawable" format="reference"/>
+    </declare-styleable>
+
 </resources>

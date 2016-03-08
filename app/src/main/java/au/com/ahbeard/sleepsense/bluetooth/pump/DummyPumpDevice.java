@@ -21,4 +21,10 @@ public class DummyPumpDevice extends PumpDevice {
     public UUID getWriteCharacteristicUUID() {
         return UUID.fromString("713d0003-503e-4c75-ba94-3148f18d941e");
     }
+
+    @Override
+    public UUID getNotifyCharacteristicUUID() {
+        return UUID.fromString("713d0002-503e-4c75-ba94-3148f18d941e");
+    }
+
 }

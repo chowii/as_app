@@ -13,6 +13,7 @@ import au.com.ahbeard.sleepsense.services.TypefaceService;
  * Created by neal on 3/03/2016.
  */
 public class StyledTextView extends TextView {
+
     public StyledTextView(Context context) {
         super(context);
         init(null, 0);

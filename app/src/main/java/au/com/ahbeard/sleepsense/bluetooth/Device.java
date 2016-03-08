@@ -11,7 +11,6 @@ import android.util.Log;
 
 import java.util.UUID;
 
-import au.com.ahbeard.sleepsense.utils.ByteUtils;
 import rx.Observable;
 import rx.Observer;
 import rx.functions.Action0;
@@ -34,7 +33,7 @@ public class Device extends BluetoothGattCallback {
     private static final UUID CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
     public static final String[] CONNECTION_STATE_LABELS =
-            { "Unlinked", "Disconnected", "Connecting", "Connecting Discovering Services", "Connected", "Disconnecting" };
+            {"Unlinked", "Disconnected", "Connecting", "Connecting Discovering Services", "Connected", "Disconnecting"};
 
     private static final String TAG = "Device";
 
@@ -54,10 +53,20 @@ public class Device extends BluetoothGattCallback {
         return null;
     }
 
+    public UUID getNotifyCharacteristicUUID() {
+        return null;
+    }
+
+    protected boolean getSetupNotifications() {
+        return false;
+    }
+
     private PublishSubject<BluetoothCommand> mBluetoothCommandSubject = PublishSubject.create();
     private PublishSubject<DeviceEvent> mDeviceEventSubject = PublishSubject.create();
+    private PublishSubject<NotifyEvent> mNotifyEventSubject = PublishSubject.create();
 
     // Per connection callbacks to indicate that something has been written
+    private PublishSubject<Integer> mCharacteristicReadSubject;
     private PublishSubject<Integer> mCharacteristicWriteSubject;
     private PublishSubject<Integer> mDescriptorWriteSubject;
 
@@ -66,6 +75,7 @@ public class Device extends BluetoothGattCallback {
 
     private BluetoothGattCharacteristic mReadCharacteristic;
     private BluetoothGattCharacteristic mWriteCharacteristic;
+    private BluetoothGattCharacteristic mNotifyCharacteristic;
 
     private CompositeSubscription mBluetoothSubscriptions = new CompositeSubscription();
 
@@ -102,12 +112,12 @@ public class Device extends BluetoothGattCallback {
     }
 
     public void sendCommand(BluetoothCommand command) {
-        log(Log.DEBUG,String.format("sending command... %s", command.toString()));
+        log(Log.DEBUG, String.format("sending command... %s", command.toString()));
         mBluetoothCommandSubject.onNext(command);
     }
 
     public void connect() {
-        log(Log.DEBUG,"connecting...");
+        log(Log.DEBUG, "connecting...");
         if (mBluetoothDevice != null && mBluetoothGatt == null) {
             mBluetoothGatt = mBluetoothDevice.connectGatt(mContext, false, this);
         }
@@ -126,14 +136,14 @@ public class Device extends BluetoothGattCallback {
     }
 
     private void log(int level, String message) {
-        Log.println(level,TAG,message);
+        Log.println(level, TAG, message);
         mLogPublishSubject.onNext(message);
     }
 
     @Override
     public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
 
-        log(Log.DEBUG,String.format("onConnectionStateChange: status=%d newState=%d",status,newState));
+        log(Log.DEBUG, String.format("onConnectionStateChange: status=%d newState=%d", status, newState));
 
         switch (newState) {
 
@@ -143,6 +153,7 @@ public class Device extends BluetoothGattCallback {
 
                 mBluetoothGatt = gatt;
 
+                mCharacteristicReadSubject = PublishSubject.create();
                 mCharacteristicWriteSubject = PublishSubject.create();
                 mDescriptorWriteSubject = PublishSubject.create();
 
@@ -156,8 +167,11 @@ public class Device extends BluetoothGattCallback {
                 break;
             case BluetoothGatt.STATE_DISCONNECTED:
 
+                onDisconnect();
+
                 mConnectionState = CONNECTION_STATE_DISCONNECTED;
 
+                mCharacteristicReadSubject.onCompleted();
                 mCharacteristicWriteSubject.onCompleted();
                 mDescriptorWriteSubject.onCompleted();
 
@@ -166,6 +180,7 @@ public class Device extends BluetoothGattCallback {
                 mBluetoothGatt.close();
                 mBluetoothGatt = null;
 
+                mCharacteristicReadSubject = null;
                 mCharacteristicWriteSubject = null;
                 mDescriptorWriteSubject = null;
 
@@ -184,6 +199,8 @@ public class Device extends BluetoothGattCallback {
     @Override
     public void onServicesDiscovered(BluetoothGatt gatt, int status) {
 
+        log(Log.ERROR,"onServicesDiscovered...");
+
         if (status == BluetoothGatt.GATT_SUCCESS) {
 
             BluetoothGattService service = gatt.getService(getServiceUUID());
@@ -191,29 +208,31 @@ public class Device extends BluetoothGattCallback {
             if (service != null) {
 
                 mReadCharacteristic = service.getCharacteristic(getReadCharacteristicUUID());
+                mNotifyCharacteristic = service.getCharacteristic(getNotifyCharacteristicUUID());
                 mWriteCharacteristic = service.getCharacteristic(getWriteCharacteristicUUID());
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
 
-                        mBluetoothGatt.setCharacteristicNotification(mReadCharacteristic, true);
+                        mBluetoothGatt.setCharacteristicNotification(mNotifyCharacteristic, true);
 
-//                        final BluetoothGattDescriptor descriptor = mReadCharacteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
-//
-//                        if (!ByteUtils.equals(descriptor.getValue(),
-//                                BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)) {
-//                            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-//
-//                            Schedulers.io().createWorker().schedule(new Action0() {
-//                                @Override
-//                                public void call() {
-//                                    mBluetoothGatt.writeDescriptor(descriptor);
-//                                }
-//                            });
-//
-//                            mDescriptorWriteSubject.toBlocking().next().iterator().next();
-//                        }
+                        if (getSetupNotifications()) {
+
+                            final BluetoothGattDescriptor descriptor =
+                                    mReadCharacteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
+
+                            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+
+                            Schedulers.io().createWorker().schedule(new Action0() {
+                                @Override
+                                public void call() {
+                                    mBluetoothGatt.writeDescriptor(descriptor);
+                                }
+                            });
+
+                            mDescriptorWriteSubject.toBlocking().next().iterator().next();
+                        }
 
                         mConnectionState = CONNECTION_STATE_CONNECTED;
 
@@ -228,7 +247,7 @@ public class Device extends BluetoothGattCallback {
 
                                             @Override
                                             public void onError(Throwable e) {
-                                                log(Log.DEBUG,"mBluetoothCommandSubject.onError: " + e.getMessage() );
+                                                log(Log.DEBUG, "mBluetoothCommandSubject.onError: " + e.getMessage());
                                             }
 
                                             @Override
@@ -236,9 +255,9 @@ public class Device extends BluetoothGattCallback {
                                                 log(Log.DEBUG, String.format("executing command... %s",
                                                         bluetoothCommand.toString()));
 
-                                                mWriteCharacteristic.setWriteType(
+                                                mNotifyCharacteristic.setWriteType(
                                                         BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-                                                mWriteCharacteristic.setValue(bluetoothCommand.getRequest());
+                                                mNotifyCharacteristic.setValue(bluetoothCommand.getRequest());
                                                 mBluetoothGatt.writeCharacteristic(mWriteCharacteristic);
 
                                                 try {
@@ -250,11 +269,14 @@ public class Device extends BluetoothGattCallback {
                                             }
                                         }));
 
+                        onConnect();
+
                         mChangeSubject.onNext(this);
                         mDeviceEventSubject.onNext(new DeviceConnectedEvent());
+
+
                     }
                 }).start();
-
 
             } else {
                 disconnect();
@@ -264,21 +286,31 @@ public class Device extends BluetoothGattCallback {
         }
     }
 
-    @Override
-    public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-        byte[] value = characteristic.getValue();
-        log(Log.DEBUG,String.format("characteristicChanged: %s", BluetoothCommand.getReadableStringFromByteArray(value)));
+    protected void onConnect() {
+
+    }
+
+    protected void onDisconnect() {
 
     }
 
     @Override
+    public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+        byte[] value = characteristic.getValue();
+        log(Log.DEBUG, String.format("characteristicChanged: %s", BluetoothCommand.getReadableStringFromByteArray(value)));
+        mNotifyEventSubject.onNext(new NotifyEvent(characteristic.getUuid(),value));
+    }
+
+    @Override
     public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+        byte[] value = characteristic.getValue();
+        log(Log.DEBUG, String.format("characteristicRead: %s", BluetoothCommand.getReadableStringFromByteArray(value)));
 
     }
 
     @Override
     public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-        log(Log.DEBUG,String.format("onCharacteristicWrite: %s",
+        log(Log.DEBUG, String.format("onCharacteristicWrite: %s",
                 BluetoothCommand.getReadableStringFromByteArray(characteristic.getValue())));
         mCharacteristicWriteSubject.onNext(0);
     }
@@ -290,7 +322,7 @@ public class Device extends BluetoothGattCallback {
 
     @Override
     public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-        log(Log.DEBUG,String.format("onDescriptorWrite: %s",
+        log(Log.DEBUG, String.format("onDescriptorWrite: %s",
                 BluetoothCommand.getReadableStringFromByteArray(descriptor.getValue())));
         mDescriptorWriteSubject.onNext(0);
     }
@@ -303,14 +335,31 @@ public class Device extends BluetoothGattCallback {
         return mChangeSubject;
     }
 
+    public Observable<NotifyEvent> getNotifyEventObservable() {
+        return mNotifyEventSubject;
+    }
+
+    /**
+     * True if we're connected and only if we're connected (not disconnecting etc.).
+     *
+     * @return
+     */
     public boolean isConnected() {
-        return true || mConnectionState == CONNECTION_STATE_CONNECTED;
+        return mConnectionState == CONNECTION_STATE_CONNECTED;
+    }
+
+    /**
+     * True if we're disconnected and only if we're disconnected (not connecting etc.).
+     *
+     * @return
+     */
+    public boolean isDisconnected() {
+        return mConnectionState == CONNECTION_STATE_DISCONNECTED;
     }
 
     /**
      *
      */
-
     public static class DeviceEvent {
 
     }

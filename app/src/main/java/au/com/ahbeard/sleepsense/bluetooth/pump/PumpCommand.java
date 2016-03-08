@@ -1,5 +1,7 @@
 package au.com.ahbeard.sleepsense.bluetooth.pump;
 
+import android.support.annotation.NonNull;
+
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothCommand;
 
 /**
@@ -38,28 +40,71 @@ public class PumpCommand extends BluetoothCommand {
     private static final char ReInflate = '8';
     private static final char Stop = '9';
     private static final char AdjustZero = 'a';
-    
+
+    @NonNull
+    public static PumpCommand checkMemoryValue(Chamber chamber) {
+        return createStandardPumpCommand(chamber, CheckMemoryValue);
+    }
+
+    @NonNull
+    public static PumpCommand checkPressure(Chamber chamber) {
+        return createStandardPumpCommand(chamber, CheckPressure);
+    }
+
+    @NonNull
     public static PumpCommand inflate(Chamber chamber) {
-        PumpCommand pumpCommand = new PumpCommand();
-        pumpCommand.writeByte('S');
-        pumpCommand.writeByte(chamber==Chamber.Left?'L':'R');
-        pumpCommand.writeByte(Inflate);
-        return pumpCommand;
+        return createStandardPumpCommand(chamber, Inflate);
     }
 
+    @NonNull
     public static PumpCommand deflate(Chamber chamber) {
+        return createStandardPumpCommand(chamber, Deflate);
+    }
+
+    @NonNull
+    public static PumpCommand runForMemoryValue(Chamber chamber) {
+        return createStandardPumpCommand(chamber, RunForMemoryValue);
+    }
+
+    @NonNull
+    public static PumpCommand selfAdapt(Chamber chamber) {
+        return createStandardPumpCommand(chamber, SelfAdapt);
+    }
+
+    @NonNull
+    public static PumpCommand saveMemoryValue(Chamber chamber, int millibar) {
+        return createAdvancedPumpCommand(chamber, SaveMemoryValue, millibar);
+    }
+
+    @NonNull
+    public static PumpCommand reInflate(Chamber chamber) {
+        return createStandardPumpCommand(chamber, ReInflate);
+    }
+
+    @NonNull
+    public static PumpCommand stop(Chamber chamber) {
+        return createStandardPumpCommand(chamber, Stop);
+    }
+
+    @NonNull
+    public static PumpCommand adjustZero(Chamber chamber, int millibar) {
+        return createAdvancedPumpCommand(chamber, AdjustZero, millibar);
+    }
+
+    private static PumpCommand createStandardPumpCommand(Chamber chamber, char command) {
         PumpCommand pumpCommand = new PumpCommand();
         pumpCommand.writeByte('S');
-        pumpCommand.writeByte(chamber==Chamber.Left?'L':'R');
-        pumpCommand.writeByte(Deflate);
+        pumpCommand.writeByte(chamber == Chamber.Left ? 'L' : 'R');
+        pumpCommand.writeByte(command);
         return pumpCommand;
     }
 
-    public static PumpCommand stop(Chamber chamber) {
+    private static PumpCommand createAdvancedPumpCommand(Chamber chamber, char command, int value) {
         PumpCommand pumpCommand = new PumpCommand();
         pumpCommand.writeByte('S');
-        pumpCommand.writeByte(chamber==Chamber.Left?'L':'R');
-        pumpCommand.writeByte(Stop);
+        pumpCommand.writeByte(chamber == Chamber.Left ? 'L' : 'R');
+        pumpCommand.writeByte(command);
+        pumpCommand.writeBytes(String.format("%03d",value%1000).getBytes());
         return pumpCommand;
     }
 
