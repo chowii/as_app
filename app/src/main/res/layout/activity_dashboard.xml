@@ -8,21 +8,13 @@
     android:layout_height="match_parent"
     tools:context=".activities.OnBoardActivity">
 
-    <ScrollView
+
+    <au.com.ahbeard.sleepsense.widgets.NonSwipeableViewPager
+        android:id="@+id/dashboard_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="0dp" android:layout_weight="1">
 
-        <LinearLayout
-            android:id="@+id/dashboard_layout_daily_weekly"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/dashboard_background_gradient">
-
-        </LinearLayout>
-
-    </ScrollView>
+    </au.com.ahbeard.sleepsense.widgets.NonSwipeableViewPager>
 
     <View
         android:layout_width="match_parent"
@@ -36,6 +28,7 @@
         android:background="@color/tabBackgroundColor">
 
         <LinearLayout
+            android:id="@+id/dashboard_tab_1"
             android:orientation="vertical"
             android:layout_width="30dp"
             android:layout_height="match_parent"
@@ -59,6 +52,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/dashboard_tab_2"
             android:orientation="vertical"
             android:layout_width="30dp"
             android:layout_height="match_parent"
@@ -82,6 +76,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/dashboard_tab_3"
             android:orientation="vertical"
             android:layout_width="30dp"
             android:layout_height="match_parent"
@@ -105,6 +100,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/dashboard_tab_4"
             android:orientation="vertical"
             android:layout_width="30dp"
             android:layout_height="match_parent"
@@ -128,6 +124,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/dashboard_tab_5"
             android:orientation="vertical"
             android:layout_width="30dp"
             android:layout_height="match_parent"

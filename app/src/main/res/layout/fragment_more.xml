@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="top"
+              android:background="@color/firmnessBackground">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:layout_weight="1"
+            android:text="More"
+            android:textSize="15sp"
+            android:lineSpacingExtra="5sp"
+            android:textColor="#4A4A4A"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            app:typeface="OpenSansLight"/>
+        <ImageView
+            android:layout_marginTop="10dp" android:layout_marginRight="20dp"
+            android:layout_gravity="right|top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:src="@drawable/help_icon_normal"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp" android:background="#DBE3E6" android:layout_gravity="bottom"/>
+
+    </FrameLayout>
+
+</LinearLayout>

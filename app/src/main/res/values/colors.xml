@@ -16,4 +16,9 @@
     <color name="tabSelectedColor">#0060AF</color>
     <color name="tabUnselectedColor">#6E788D</color>
 
+    <color name="firmnessDotGood">#34DABA</color>
+    <color name="firmnessDotBad">#FD8B87</color>
+
+    <color name="firmnessBackground">#FAFAFA</color>
+
 </resources>

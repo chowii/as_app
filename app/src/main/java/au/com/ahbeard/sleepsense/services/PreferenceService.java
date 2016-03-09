@@ -23,8 +23,7 @@ public class PreferenceService {
         mContext = context;
     }
 
-
     public boolean requiresOnBoarding() {
-        return true;
+        return false;
     }
 }

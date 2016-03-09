@@ -1,0 +1,17 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="au.com.ahbeard.sleepsense.fragments.DashboardFragment"
+             android:background="@drawable/dashboard_background">
+
+    <LinearLayout
+        android:id="@+id/dashboard_layout_daily_weekly"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    </LinearLayout>
+
+</ScrollView>

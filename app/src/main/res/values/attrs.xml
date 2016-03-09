@@ -9,6 +9,8 @@
         <attr name="levelDrawable" format="reference"/>
         <attr name="foregroundDrawable" format="reference"/>
         <attr name="knobDrawable" format="reference"/>
+        <attr name="dotColor" format="reference"/>
+        <attr name="dotRadius" format="dimension"/>
     </declare-styleable>
 
 </resources>

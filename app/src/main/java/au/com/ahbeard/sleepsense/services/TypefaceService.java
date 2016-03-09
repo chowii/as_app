@@ -85,7 +85,7 @@ public class TypefaceService {
     }
 
     public Typeface getTypeface(String typeface) {
-        return mTypefaces.get(typeface);
+        return mTypefaces.get(typeface.toUpperCase());
     }
 
     public SpannableString createSpannableStringWithTypeface(String string, String typefaceId) {
