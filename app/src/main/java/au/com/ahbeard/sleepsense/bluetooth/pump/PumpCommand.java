@@ -2,12 +2,12 @@ package au.com.ahbeard.sleepsense.bluetooth.pump;
 
 import android.support.annotation.NonNull;
 
-import au.com.ahbeard.sleepsense.bluetooth.BluetoothCommand;
+import au.com.ahbeard.sleepsense.bluetooth.BluetoothWriteOperation;
 
 /**
  * Created by neal on 7/03/2016.
  */
-public class PumpCommand extends BluetoothCommand {
+public class PumpCommand extends BluetoothWriteOperation {
 
     public enum Chamber {
         Left,

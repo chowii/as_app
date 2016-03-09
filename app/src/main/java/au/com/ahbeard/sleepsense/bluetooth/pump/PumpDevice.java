@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
-import au.com.ahbeard.sleepsense.bluetooth.NotifyEvent;
+import au.com.ahbeard.sleepsense.bluetooth.ValueChangeEvent;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -95,10 +95,10 @@ public class PumpDevice extends Device {
     public void onConnect() {
 
         mPumpStatusSubscription = getNotifyEventObservable().subscribeOn(
-                Schedulers.io()).map(new Func1<NotifyEvent, byte[]>() {
+                Schedulers.io()).map(new Func1<ValueChangeEvent, byte[]>() {
             @Override
-            public byte[] call(NotifyEvent notifyEvent) {
-                return notifyEvent.getValue();
+            public byte[] call(ValueChangeEvent valueChangeEvent) {
+                return valueChangeEvent.getValue();
             }
         }).subscribe(new PumpStatusObserver(mPumpEventSubject));
 
