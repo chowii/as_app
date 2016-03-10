@@ -13,4 +13,12 @@
         <attr name="dotRadius" format="dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="SimpleTabStrip">
+        <attr name="tabLayout" format="reference"/>
+        <attr name="tabColor" format="reference"/>
+        <attr name="selectedTabColor" format="reference"/>
+    </declare-styleable>
+
+
+
 </resources>

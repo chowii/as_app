@@ -5,11 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.ViewGroup;
-
-import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
@@ -18,6 +14,7 @@ import au.com.ahbeard.sleepsense.fragments.MoreFragment;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
 import au.com.ahbeard.sleepsense.fragments.PumpControlFragment;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
+import au.com.ahbeard.sleepsense.widgets.SimpleTabStrip;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,18 +24,19 @@ import butterknife.OnClick;
  */
 public class DashboardActivity extends BaseActivity {
 
-    private DashboardPagerAdapter mDashboardPagerAdapter;
+    private DashboardPagerStripSimple mDashboardPagerAdapter;
+
+    @OnClick(R.id.dashboard_fab_start_sleep)
+    void onStartSleepClicked() {
+        Intent intent = new Intent(this,SleepTrackingActivity.class);
+        startActivity(intent);
+    }
 
     @Bind(R.id.dashboard_view_pager)
     ViewPager mViewPager;
 
-    @Bind({R.id.dashboard_tab_1,R.id.dashboard_tab_2,R.id.dashboard_tab_3,R.id.dashboard_tab_4,R.id.dashboard_tab_5})
-    List<ViewGroup> mTabs;
-
-    @OnClick({R.id.dashboard_tab_1,R.id.dashboard_tab_2,R.id.dashboard_tab_3,R.id.dashboard_tab_4,R.id.dashboard_tab_5})
-    void tabClicked(ViewGroup viewGroup) {
-        mViewPager.setCurrentItem(mTabs.indexOf(viewGroup));
-    }
+    @Bind(R.id.dashboard_simple_tab_strip)
+    SimpleTabStrip mSimpleTabStrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +53,38 @@ public class DashboardActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        mDashboardPagerAdapter = new DashboardPagerAdapter(getSupportFragmentManager());
+        mDashboardPagerAdapter = new DashboardPagerStripSimple(getSupportFragmentManager());
         mViewPager.setAdapter(mDashboardPagerAdapter);
+        mSimpleTabStrip.setViewPager(mViewPager);
 
     }
 
-    class DashboardPagerAdapter extends FragmentPagerAdapter {
+    class DashboardPagerStripSimple extends FragmentPagerAdapter implements SimpleTabStrip.TabProvider {
+
+        private String[] mTabNames = {
+                "Dashboard",
+                "Firmness",
+                "Position",
+                "Massage",
+                "More"
+        };
+
+        private int[] mTabIconResourceIds = {
+                R.drawable.tab_dashboard_unselected,
+                R.drawable.tab_firmness_unselected,
+                R.drawable.tab_position_unselected,
+                R.drawable.tab_massage_unselected,
+                R.drawable.tab_more_unselected
+        };
+
+        private int[] mSelectedTabIconResourceIds = {
+                R.drawable.tab_dashboard_selected,
+                R.drawable.tab_firmness_selected,
+                R.drawable.tab_position_selected,
+                R.drawable.tab_massage_selected,
+                R.drawable.tab_more_selected
+        };
+
 
         private Fragment[] mFragments = {
                 DashboardFragment.newInstance("",""),
@@ -70,7 +94,7 @@ public class DashboardActivity extends BaseActivity {
                 MoreFragment.newInstance("","")
         };
 
-        public DashboardPagerAdapter(FragmentManager fm) {
+        public DashboardPagerStripSimple(FragmentManager fm) {
             super(fm);
         }
 
@@ -82,6 +106,20 @@ public class DashboardActivity extends BaseActivity {
         @Override
         public int getCount() {
             return 5;
+        }
+
+        @Override
+        public String getName(int position) {
+            return mTabNames[position];
+        }
+
+        @Override
+        public int getIconResourceId(int position) {
+            return mTabIconResourceIds[position];
+        }
+        @Override
+        public int getSelectedIconResourceId(int position) {
+            return mSelectedTabIconResourceIds[position];
         }
     }
 

@@ -9,144 +9,44 @@
     tools:context=".activities.OnBoardActivity">
 
 
-    <au.com.ahbeard.sleepsense.widgets.NonSwipeableViewPager
-        android:id="@+id/dashboard_view_pager"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    </au.com.ahbeard.sleepsense.widgets.NonSwipeableViewPager>
+        <au.com.ahbeard.sleepsense.widgets.NonSwipeableViewPager
+            android:id="@+id/dashboard_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </au.com.ahbeard.sleepsense.widgets.NonSwipeableViewPager>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/dashboard_fab_start_sleep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/fab_icon_sleep"
+            app:elevation="6dp"
+            android:layout_margin="21dp"
+            app:pressedTranslationZ="12dp"/>
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/tabTopColor"/>
 
-    <LinearLayout
+
+    <au.com.ahbeard.sleepsense.widgets.SimpleTabStrip
+        android:id="@+id/dashboard_simple_tab_strip"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="51dp"
-        android:background="@color/tabBackgroundColor">
+        android:background="@color/tabBackgroundColor"
+        app:selectedTabColor="@color/tabSelectedColor"
+        app:tabColor="@color/tabUnselectedColor" app:tabLayout="@layout/tab_dashboard">
 
-        <LinearLayout
-            android:id="@+id/dashboard_tab_1"
-            android:orientation="vertical"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/tab_dashboard_selected"
-                android:layout_margin="2dp"/>
-
-            <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/tabSelectedColor"
-                android:text="Dashboard"
-                app:typeface="OpenSansRegular"
-                android:textSize="8.5dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/dashboard_tab_2"
-            android:orientation="vertical"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/tab_firmness_unselected"
-                android:layout_margin="2dp"/>
-
-            <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/tabUnselectedColor"
-                android:text="Firmness"
-                app:typeface="OpenSansRegular"
-                android:textSize="8.5dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/dashboard_tab_3"
-            android:orientation="vertical"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/tab_position_unselected"
-                android:layout_margin="2dp"/>
-
-            <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/tabUnselectedColor"
-                android:text="Position"
-                app:typeface="OpenSansRegular"
-                android:textSize="8.5dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/dashboard_tab_4"
-            android:orientation="vertical"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/tab_massage_unselected"
-                android:layout_margin="2dp"/>
-
-            <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/tabUnselectedColor"
-                android:text="Massage"
-                app:typeface="OpenSansRegular"
-                android:textSize="8.5dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/dashboard_tab_5"
-            android:orientation="vertical"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/tab_more_unselected"
-                android:layout_margin="2dp"/>
-
-            <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/tabUnselectedColor"
-                android:text="More"
-                app:typeface="OpenSansRegular"
-                android:textSize="8.5dp"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </au.com.ahbeard.sleepsense.widgets.SimpleTabStrip>
 
 </LinearLayout>

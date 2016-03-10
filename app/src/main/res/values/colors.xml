@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#0074BF</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#3C709C</color>
 
     <color name="splashBackground">#CCDFEF</color>
     <color name="onBoardHeaderTextColor">#4A4A4A</color>
