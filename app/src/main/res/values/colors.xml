@@ -21,4 +21,11 @@
 
     <color name="firmnessBackground">#FAFAFA</color>
 
+    <color name="graphAreaGradientStart">#EAF4FA</color>
+    <color name="graphAreaGradientMiddle">#C8E8F6</color>
+    <color name="graphAreaGradientEnd">#DDF4FD</color>
+
+    <color name="graphDividerColor">#FFFFFF</color>
+    <color name="graphLegendColor">#16274A</color>
+
 </resources>

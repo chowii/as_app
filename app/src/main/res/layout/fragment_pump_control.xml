@@ -60,7 +60,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp">
+        android:layout_margin="10dp">
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:layout_weight="1"
@@ -72,8 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            app:typeface="OpenSansSemiBold"
-            android:layout_marginBottom="13dp"/>
+            app:typeface="OpenSansSemiBold"/>
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:layout_weight="1"
@@ -115,7 +114,7 @@
             android:text="MEDIUM\nPLUSH"
             android:layout_gravity="top|left"
             app:typeface="OpenSansRegular"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="60dp"
             style="@style/firmnessLabel"/>
 
@@ -129,7 +128,7 @@
             android:text="MEDIUM\nFIRM"
             android:layout_gravity="top|right"
             app:typeface="OpenSansRegular"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="5dp"
             android:layout_marginTop="60dp"
             style="@style/firmnessLabel"/>
 

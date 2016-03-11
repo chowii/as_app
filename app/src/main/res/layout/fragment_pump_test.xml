@@ -9,7 +9,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pump_test_recycler_view_log"
         android:layout_width="match_parent"
-        android:layout_height="10dp">
+        android:layout_height="10dp" android:layout_weight="1">
 
     </android.support.v7.widget.RecyclerView>
 
@@ -49,14 +49,6 @@
             android:layout_weight="1"/>
 
     </LinearLayout>
-
-    <au.com.ahbeard.sleepsense.widgets.FirmnessControlView
-        android:id="@+id/pump_test_firmness_acquire"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        app:levelDrawable="@drawable/firmness"
-        app:foregroundDrawable="@drawable/foreground"
-        app:knobDrawable="@drawable/knob" app:dotColor="@color/firmnessDotGood" app:dotRadius="2dp"/>
 
     <Button
         android:id="@+id/pump_test_button_inflate"

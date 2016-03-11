@@ -2,10 +2,12 @@ package au.com.ahbeard.sleepsense.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
@@ -13,6 +15,7 @@ import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MoreFragment;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
 import au.com.ahbeard.sleepsense.fragments.PumpControlFragment;
+import au.com.ahbeard.sleepsense.fragments.PumpTestFragment;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.widgets.SimpleTabStrip;
 import butterknife.Bind;
@@ -31,6 +34,9 @@ public class DashboardActivity extends BaseActivity {
         Intent intent = new Intent(this,SleepTrackingActivity.class);
         startActivity(intent);
     }
+
+    @Bind(R.id.dashboard_fab_start_sleep)
+    FloatingActionButton mStartSleepFloatingActionButton;
 
     @Bind(R.id.dashboard_view_pager)
     ViewPager mViewPager;
@@ -56,6 +62,22 @@ public class DashboardActivity extends BaseActivity {
         mDashboardPagerAdapter = new DashboardPagerStripSimple(getSupportFragmentManager());
         mViewPager.setAdapter(mDashboardPagerAdapter);
         mSimpleTabStrip.setViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mStartSleepFloatingActionButton.setVisibility(position==0? View.VISIBLE:View.GONE);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
     }
 
@@ -91,7 +113,7 @@ public class DashboardActivity extends BaseActivity {
                 PumpControlFragment.newInstance(),
                 PositionControlFragment.newInstance("",""),
                 MassageControlFragment.newInstance("",""),
-                MoreFragment.newInstance("","")
+                PumpTestFragment.newInstance()// MoreFragment.newInstance("","")
         };
 
         public DashboardPagerStripSimple(FragmentManager fm) {

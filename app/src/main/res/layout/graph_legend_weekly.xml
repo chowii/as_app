@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/graph_legend_layout"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center">
+
+    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:id="@+id/graph_legend_text_view_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="13sp"
+        android:lineSpacingExtra="3sp"
+        android:text="93"
+        android:textColor="@color/graphLegendColor"
+        app:typeface="OpenSansRegular"
+        android:layout_marginBottom="8dp"/>
+
+    <ImageView
+        android:id="@+id/graph_legend_image_view_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/graph_expand_day_icon"/>
+
+    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:id="@+id/graph_legend_text_view_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="13sp"
+        android:lineSpacingExtra="3sp"
+        android:text="MON"
+        android:textColor="@color/graphLegendColor"
+        app:typeface="OpenSansRegular"
+        android:layout_marginTop="12dp"/>
+
+</LinearLayout>
