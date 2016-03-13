@@ -35,14 +35,14 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/pump_test_toggle_left"
+            android:id="@+id/pump_test_button_toggle_left"
             android:layout_width="0dp"
             android:text="Left"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
         <Button
-            android:id="@+id/pump_test_toggle_right"
+            android:id="@+id/pump_test_button_toggle_right"
             android:layout_width="0dp"
             android:text="Right"
             android:layout_height="wrap_content"

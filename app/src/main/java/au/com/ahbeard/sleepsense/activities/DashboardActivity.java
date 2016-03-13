@@ -113,7 +113,7 @@ public class DashboardActivity extends BaseActivity {
                 PumpControlFragment.newInstance(),
                 PositionControlFragment.newInstance("",""),
                 MassageControlFragment.newInstance("",""),
-                PumpTestFragment.newInstance()// MoreFragment.newInstance("","")
+                PumpTestFragment.newInstance() // MoreFragment.newInstance("","")
         };
 
         public DashboardPagerStripSimple(FragmentManager fm) {

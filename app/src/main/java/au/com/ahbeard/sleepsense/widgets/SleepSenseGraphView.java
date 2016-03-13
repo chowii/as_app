@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import au.com.ahbeard.sleepsense.R;
 import butterknife.Bind;
@@ -117,8 +116,20 @@ public class SleepSenseGraphView extends ViewGroup {
 
     }
 
+    public void setValues(float[] values, String[] names, float minimum, float maximum) {
+
+        Float[] _values = new Float[values.length];
+
+        for (int i = 0; i < values.length; i++) {
+            _values[i] = values[i] >= 0 ? values[i] : null;
+        }
+
+        setValues(_values, names, minimum, maximum);
+
+    }
+
     // We actually need to think of this as a window on some data not
-    private void setValues(Float[] values, String[] names, float minimum, float maximum) {
+    public void setValues(Float[] values, String[] names, float minimum, float maximum) {
 
         mValues = values;
 
@@ -141,16 +152,18 @@ public class SleepSenseGraphView extends ViewGroup {
 
         mLegendViewHolders = new LegendViewHolder[mValues.length];
 
-        for (int i = 1; i < mValues.length - 1; i++) {
-            if (mValues[i] != null) {
-                View view = LayoutInflater.from(getContext()).inflate(R.layout.graph_legend_weekly, this,false);
-                LegendViewHolder legendViewHolder = new LegendViewHolder();
-                ButterKnife.bind(legendViewHolder, view);
-                this.addView(view);
-                legendViewHolder.mRoot = view;
-                legendViewHolder.mTextTextView.setText(names[i]);
-                legendViewHolder.mValueTextView.setText(Integer.toString(mValues[i].intValue()  ));
-                mLegendViewHolders[i] = legendViewHolder;
+        if ( names != null ) {
+            for (int i = 1; i < mValues.length - 1; i++) {
+                if (mValues[i] != null) {
+                    View view = LayoutInflater.from(getContext()).inflate(R.layout.graph_legend_weekly, this, false);
+                    LegendViewHolder legendViewHolder = new LegendViewHolder();
+                    ButterKnife.bind(legendViewHolder, view);
+                    this.addView(view);
+                    legendViewHolder.mRoot = view;
+                    legendViewHolder.mTextTextView.setText(names[i]);
+                    legendViewHolder.mValueTextView.setText(Integer.toString(mValues[i].intValue()));
+                    mLegendViewHolders[i] = legendViewHolder;
+                }
             }
         }
 
@@ -193,7 +206,7 @@ public class SleepSenseGraphView extends ViewGroup {
 
         for (int i = 0; i < mLegendViewHolders.length; i++) {
 
-            if (mLegendViewHolders[i]==null)
+            if (mLegendViewHolders[i] == null)
                 continue;
             View child = mLegendViewHolders[i].mRoot;
 
@@ -205,10 +218,10 @@ public class SleepSenseGraphView extends ViewGroup {
             int childHeight = child.getMeasuredHeight();
 
             child.layout(
-                    (int)(mPoints[i].x - childWidth / 2),
-                    (int)(mGraphRegionHeight + mLegendHeight / 2 - childHeight / 2),
-                    (int)(mPoints[i].x + childWidth / 2),
-                    (int)(mGraphRegionHeight + mLegendHeight / 2 + childHeight / 2));
+                    (int) (mPoints[i].x - childWidth / 2),
+                    (int) (mGraphRegionHeight + mLegendHeight / 2 - childHeight / 2),
+                    (int) (mPoints[i].x + childWidth / 2),
+                    (int) (mGraphRegionHeight + mLegendHeight / 2 + childHeight / 2));
 
         }
 
@@ -340,13 +353,16 @@ public class SleepSenseGraphView extends ViewGroup {
 
         canvas.drawPath(mPath, mLinePaint);
 
-        for (int i = 0; i < mPoints.length; i++) {
+        if (mPoints.length<=14) {
+            for (int i = 0; i < mPoints.length; i++) {
 
-            if (mPoints[i] != null) {
-                canvas.drawCircle(mPoints[i].x, mPoints[i].y, 4, mLinePaint);
+                if (mPoints[i] != null) {
+                    canvas.drawCircle(mPoints[i].x, mPoints[i].y, 4, mLinePaint);
+                }
+
             }
-
         }
+
 
     }
 

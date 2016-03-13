@@ -44,7 +44,11 @@ public class PumpTestFragment extends Fragment {
     @OnClick(R.id.pump_test_button_connect_disconnect)
     void connectOrDisconnect() {
         if (mPumpDevice != null) {
-            mPumpDevice.connect();
+            if ( mPumpDevice.isConnected() ) {
+                mPumpDevice.disconnect();
+            } else {
+                mPumpDevice.connect();
+            }
         }
     }
 
@@ -81,6 +85,12 @@ public class PumpTestFragment extends Fragment {
     @Bind(R.id.pump_test_button_stop)
     Button mStopButton;
 
+    @Bind(R.id.pump_test_button_toggle_left)
+    Button mToggleLeftButton;
+
+    @Bind(R.id.pump_test_button_toggle_right)
+    Button mToggleRightButton;
+
     public PumpTestFragment() {
         // Required empty public constructor
     }
@@ -98,9 +108,8 @@ public class PumpTestFragment extends Fragment {
         mLogRecyclerView.setItemAnimator(new SimpleItemAnimator());
 
         mConnectDisconnectButton.setEnabled(false);
-        mInflateButton.setEnabled(false);
-        mDeflateButton.setEnabled(false);
-        mStopButton.setEnabled(false);
+
+        updateControls(false);
 
         SleepSenseDeviceService.instance().getLogObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
                 new Action1<String>() {
@@ -112,6 +121,15 @@ public class PumpTestFragment extends Fragment {
 
 
         return view;
+    }
+
+    private void updateControls(boolean isConnected) {
+        mConnectDisconnectButton.setText(isConnected?"Disconnect":"Connect");
+        mInflateButton.setEnabled(isConnected);
+        mDeflateButton.setEnabled(isConnected);
+        mStopButton.setEnabled(isConnected);
+        mToggleLeftButton.setEnabled(isConnected);
+        mToggleRightButton.setEnabled(isConnected);
     }
 
     public static Fragment newInstance() {
@@ -206,9 +224,11 @@ public class PumpTestFragment extends Fragment {
                                     new Action1<Device.DeviceEvent>() {
                                         @Override
                                         public void call(Device.DeviceEvent deviceEvent) {
-                                            mInflateButton.setEnabled(mPumpDevice.isConnected());
-                                            mDeflateButton.setEnabled(mPumpDevice.isConnected());
-                                            mStopButton.setEnabled(mPumpDevice.isConnected());
+                                            if ( deviceEvent instanceof Device.DeviceConnectedEvent) {
+                                                updateControls(true);
+                                            } else if (deviceEvent instanceof Device.DeviceDisconnectedEvent) {
+                                                updateControls(false);
+                                            }
                                         }
                                     });
 
