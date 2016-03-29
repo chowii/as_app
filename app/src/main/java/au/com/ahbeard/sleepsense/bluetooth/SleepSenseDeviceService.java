@@ -12,10 +12,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
-import au.com.ahbeard.sleepsense.bluetooth.base.DummyBaseDevice;
-import au.com.ahbeard.sleepsense.bluetooth.pump.DummyPumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
-import au.com.ahbeard.sleepsense.bluetooth.tracker.DummyTrackerDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 import rx.Observable;
 import rx.functions.Action1;
@@ -39,6 +36,8 @@ public class SleepSenseDeviceService {
 
     private PublishSubject<String> mLogSubject = PublishSubject.create();
 
+    private PublishSubject<String> mChangeEventPublishSubject = PublishSubject.create();
+
     private final Context mContext;
 
     private String mBaseDeviceAddress;
@@ -51,6 +50,10 @@ public class SleepSenseDeviceService {
 
     private SleepSenseDeviceService(Context context) {
         mContext = context;
+    }
+
+    public Observable<String> getChangeEventObservable() {
+        return mChangeEventPublishSubject;
     }
 
     public BaseDevice getBaseDevice() {
@@ -133,6 +136,8 @@ public class SleepSenseDeviceService {
                         }
 
                         mObservable.onCompleted();
+
+                        mChangeEventPublishSubject.onNext("CHANGE");
 
                     }
                 });

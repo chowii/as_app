@@ -45,13 +45,13 @@ public class PumpStatusObserver implements Observer<byte[]> {
                 buffer[bufferPointer++] = (char) bytes[i];
             }
 
-            // Do this last, so we catch a complete status.
+            // Do this last, so we catch a complete mStatus.
             if (bufferPointer >= 18) {
                 // Consume the buffer.
                 String status = new String(buffer, 0, 18);
 
                 if (mAdvancePumpEventPattern.matcher(status).matches()) {
-                    // We have a proper status string.
+                    // We have a proper mStatus string.
                     mPumpStatusEventObserver.onNext(new PumpEvent(status));
                 }
 

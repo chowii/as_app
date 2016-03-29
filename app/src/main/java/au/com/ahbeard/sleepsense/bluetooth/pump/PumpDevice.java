@@ -1,5 +1,8 @@
 package au.com.ahbeard.sleepsense.bluetooth.pump;
 
+import android.bluetooth.BluetoothGatt;
+import android.support.annotation.NonNull;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -47,6 +50,11 @@ public class PumpDevice extends Device {
 
     private static final UUID[] ADVERTISED_UUIDs = {BluetoothUtils.uuidFrom16BitUuid(0xffe0)};
 
+    @Override
+    public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+        super.onServicesDiscovered(gatt, status);
+    }
+
     public PumpDevice() {
 
         super();
@@ -61,6 +69,11 @@ public class PumpDevice extends Device {
                 mPumpStatuses = pumpEvent.getStatuses();
             }
         });
+    }
+
+    @Override
+    protected boolean getSetupNotifications() {
+        return true;
     }
 
     @Override
@@ -209,16 +222,26 @@ public class PumpDevice extends Device {
         }
     }
 
+    public void inflateToTarget(Side side, int pressure) {
+        sendCommand(PumpCommand.stop(convertSideToChamber(side)));
+        sendCommand(PumpCommand.setPressure(convertSideToChamber(side),pressure));
+    }
 
     public void inflate(Side side) {
-        sendCommand(PumpCommand.inflate(side == Side.Left ? PumpCommand.Chamber.Left : PumpCommand.Chamber.Right));
+        sendCommand(PumpCommand.inflate(convertSideToChamber(side)));
     }
 
     public void deflate(Side side) {
-        sendCommand(PumpCommand.deflate(side == Side.Left ? PumpCommand.Chamber.Left : PumpCommand.Chamber.Right));
+        sendCommand(PumpCommand.deflate(convertSideToChamber(side)));
     }
 
     public void stop(Side side) {
-        sendCommand(PumpCommand.stop(side == Side.Left ? PumpCommand.Chamber.Left : PumpCommand.Chamber.Right));
+        sendCommand(PumpCommand.stop(convertSideToChamber(side)));
     }
+
+    @NonNull
+    private PumpCommand.Chamber convertSideToChamber(Side side) {
+        return side == Side.Left ? PumpCommand.Chamber.Left : PumpCommand.Chamber.Right;
+    }
+
 }

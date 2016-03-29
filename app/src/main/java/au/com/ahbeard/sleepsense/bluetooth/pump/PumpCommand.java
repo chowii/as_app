@@ -2,12 +2,19 @@ package au.com.ahbeard.sleepsense.bluetooth.pump;
 
 import android.support.annotation.NonNull;
 
-import au.com.ahbeard.sleepsense.bluetooth.BluetoothWriteOperation;
+import java.util.UUID;
+
+import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
+import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 
 /**
  * Created by neal on 7/03/2016.
  */
-public class PumpCommand extends BluetoothWriteOperation {
+public class PumpCommand extends CharacteristicWriteOperation {
+
+    public PumpCommand(UUID serviceUUID, UUID characteristicUUID) {
+        super(serviceUUID, characteristicUUID);
+    }
 
     public enum Chamber {
         Left,
@@ -40,6 +47,9 @@ public class PumpCommand extends BluetoothWriteOperation {
     private static final char ReInflate = '8';
     private static final char Stop = '9';
     private static final char AdjustZero = 'a';
+    private static final char SetPressure = 'b';
+    private static final char SetMemoryValue = 'c';
+
 
     @NonNull
     public static PumpCommand checkMemoryValue(Chamber chamber) {
@@ -72,13 +82,13 @@ public class PumpCommand extends BluetoothWriteOperation {
     }
 
     @NonNull
-    public static PumpCommand saveMemoryValue(Chamber chamber, int millibar) {
-        return createAdvancedPumpCommand(chamber, SaveMemoryValue, millibar);
+    public static PumpCommand reInflate(Chamber chamber) {
+        return createStandardPumpCommand(chamber, ReInflate);
     }
 
     @NonNull
-    public static PumpCommand reInflate(Chamber chamber) {
-        return createStandardPumpCommand(chamber, ReInflate);
+    public static PumpCommand saveMemoryValue(Chamber chamber) {
+        return createStandardPumpCommand(chamber, SaveMemoryValue);
     }
 
     @NonNull
@@ -91,20 +101,32 @@ public class PumpCommand extends BluetoothWriteOperation {
         return createAdvancedPumpCommand(chamber, AdjustZero, millibar);
     }
 
+    @NonNull
+    public static PumpCommand setPressure(Chamber chamber, int millibar) {
+        return createAdvancedPumpCommand(chamber, SetPressure, millibar);
+    }
+
+    @NonNull
+    public static PumpCommand setMemoryValue(Chamber chamber, int millibar) {
+        return createAdvancedPumpCommand(chamber, SetMemoryValue, millibar);
+    }
+
     private static PumpCommand createStandardPumpCommand(Chamber chamber, char command) {
-        PumpCommand pumpCommand = new PumpCommand();
+        PumpCommand pumpCommand = new PumpCommand(BluetoothUtils.uuidFrom16BitUuid(0xffe0),BluetoothUtils.uuidFrom16BitUuid(0xffe1));
         pumpCommand.writeByte('S');
         pumpCommand.writeByte(chamber == Chamber.Left ? 'L' : 'R');
         pumpCommand.writeByte(command);
+        pumpCommand.writeByte('\n');
         return pumpCommand;
     }
 
     private static PumpCommand createAdvancedPumpCommand(Chamber chamber, char command, int value) {
-        PumpCommand pumpCommand = new PumpCommand();
+        PumpCommand pumpCommand = new PumpCommand(BluetoothUtils.uuidFrom16BitUuid(0xffe0),BluetoothUtils.uuidFrom16BitUuid(0xffe1));
         pumpCommand.writeByte('S');
         pumpCommand.writeByte(chamber == Chamber.Left ? 'L' : 'R');
         pumpCommand.writeByte(command);
         pumpCommand.writeBytes(String.format("%03d",value%1000).getBytes());
+        pumpCommand.writeByte('\n');
         return pumpCommand;
     }
 

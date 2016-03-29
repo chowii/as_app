@@ -88,6 +88,10 @@ public class SleepSenseGraphView extends ViewGroup {
         mAreaPaint = new Paint();
         mAreaPaint.setShader(mAreaGradient);
         mAreaPaint.setAlpha(190);
+        mAreaPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mAreaPaint.setStrokeWidth(
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
+        mAreaPaint.setAntiAlias(true);
 
         mLinePaint = new Paint();
         mLinePaint.setAntiAlias(true);
@@ -107,12 +111,6 @@ public class SleepSenseGraphView extends ViewGroup {
         mDividerPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         mPath = new Path();
-
-        // The assumption made here that we always have 7 points of data is WRONG.
-        //       setValues(new Float[]{20f, 0f, 100f, 0f, 20f}, 0f, 100f);
-        // setValues(new Float[]{20f, 0f, 100f, 65f, null, 40f, 0f, 100f, 65f,40f, 0f, 100f, 65f, null, 40f, 70f, 67f,40f, 70f, 67f, 20f}, 0f, 100f);
-        setValues(new Float[]{20f, 0f, 100f, 65f, null, 40f, 70f, 67f, 20f},
-                new String[]{null, "MON", "TUE", "WED", null, "FRI", "SAT", "SUN", null}, 0f, 100f);
 
     }
 
@@ -186,7 +184,10 @@ public class SleepSenseGraphView extends ViewGroup {
                 getResources().getColor(R.color.graphAreaGradientEnd),
                 Shader.TileMode.MIRROR));
 
-        mColumnWidth = width / (mRawPoints.length - 2);
+        mColumnWidth = (float)width / (mRawPoints.length - 2);
+
+        Log.d("GRAPH","COLUMN WIDTH: "  + mColumnWidth);
+
         mGraphRegionHeight = height * GRAPH_LEGEND_SPLIT;
         mLegendHeight = height - mGraphRegionHeight;
         mGraphExtent = height * GRAPH_LEGEND_SPLIT - TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4,
@@ -231,6 +232,9 @@ public class SleepSenseGraphView extends ViewGroup {
             if (mPoints[i] == null)
                 continue;
 
+            boolean isFirstPoint = i==1;
+            boolean isLastPoint = i == mPoints.length-2;
+
             // Find left neighbour index...
             Integer nearestLeftNeighbourIndex = null;
 
@@ -270,6 +274,7 @@ public class SleepSenseGraphView extends ViewGroup {
             // Build the right half of the path
             PointF rightStartPoint = new PointF();
 
+            // Round this, don't just convert it into an integer, otherwise we might lose a chunk on some devices.
             rightStartPoint.x = mPoints[i].x + mColumnWidth / 2;
 
             if (nearestRightNeighbourIndex == null) {
@@ -284,8 +289,6 @@ public class SleepSenseGraphView extends ViewGroup {
 
             }
 
-            Log.d("GRAPH", String.format("rightStartPoint: %s", rightStartPoint));
-
             // Create the line segment.
             if (nearestLeftNeighbourIndex != null && nearestLeftNeighbourIndex == i - 1) {
                 mPath.moveTo(leftStartPoint.x, leftStartPoint.y);
@@ -293,6 +296,7 @@ public class SleepSenseGraphView extends ViewGroup {
             } else {
                 mPath.moveTo(mPoints[i].x, mPoints[i].y);
             }
+
             if (nearestRightNeighbourIndex != null && nearestRightNeighbourIndex == i + 1) {
                 mPath.lineTo(rightStartPoint.x, rightStartPoint.y);
             }
@@ -300,11 +304,17 @@ public class SleepSenseGraphView extends ViewGroup {
             // Create the area under the line segment.
             Path path = new Path();
 
+            Log.d("GRAPH",String.format("PATH MOVETO: %f,%f", leftStartPoint.x, leftStartPoint.y));
             path.moveTo(leftStartPoint.x, leftStartPoint.y);
+            Log.d("GRAPH",String.format("PATH LINETO: %f,%f", mPoints[i].x, mPoints[i].y));
             path.lineTo(mPoints[i].x, mPoints[i].y);
+            Log.d("GRAPH",String.format("PATH LINETO: %f,%f", rightStartPoint.x, rightStartPoint.y));
             path.lineTo(rightStartPoint.x, rightStartPoint.y);
+            Log.d("GRAPH",String.format("PATH LINETO: %f,%f", rightStartPoint.x, (float)getHeight()));
             path.lineTo(rightStartPoint.x, getHeight());
+            Log.d("GRAPH",String.format("PATH LINETO: %f,%f", leftStartPoint.x, (float)getHeight()));
             path.lineTo(leftStartPoint.x, getHeight());
+
             path.close();
 
             mAreaPaths.add(path);
@@ -317,6 +327,8 @@ public class SleepSenseGraphView extends ViewGroup {
     @Override
     protected void onDraw(Canvas canvas) {
 
+        Log.d("GRAPH","CANVAS WIDTH: " + canvas.getWidth());
+
         if (mGraphNeedsRelayout) {
             layout(canvas.getWidth(), canvas.getHeight());
         }
@@ -325,16 +337,18 @@ public class SleepSenseGraphView extends ViewGroup {
             canvas.drawPath(mAreaPaths.get(i), mAreaPaint);
         }
 
-        for (int i = 0; i < mDividerPoints.size(); i++) {
-            PointF dividerPoint = mDividerPoints.get(i);
-            mDividerPaint.setShader(new LinearGradient(
-                    0, dividerPoint.y, 0, mGraphRegionHeight,
-                    Color.TRANSPARENT,
-                    getResources().getColor(R.color.graphDividerColor),
-                    Shader.TileMode.CLAMP));
-            canvas.drawLine(dividerPoint.x, dividerPoint.y, dividerPoint.x, getHeight(), mDividerPaint);
-            Log.d("GRAPH", "dividerPoint" + dividerPoint);
-        }
+        Log.d("GRAPH","CLIP BOUNDS: " + canvas.getClipBounds());
+
+//        for (int i = 0; i < mDividerPoints.size(); i++) {
+//            PointF dividerPoint = mDividerPoints.get(i);
+//            mDividerPaint.setShader(new LinearGradient(
+//                    0, dividerPoint.y, 0, mGraphRegionHeight,
+//                    Color.TRANSPARENT,
+//                    getResources().getColor(R.color.graphDividerColor),
+//                    Shader.TileMode.CLAMP));
+//            canvas.drawLine(dividerPoint.x, dividerPoint.y, dividerPoint.x, getHeight(), mDividerPaint);
+////            Log.d("GRAPH", "dividerPoint" + dividerPoint);
+//        }
 
         super.onDraw(canvas);
 

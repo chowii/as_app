@@ -93,7 +93,7 @@ public class DashboardFragment extends Fragment {
 
         graphViewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
 
-            private String[] mLabels = null;// {null,"SUN","MON","TUE","WED","THU","FRI","SAT",null};
+            private String[] mLabels = {null,"SUN","MON","TUE","WED","THU","FRI","SAT",null};
             private int mWidth = 7;
             private int mNumberOfPagesBack = 1024;
 

@@ -2,13 +2,14 @@ package au.com.ahbeard.sleepsense.bluetooth.base;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
-import au.com.ahbeard.sleepsense.bluetooth.BluetoothWriteOperation;
+import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 
 /**
  * Created by neal on 7/03/2016.
  */
-public class BaseCommand extends BluetoothWriteOperation {
+public class BaseCommand extends CharacteristicWriteOperation {
 
 
    public static Map<String,Integer> COMMANDS = new HashMap<>();
@@ -42,8 +43,7 @@ public class BaseCommand extends BluetoothWriteOperation {
    }
 
 
-
-
-
-    
+    public BaseCommand(UUID serviceUUID, UUID characteristicUUID) {
+        super(serviceUUID, characteristicUUID);
+    }
 }

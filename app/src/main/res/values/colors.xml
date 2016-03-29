@@ -19,6 +19,9 @@
     <color name="firmnessDotGood">#34DABA</color>
     <color name="firmnessDotBad">#FD8B87</color>
 
+    <color name="firmnessTabHighlight">#FD8B87</color>
+    <color name="firmnessTabNormal">#6E788D</color>
+
     <color name="firmnessBackground">#FAFAFA</color>
 
     <color name="graphAreaGradientStart">#EAF4FA</color>

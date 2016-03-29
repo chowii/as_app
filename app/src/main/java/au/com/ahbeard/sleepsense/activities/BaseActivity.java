@@ -34,7 +34,6 @@ public class BaseActivity extends AppCompatActivity {
             } else {
 
                 // No explanation needed, we can request the permission.
-
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                         PERMISSIONS_REQUEST_COARSE_LOCATION);

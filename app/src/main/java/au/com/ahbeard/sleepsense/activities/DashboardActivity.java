@@ -61,7 +61,10 @@ public class DashboardActivity extends BaseActivity {
 
         mDashboardPagerAdapter = new DashboardPagerStripSimple(getSupportFragmentManager());
         mViewPager.setAdapter(mDashboardPagerAdapter);
+        mViewPager.setOffscreenPageLimit(5);
         mSimpleTabStrip.setViewPager(mViewPager);
+
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

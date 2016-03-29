@@ -12,9 +12,9 @@ public class PumpEvent {
 
     /*
 
-    /// An example pump status string (new format): "EX0250360250280200"
+    /// An example pump mStatus string (new format): "EX0250360250280200"
 
-    EX{left memory 3 digits}{left pressure 3 digits}{right memory 3 digits}{right pressure 3 digits}{4 hex status}
+    EX{left memory 3 digits}{left pressure 3 digits}{right memory 3 digits}{right pressure 3 digits}{4 hex mStatus}
 
     we don't have the EX (don't need it).
 

@@ -2,8 +2,11 @@ package au.com.ahbeard.sleepsense.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
@@ -13,6 +16,10 @@ import au.com.ahbeard.sleepsense.services.TypefaceService;
  * Created by neal on 3/03/2016.
  */
 public class StyledTextView extends TextView {
+
+    private Paint mBorderPaint = new Paint();
+
+    private boolean mDrawTopBorder = false;
 
     public StyledTextView(Context context) {
         super(context);
@@ -50,8 +57,29 @@ public class StyledTextView extends TextView {
             }
         }
 
+        mBorderPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2f, getResources().getDisplayMetrics()));
+        mBorderPaint.setColor(getCurrentTextColor());
+
         a.recycle();
     }
 
+    public void setDrawTopBorder(boolean mDrawTopBorder) {
+        this.mDrawTopBorder = mDrawTopBorder;
+    }
 
+    @Override
+    public void setTextColor(int color) {
+        super.setTextColor(color);
+        mBorderPaint.setColor(color);
+
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        if (mDrawTopBorder) {
+            canvas.drawLine(0, 0, canvas.getWidth(), 0, mBorderPaint);
+        }
+    }
 }

@@ -20,6 +20,12 @@ import au.com.ahbeard.sleepsense.R;
  */
 public class FirmnessControlView extends View {
 
+    private OnTargetValueSetListener mOnTargetValueSetListener;
+
+    public interface OnTargetValueSetListener {
+        void onTargetValueSet(float targetValue);
+    }
+
     public static final float TO_RADIANS = 0.01745329252f;
     public static final float FROM_RADIANS = 1f / TO_RADIANS;
 
@@ -39,7 +45,8 @@ public class FirmnessControlView extends View {
     private PointF mRotatedKnobCenterPoint = new PointF();
     private PointF mRotatedDotCenterPoint = new PointF();
 
-    private float mValue = 0.0f;
+    private float mTargetValue = 0.0f;
+    private float mActualValue = 0.0f;
 
     public FirmnessControlView(Context context) {
         super(context);
@@ -87,12 +94,19 @@ public class FirmnessControlView extends View {
         mForegroundDrawable = foregroundDrawable;
     }
 
-    public void setValue(float value) {
-        mValue = value;
+    public void _setTargetValue(float value) {
+        mTargetValue = value;
+        postInvalidate();
+    }
+
+    public void setActualValue(float value) {
+
+        mActualValue = value;
+
         if (mLevelDrawable != null) {
-            Log.d("TOUCH", String.format("setLevel: %d", Math.round(mValue)));
-            mLevelDrawable.setLevel(Math.round(mValue));
+            mLevelDrawable.setLevel(Math.round(mActualValue));
         }
+
         postInvalidate();
     }
 
@@ -104,6 +118,10 @@ public class FirmnessControlView extends View {
     public void setDotRadius(int dotRadius) {
         mDotRadius = dotRadius;
         postInvalidate();
+    }
+
+    public void setOnTargetValueSetListener(OnTargetValueSetListener onTargetValueSetListener) {
+        mOnTargetValueSetListener = onTargetValueSetListener;
     }
 
     private boolean mUpdating;
@@ -147,7 +165,7 @@ public class FirmnessControlView extends View {
 
                     if (Math.abs(deltaValue) > 0.01f) {
 
-                        float newValue = mValue + deltaValue;
+                        float newValue = mTargetValue + deltaValue;
 
                         if (newValue < 0.0f) {
                             newValue = 0.0f;
@@ -156,15 +174,11 @@ public class FirmnessControlView extends View {
                             newValue = 10.0f;
                         }
 
-                        setValue(newValue);
+                        _setTargetValue(newValue);
 
                         mLastAngle = eventAngle;
 
-                        Log.d("TOUCH", String.format("%.5f", mValue));
-
-//                        if ( mRingDialUpdateListener != null ) {
-//                            mRingDialUpdateListener.valueUpdated(mValue);
-//                        }
+                        Log.d("TOUCH", String.format("%.5f", mTargetValue));
 
                     }
 
@@ -179,14 +193,12 @@ public class FirmnessControlView extends View {
 
                 mUpdating = false;
 
-                mValue = Math.round(mValue);
-                Log.d("TOUCH", String.format("%.5f", mValue));
+                // Round the value (so we have a 0-9 range).
+                _setTargetValue(Math.round(mTargetValue*10f)/10f);
 
-                postInvalidate();
-
-//                if ( mRingDialUpdateListener != null ) {
-//                    mRingDialUpdateListener.finishedUpdatingValue(mValue);
-//                }
+                if ( mOnTargetValueSetListener != null ) {
+                    mOnTargetValueSetListener.onTargetValueSet(mTargetValue);
+                }
 
                 break;
         }
@@ -231,7 +243,7 @@ public class FirmnessControlView extends View {
             int width = (int) (mKnobDrawable.getIntrinsicWidth() * mScaleWidth);
             int height = (int) (mKnobDrawable.getIntrinsicHeight() * mScaleHeight);
 
-            float rotationAngle = -137f * TO_RADIANS + 274f * (mValue) / 10f * TO_RADIANS;
+            float rotationAngle = -137f * TO_RADIANS + 274f * (mTargetValue) / 10f * TO_RADIANS;
 
             mRotatedKnobCenterPoint.x = (float) (mKnobCenterPoint.x * Math.cos(rotationAngle)
                     - mKnobCenterPoint.y * Math.sin(rotationAngle));
@@ -252,7 +264,7 @@ public class FirmnessControlView extends View {
             mRotatedDotCenterPoint.y = (float) (mDotCenterPoint.y * Math.cos(rotationAngle)
                     + mDotCenterPoint.x * Math.sin(rotationAngle));
 
-            Log.d("TOUCH", "rotatedDOt: " + mRotatedDotCenterPoint);
+            Log.d("TOUCH", "rotatedDot: " + mRotatedDotCenterPoint);
 
             canvas.drawCircle(mRotatedDotCenterPoint.x * canvas.getWidth() / 2,
                     mRotatedDotCenterPoint.y * canvas.getHeight() / 2, mDotRadius, mDotPaint);

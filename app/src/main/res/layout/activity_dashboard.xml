@@ -42,7 +42,7 @@
         android:id="@+id/dashboard_simple_tab_strip"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="51dp"
+        android:layout_height="56dp"
         android:background="@color/tabBackgroundColor"
         app:selectedTabColor="@color/tabSelectedColor"
         app:tabColor="@color/tabUnselectedColor" app:tabLayout="@layout/tab_dashboard">
