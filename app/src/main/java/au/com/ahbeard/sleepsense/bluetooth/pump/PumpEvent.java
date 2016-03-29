@@ -113,6 +113,10 @@ public class PumpEvent {
         return mStatus;
     }
 
+    public boolean isAdjusting()  {
+        return mStatus.contains(PumpStatus.Inflating)||mStatus.contains(PumpStatus.Deflating);
+    }
+
     @Override
     public String toString() {
         return "PumpEvent{" +
@@ -124,4 +128,5 @@ public class PumpEvent {
                 ", mStatus=" + mStatus +
                 '}';
     }
+
 }

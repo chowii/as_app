@@ -80,15 +80,30 @@
             android:gravity="center"
             app:typeface="OpenSansSemiBold"/>
 
-        <au.com.ahbeard.sleepsense.widgets.StyledTextView
-            android:layout_weight="1"
-            android:text="Adjusting"
-            android:textSize="30sp"
-            android:textColor="#4FB2EA"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            app:typeface="OpenSansRegular"/>
+            android:layout_height="wrap_content">
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:id="@+id/firmness_control_text_view_firmness_left"
+                android:layout_weight="1"
+                android:text="Adjusting"
+                android:textSize="30sp"
+                android:textColor="#4FB2EA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:typeface="OpenSansRegular"/>
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:id="@+id/firmness_control_text_view_firmness_right"
+                android:layout_weight="1"
+                android:text="Adjusting"
+                android:textSize="30sp"
+                android:textColor="#4FB2EA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:typeface="OpenSansRegular" android:visibility="gone"/>
+        </FrameLayout>
 
     </LinearLayout>
 

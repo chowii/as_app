@@ -8,7 +8,7 @@ import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
 import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 
 /**
- * Created by neal on 7/03/2016.
+ * Created by Neal Maloney on 7/03/2016.
  */
 public class PumpCommand extends CharacteristicWriteOperation {
 
@@ -30,13 +30,6 @@ public class PumpCommand extends CharacteristicWriteOperation {
     // A is the string literal "R" or "L" depending on which chamber the command is for (right, left)
     // B is a string literal of the value "1"-"9" or "a" (depending on command)
 
-    // Extended Pump Command
-    // Format: SABCCC\n
-    // Where: S is the string literal "S" and \n is the string literal "\n"
-    // A is the string literal "R" or "L" depending on which chamber the command is for (right, left)
-    // B is a string literal of the value "b" or "c" (depending on command)
-    // CCC is a three-character string literal expressing pressure in millibar e.g. "025"
-
     private static final char CheckMemoryValue = '1';
     private static final char CheckPressure = '2';
     private static final char Inflate = '3';
@@ -47,6 +40,14 @@ public class PumpCommand extends CharacteristicWriteOperation {
     private static final char ReInflate = '8';
     private static final char Stop = '9';
     private static final char AdjustZero = 'a';
+
+    // Extended Pump Command
+    // Format: SABCCC\n
+    // Where: S is the string literal "S" and \n is the string literal "\n"
+    // A is the string literal "R" or "L" depending on which chamber the command is for (right, left)
+    // B is a string literal of the value "b" or "c" (depending on command)
+    // CCC is a three-character string literal expressing pressure in millibar e.g. "025"
+
     private static final char SetPressure = 'b';
     private static final char SetMemoryValue = 'c';
 
@@ -114,7 +115,7 @@ public class PumpCommand extends CharacteristicWriteOperation {
     private static PumpCommand createStandardPumpCommand(Chamber chamber, char command) {
         PumpCommand pumpCommand = new PumpCommand(BluetoothUtils.uuidFrom16BitUuid(0xffe0),BluetoothUtils.uuidFrom16BitUuid(0xffe1));
         pumpCommand.writeByte('S');
-        pumpCommand.writeByte(chamber == Chamber.Left ? 'L' : 'R');
+        pumpCommand.writeByte(chamber == Chamber.Left ? LeftChamber : RightChamber );
         pumpCommand.writeByte(command);
         pumpCommand.writeByte('\n');
         return pumpCommand;
@@ -123,7 +124,7 @@ public class PumpCommand extends CharacteristicWriteOperation {
     private static PumpCommand createAdvancedPumpCommand(Chamber chamber, char command, int value) {
         PumpCommand pumpCommand = new PumpCommand(BluetoothUtils.uuidFrom16BitUuid(0xffe0),BluetoothUtils.uuidFrom16BitUuid(0xffe1));
         pumpCommand.writeByte('S');
-        pumpCommand.writeByte(chamber == Chamber.Left ? 'L' : 'R');
+        pumpCommand.writeByte(chamber == Chamber.Left ? LeftChamber : RightChamber );
         pumpCommand.writeByte(command);
         pumpCommand.writeBytes(String.format("%03d",value%1000).getBytes());
         pumpCommand.writeByte('\n');

@@ -39,6 +39,10 @@ public class PumpDevice extends Device {
         public ChamberState(Side side) {
             this.side = side;
         }
+
+        public int getCurrentPressure() {
+            return currentPressure;
+        }
     }
 
     private PublishSubject<PumpEvent> mPumpEventSubject = PublishSubject.create();
@@ -223,6 +227,9 @@ public class PumpDevice extends Device {
     }
 
     public void inflateToTarget(Side side, int pressure) {
+
+        if ( mPumpStatuses.contains(PumpEvent.PumpStatus.Inflating))
+
         sendCommand(PumpCommand.stop(convertSideToChamber(side)));
         sendCommand(PumpCommand.setPressure(convertSideToChamber(side),pressure));
     }

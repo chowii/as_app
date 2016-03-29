@@ -12,9 +12,8 @@ import android.view.View;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
-import au.com.ahbeard.sleepsense.fragments.MoreFragment;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
-import au.com.ahbeard.sleepsense.fragments.PumpControlFragment;
+import au.com.ahbeard.sleepsense.fragments.FirmnessFragment;
 import au.com.ahbeard.sleepsense.fragments.PumpTestFragment;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.widgets.SimpleTabStrip;
@@ -113,7 +112,7 @@ public class DashboardActivity extends BaseActivity {
 
         private Fragment[] mFragments = {
                 DashboardFragment.newInstance("",""),
-                PumpControlFragment.newInstance(),
+                FirmnessFragment.newInstance(),
                 PositionControlFragment.newInstance("",""),
                 MassageControlFragment.newInstance("",""),
                 PumpTestFragment.newInstance() // MoreFragment.newInstance("","")

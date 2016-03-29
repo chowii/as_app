@@ -6,14 +6,4 @@ package au.com.ahbeard.sleepsense.bluetooth.pump;
 public class PumpResponse {
 
 
-
-
-
-
-
-
-
-
-
-
 }
