@@ -18,12 +18,6 @@
         android:layout_height="8dp"/>
 
     <Button
-        android:id="@+id/pump_test_button_acquire"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Acquire"/>
-
-    <Button
         android:id="@+id/pump_test_button_connect_disconnect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

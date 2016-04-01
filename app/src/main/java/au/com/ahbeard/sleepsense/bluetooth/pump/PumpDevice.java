@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
+import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.ValueChangeEvent;
 import rx.Observable;
@@ -23,6 +24,8 @@ import rx.subjects.PublishSubject;
 public class PumpDevice extends Device {
 
     private Subscription mPumpStatusSubscription;
+
+    private long mLastActiveTime;
 
     public enum Side {
         Left,
@@ -71,8 +74,22 @@ public class PumpDevice extends Device {
                 mLeftChamberState.currentPressure = pumpEvent.getLeftPressure();
                 mRightChamberState.currentPressure = pumpEvent.getRightPressure();
                 mPumpStatuses = pumpEvent.getStatuses();
+
+                // Disconnect if we're not doing anything.
+                if (pumpEvent.isAdjusting()) {
+                    mLastActiveTime = System.currentTimeMillis();
+                } else if (System.currentTimeMillis() - mLastActiveTime > 3000 ) {
+                    disconnect();
+                }
+
             }
         });
+    }
+
+    @Override
+    public void sendCommand(CharacteristicWriteOperation command) {
+        mLastActiveTime = System.currentTimeMillis();
+        super.sendCommand(command);
     }
 
     @Override
@@ -139,99 +156,13 @@ public class PumpDevice extends Device {
         }
     }
 
-    public void setTarget(Side side, int pressure) {
-
-        if (pressure < 0 || pressure > 60) {
-            throw new IllegalArgumentException("Pump pressure must be in the range 0-60!");
-        }
-
-        if (side == Side.Left) {
-            mLeftChamberState.targetPressure = pressure;
-        } else if (side == Side.Right) {
-            mRightChamberState.targetPressure = pressure;
-        } else {
-            throw new IllegalArgumentException("Pump side must be either left or right!");
-        }
-
-        controlPump();
-
-    }
-
-    public void cancelTarget(Side side) {
-        if (side == Side.Left) {
-            mLeftChamberState.active = true;
-        } else if (side == Side.Right) {
-            mRightChamberState.active = true;
-        } else {
-            throw new IllegalArgumentException("Pump side must be either left or right!");
-        }
-
-        controlPump();
-    }
-
-    public void controlPump() {
-
-        // Control the left chamber.
-        if (mPumpStatuses.contains(PumpEvent.PumpStatus.LeftChamberActive)) {
-            handleActiveChamber(mLeftChamberState);
-        } else {
-            handleInactiveChamber(mLeftChamberState);
-        }
-
-        if (mPumpStatuses.contains(PumpEvent.PumpStatus.RightChamberActive)) {
-            handleActiveChamber(mRightChamberState);
-        } else {
-            handleInactiveChamber(mRightChamberState);
-        }
-
-    }
-
-    private void handleInactiveChamber(ChamberState chamberState) {
-
-        if (chamberState.active && isConnected()) {
-            if (chamberState.currentPressure > chamberState.targetPressure) {
-                deflate(chamberState.side);
-            } else if (chamberState.currentPressure < chamberState.targetPressure) {
-                inflate(chamberState.side);
-            } else {
-                chamberState.active = false;
-            }
-
-        }
-
-    }
-
-    private void handleActiveChamber(ChamberState chamberState) {
-
-        if (chamberState.active && isConnected()) {
-
-            // Check for over inflation (the 3 is added for "debounce").
-            if (mPumpStatuses.contains(PumpEvent.PumpStatus.Inflating) &&
-                    chamberState.currentPressure >= chamberState.targetPressure + 3) {
-                deflate(chamberState.side);
-            } else if (mPumpStatuses.contains(PumpEvent.PumpStatus.Inflating) &&
-                    chamberState.currentPressure >= chamberState.targetPressure) {
-                chamberState.active = false;
-                stop(chamberState.side);
-            // Check for under inflation (the 3 is added for "debounce").
-            } else if (mPumpStatuses.contains(PumpEvent.PumpStatus.Deflating) &&
-                    chamberState.currentPressure <= chamberState.targetPressure - 3) {
-                inflate(chamberState.side);
-            } else if (mPumpStatuses.contains(PumpEvent.PumpStatus.Deflating) &&
-                    chamberState.currentPressure <= chamberState.targetPressure) {
-                chamberState.active = false;
-                stop(chamberState.side);
-            }
-
-        }
-    }
-
     public void inflateToTarget(Side side, int pressure) {
 
-        if ( mPumpStatuses.contains(PumpEvent.PumpStatus.Inflating))
+        if (mPumpStatuses.contains(PumpEvent.PumpStatus.Inflating) || mPumpStatuses.contains(PumpEvent.PumpStatus.Deflating)) {
+            sendCommand(PumpCommand.stop(convertSideToChamber(side)));
+        }
 
-        sendCommand(PumpCommand.stop(convertSideToChamber(side)));
-        sendCommand(PumpCommand.setPressure(convertSideToChamber(side),pressure));
+        sendCommand(PumpCommand.setPressure(convertSideToChamber(side), pressure));
     }
 
     public void inflate(Side side) {
@@ -250,5 +181,10 @@ public class PumpDevice extends Device {
     private PumpCommand.Chamber convertSideToChamber(Side side) {
         return side == Side.Left ? PumpCommand.Chamber.Left : PumpCommand.Chamber.Right;
     }
+
+    public void fetchStatus() {
+        connect();
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package au.com.ahbeard.sleepsense.widgets;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,7 +18,10 @@ import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.model.Firmness;
 
 /**
+ *
  * Created by neal on 8/03/2016.
+ *
+ * This control is
  */
 public class FirmnessControlView extends View {
 
@@ -35,7 +39,9 @@ public class FirmnessControlView extends View {
     private Drawable mKnobDrawable;
     private Drawable mRotatingDrawable;
 
-    private int mDotColor = Color.DKGRAY;
+    private int mTargetMetDotColor = Color.DKGRAY;
+    private int mTargetNotMetDotColor = Color.DKGRAY;
+
     private float mDotRadius;
 
     private PointF mKnobCenterPoint = new PointF(0.0f, -0.6f);
@@ -47,7 +53,6 @@ public class FirmnessControlView extends View {
     private PointF mRotatedDotCenterPoint = new PointF();
 
     private float mTargetValue = 0.0f;
-    private float mActualValue = 0.0f;
 
     public FirmnessControlView(Context context) {
         super(context);
@@ -73,7 +78,9 @@ public class FirmnessControlView extends View {
         mForegroundDrawable = a.getDrawable(R.styleable.FirmnessControlView_foregroundDrawable);
         mKnobDrawable = a.getDrawable(R.styleable.FirmnessControlView_knobDrawable);
 
-        mDotPaint.setColor(a.getColor(R.styleable.FirmnessControlView_dotColor, Color.DKGRAY));
+        mTargetMetDotColor = a.getColor(R.styleable.FirmnessControlView_targetMetDotColor, Color.DKGRAY);
+        mTargetNotMetDotColor = a.getColor(R.styleable.FirmnessControlView_targetNotMetDotColor, Color.DKGRAY);
+
         mDotRadius = a.getDimension(R.styleable.FirmnessControlView_dotRadius,
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, context.getResources().getDisplayMetrics()));
 
@@ -95,19 +102,28 @@ public class FirmnessControlView extends View {
         mForegroundDrawable = foregroundDrawable;
     }
 
+    private boolean mSetTargetValueWithActualValue = true;
+
     public void setActualValue(float value) {
 
-        mActualValue = value;
+        float actualValue = value;
 
-        if (mLevelDrawable != null) {
-            mLevelDrawable.setLevel(Firmness.getDrawableLevelForControlValue(mActualValue));
+        if ( mSetTargetValueWithActualValue ) {
+            mTargetValue = actualValue;
+            mSetTargetValueWithActualValue = false;
         }
 
-        postInvalidate();
-    }
+        if (mLevelDrawable != null) {
+            mLevelDrawable.setLevel(Firmness.getDrawableLevelForControlValue(actualValue));
+        }
 
-    public void setDotColor(int dotColor) {
-        mDotColor = dotColor;
+        if ( actualValue > mTargetValue - 0.025f && actualValue < mTargetValue + 0.025f ) {
+            mDotPaint.setColor(mTargetMetDotColor);
+        } else {
+            mDotPaint.setColor(mTargetNotMetDotColor);
+        }
+
+
         postInvalidate();
     }
 
@@ -192,6 +208,7 @@ public class FirmnessControlView extends View {
 
                 // Round the value (so we have a 0-9 range).
                 mTargetValue = Firmness.snapControlValue(mTargetValue);
+                mSetTargetValueWithActualValue = false;
 
                 if ( mOnTargetValueSetListener != null ) {
                     mOnTargetValueSetListener.onTargetValueSet(mTargetValue);

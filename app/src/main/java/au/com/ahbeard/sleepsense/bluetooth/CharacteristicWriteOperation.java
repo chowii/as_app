@@ -3,6 +3,7 @@ package au.com.ahbeard.sleepsense.bluetooth;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
+import android.util.Log;
 
 import java.util.UUID;
 
@@ -112,6 +113,7 @@ public class CharacteristicWriteOperation extends BluetoothOperation {
 
     @Override
     public void perform(BluetoothGatt bluetoothGatt) {
+        Log.d("Device","actually performing write");
         BluetoothGattService service = bluetoothGatt.getService(mServiceUUID);
         if (service != null) {
             BluetoothGattCharacteristic characteristic = service.getCharacteristic(mCharacteristicUUID);

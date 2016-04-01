@@ -123,7 +123,8 @@
                 app:levelDrawable="@drawable/firmness"
                 app:foregroundDrawable="@drawable/foreground"
                 app:knobDrawable="@drawable/knob"
-                app:dotColor="@color/firmnessDotGood"
+                app:targetMetDotColor="@color/firmnessDotGood"
+                app:targetNotMetDotColor="@color/firmnessDotBad"
                 app:dotRadius="2dp"
                 android:layout_margin="30dp"/>
             <au.com.ahbeard.sleepsense.widgets.FirmnessControlView
@@ -134,7 +135,8 @@
                 app:levelDrawable="@drawable/firmness"
                 app:foregroundDrawable="@drawable/foreground"
                 app:knobDrawable="@drawable/knob"
-                app:dotColor="@color/firmnessDotGood"
+                app:targetMetDotColor="@color/firmnessDotGood"
+                app:targetNotMetDotColor="@color/firmnessDotBad"
                 app:dotRadius="2dp"
                 android:layout_margin="30dp" android:visibility="gone"/>
         </FrameLayout>

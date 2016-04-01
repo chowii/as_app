@@ -2,6 +2,7 @@ package au.com.ahbeard.sleepsense.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,9 +24,9 @@ import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,15 +37,10 @@ public class PumpTestFragment extends Fragment {
 
     PumpDevice mPumpDevice;
 
-    @OnClick(R.id.pump_test_button_acquire)
-    void acquire() {
-        acquireDevice();
-    }
-
     @OnClick(R.id.pump_test_button_connect_disconnect)
     void connectOrDisconnect() {
         if (mPumpDevice != null) {
-            if ( mPumpDevice.isConnected() ) {
+            if (mPumpDevice.isConnected()) {
                 mPumpDevice.disconnect();
             } else {
                 mPumpDevice.connect();
@@ -70,9 +66,6 @@ public class PumpTestFragment extends Fragment {
     @Bind(R.id.pump_test_recycler_view_log)
     RecyclerView mLogRecyclerView;
 
-    @Bind(R.id.pump_test_button_acquire)
-    Button mAcquireButton;
-
     @Bind(R.id.pump_test_button_connect_disconnect)
     Button mConnectDisconnectButton;
 
@@ -91,8 +84,24 @@ public class PumpTestFragment extends Fragment {
     @Bind(R.id.pump_test_button_toggle_right)
     Button mToggleRightButton;
 
+    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+
     public PumpTestFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SleepSenseDeviceService.instance().getLogObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
+                new Action1<String>() {
+                    @Override
+                    public void call(String message) {
+                        mLogAdapter.log(message);
+                    }
+                });
+
+
     }
 
     @Override
@@ -111,20 +120,27 @@ public class PumpTestFragment extends Fragment {
 
         updateControls(false);
 
-        SleepSenseDeviceService.instance().getLogObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
+        SleepSenseDeviceService.instance().getChangeEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
                 new Action1<String>() {
                     @Override
                     public void call(String message) {
-                        mLogAdapter.log(message);
+                       attachToPump();
                     }
                 });
 
+        attachToPump();
 
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        mCompositeSubscription.clear();
+        super.onDestroyView();
+    }
+
     private void updateControls(boolean isConnected) {
-        mConnectDisconnectButton.setText(isConnected?"Disconnect":"Connect");
+        mConnectDisconnectButton.setText(isConnected ? "Disconnect" : "Connect");
         mInflateButton.setEnabled(isConnected);
         mDeflateButton.setEnabled(isConnected);
         mStopButton.setEnabled(isConnected);
@@ -196,65 +212,52 @@ public class PumpTestFragment extends Fragment {
         }
     }
 
-    public void acquireDevice() {
-        // Attempt to grab the devices, then grab a SleepSense device, then connect to them all.
-        SleepSenseDeviceService.instance().acquireDevices(2000).observeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Observer<String>() {
-                    @Override
-                    public void onCompleted() {
+    public void attachToPump() {
 
-                        mPumpDevice = SleepSenseDeviceService.instance().getPumpDevice();
+        mPumpDevice = SleepSenseDeviceService.instance().getPumpDevice();
 
-                        if (mPumpDevice != null) {
+        if (mPumpDevice != null) {
 
-                            mConnectDisconnectButton.setEnabled(true);
+            mConnectDisconnectButton.setEnabled(true);
+            updateControls(mPumpDevice.isConnected());
 
-                            mLogAdapter.log("PumpDevice acquired for testing...");
-
-                            mPumpDevice.getLogObservable().subscribeOn(AndroidSchedulers.mainThread()).observeOn(
-                                    AndroidSchedulers.mainThread()).subscribe(
+            mCompositeSubscription.add(
+                    mPumpDevice.getLogObservable()
+                            .subscribeOn(AndroidSchedulers.mainThread())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
                                     new Action1<String>() {
                                         @Override
                                         public void call(String message) {
                                             mLogAdapter.log(message);
                                         }
-                                    });
+                                    }));
 
-                            mPumpDevice.getDeviceEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
-                                    new Action1<Device.DeviceEvent>() {
-                                        @Override
-                                        public void call(Device.DeviceEvent deviceEvent) {
-                                            if ( deviceEvent instanceof Device.DeviceConnectedEvent) {
-                                                updateControls(true);
-                                            } else if (deviceEvent instanceof Device.DeviceDisconnectedEvent) {
-                                                updateControls(false);
-                                            }
-                                        }
-                                    });
-
-                            mPumpDevice.getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
-                                    new Action1<PumpEvent>() {
-                                        @Override
-                                        public void call(PumpEvent pumpEvent) {
-                                            mLogAdapter.log("PUMP EVENT: "+pumpEvent.toString());
-                                        }
-                                    });
-
-                        } else {
-                            mConnectDisconnectButton.setEnabled(false);
+            mCompositeSubscription.add(mPumpDevice.getDeviceEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
+                    new Action1<Device.DeviceEvent>() {
+                        @Override
+                        public void call(Device.DeviceEvent deviceEvent) {
+                            if (deviceEvent instanceof Device.DeviceConnectedEvent) {
+                                updateControls(true);
+                            } else if (deviceEvent instanceof Device.DeviceDisconnectedEvent) {
+                                updateControls(false);
+                            }
                         }
-                    }
+                    }));
 
-                    @Override
-                    public void onError(Throwable e) {
+            mCompositeSubscription.add(mPumpDevice.getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
+                    new Action1<PumpEvent>() {
+                        @Override
+                        public void call(PumpEvent pumpEvent) {
+                            mLogAdapter.log("PUMP EVENT: " + pumpEvent.toString());
+                        }
+                    }));
 
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-
-                    }
-                });
+        } else {
+            mConnectDisconnectButton.setEnabled(false);
+            updateControls(false);
+        }
 
     }
+
 }

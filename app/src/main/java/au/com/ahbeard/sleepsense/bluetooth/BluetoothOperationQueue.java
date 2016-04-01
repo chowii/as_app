@@ -43,6 +43,14 @@ public class BluetoothOperationQueue {
 
     public Queue<BluetoothOperation> mBluetoothOperations = new ArrayBlockingQueue<BluetoothOperation>(1024);
 
+    private boolean mIsRunning = false;
+
+    public void start() {
+        mIsRunning = true;
+
+        processQueue();
+    }
+
     public void addOperation(BluetoothOperation operation) {
 
         mBluetoothOperations.add(operation);
@@ -96,6 +104,10 @@ public class BluetoothOperationQueue {
      */
     private void processQueue() {
 
+        if ( ! mIsRunning ) {
+            return;
+        }
+
         while (mBluetoothOperations.size() > 0) {
             if (mBluetoothOperations.peek().getStatus() == BluetoothOperation.Status.Queued) {
                 mBluetoothOperations.peek().setStatus(BluetoothOperation.Status.Running);
@@ -114,6 +126,8 @@ public class BluetoothOperationQueue {
 
 
     public void purge() {
+        mIsRunning = false;
+        mBluetoothOperations.clear();
 
     }
 }

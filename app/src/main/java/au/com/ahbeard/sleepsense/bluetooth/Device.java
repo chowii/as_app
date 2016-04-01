@@ -127,7 +127,12 @@ public class Device extends BluetoothGattCallback {
 
     public void sendCommand(CharacteristicWriteOperation command) {
         log(Log.DEBUG, String.format("sending command... %s", command.toString()));
+
         mBluetoothOperationQueue.addOperation(command);
+
+        if ( mConnectionState == CONNECTION_STATE_DISCONNECTED ) {
+            connect();
+        }
     }
 
     public void connect() {
@@ -138,7 +143,9 @@ public class Device extends BluetoothGattCallback {
     }
 
     public void disconnect() {
-        mBluetoothGatt.disconnect();
+        if ( mBluetoothGatt != null ) {
+            mBluetoothGatt.disconnect();
+        }
     }
 
     public int getConnectionState() {
@@ -238,6 +245,8 @@ public class Device extends BluetoothGattCallback {
                 mConnectionState = CONNECTION_STATE_CONNECTED;
 
                 onConnect();
+
+                mBluetoothOperationQueue.start();
 
                 mChangeSubject.onNext(this);
                 mDeviceEventSubject.onNext(new DeviceConnectedEvent());

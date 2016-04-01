@@ -12,7 +12,10 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
+import au.com.ahbeard.sleepsense.bluetooth.base.DummyBaseDevice;
+import au.com.ahbeard.sleepsense.bluetooth.pump.DummyPumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
+import au.com.ahbeard.sleepsense.bluetooth.tracker.DummyTrackerDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 import rx.Observable;
 import rx.functions.Action1;
@@ -49,7 +52,14 @@ public class SleepSenseDeviceService {
     private TrackerDevice mTrackerDevice;
 
     private SleepSenseDeviceService(Context context) {
+
         mContext = context;
+
+        // Load previously saved devices.
+
+//        mBaseDevice = new DummyBaseDevice();
+//        mPumpDevice = new DummyPumpDevice();
+//        mTrackerDevice = new DummyTrackerDevice();
     }
 
     public Observable<String> getChangeEventObservable() {
@@ -113,31 +123,38 @@ public class SleepSenseDeviceService {
 
                         log(Log.DEBUG,String.format("found %d devices while scanning...", devices.size()));
 
+                        boolean hasChanged = false;
+
                         // Assign the closest of each device if we don't have one.
                         for (Device device : devices) {
 
                             if (mBaseDevice == null && device instanceof BaseDevice) {
                                 mBaseDevice = (BaseDevice) device;
                                 log(Log.DEBUG,"found BaseDevice...");
+                                hasChanged = true;
                                 continue;
                             }
 
                             if (mPumpDevice == null && device instanceof PumpDevice) {
                                 mPumpDevice = (PumpDevice) device;
                                 log(Log.DEBUG,"found PumpDevice...");
+                                hasChanged = true;
                                 continue;
                             }
 
                             if (mTrackerDevice == null && device instanceof TrackerDevice) {
                                 mTrackerDevice = (TrackerDevice) device;
                                 log(Log.DEBUG,"found TrackerDevice...");
+                                hasChanged = true;
                                 continue;
                             }
                         }
 
                         mObservable.onCompleted();
 
-                        mChangeEventPublishSubject.onNext("CHANGE");
+                        if ( hasChanged ) {
+                            mChangeEventPublishSubject.onNext("CHANGE");
+                        }
 
                     }
                 });

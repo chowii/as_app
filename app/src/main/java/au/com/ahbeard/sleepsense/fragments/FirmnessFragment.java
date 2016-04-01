@@ -87,6 +87,8 @@ public class FirmnessFragment extends Fragment {
 
         setLeftSideActive();
 
+
+
         mFirmnessControlLeftView.setOnTargetValueSetListener(new FirmnessControlView.OnTargetValueSetListener() {
             @Override
             public void onTargetValueSet(float targetValue) {
@@ -113,6 +115,8 @@ public class FirmnessFragment extends Fragment {
             }
         }));
 
+        connectPump();
+
         return view;
 
     }
@@ -132,16 +136,16 @@ public class FirmnessFragment extends Fragment {
 
         if ( SleepSenseDeviceService.instance().hasPumpDevice() ) {
 
-            int currentLeftPressure = SleepSenseDeviceService.instance().getPumpDevice().getChamberState(PumpDevice.Side.Left).getCurrentPressure();
-            int currentRightPressure = SleepSenseDeviceService.instance().getPumpDevice().getChamberState(PumpDevice.Side.Right).getCurrentPressure();
+//            int currentLeftPressure = SleepSenseDeviceService.instance().getPumpDevice().getChamberState(PumpDevice.Side.Left).getCurrentPressure();
+//            int currentRightPressure = SleepSenseDeviceService.instance().getPumpDevice().getChamberState(PumpDevice.Side.Right).getCurrentPressure();
+//
+//            mFirmnessControlLeftView.setActualValue(Firmness.getControlValueForPressure(currentLeftPressure));
+//            mFirmnessControlRightView.setActualValue(Firmness.getControlValueForPressure(culorrentRightPressure));
+//
+//            mFirmnessLeftTextView.setText(Firmness.getFirmnessForPressure(currentLeftPressure).getLabel());
+//            mFirmnessRightTextView.setText(Firmness.getFirmnessForPressure(currentRightPressure).getLabel());
 
-            mFirmnessControlLeftView.setActualValue(Firmness.getControlValueForPressure(currentLeftPressure));
-            mFirmnessControlRightView.setActualValue(Firmness.getControlValueForPressure(currentRightPressure));
-
-            mFirmnessLeftTextView.setText(Firmness.getFirmnessForPressure(currentLeftPressure).getLabel());
-            mFirmnessRightTextView.setText(Firmness.getFirmnessForPressure(currentRightPressure).getLabel());
-
-            SleepSenseDeviceService.instance().getPumpDevice().getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
+            mSubscriptions.add(SleepSenseDeviceService.instance().getPumpDevice().getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
                 @Override
                 public void call(PumpEvent pumpEvent) {
 
@@ -159,8 +163,11 @@ public class FirmnessFragment extends Fragment {
                     } else {
                         mFirmnessRightTextView.setText(Firmness.getFirmnessForPressure(pumpEvent.getRightPressure()).getLabel());
                     }
+
                 }
-            });
+            }));
+
+            SleepSenseDeviceService.instance().getPumpDevice().fetchStatus();
         }
 
     }

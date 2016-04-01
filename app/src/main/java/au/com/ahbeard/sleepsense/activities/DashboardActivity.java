@@ -5,32 +5,47 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
-import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
-import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
+import au.com.ahbeard.sleepsense.fragments.DebugFragment;
 import au.com.ahbeard.sleepsense.fragments.FirmnessFragment;
+import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
+import au.com.ahbeard.sleepsense.fragments.MoreFragment;
+import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
 import au.com.ahbeard.sleepsense.fragments.PumpTestFragment;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.widgets.SimpleTabStrip;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by neal on 3/03/2016.
  */
 public class DashboardActivity extends BaseActivity {
 
-    private DashboardPagerStripSimple mDashboardPagerAdapter;
+    private final DashboardFragment mHomeFragment = DashboardFragment.newInstance("", "");
+    private final FirmnessFragment mFirmnessFragment = FirmnessFragment.newInstance();
+    private final PositionControlFragment mPositionControlFragment = PositionControlFragment.newInstance();
+    private final MassageControlFragment mMassageControlFragment = MassageControlFragment.newInstance();
+    private final MoreFragment mMoreFragment = MoreFragment.newInstance("", "");
+    private final Fragment mDebugFragment = DebugFragment.newInstance();
+    private final Fragment mPumpTestFragment = PumpTestFragment.newInstance();
+    private HomeFragmentPagerAdapter mDashboardPagerAdapter;
 
     @OnClick(R.id.dashboard_fab_start_sleep)
     void onStartSleepClicked() {
-        Intent intent = new Intent(this,SleepTrackingActivity.class);
+        Intent intent = new Intent(this, SleepTrackingActivity.class);
         startActivity(intent);
     }
 
@@ -49,7 +64,7 @@ public class DashboardActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         if (PreferenceService.instance().requiresOnBoarding()) {
-            Intent intent = new Intent(this,OnBoardActivity.class);
+            Intent intent = new Intent(this, OnBoardActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
@@ -58,11 +73,10 @@ public class DashboardActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        mDashboardPagerAdapter = new DashboardPagerStripSimple(getSupportFragmentManager());
-        mViewPager.setAdapter(mDashboardPagerAdapter);
-        mViewPager.setOffscreenPageLimit(5);
-        mSimpleTabStrip.setViewPager(mViewPager);
 
+        addTabs();
+
+        mViewPager.setOffscreenPageLimit(5);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -72,7 +86,7 @@ public class DashboardActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                mStartSleepFloatingActionButton.setVisibility(position==0? View.VISIBLE:View.GONE);
+                mStartSleepFloatingActionButton.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
             }
 
             @Override
@@ -81,69 +95,84 @@ public class DashboardActivity extends BaseActivity {
             }
         });
 
+        SleepSenseDeviceService.instance().getChangeEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
+            @Override
+            public void call(String s) {
+                addTabs();
+            }
+        });
+
     }
 
-    class DashboardPagerStripSimple extends FragmentPagerAdapter implements SimpleTabStrip.TabProvider {
+    private void addTabs() {
 
-        private String[] mTabNames = {
-                "Dashboard",
-                "Firmness",
-                "Position",
-                "Massage",
-                "More"
-        };
+        mDashboardPagerAdapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
 
-        private int[] mTabIconResourceIds = {
-                R.drawable.tab_dashboard_unselected,
-                R.drawable.tab_firmness_unselected,
-                R.drawable.tab_position_unselected,
-                R.drawable.tab_massage_unselected,
-                R.drawable.tab_more_unselected
-        };
+        if (SleepSenseDeviceService.instance().hasTrackerDevice() ) {
+            mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, mHomeFragment);
+        }
 
-        private int[] mSelectedTabIconResourceIds = {
-                R.drawable.tab_dashboard_selected,
-                R.drawable.tab_firmness_selected,
-                R.drawable.tab_position_selected,
-                R.drawable.tab_massage_selected,
-                R.drawable.tab_more_selected
-        };
+        if (SleepSenseDeviceService.instance().hasPumpDevice() ) {
+            mDashboardPagerAdapter.addTab("Firmness",R.drawable.tab_firmness_unselected,R.drawable.tab_firmness_selected, mFirmnessFragment);
+        }
 
+        if (SleepSenseDeviceService.instance().hasBaseDevice() ) {
+            mDashboardPagerAdapter.addTab("Position",R.drawable.tab_position_unselected,R.drawable.tab_position_selected, mPositionControlFragment);
+            mDashboardPagerAdapter.addTab("Massage",R.drawable.tab_massage_unselected,R.drawable.tab_massage_selected, mMassageControlFragment);
+        }
 
-        private Fragment[] mFragments = {
-                DashboardFragment.newInstance("",""),
-                FirmnessFragment.newInstance(),
-                PositionControlFragment.newInstance(),
-                MassageControlFragment.newInstance(),
-                PumpTestFragment.newInstance() // MoreFragment.newInstance("","")
-        };
+        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, mMoreFragment);
+        mDashboardPagerAdapter.addTab("Debug",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, mDebugFragment);
+        mDashboardPagerAdapter.addTab("Pump",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, mPumpTestFragment);
 
-        public DashboardPagerStripSimple(FragmentManager fm) {
+        mViewPager.setAdapter(mDashboardPagerAdapter);
+
+        mSimpleTabStrip.setViewPager(mViewPager);
+
+    }
+
+    class HomeFragmentPagerAdapter extends FragmentStatePagerAdapter implements SimpleTabStrip.TabProvider {
+
+        private List<String> mTabNames = new ArrayList<>();
+        private List<Integer> mTabIconResourceIds = new ArrayList<>();
+        private List<Integer> mSelectedTabIconResourceIds = new ArrayList<>();
+        private List<Fragment> mFragments = new ArrayList<>();
+
+        public HomeFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
+        }
+
+        public void addTab(String name, int iconResource, int selectedIconResource, Fragment fragment ) {
+            mTabNames.add(name);
+            mTabIconResourceIds.add(iconResource);
+            mSelectedTabIconResourceIds.add(selectedIconResource);
+            mFragments.add(fragment);
+            notifyDataSetChanged();
         }
 
         @Override
         public Fragment getItem(int position) {
-            return mFragments[position];
+            return mFragments.get(position);
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return mFragments.size();
         }
 
         @Override
         public String getName(int position) {
-            return mTabNames[position];
+            return mTabNames.get(position);
         }
 
         @Override
         public int getIconResourceId(int position) {
-            return mTabIconResourceIds[position];
+            return mTabIconResourceIds.get(position);
         }
+
         @Override
         public int getSelectedIconResourceId(int position) {
-            return mSelectedTabIconResourceIds[position];
+            return mSelectedTabIconResourceIds.get(position);
         }
     }
 
