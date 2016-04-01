@@ -21,6 +21,9 @@ public class BaseDevice extends Device {
         return ADVERTISED_UUIDS;
     }
 
+    //
+
+
     /*
 
     struct BaseCharacteristicPaths {

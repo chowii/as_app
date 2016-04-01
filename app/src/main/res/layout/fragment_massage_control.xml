@@ -1,34 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="top"
-              android:background="@color/firmnessBackground">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/firmnessBackground"
+    android:gravity="top"
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="48dp">
+
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
-            android:text="Massage Settings"
-            android:textSize="15sp"
-            android:lineSpacingExtra="5sp"
-            android:textColor="#4A4A4A"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            app:typeface="OpenSansLight"/>
+            android:lineSpacingExtra="5sp"
+            android:text="Massage Settings"
+            android:textColor="#4A4A4A"
+            android:textSize="15sp"
+            app:typeface="OpenSansLight" />
+
         <ImageView
-            android:layout_marginTop="10dp" android:layout_marginRight="20dp"
-            android:layout_gravity="right|top"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:src="@drawable/help_icon_normal"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|top"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/help_icon_normal" />
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp" android:background="#DBE3E6" android:layout_gravity="bottom"/>
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="#DBE3E6" />
 
     </FrameLayout>
+    <View
+        android:layout_width="15dp"
+        android:layout_height="15dp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" android:gravity="center"
+        android:padding="20dp">
+
+        <au.com.ahbeard.sleepsense.widgets.StyledLinearLayout
+            style="@style/styledButton"
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="horizontal" android:padding="20dp" android:minHeight="90dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:src="@drawable/massage_whole_body_massage_icon" />
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="0dp"
+                android:textColor="@color/control_color"
+                android:text="Whole body massage"
+                android:textSize="15sp"
+                app:typeface="OpenSansLight" />
+
+        </au.com.ahbeard.sleepsense.widgets.StyledLinearLayout>
+
+        <View
+            android:layout_width="35dp"
+            android:layout_height="35dp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="Head"
+                android:textAllCaps="true"
+                android:textColor="#4A4A4A"
+                android:textSize="15sp"
+                app:typeface="OpenSansLight" />
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="Foot"
+                android:textAllCaps="true"
+                android:textColor="#4A4A4A"
+                android:textSize="15sp"
+                app:typeface="OpenSansLight" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="20dp"
+            android:layout_height="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <au.com.ahbeard.sleepsense.widgets.StyledImageButton
+                style="@style/styledButton"
+                android:src="@drawable/massage_plus_icon_normal"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+
+            <au.com.ahbeard.sleepsense.widgets.StyledImageButton
+                style="@style/styledButton"
+                android:src="@drawable/massage_minus_icon_normal"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+
+            <au.com.ahbeard.sleepsense.widgets.StyledImageButton
+                style="@style/styledButton"
+                android:src="@drawable/massage_plus_icon_normal"/>
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="20dp" />
+
+            <au.com.ahbeard.sleepsense.widgets.StyledImageButton
+                style="@style/styledButton"
+                android:src="@drawable/massage_minus_icon_normal"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="35dp"
+            android:layout_height="35dp" />
+
+        <au.com.ahbeard.sleepsense.widgets.StyledLinearLayout
+            style="@style/styledButton"
+            android:id="@+id/massage_button_timer"
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:gravity="center"
+            app:borderColor="@color/controlHighlight"
+            android:orientation="horizontal" android:padding="20dp" android:minHeight="90dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:src="@drawable/massage_timer_icon" />
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="0dp"
+                android:textColor="@color/control_color"
+                android:text="Timer / all off"
+                android:textSize="15sp"
+                app:typeface="OpenSansLight" />
+
+        </au.com.ahbeard.sleepsense.widgets.StyledLinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:paddingTop="26dp">
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:id="@+id/massage_text_view_10_min"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="10 Min"
+                android:textAllCaps="true"
+                android:textColor="@color/control_color"
+                android:textSize="15sp"
+                app:typeface="OpenSansLight" app:selectedTypeface="OpenSansRegular"  />
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:id="@+id/massage_text_view_20_min"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="20 Min"
+                android:textAllCaps="true"
+                android:textColor="@color/control_color"
+                android:textSize="15sp"
+                app:typeface="OpenSansLight" app:selectedTypeface="OpenSansRegular" />
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:id="@+id/massage_text_view_30_min"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="30 Min"
+                android:textAllCaps="true"
+                android:textColor="@color/control_color"
+                android:textSize="15sp"
+                app:typeface="OpenSansLight" app:selectedTypeface="OpenSansRegular" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 </LinearLayout>

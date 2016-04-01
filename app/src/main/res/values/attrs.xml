@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="StyledTextView">
+    <declare-styleable name="StyledView">
         <attr name="typeface" format="string"/>
+        <attr name="selectedTypeface" format="string"/>
+        <attr name="topBorder" format="boolean"/>
+        <attr name="bottomBorder" format="boolean"/>
+        <attr name="borderColor" format="color"/>
     </declare-styleable>
 
     <declare-styleable name="FirmnessControlView">

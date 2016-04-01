@@ -113,8 +113,8 @@ public class DashboardActivity extends BaseActivity {
         private Fragment[] mFragments = {
                 DashboardFragment.newInstance("",""),
                 FirmnessFragment.newInstance(),
-                PositionControlFragment.newInstance("",""),
-                MassageControlFragment.newInstance("",""),
+                PositionControlFragment.newInstance(),
+                MassageControlFragment.newInstance(),
                 PumpTestFragment.newInstance() // MoreFragment.newInstance("","")
         };
 

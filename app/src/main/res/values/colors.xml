@@ -19,8 +19,8 @@
     <color name="firmnessDotGood">#34DABA</color>
     <color name="firmnessDotBad">#FD8B87</color>
 
-    <color name="firmnessTabHighlight">#FD8B87</color>
-    <color name="firmnessTabNormal">#6E788D</color>
+    <color name="controlHighlight">#FD8B87</color>
+    <color name="controlNormal">#6E788D</color>
 
     <color name="firmnessBackground">#FAFAFA</color>
 
@@ -30,5 +30,8 @@
 
     <color name="graphDividerColor">#FFFFFF</color>
     <color name="graphLegendColor">#16274A</color>
+
+
+
 
 </resources>

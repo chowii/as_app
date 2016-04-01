@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
 import au.com.ahbeard.sleepsense.bluetooth.base.DummyBaseDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.DummyPumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
@@ -22,11 +23,17 @@ public class SleepSenseDeviceFactory {
             return true;
         }
 
-        if ("BLE Mini".equals(deviceFoundEvent.getDevice().getName())) {
+        String name = deviceFoundEvent.getDevice().getName();
+
+        if ("BLE Mini".equals(name)) {
             return true;
         }
 
-        if ("2618BL".equals(deviceFoundEvent.getDevice().getName())) {
+        if ("2618BL".equals(name)) {
+            return true;
+        }
+
+        if (name != null && name.contains("base-i4")) {
             return true;
         }
 
@@ -45,16 +52,24 @@ public class SleepSenseDeviceFactory {
 //            mDevices.add(new DummyTrackerDevice());
 //        }
 
-        if ("BLE Mini".equals(deviceFoundEvent.getDevice().getName())) {
+        String name = deviceFoundEvent.getDevice().getName();
+
+        if ("BLE Mini".equals(name)) {
             DummyPumpDevice dummyPumpDevice = new DummyPumpDevice();
-            dummyPumpDevice.link(context,deviceFoundEvent.getDevice());
+            dummyPumpDevice.link(context, deviceFoundEvent.getDevice());
             mDevices.add(dummyPumpDevice);
         }
 
-        if ("2618BL".equals(deviceFoundEvent.getDevice().getName())) {
-            PumpDevice dummyPumpDevice = new PumpDevice();
-            dummyPumpDevice.link(context,deviceFoundEvent.getDevice());
-            mDevices.add(dummyPumpDevice);
+        if ("2618BL".equals(name)) {
+            PumpDevice pumpDevice = new PumpDevice();
+            pumpDevice.link(context, deviceFoundEvent.getDevice());
+            mDevices.add(pumpDevice);
+        }
+
+        if (name != null && name.contains("base-i4")) {
+            BaseDevice baseDevice = new BaseDevice();
+            baseDevice.link(context, deviceFoundEvent.getDevice());
+            mDevices.add(baseDevice);
         }
 
 

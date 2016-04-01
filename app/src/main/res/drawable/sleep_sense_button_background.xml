@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <layer-list>
+            <item >
+                <inset android:insetLeft="1dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="4dp" />
+                        <solid android:color="#20DDDDDD"/>
+                    </shape>
+                </inset>
+            </item>
+            <item>
+                <inset android:insetTop="1dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="4dp" />
+                        <solid android:color="#BECED4"/>
+                    </shape>
+                </inset>
+            </item>
+            <item>
+                <inset android:insetRight="1dp" android:insetBottom="1dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="4dp" />
+                        <solid android:color="#dddddd"/>
+                        <stroke android:color="#dddddd" android:width="0.5dp"/>
+                    </shape>
+                </inset>
+            </item>
+        </layer-list>
+    </item>
+    <item>
+        <layer-list>
+            <item >
+                <inset android:insetLeft="1dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="4dp" />
+                        <solid android:color="#20DDDDDD"/>
+                    </shape>
+                </inset>
+            </item>
+            <item>
+                <inset android:insetTop="1dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="4dp" />
+                        <solid android:color="#BECED4"/>
+                    </shape>
+                </inset>
+            </item>
+            <item>
+                <inset android:insetRight="1dp" android:insetBottom="1dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="4dp" />
+                        <solid android:color="#ffffff"/>
+                        <stroke android:color="#eeeeee" android:width="0.5dp"/>
+                    </shape>
+                </inset>
+            </item>
+        </layer-list>
+    </item>
+</selector>
+

@@ -49,8 +49,8 @@ public class FirmnessFragment extends Fragment {
     void setLeftSideActive() {
         mLeftTextView.setDrawTopBorder(true);
         mRightTextView.setDrawTopBorder(false);
-        mLeftTextView.setTextColor(getResources().getColor(R.color.firmnessTabHighlight));
-        mRightTextView.setTextColor(getResources().getColor(R.color.firmnessTabNormal));
+        mLeftTextView.setTextColor(getResources().getColor(R.color.controlHighlight));
+        mRightTextView.setTextColor(getResources().getColor(R.color.controlNormal));
         mFirmnessControlLeftView.setVisibility(View.VISIBLE);
         mFirmnessControlRightView.setVisibility(View.GONE);
         mFirmnessLeftTextView.setVisibility(View.VISIBLE);
@@ -62,8 +62,8 @@ public class FirmnessFragment extends Fragment {
     void setRightSideActive() {
         mLeftTextView.setDrawTopBorder(false);
         mRightTextView.setDrawTopBorder(true);
-        mLeftTextView.setTextColor(getResources().getColor(R.color.firmnessTabNormal));
-        mRightTextView.setTextColor(getResources().getColor(R.color.firmnessTabHighlight));
+        mLeftTextView.setTextColor(getResources().getColor(R.color.controlNormal));
+        mRightTextView.setTextColor(getResources().getColor(R.color.controlHighlight));
         mFirmnessControlLeftView.setVisibility(View.GONE);
         mFirmnessControlRightView.setVisibility(View.VISIBLE);
         mFirmnessLeftTextView.setVisibility(View.GONE);

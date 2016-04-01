@@ -3,11 +3,17 @@ package au.com.ahbeard.sleepsense.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import au.com.ahbeard.sleepsense.R;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,34 +22,63 @@ import au.com.ahbeard.sleepsense.R;
  */
 public class MassageControlFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
+    @Bind(R.id.massage_button_timer)
+    View mTimerButton;
+
+    @OnClick(R.id.massage_button_timer)
+    void timerButtonClicked() {
+        mMassageTimerState = (mMassageTimerState + 1) % 4;
+        Log.d("TIMER","mMassageTimerState"+mMassageTimerState);
+        updateViews();
+
+    }
+
+    @Bind({R.id.massage_text_view_10_min, R.id.massage_text_view_20_min, R.id.massage_text_view_30_min})
+    List<View> mTimeTextViews;
+
+    // Temporary while building back end.
+    private int mMassageTimerState = 0;
 
     public MassageControlFragment() {
-        // Required empty public constructor
+
+    }
+
+    private void updateViews() {
+
+        mTimerButton.setSelected(false);
+
+        for (View view: mTimeTextViews) {
+            view.setSelected(false);
+        }
+
+        switch (mMassageTimerState) {
+            case 0:
+                break;
+            case 1:
+                mTimerButton.setSelected(true);
+                mTimeTextViews.get(0).setSelected(true);
+                break;
+            case 2:
+                mTimerButton.setSelected(true);
+                mTimeTextViews.get(1).setSelected(true);
+                break;
+            case 3:
+                mTimerButton.setSelected(true);
+                mTimeTextViews.get(2).setSelected(true);
+                break;
+            default:
+
+        }
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment MassageControlFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static MassageControlFragment newInstance(String param1, String param2) {
+    public static MassageControlFragment newInstance() {
         MassageControlFragment fragment = new MassageControlFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,8 +87,6 @@ public class MassageControlFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -61,7 +94,21 @@ public class MassageControlFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_massage_control, container, false);
+        View view = inflater.inflate(R.layout.fragment_massage_control, container, false);
+
+        ButterKnife.bind(this, view);
+
+        return view;
+
     }
+
+    @Override
+    public void onDestroyView() {
+
+        ButterKnife.unbind(this);
+
+        super.onDestroyView();
+    }
+
 
 }
