@@ -17,9 +17,11 @@ public class SleepSenseApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        // Kind of have to do these first!
         TypefaceService.initialize(this);
         PreferenceService.initialize(this);
 
+        // Initialize these later.
         BluetoothService.initialize(this);
         SleepSenseDeviceService.initialize(this);
     }

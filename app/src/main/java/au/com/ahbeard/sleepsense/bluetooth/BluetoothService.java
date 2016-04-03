@@ -9,6 +9,7 @@ import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 
+import rx.functions.Action0;
 import rx.subjects.PublishSubject;
 
 /**
@@ -32,7 +33,7 @@ public class BluetoothService extends BluetoothGattCallback {
 
     private BluetoothAdapter mBluetoothAdapter;
 
-    private PublishSubject<BluetoothScanEvent> mBluetoothScanningSubject = PublishSubject.create();
+    private PublishSubject<BluetoothScanEvent> mBluetoothScanningSubject;
 
     protected BluetoothService(Context context) {
         mContext = context;
@@ -65,7 +66,17 @@ public class BluetoothService extends BluetoothGattCallback {
 
     // TODO: There is a chance this could start scanning before the subscription takes effect.
     public PublishSubject<BluetoothScanEvent> startScanning() {
-        _scan(true);
+
+        mBluetoothScanningSubject = PublishSubject.create();
+
+        mBluetoothScanningSubject.doOnSubscribe(new Action0() {
+            @Override
+            public void call() {
+                mBluetoothScanningSubject.doOnSubscribe(null);
+                _scan(true);
+            }
+        });
+
         return mBluetoothScanningSubject;
     }
 
@@ -75,14 +86,7 @@ public class BluetoothService extends BluetoothGattCallback {
 
     private void _scan(final boolean enable) {
 
-        // Get the Bluetooth adapter.
-        if (mBluetoothAdapter == null) {
-            // Initializes Bluetooth adapter.
-            final BluetoothManager bluetoothManager =
-                    (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
-
-            mBluetoothAdapter = bluetoothManager.getAdapter();
-        }
+        initializeBluetoothAdapter();
 
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             mBluetoothScanningSubject.onNext(new BluetoothScanEvent.BluetoothDisabledEvent());
@@ -105,5 +109,24 @@ public class BluetoothService extends BluetoothGattCallback {
 
     }
 
+    private void initializeBluetoothAdapter() {
+        // Get the Bluetooth adapter.
+        if (mBluetoothAdapter == null) {
+            // Initializes Bluetooth adapter.
+            final BluetoothManager bluetoothManager =
+                    (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
 
+            mBluetoothAdapter = bluetoothManager.getAdapter();
+        }
+    }
+
+
+    public BluetoothDevice createDeviceFromAddress(String address) {
+        initializeBluetoothAdapter();
+        if ( mBluetoothAdapter != null ) {
+            return mBluetoothAdapter.getRemoteDevice(address);
+        } else {
+            return null;
+        }
+    }
 }

@@ -111,6 +111,12 @@ public class Device extends BluetoothGattCallback {
         mConnectionState = CONNECTION_STATE_DISCONNECTED;
     }
 
+    public Device(Context context, String address) {
+        mContext = context.getApplicationContext();
+        mBluetoothDevice = BluetoothService.instance().createDeviceFromAddress(address);
+        mConnectionState = CONNECTION_STATE_DISCONNECTED;
+    }
+
     public Device() {
         mConnectionState = CONNECTION_STATE_UNLINKED;
     }
@@ -130,7 +136,7 @@ public class Device extends BluetoothGattCallback {
 
         mBluetoothOperationQueue.addOperation(command);
 
-        if ( mConnectionState == CONNECTION_STATE_DISCONNECTED ) {
+        if (mConnectionState == CONNECTION_STATE_DISCONNECTED) {
             connect();
         }
     }
@@ -143,7 +149,7 @@ public class Device extends BluetoothGattCallback {
     }
 
     public void disconnect() {
-        if ( mBluetoothGatt != null ) {
+        if (mBluetoothGatt != null) {
             mBluetoothGatt.disconnect();
         }
     }
@@ -332,6 +338,10 @@ public class Device extends BluetoothGattCallback {
      */
     public boolean isDisconnected() {
         return mConnectionState == CONNECTION_STATE_DISCONNECTED;
+    }
+
+    public String getAddress() {
+        return mBluetoothDevice != null ? mBluetoothDevice.getAddress() : null;
     }
 
     /**

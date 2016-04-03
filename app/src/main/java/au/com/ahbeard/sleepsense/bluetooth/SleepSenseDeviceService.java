@@ -17,6 +17,7 @@ import au.com.ahbeard.sleepsense.bluetooth.pump.DummyPumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.DummyTrackerDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
+import au.com.ahbeard.sleepsense.services.PreferenceService;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -43,23 +44,34 @@ public class SleepSenseDeviceService {
 
     private final Context mContext;
 
-    private String mBaseDeviceAddress;
     private String mPumpDeviceAddress;
+    private String mBaseDeviceAddress;
     private String mTrackerDeviceAddress;
 
-    private BaseDevice mBaseDevice;
     private PumpDevice mPumpDevice;
+    private BaseDevice mBaseDevice;
     private TrackerDevice mTrackerDevice;
 
     private SleepSenseDeviceService(Context context) {
 
         mContext = context;
 
-        // Load previously saved devices.
+        mPumpDeviceAddress = PreferenceService.instance().getPumpDeviceAddress();
+        mBaseDeviceAddress = PreferenceService.instance().getBaseDeviceAddress();
+        mTrackerDeviceAddress = PreferenceService.instance().getTrackerDeviceAddress();
 
-//        mBaseDevice = new DummyBaseDevice();
-//        mPumpDevice = new DummyPumpDevice();
-//        mTrackerDevice = new DummyTrackerDevice();
+        if ( mPumpDeviceAddress != null ) {
+            mPumpDevice = new PumpDevice();
+            mPumpDevice.link(context,BluetoothService.instance().createDeviceFromAddress(mPumpDeviceAddress));
+        }
+        if ( mBaseDeviceAddress != null ) {
+            mBaseDevice = new BaseDevice();
+            mBaseDevice.link(context,BluetoothService.instance().createDeviceFromAddress(mBaseDeviceAddress));
+        }
+        if ( mTrackerDeviceAddress != null ) {
+            mTrackerDevice = new TrackerDevice();
+            mTrackerDevice.link(context,BluetoothService.instance().createDeviceFromAddress(mTrackerDeviceAddress));
+        }
     }
 
     public Observable<String> getChangeEventObservable() {
@@ -130,6 +142,7 @@ public class SleepSenseDeviceService {
 
                             if (mBaseDevice == null && device instanceof BaseDevice) {
                                 mBaseDevice = (BaseDevice) device;
+                                PreferenceService.instance().setBaseDeviceAddress(device.getAddress());
                                 log(Log.DEBUG,"found BaseDevice...");
                                 hasChanged = true;
                                 continue;
@@ -137,6 +150,7 @@ public class SleepSenseDeviceService {
 
                             if (mPumpDevice == null && device instanceof PumpDevice) {
                                 mPumpDevice = (PumpDevice) device;
+                                PreferenceService.instance().setPumpDeviceAddress(device.getAddress());
                                 log(Log.DEBUG,"found PumpDevice...");
                                 hasChanged = true;
                                 continue;
@@ -144,6 +158,7 @@ public class SleepSenseDeviceService {
 
                             if (mTrackerDevice == null && device instanceof TrackerDevice) {
                                 mTrackerDevice = (TrackerDevice) device;
+                                PreferenceService.instance().setTrackerDeviceAddress(device.getAddress());
                                 log(Log.DEBUG,"found TrackerDevice...");
                                 hasChanged = true;
                                 continue;
