@@ -14,6 +14,7 @@ import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
+import au.com.ahbeard.sleepsense.fragments.BaseTestFragment;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.DebugFragment;
 import au.com.ahbeard.sleepsense.fragments.FirmnessFragment;
@@ -39,8 +40,11 @@ public class DashboardActivity extends BaseActivity {
     private final PositionControlFragment mPositionControlFragment = PositionControlFragment.newInstance();
     private final MassageControlFragment mMassageControlFragment = MassageControlFragment.newInstance();
     private final MoreFragment mMoreFragment = MoreFragment.newInstance("", "");
+
     private final Fragment mDebugFragment = DebugFragment.newInstance();
+    private final Fragment mBaseTestFragment = BaseTestFragment.newInstance();
     private final Fragment mPumpTestFragment = PumpTestFragment.newInstance();
+
     private HomeFragmentPagerAdapter mDashboardPagerAdapter;
 
     @OnClick(R.id.dashboard_fab_start_sleep)
@@ -123,6 +127,7 @@ public class DashboardActivity extends BaseActivity {
 
         mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, mMoreFragment);
         mDashboardPagerAdapter.addTab("Debug",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, mDebugFragment);
+        mDashboardPagerAdapter.addTab("Base",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, mBaseTestFragment);
         mDashboardPagerAdapter.addTab("Pump",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, mPumpTestFragment);
 
         mViewPager.setAdapter(mDashboardPagerAdapter);

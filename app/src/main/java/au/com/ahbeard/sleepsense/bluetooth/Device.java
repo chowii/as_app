@@ -32,7 +32,6 @@ public class Device extends BluetoothGattCallback {
 
     protected static final UUID DEVICE_INFORMATION_SERVICE_UUID =
             UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
-
     protected static final UUID DEVICE_INFORMATION_MANUFACTURER_NAME_UUID =
             UUID.fromString("00002A29-0000-1000-8000-00805f9b34fb");
     protected static final UUID DEVICE_INFORMATION_MODEL_NUMBER_UUID =
@@ -53,8 +52,13 @@ public class Device extends BluetoothGattCallback {
 
     private BluetoothOperationQueue mBluetoothOperationQueue = new BluetoothOperationQueue();
 
-    // Used to match the device initially.
-    public UUID[] getAdvertisedUUIDs() {
+    // Get the list of services
+    public UUID[] getAdvertisedServiceUUIDs() {
+        return new UUID[0];
+    }
+
+    // Get the list of services
+    public UUID[] getRequiredServiceUUIDs() {
         return new UUID[0];
     }
 

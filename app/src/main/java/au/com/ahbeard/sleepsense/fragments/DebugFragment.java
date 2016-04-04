@@ -40,6 +40,11 @@ public class DebugFragment extends Fragment {
         acquireDevice();
     }
 
+    @OnClick(R.id.debug_button_clear)
+    void clear() {
+        SleepSenseDeviceService.instance().clearDevices();
+    }
+
     @Bind(R.id.debug_recycler_view_log)
     RecyclerView mLogRecyclerView;
 

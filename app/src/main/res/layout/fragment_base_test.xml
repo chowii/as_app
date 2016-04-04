@@ -1,0 +1,205 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:padding="16dp" >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/base_test_recycler_view_log"
+        android:layout_width="match_parent"
+        android:layout_height="10dp" android:layout_weight="1">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+
+    <Button
+        android:id="@+id/base_test_button_connect_disconnect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Connect"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/base_test_button_head_up"
+            android:layout_width="0dp"
+            android:text="Head Up"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/base_test_button_head_down"
+            android:layout_width="0dp"
+            android:text="Head Down"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/base_test_button_foot_up"
+            android:layout_width="0dp"
+            android:text="Foot Up"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/base_test_button_foot_down"
+            android:layout_width="0dp"
+            android:text="Foot Down"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/base_test_button_head_increase"
+            android:layout_width="0dp"
+            android:text="Head Increase"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/base_test_button_head_decrease"
+            android:layout_width="0dp"
+            android:text="Head Decrease"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/base_test_button_foot_increase"
+            android:layout_width="0dp"
+            android:text="Foot Increase"
+            android:hapticFeedbackEnabled="true"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/base_test_button_foot_decrease"
+            android:layout_width="0dp"
+            android:text="Foot Decrease"
+            android:hapticFeedbackEnabled="true"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/base_test_button_preset_flat"
+            android:layout_width="0dp"
+            android:text="Preset Flat"
+            android:hapticFeedbackEnabled="true"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/base_test_button_preset_lounge"
+            android:layout_width="0dp"
+            android:text="Preset Lounge"
+            android:hapticFeedbackEnabled="true"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/base_test_button_preset_tv"
+            android:layout_width="0dp"
+            android:text="Preset TV"
+            android:hapticFeedbackEnabled="true"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/base_test_button_preset_zero_g"
+            android:layout_width="0dp"
+            android:text="Preset Zero G"
+            android:hapticFeedbackEnabled="true"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/base_test_button_motor_stop"
+            android:layout_width="0dp"
+            android:text="Motor Stop"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/base_test_button_whole_body"
+            android:layout_width="0dp"
+            android:text="Whole Body Massage"
+            android:layout_height="wrap_content"
+            android:hapticFeedbackEnabled="true"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/base_test_button_timer"
+            android:layout_width="0dp"
+            android:text="Timer"
+            android:layout_height="wrap_content"
+            android:hapticFeedbackEnabled="true"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
+

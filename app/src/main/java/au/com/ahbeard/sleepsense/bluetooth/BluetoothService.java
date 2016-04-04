@@ -33,7 +33,7 @@ public class BluetoothService extends BluetoothGattCallback {
 
     private BluetoothAdapter mBluetoothAdapter;
 
-    private PublishSubject<BluetoothScanEvent> mBluetoothScanningSubject;
+    private PublishSubject<BluetoothScanEvent> mBluetoothScanningSubject = PublishSubject.create();
 
     protected BluetoothService(Context context) {
         mContext = context;
@@ -66,17 +66,7 @@ public class BluetoothService extends BluetoothGattCallback {
 
     // TODO: There is a chance this could start scanning before the subscription takes effect.
     public PublishSubject<BluetoothScanEvent> startScanning() {
-
-        mBluetoothScanningSubject = PublishSubject.create();
-
-        mBluetoothScanningSubject.doOnSubscribe(new Action0() {
-            @Override
-            public void call() {
-                mBluetoothScanningSubject.doOnSubscribe(null);
-                _scan(true);
-            }
-        });
-
+        _scan(true);
         return mBluetoothScanningSubject;
     }
 

@@ -212,6 +212,14 @@ public class SleepSenseDeviceService {
         return mLogSubject;
     }
 
+    public void clearDevices() {
+        if ( mBaseDevice != null ) {
+            PreferenceService.instance().clearBaseDeviceAddress();
+        }
+
+        mChangeEventPublishSubject.onNext("CLEAR");
+    }
+
     // The scanning filter.
     class ScanningFilter implements Func1<BluetoothScanEvent, Boolean> {
 

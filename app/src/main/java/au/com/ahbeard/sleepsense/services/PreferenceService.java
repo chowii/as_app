@@ -44,6 +44,10 @@ public class PreferenceService {
         return getSharedPreferences().getString("baseDeviceAddress",null);
     }
 
+    public void clearBaseDeviceAddress() {
+        getSharedPreferences().edit().remove("baseDeviceAddress").commit();
+    }
+
     public void setTrackerDeviceAddress(String address) {
         getSharedPreferences().edit().putString("trackerDeviceAddress", address).commit();
     }

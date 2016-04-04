@@ -9,15 +9,29 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.widget.Button;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.services.TypefaceService;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 
 /**
  * Created by neal on 30/03/2016.
  */
 public class StyledButton extends Button {
+
+    public interface OnPressPulseListener {
+        void onPressPulse(StyledButton view);
+    }
+
+    private OnPressPulseListener mOnPressPulseListener;
 
     private Paint mBorderPaint = new Paint();
 
@@ -55,13 +69,32 @@ public class StyledButton extends Button {
     public void setSelected(boolean selected) {
         super.setSelected(selected);
         mDrawTopBorder = selected;
-//        for (int i=0 ; i < getCompoundDrawables().length;i++) {
-//            if( getCompoundDrawables()[i]!=null) {
-//                Log.d("STYLED_BUTTON","getDrawableState()"+getDrawableState());
-//                getCompoundDrawables()[i].setState(getDrawableState());
-//            }
-//        }
         invalidate();
+    }
+
+    private Subscription mPulseTimerSubscription;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if ( event.getAction() == MotionEvent.ACTION_DOWN ) {
+            mPulseTimerSubscription = AndroidSchedulers.mainThread().createWorker().schedulePeriodically(new Action0() {
+                @Override
+                public void call() {
+                    if (mOnPressPulseListener!=null) {
+                        mOnPressPulseListener.onPressPulse(StyledButton.this);
+                    }
+                }
+            },0,200, TimeUnit.MILLISECONDS);
+
+        } else if (event.getAction() == MotionEvent.ACTION_UP ) {
+            if ( mPulseTimerSubscription != null ) {
+                mPulseTimerSubscription.unsubscribe();
+                mPulseTimerSubscription = null;
+            }
+        }
+
+        return super.onTouchEvent(event);
     }
 
     public void init(AttributeSet attrs, int defStyleAttr) {
@@ -90,7 +123,10 @@ public class StyledButton extends Button {
         mBorderPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3f, getResources().getDisplayMetrics()));
 
         a.recycle();
+
     }
 
-
+    public void setOnPressPulseListener(OnPressPulseListener onPressPulseListener) {
+        mOnPressPulseListener = onPressPulseListener;
+    }
 }

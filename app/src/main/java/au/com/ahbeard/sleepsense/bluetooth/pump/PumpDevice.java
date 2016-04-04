@@ -98,7 +98,7 @@ public class PumpDevice extends Device {
     }
 
     @Override
-    public UUID[] getAdvertisedUUIDs() {
+    public UUID[] getRequiredServiceUUIDs() {
         return ADVERTISED_UUIDs;
     }
 

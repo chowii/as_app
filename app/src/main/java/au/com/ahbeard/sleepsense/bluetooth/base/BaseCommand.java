@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
 import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
+import au.com.ahbeard.sleepsense.bluetooth.pump.PumpCommand;
 
 /**
  * Created by neal on 7/03/2016.
@@ -42,5 +44,111 @@ public class BaseCommand extends CharacteristicWriteOperation {
 
     public BaseCommand(UUID serviceUUID, UUID characteristicUUID) {
         super(serviceUUID, characteristicUUID);
+    }
+
+    public static BaseCommand headPositionUp() {
+        return createGeneralBaseCommand("HeadPositionUp");
+    }
+
+    public static BaseCommand headPositionDown() {
+        return createGeneralBaseCommand("HeadPositionDown");
+    }
+
+    public static BaseCommand footPositionUp() {
+        return createGeneralBaseCommand("FootPositionUp");
+    }
+
+    public static BaseCommand footPositionDown() {
+        return createGeneralBaseCommand("FootPositionDown");
+    }
+
+    public static BaseCommand headMassageIncrease() {
+        return createGeneralBaseCommand("HeadMassageIncrease");
+    }
+
+    public static BaseCommand headMassageDecrease() {
+        return createGeneralBaseCommand("HeadMassageDecrease");
+    }
+
+    public static BaseCommand footMassageIncrease() {
+        return createGeneralBaseCommand("FootMassageIncrease");
+    }
+
+    public static BaseCommand footMassageDecrease() {
+        return createGeneralBaseCommand("FootMassageDecrease");
+    }
+
+    public static BaseCommand presetFlat() {
+        return createGeneralBaseCommand("PresetFlat");
+    }
+
+    public static BaseCommand presetLounge() {
+        return createGeneralBaseCommand("PresetLounge");
+    }
+
+    public static BaseCommand presetZeroG() {
+        return createGeneralBaseCommand("PresetZeroG");
+    }
+
+    public static BaseCommand presetTV() {
+        return createGeneralBaseCommand("PresetTV");
+    }
+
+    public static BaseCommand motorStop() {
+        return createGeneralBaseCommand("MotorStop");
+    }
+
+    public static BaseCommand wholeBody() {
+        return createGeneralBaseCommand("MassageAllIntensityStep");
+    }
+
+    public static BaseCommand timer() {
+        return createGeneralBaseCommand("MassageTimer");
+    }
+
+    public static BaseCommand createGeneralBaseCommand(String identifier) {
+
+        BaseCommand baseCommand = new BaseCommand(
+                BluetoothUtils.uuidFrom16BitUuid(0xffe5),
+                BluetoothUtils.uuidFrom16BitUuid(0xffe9));
+
+        baseCommand.writeByte(0xe5);
+        baseCommand.writeByte(0xfe);
+        baseCommand.writeByte(0x16);
+        baseCommand.writeUInt32(_COMMANDS.get(identifier));
+        baseCommand.computeAndWriteChecksum();
+
+        return baseCommand;
+
+    }
+
+    /*
+        func computeChecksumForProper() -> Checksum {
+        // Checksum is calculated by summing all bytes,
+        // allowing overflow, then inverting the result
+        var checksum: Checksum = 0x00
+        for byte in proper {
+            // add byte, allowing overflow
+            checksum = checksum &+ byte
+        }
+        // return sum, inverted
+        return ~checksum
+    }
+     */
+    public void computeAndWriteChecksum() {
+
+        int checksum = 0;
+        byte[] value = getValue();
+
+        // Add all the values.
+        for (int i = 0; i < value.length; i++) {
+            checksum = checksum + value[i];
+        }
+
+        // Invert the result.
+        checksum = ~checksum;
+
+        // Write only the low 8 bits.
+        writeByte(checksum);
     }
 }

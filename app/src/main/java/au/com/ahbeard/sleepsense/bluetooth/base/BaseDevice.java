@@ -1,64 +1,83 @@
 package au.com.ahbeard.sleepsense.bluetooth.base;
 
+import android.util.Log;
+
 import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
+import au.com.ahbeard.sleepsense.bluetooth.ValueChangeEvent;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by neal on 4/03/2016.
  */
 public class BaseDevice extends Device {
 
-    private static UUID[] ADVERTISED_UUIDS = {
+    private static UUID[] REQUIRED_SERVICES = {
             BluetoothUtils.uuidFrom16BitUuid(0xffb0),
             BluetoothUtils.uuidFrom16BitUuid(0xffe0),
             BluetoothUtils.uuidFrom16BitUuid(0xffe5),
             BluetoothUtils.uuidFrom16BitUuid(0xfff0),
     };
 
-    public UUID[] getAdvertisedUUIDs() {
-        return ADVERTISED_UUIDS;
+    private Subscription mBaseStatusSubscription;
+    private PublishSubject<BaseStatusEvent> mBaseStatusEventPublishSubject = PublishSubject.create();
+
+    public UUID[] getRequiredServiceUUIDs() {
+        return REQUIRED_SERVICES;
     }
 
-    //
-
-
-    /*
-
-    struct BaseCharacteristicPaths {
-    static let SendCommand  = CharacteristicPathPredicate(identifier: "FFE5", characteristicIdentifier: "FFE9")
-    static let ReadStatus   = CharacteristicPathPredicate(identifier: "FFE0", characteristicIdentifier: "FFE4")
-}
-
-/// Criteria that identifies a compatible RealBase peripheral
-struct RealBaseCriteria : SerialDeviceCriteria {
-    let readPredicate   = BaseCharacteristicPaths.ReadStatus
-    let writePredicate  = BaseCharacteristicPaths.SendCommand
-}
-
-struct HackWorkaroundExtraBaseCriteria : DeviceCriteria {
-    var requiredServices: [ServicePredicate] {
-        return [
-            ServicePredicate(identifier: "FFF0", characteristicIdentifiers: ["HACK"]),
-            ServicePredicate(identifier: "FFB0", characteristicIdentifiers: ["HACK"])
-        ]
+    @Override
+    public UUID getServiceUUID() {
+        return BluetoothUtils.uuidFrom16BitUuid(0xffe0);
     }
-}
 
-     */
+    @Override
+    public UUID getNotifyCharacteristicUUID() {
+        return BluetoothUtils.uuidFrom16BitUuid(0xffe4);
+    }
 
-/*
+    @Override
+    protected boolean getSetupNotifications() {
+        return true;
+    }
 
-    // Constants for the Simblee chip.
-    private static final UUID SERVICE_UUID = UUID.fromString("00002220-0000-1000-8000-00805f9b34fb");
+    @Override
+    protected void onConnect() {
+        super.onConnect();
 
-    private static final UUID RECEIVE_CHARACTERISTIC_UUID = UUID.fromString("00002221-0000-1000-8000-00805f9b34fb");
-    private static final UUID SEND_CHARACTERISTIC_UUID = UUID.fromString("00002222-0000-1000-8000-00805f9b34fb");
+        mBaseStatusSubscription = getNotifyEventObservable()
+                .subscribeOn(Schedulers.io())
+                .map(new Func1<ValueChangeEvent, byte[]>() {
+                    @Override
+                    public byte[] call(ValueChangeEvent valueChangeEvent) {
+                        return valueChangeEvent.getValue();
+                    }
+                }).subscribe(new Action1<byte[]>() {
+                    @Override
+                    public void call(byte[] value) {
+                        BaseStatusEvent baseStatusEvent = BaseStatusEvent.safeInstance(value);
+                        Log.d("BaseDevice","baseStatusEvent: "+baseStatusEvent);
+                        if (baseStatusEvent!=null){
+                            mBaseStatusEventPublishSubject.onNext(baseStatusEvent);
+                        }
+                    }
+                });
 
-    private static final UUID CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+    }
 
- */
+    @Override
+    protected void onDisconnect() {
+        if ( mBaseStatusSubscription != null ) {
+            mBaseStatusSubscription.unsubscribe();
+            mBaseStatusSubscription = null;
+        }
 
-
+        super.onDisconnect();
+    }
 }

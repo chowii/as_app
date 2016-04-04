@@ -1,32 +1,60 @@
 package au.com.ahbeard.sleepsense.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
+import au.com.ahbeard.sleepsense.bluetooth.base.BaseCommand;
+import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
 import au.com.ahbeard.sleepsense.widgets.StyledButton;
+import au.com.ahbeard.sleepsense.widgets.StyledImageButton;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  *
  */
 public class PositionControlFragment extends Fragment {
 
+    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+
     @Bind({R.id.position_button_rest,R.id.position_button_recline,R.id.position_button_relax,R.id.position_button_recover})
     List<StyledButton> mPositionButtons;
 
+    @Bind(R.id.position_button_head_position_up)
+    StyledImageButton mHeadPositionUpButton;
+    @Bind(R.id.position_button_head_position_down)
+    StyledImageButton mHeadPositionDownButton;
+    @Bind(R.id.position_button_foot_position_up)
+    StyledImageButton mFootPositionUpButton;
+    @Bind(R.id.position_button_foot_position_down)
+    StyledImageButton mFootPositionDownButton;
+
     @OnClick({R.id.position_button_rest,R.id.position_button_recline,R.id.position_button_relax,R.id.position_button_recover})
     void onClick(View clickedButton) {
+
+        if (clickedButton.getId()==R.id.position_button_rest) {
+            SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetFlat());
+        } else if (clickedButton.getId()==R.id.position_button_recline) {
+            SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetLounge());
+        } else if (clickedButton.getId()==R.id.position_button_relax) {
+            SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetTV());
+        } else if (clickedButton.getId()==R.id.position_button_recover) {
+            SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetZeroG());
+        }
+
         for ( StyledButton button : mPositionButtons ) {
             if ( button == clickedButton ) {
                 button.setSelected(true);
@@ -46,7 +74,6 @@ public class PositionControlFragment extends Fragment {
      *
      * @return A new instance of fragment PositionControlFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static PositionControlFragment newInstance() {
         PositionControlFragment fragment = new PositionControlFragment();
         Bundle args = new Bundle();
@@ -64,13 +91,51 @@ public class PositionControlFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_position_control, container, false);
         ButterKnife.bind(this,view);
+
+        mCompositeSubscription.add(SleepSenseDeviceService.instance().getPumpDevice().getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
+            @Override
+            public void call(PumpEvent pumpEvent) {
+
+            }
+        }));
+
+        mHeadPositionUpButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
+            @Override
+            public void onPressPulse(StyledImageButton view) {
+                SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.headPositionUp());
+            }
+        });
+
+        mHeadPositionDownButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
+            @Override
+            public void onPressPulse(StyledImageButton view) {
+                SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.headPositionDown());
+            }
+        });
+
+        mFootPositionUpButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
+            @Override
+            public void onPressPulse(StyledImageButton view) {
+                SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.footPositionUp());
+            }
+        });
+
+        mFootPositionDownButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
+            @Override
+            public void onPressPulse(StyledImageButton view) {
+                SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.footPositionDown());
+            }
+        });
+
         return view;
     }
 
     @Override
     public void onDestroyView() {
+        mCompositeSubscription.clear();
         ButterKnife.unbind(this);
         super.onDestroyView();
     }
