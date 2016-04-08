@@ -9,14 +9,24 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.OnBoardActivity;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class OnBoardConnectionsFragment extends Fragment {
+
+    @OnClick(R.id.on_board_button_continue)
+    void continueOn() {
+        ((OnBoardActivity) getActivity()).successContinue();
+    }
 
     @Bind(R.id.on_board_image_view_base_found)
     ImageView mBaseFoundImageView;
@@ -27,6 +37,7 @@ public class OnBoardConnectionsFragment extends Fragment {
     @Bind(R.id.on_board_image_view_tracker_found)
     ImageView mTrackerFoundImageView;
 
+    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     public static OnBoardConnectionsFragment newInstance() {
         OnBoardConnectionsFragment fragment = new OnBoardConnectionsFragment();
@@ -48,17 +59,18 @@ public class OnBoardConnectionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_on_board_connections, container, false);
 
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
-        mBaseFoundImageView.setImageResource(SleepSenseDeviceService.instance().hasBaseDevice()?R.drawable.success_tick:R.drawable.failure_cross);
-        mMattressFoundImageView.setImageResource(SleepSenseDeviceService.instance().hasPumpDevice()?R.drawable.success_tick:R.drawable.failure_cross);
-        mTrackerFoundImageView.setImageResource(SleepSenseDeviceService.instance().hasTrackerDevice()?R.drawable.success_tick:R.drawable.failure_cross);
+        mBaseFoundImageView.setImageResource(SleepSenseDeviceService.instance().hasBaseDevice() ? R.drawable.success_tick : R.drawable.failure_cross);
+        mMattressFoundImageView.setImageResource(SleepSenseDeviceService.instance().hasPumpDevice() ? R.drawable.success_tick : R.drawable.failure_cross);
+        mTrackerFoundImageView.setImageResource(SleepSenseDeviceService.instance().hasTrackerDevice() ? R.drawable.success_tick : R.drawable.failure_cross);
 
         return view;
     }
 
     @Override
     public void onDestroyView() {
+        mCompositeSubscription.clear();
         ButterKnife.unbind(this);
         super.onDestroyView();
     }

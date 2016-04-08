@@ -61,7 +61,7 @@ public class TypefaceService {
 
 
         } catch (IOException e) {
-            Log.e(TAG, "Exception initialising list of typefaces...", e);
+            LogService.d(TAG, "Exception initialising list of typefaces...", e);
         }
 
 

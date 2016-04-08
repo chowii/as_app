@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
@@ -25,7 +26,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * The pump controls, excluding left and right selection, but this control does know about left and right.
  */
-public class FirmnessFragment extends Fragment {
+public class FirmnessControlFragment extends Fragment {
 
     @Bind(R.id.firmness_control_firmness_control_left)
     FirmnessControlView mFirmnessControlLeftView;
@@ -44,6 +45,9 @@ public class FirmnessFragment extends Fragment {
 
     @Bind(R.id.firmness_control_text_view_firmness_right)
     TextView mFirmnessRightTextView;
+
+    @Bind(R.id.progress_layout)
+    View mProgressLayout;
 
     @OnClick(R.id.firmness_control_text_view_left)
     void setLeftSideActive() {
@@ -72,7 +76,7 @@ public class FirmnessFragment extends Fragment {
 
     private CompositeSubscription mSubscriptions = new CompositeSubscription();
 
-    public FirmnessFragment() {
+    public FirmnessControlFragment() {
         // Required empty public constructor
     }
 
@@ -93,7 +97,6 @@ public class FirmnessFragment extends Fragment {
             @Override
             public void onTargetValueSet(float targetValue) {
                 if ( SleepSenseDeviceService.instance().hasPumpDevice() ) {
-                    Log.d("TARGET","target="+targetValue);
                     SleepSenseDeviceService.instance().getPumpDevice().inflateToTarget(PumpDevice.Side.Left, Firmness.getPressureForControlValue(targetValue) );
                 }
             }
@@ -108,10 +111,12 @@ public class FirmnessFragment extends Fragment {
             }
         });
 
-        mSubscriptions.add(SleepSenseDeviceService.instance().getChangeEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
+        mSubscriptions.add(SleepSenseDeviceService.instance().getEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
             @Override
-            public void call(String s) {
-                connectPump();
+            public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent event) {
+                if ( event == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.DeviceListChanged ) {
+                    connectPump();
+                }
             }
         }));
 
@@ -128,8 +133,8 @@ public class FirmnessFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public static FirmnessFragment newInstance() {
-        return new FirmnessFragment();
+    public static FirmnessControlFragment newInstance() {
+        return new FirmnessControlFragment();
     }
 
     public void connectPump() {
@@ -164,6 +169,17 @@ public class FirmnessFragment extends Fragment {
                         mFirmnessRightTextView.setText(Firmness.getFirmnessForPressure(pumpEvent.getRightPressure()).getLabel());
                     }
 
+                }
+            }));
+
+            mSubscriptions.add(SleepSenseDeviceService.instance().getPumpDevice().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
+                @Override
+                public void call(Device device) {
+                    if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
+                        mProgressLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        mProgressLayout.setVisibility(View.GONE);
+                    }
                 }
             }));
 

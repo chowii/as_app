@@ -9,9 +9,12 @@ import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.bluetooth.tracker.EnableNotificationOperation;
+import au.com.ahbeard.sleepsense.services.LogService;
 import rx.Observable;
 import rx.Observer;
 import rx.schedulers.Schedulers;
@@ -49,6 +52,8 @@ public class Device extends BluetoothGattCallback {
             {"Unlinked", "Disconnected", "Connecting", "Connecting Discovering Services", "Connected", "Disconnecting"};
 
     private static final String TAG = "Device";
+
+    private long mConnectIssuedAt;
 
     private BluetoothOperationQueue mBluetoothOperationQueue = new BluetoothOperationQueue();
 
@@ -95,9 +100,9 @@ public class Device extends BluetoothGattCallback {
     private BluetoothDevice mBluetoothDevice;
     private BluetoothGatt mBluetoothGatt;
 
-    private CompositeSubscription mBluetoothSubscriptions = new CompositeSubscription();
+    private CompositeSubscription mBluetoothOperationQueueSubscription = new CompositeSubscription();
 
-    private PublishSubject<Object> mChangeSubject = PublishSubject.create();
+    private PublishSubject<Device> mChangeSubject = PublishSubject.create();
 
     private Context mContext;
 
@@ -136,19 +141,32 @@ public class Device extends BluetoothGattCallback {
     }
 
     public void sendCommand(CharacteristicWriteOperation command) {
-        log(Log.DEBUG, String.format("sending command... %s", command.toString()));
-
-        mBluetoothOperationQueue.addOperation(command);
-
-        if (mConnectionState == CONNECTION_STATE_DISCONNECTED) {
+        LogService.d("SleepSenseDeviceService",String.format("sending command... %s", command.toString()));
+        if (mBluetoothOperationQueue.addOperation(command) && mConnectionState == CONNECTION_STATE_DISCONNECTED) {
             connect();
         }
     }
 
+    private Timer mConnectionTimer;
+
     public void connect() {
-        log(Log.DEBUG, "connecting...");
+        LogService.d("Device","connecting...");
         if (mBluetoothDevice != null && mBluetoothGatt == null) {
+
+            // Set up a timer to
+            mConnectionTimer = new Timer();
+            mConnectionTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if ( mConnectionState == CONNECTION_STATE_CONNECTING ) {
+                        mChangeSubject.onNext(Device.this);
+                    }
+                }
+            }, 100, 100);
+
+            mConnectionState = CONNECTION_STATE_CONNECTING;
             mBluetoothGatt = mBluetoothDevice.connectGatt(mContext, false, this);
+            mChangeSubject.onNext(this);
         }
     }
 
@@ -156,6 +174,10 @@ public class Device extends BluetoothGattCallback {
         if (mBluetoothGatt != null) {
             mBluetoothGatt.disconnect();
         }
+    }
+
+    public long getElapsedConnectingTime() {
+        return System.currentTimeMillis() - mConnectIssuedAt;
     }
 
     public int getConnectionState() {
@@ -166,19 +188,19 @@ public class Device extends BluetoothGattCallback {
         return CONNECTION_STATE_LABELS[mConnectionState];
     }
 
-    private void log(int level, String message) {
-        Log.println(level, TAG, message);
-        mLogPublishSubject.onNext(message);
-    }
-
     @Override
     public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
 
-        log(Log.DEBUG, String.format("onConnectionStateChange: mStatus=%d newState=%d", status, newState));
+        LogService.i("Device",String.format("onConnectionStateChange: mStatus=%d newState=%d", status, newState));
 
         switch (newState) {
 
             case BluetoothGatt.STATE_CONNECTED:
+
+                if ( mConnectionTimer != null ) {
+                    mConnectionTimer.cancel();
+                    mConnectionTimer = null;
+                }
 
                 mConnectionState = CONNECTION_STATE_CONNECTED_DISCOVERING_SERVICES;
 
@@ -199,6 +221,7 @@ public class Device extends BluetoothGattCallback {
                 mConnectionState = CONNECTION_STATE_DISCONNECTED;
 
                 mBluetoothOperationQueue.purge();
+                mBluetoothOperationQueueSubscription.clear();
 
                 mBluetoothGatt.close();
                 mBluetoothGatt = null;
@@ -218,7 +241,7 @@ public class Device extends BluetoothGattCallback {
     @Override
     public void onServicesDiscovered(BluetoothGatt gatt, int status) {
 
-        log(Log.ERROR, "onServicesDiscovered...");
+        LogService.i("Device","onServicesDiscovered...");
 
         if (status == BluetoothGatt.GATT_SUCCESS) {
 
@@ -226,7 +249,7 @@ public class Device extends BluetoothGattCallback {
 
             if (service != null) {
 
-                mBluetoothSubscriptions.add(
+                mBluetoothOperationQueueSubscription.add(
                         mBluetoothOperationQueue.observe().observeOn(Schedulers.io()).subscribe(
                                 new Observer<BluetoothOperation>() {
                                     @Override
@@ -241,7 +264,11 @@ public class Device extends BluetoothGattCallback {
 
                                     @Override
                                     public void onNext(BluetoothOperation bluetoothOperation) {
-                                        bluetoothOperation.perform(mBluetoothGatt);
+
+                                        if (bluetoothOperation.perform(mBluetoothGatt) ) {
+                                            mBluetoothOperationQueue.completeOperation(bluetoothOperation);
+                                        }
+
                                     }
                                 }
 
@@ -274,6 +301,10 @@ public class Device extends BluetoothGattCallback {
 
     }
 
+    protected void onSlowConnect() {
+
+    }
+
     protected void onDisconnect() {
 
     }
@@ -281,7 +312,7 @@ public class Device extends BluetoothGattCallback {
     @Override
     public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         byte[] value = characteristic.getValue();
-        log(Log.DEBUG, String.format("characteristicChanged: %s",
+        LogService.d("Device",String.format("onCharacteristicChanged: %s",
                 CharacteristicWriteOperation.getReadableStringFromByteArray(value)));
         mNotifyEventSubject.onNext(new ValueChangeEvent(characteristic.getUuid(), value));
     }
@@ -289,28 +320,28 @@ public class Device extends BluetoothGattCallback {
     @Override
     public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
         byte[] value = characteristic.getValue();
-        log(Log.DEBUG, String.format("characteristicRead: %s",
+        LogService.d("SleepSenseDeviceService",String.format("onCharacteristicRead: %s",
                 CharacteristicWriteOperation.getReadableStringFromByteArray(value)));
         mBluetoothOperationQueue.completeReadOperation(characteristic.getUuid(), value);
     }
 
     @Override
     public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-        log(Log.DEBUG, String.format("onCharacteristicWrite: %s",
+        LogService.d("Device",String.format("onCharacteristicWrite: %s",
                 CharacteristicWriteOperation.getReadableStringFromByteArray(characteristic.getValue())));
         mBluetoothOperationQueue.completeWriteOperation();
     }
 
     @Override
     public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-        log(Log.DEBUG, String.format("onDescriptorRead: %s",
+        LogService.d("Device",String.format("onDescriptorRead: %s",
                 CharacteristicWriteOperation.getReadableStringFromByteArray(descriptor.getValue())));
     }
 
     @Override
     public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
         mBluetoothOperationQueue.completeDescriptorWriteOperation();
-        log(Log.DEBUG, String.format("onDescriptorWrite: %s",
+        LogService.d("Device",String.format("onDescriptorWrite: %s",
                 CharacteristicWriteOperation.getReadableStringFromByteArray(descriptor.getValue())));
     }
 
@@ -318,7 +349,7 @@ public class Device extends BluetoothGattCallback {
         return mDeviceEventSubject;
     }
 
-    public Observable<Object> getChangeObservable() {
+    public Observable<Device> getChangeObservable() {
         return mChangeSubject;
     }
 

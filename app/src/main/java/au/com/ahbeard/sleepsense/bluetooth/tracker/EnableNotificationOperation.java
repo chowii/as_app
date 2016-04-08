@@ -29,16 +29,24 @@ public class EnableNotificationOperation extends BluetoothOperation {
     }
 
     @Override
-    public void perform(BluetoothGatt bluetoothGatt) {
+    public boolean perform(BluetoothGatt bluetoothGatt) {
+
         BluetoothGattService service = bluetoothGatt.getService(mServiceUUID);
+
         if (service != null) {
             BluetoothGattCharacteristic characteristic = service.getCharacteristic(mCharacteristicUUID);
             bluetoothGatt.setCharacteristicNotification(characteristic, true);
+
             if (characteristic != null) {
                 BluetoothGattDescriptor descriptor = characteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
-                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
+
                 bluetoothGatt.writeDescriptor(descriptor);
             }
+
+            return false;
         }
+
+        return true;
     }
 }

@@ -125,7 +125,7 @@
         android:id="@+id/on_board_button_continue"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:background="@drawable/button_normal"
+        android:background="@drawable/button"
         android:layout_margin="15dp" android:textColor="#fff" android:textSize="13.45dp" android:text="Continue"/>
 
     <au.com.ahbeard.sleepsense.widgets.StyledTextView

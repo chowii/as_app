@@ -8,16 +8,24 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.OnBoardActivity;
+import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class OnBoardInitialFragment extends Fragment {
 
-    // @Bind()
-
+    @OnClick(R.id.on_board_button_locate_devices)
+    void acquireDevices() {
+        ((OnBoardActivity)getActivity()).acquireDevices();
+    }
 
     public static OnBoardInitialFragment newInstance() {
         OnBoardInitialFragment fragment = new OnBoardInitialFragment();

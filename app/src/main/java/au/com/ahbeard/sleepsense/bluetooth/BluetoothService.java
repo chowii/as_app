@@ -9,6 +9,7 @@ import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 
+import au.com.ahbeard.sleepsense.services.LogService;
 import rx.functions.Action0;
 import rx.subjects.PublishSubject;
 
@@ -48,7 +49,7 @@ public class BluetoothService extends BluetoothGattCallback {
                 public void onLeScan(final BluetoothDevice device, int rssi,
                                      byte[] scanRecord) {
 
-                    Log.e(TAG, String.format("device: %s rssi: %d name: '%s'", device.getAddress(), rssi, device.getName()));
+                    LogService.e(TAG, String.format("device: %s rssi: %d name: '%s'", device.getAddress(), rssi, device.getName()));
 
                     // Check the address of the device.
                     if (StringUtils.isNotEmpty(device.getName())) {

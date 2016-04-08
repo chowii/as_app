@@ -12,11 +12,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
-import au.com.ahbeard.sleepsense.bluetooth.base.DummyBaseDevice;
-import au.com.ahbeard.sleepsense.bluetooth.pump.DummyPumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
-import au.com.ahbeard.sleepsense.bluetooth.tracker.DummyTrackerDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
+import au.com.ahbeard.sleepsense.services.LogService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import rx.Observable;
 import rx.functions.Action1;
@@ -27,6 +25,12 @@ import rx.subjects.PublishSubject;
  * Created by neal on 4/01/2016.
  */
 public class SleepSenseDeviceService {
+
+    public enum SleepSenseDeviceServiceEvent {
+        StartedSearchingForDevices,
+        FinishedSearchingForDevices,
+        DeviceListChanged
+    }
 
     private static SleepSenseDeviceService sSleepSenseDeviceService;
 
@@ -40,7 +44,7 @@ public class SleepSenseDeviceService {
 
     private PublishSubject<String> mLogSubject = PublishSubject.create();
 
-    private PublishSubject<String> mChangeEventPublishSubject = PublishSubject.create();
+    private PublishSubject<SleepSenseDeviceServiceEvent> mChangeEventPublishSubject = PublishSubject.create();
 
     private final Context mContext;
 
@@ -74,7 +78,7 @@ public class SleepSenseDeviceService {
         }
     }
 
-    public Observable<String> getChangeEventObservable() {
+    public Observable<SleepSenseDeviceServiceEvent> getEventObservable() {
         return mChangeEventPublishSubject;
     }
 
@@ -98,6 +102,8 @@ public class SleepSenseDeviceService {
 
         final PublishSubject<String> mObservable = PublishSubject.create();
 
+        mChangeEventPublishSubject.onNext(SleepSenseDeviceServiceEvent.StartedSearchingForDevices);
+
         BluetoothService.instance()
                 .startScanning()
                 .filter(new ScanningFilter())
@@ -120,7 +126,6 @@ public class SleepSenseDeviceService {
                         ArrayList<Device> devices = new ArrayList<>();
 
                         for (BluetoothScanEvent.DeviceFoundEvent deviceFoundEvent:deviceFoundEvents) {
-                            // Neal's FitBit... emit out 3 dummy devices.
                             devices.addAll(SleepSenseDeviceFactory.factorySleepSenseDevice(mContext,deviceFoundEvent));
                         }
 
@@ -133,7 +138,7 @@ public class SleepSenseDeviceService {
 
                         BluetoothService.instance().stopScanning();
 
-                        log(Log.DEBUG,String.format("found %d devices while scanning...", devices.size()));
+                        LogService.d("SleepSenseDeviceService",String.format("found %d SleepSense devices while scanning...", devices.size()));
 
                         boolean hasChanged = false;
 
@@ -143,7 +148,7 @@ public class SleepSenseDeviceService {
                             if (mBaseDevice == null && device instanceof BaseDevice) {
                                 mBaseDevice = (BaseDevice) device;
                                 PreferenceService.instance().setBaseDeviceAddress(device.getAddress());
-                                log(Log.DEBUG,"found BaseDevice...");
+                                LogService.d("SleepSenseDeviceService","found BaseDevice...");
                                 hasChanged = true;
                                 continue;
                             }
@@ -151,7 +156,7 @@ public class SleepSenseDeviceService {
                             if (mPumpDevice == null && device instanceof PumpDevice) {
                                 mPumpDevice = (PumpDevice) device;
                                 PreferenceService.instance().setPumpDeviceAddress(device.getAddress());
-                                log(Log.DEBUG,"found PumpDevice...");
+                                LogService.d("SleepSenseDeviceService","found PumpDevice...");
                                 hasChanged = true;
                                 continue;
                             }
@@ -159,7 +164,7 @@ public class SleepSenseDeviceService {
                             if (mTrackerDevice == null && device instanceof TrackerDevice) {
                                 mTrackerDevice = (TrackerDevice) device;
                                 PreferenceService.instance().setTrackerDeviceAddress(device.getAddress());
-                                log(Log.DEBUG,"found TrackerDevice...");
+                                LogService.d("SleepSenseDeviceService","found TrackerDevice...");
                                 hasChanged = true;
                                 continue;
                             }
@@ -168,9 +173,10 @@ public class SleepSenseDeviceService {
                         mObservable.onCompleted();
 
                         if ( hasChanged ) {
-                            mChangeEventPublishSubject.onNext("CHANGE");
+                            mChangeEventPublishSubject.onNext(SleepSenseDeviceServiceEvent.DeviceListChanged);
                         }
 
+                        mChangeEventPublishSubject.onNext(SleepSenseDeviceServiceEvent.FinishedSearchingForDevices);
                     }
                 });
 
@@ -213,11 +219,18 @@ public class SleepSenseDeviceService {
     }
 
     public void clearDevices() {
+
         if ( mBaseDevice != null ) {
             PreferenceService.instance().clearBaseDeviceAddress();
+            mBaseDevice = null;
         }
 
-        mChangeEventPublishSubject.onNext("CLEAR");
+        if ( mPumpDevice != null ) {
+            PreferenceService.instance().clearPumpDeviceAddress();
+            mPumpDevice = null;
+        }
+
+        mChangeEventPublishSubject.onNext(SleepSenseDeviceServiceEvent.DeviceListChanged);
     }
 
     // The scanning filter.
@@ -246,5 +259,7 @@ public class SleepSenseDeviceService {
             return false;
         }
     }
+
+
 
 }

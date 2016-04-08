@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/progress_layout"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top|end"
+    android:layout_margin="15dp"
+    android:gravity="center"
+    android:background="#4ccc"
+    android:padding="10dp"
+    android:visibility="gone"
+    tools:visibility="visible"
+    tools:showIn="@layout/fragment_position_control">
+
+    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CONNECTING"
+        android:textColor="#4A4A4A"
+        app:typeface="OpenSansLight"
+        android:layout_marginEnd="5dp"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
+
+        

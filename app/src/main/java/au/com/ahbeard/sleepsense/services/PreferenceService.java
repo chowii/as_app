@@ -25,7 +25,7 @@ public class PreferenceService {
     }
 
     public boolean requiresOnBoarding() {
-        return false;
+        return getPumpDeviceAddress()==null||getBaseDeviceAddress()==null;
     }
 
     public void setPumpDeviceAddress(String address) {
@@ -34,6 +34,10 @@ public class PreferenceService {
 
     public String getPumpDeviceAddress() {
         return getSharedPreferences().getString("pumpDeviceAddress",null);
+    }
+
+    public void clearPumpDeviceAddress() {
+        getSharedPreferences().edit().remove("pumpDeviceAddress").commit();
     }
 
     public void setBaseDeviceAddress(String address) {
@@ -54,6 +58,10 @@ public class PreferenceService {
 
     public String getTrackerDeviceAddress() {
         return getSharedPreferences().getString("trackerDeviceAddress",null);
+    }
+
+    public void clearTrackerDeviceAddress() {
+        getSharedPreferences().edit().remove("trackerDeviceAddress").commit();
     }
 
     private SharedPreferences getSharedPreferences() {

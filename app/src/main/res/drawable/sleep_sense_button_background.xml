@@ -22,8 +22,8 @@
                 <inset android:insetRight="1dp" android:insetBottom="1dp">
                     <shape android:shape="rectangle">
                         <corners android:radius="4dp" />
-                        <solid android:color="#dddddd"/>
-                        <stroke android:color="#dddddd" android:width="0.5dp"/>
+                        <solid android:color="#eeeeee"/>
+                        <stroke android:color="#eeeeee" android:width="0.5dp"/>
                     </shape>
                 </inset>
             </item>

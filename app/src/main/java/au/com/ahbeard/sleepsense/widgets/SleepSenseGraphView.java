@@ -186,8 +186,6 @@ public class SleepSenseGraphView extends ViewGroup {
 
         mColumnWidth = (float)width / (mRawPoints.length - 2);
 
-        Log.d("GRAPH","COLUMN WIDTH: "  + mColumnWidth);
-
         mGraphRegionHeight = height * GRAPH_LEGEND_SPLIT;
         mLegendHeight = height - mGraphRegionHeight;
         mGraphExtent = height * GRAPH_LEGEND_SPLIT - TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4,
@@ -255,9 +253,6 @@ public class SleepSenseGraphView extends ViewGroup {
                 }
             }
 
-            Log.d("GRAPH", String.format("index: %d nearest left: %s nearest right: %s", i, nearestLeftNeighbourIndex,
-                    nearestRightNeighbourIndex));
-
             // Build the left half of the path.
             PointF leftStartPoint = new PointF();
 
@@ -304,15 +299,10 @@ public class SleepSenseGraphView extends ViewGroup {
             // Create the area under the line segment.
             Path path = new Path();
 
-            Log.d("GRAPH",String.format("PATH MOVETO: %f,%f", leftStartPoint.x, leftStartPoint.y));
             path.moveTo(leftStartPoint.x, leftStartPoint.y);
-            Log.d("GRAPH",String.format("PATH LINETO: %f,%f", mPoints[i].x, mPoints[i].y));
             path.lineTo(mPoints[i].x, mPoints[i].y);
-            Log.d("GRAPH",String.format("PATH LINETO: %f,%f", rightStartPoint.x, rightStartPoint.y));
             path.lineTo(rightStartPoint.x, rightStartPoint.y);
-            Log.d("GRAPH",String.format("PATH LINETO: %f,%f", rightStartPoint.x, (float)getHeight()));
             path.lineTo(rightStartPoint.x, getHeight());
-            Log.d("GRAPH",String.format("PATH LINETO: %f,%f", leftStartPoint.x, (float)getHeight()));
             path.lineTo(leftStartPoint.x, getHeight());
 
             path.close();
@@ -327,8 +317,6 @@ public class SleepSenseGraphView extends ViewGroup {
     @Override
     protected void onDraw(Canvas canvas) {
 
-        Log.d("GRAPH","CANVAS WIDTH: " + canvas.getWidth());
-
         if (mGraphNeedsRelayout) {
             layout(canvas.getWidth(), canvas.getHeight());
         }
@@ -336,8 +324,6 @@ public class SleepSenseGraphView extends ViewGroup {
         for (int i = 0; i < mAreaPaths.size(); i++) {
             canvas.drawPath(mAreaPaths.get(i), mAreaPaint);
         }
-
-        Log.d("GRAPH","CLIP BOUNDS: " + canvas.getClipBounds());
 
 //        for (int i = 0; i < mDividerPoints.size(); i++) {
 //            PointF dividerPoint = mDividerPoints.get(i);

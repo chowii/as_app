@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.StateSet;
 import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -23,6 +24,9 @@ public class StyledLinearLayout extends LinearLayout {
 
     private boolean mDrawTopBorder;
     private boolean mDrawBottomBorder;
+
+    private boolean mActuallyDrawTopBorder;
+    private boolean mActuallyDrawBottomBorder;
 
     public StyledLinearLayout(Context context) {
         super(context);
@@ -44,15 +48,25 @@ public class StyledLinearLayout extends LinearLayout {
 
         super.onDraw(canvas);
 
-        if (mDrawTopBorder) {
+        if (mActuallyDrawTopBorder) {
             canvas.drawLine(0, 0, canvas.getWidth(), 0, mBorderPaint);
         }
 
-        if (mDrawBottomBorder) {
+        if (mActuallyDrawTopBorder) {
             canvas.drawLine(0, canvas.getHeight(), canvas.getWidth(), canvas.getHeight(), mBorderPaint);
         }
 
     }
+
+    @Override
+    protected void drawableStateChanged() {
+        super.drawableStateChanged();
+        mActuallyDrawTopBorder = mDrawTopBorder && (isPressed()|| StateSet.stateSetMatches(getDrawableState(),SELECTED_STATE_SET));
+        mActuallyDrawBottomBorder = mDrawBottomBorder && (isPressed()||StateSet.stateSetMatches(getDrawableState(),SELECTED_STATE_SET));
+        invalidate();
+    }
+
+
 
     @Override
     public void setSelected(boolean selected) {
@@ -71,6 +85,7 @@ public class StyledLinearLayout extends LinearLayout {
 
         mDrawTopBorder = a.getBoolean(R.styleable.StyledView_topBorder, false);
         mDrawBottomBorder = a.getBoolean(R.styleable.StyledView_bottomBorder, false);
+
         mBorderPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3f, getResources().getDisplayMetrics()));
         mBorderPaint.setColor(a.getColor(R.styleable.StyledView_borderColor, Color.TRANSPARENT));
 

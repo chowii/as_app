@@ -5,8 +5,10 @@ import android.util.Log;
 import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
+import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.ValueChangeEvent;
+import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -18,6 +20,8 @@ import rx.subjects.PublishSubject;
  */
 public class BaseDevice extends Device {
 
+    public static final int DISCONNECT_AFTER = 15000;
+
     private static UUID[] REQUIRED_SERVICES = {
             BluetoothUtils.uuidFrom16BitUuid(0xffb0),
             BluetoothUtils.uuidFrom16BitUuid(0xffe0),
@@ -26,7 +30,7 @@ public class BaseDevice extends Device {
     };
 
     private Subscription mBaseStatusSubscription;
-    private PublishSubject<BaseStatusEvent> mBaseStatusEventPublishSubject = PublishSubject.create();
+    private PublishSubject<BaseStatusEvent> mBaseEventPublishSubject = PublishSubject.create();
 
     public UUID[] getRequiredServiceUUIDs() {
         return REQUIRED_SERVICES;
@@ -47,9 +51,33 @@ public class BaseDevice extends Device {
         return true;
     }
 
+    private long mLastActiveTime;
+
+    public BaseDevice() {
+        super();
+
+        mBaseEventPublishSubject.subscribe(new Action1<BaseStatusEvent>() {
+            @Override
+            public void call(BaseStatusEvent baseStatusEvent) {
+                if (baseStatusEvent.isHeadMotorRunning()||baseStatusEvent.isFootMotorRunning()) {
+                    mLastActiveTime = System.currentTimeMillis();
+                } else if (System.currentTimeMillis() - mLastActiveTime > DISCONNECT_AFTER) {
+                    disconnect();
+                }
+            }
+        });
+    }
+
+    public Observable<BaseStatusEvent> getBaseEventObservable() {
+        return mBaseEventPublishSubject;
+    }
+
     @Override
     protected void onConnect() {
+
         super.onConnect();
+
+        mLastActiveTime = System.currentTimeMillis();
 
         mBaseStatusSubscription = getNotifyEventObservable()
                 .subscribeOn(Schedulers.io())
@@ -62,9 +90,8 @@ public class BaseDevice extends Device {
                     @Override
                     public void call(byte[] value) {
                         BaseStatusEvent baseStatusEvent = BaseStatusEvent.safeInstance(value);
-                        Log.d("BaseDevice","baseStatusEvent: "+baseStatusEvent);
                         if (baseStatusEvent!=null){
-                            mBaseStatusEventPublishSubject.onNext(baseStatusEvent);
+                            mBaseEventPublishSubject.onNext(baseStatusEvent);
                         }
                     }
                 });
@@ -79,5 +106,11 @@ public class BaseDevice extends Device {
         }
 
         super.onDisconnect();
+    }
+
+    @Override
+    public void sendCommand(CharacteristicWriteOperation command) {
+        super.sendCommand(command);
+        mLastActiveTime = System.currentTimeMillis();
     }
 }

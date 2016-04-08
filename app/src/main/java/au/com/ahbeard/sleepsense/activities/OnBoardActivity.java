@@ -2,21 +2,26 @@ package au.com.ahbeard.sleepsense.activities;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.fragments.OnBoardConnectionsFragment;
 import au.com.ahbeard.sleepsense.fragments.OnBoardInitialFragment;
+import au.com.ahbeard.sleepsense.services.LogService;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 public class OnBoardActivity extends BaseActivity {
 
-    @OnClick(R.id.on_board_image_view_phone)
-    void click() {
+    @Bind(R.id.on_board_image_view_phone)
+    ImageView mPhoneImageView;
+
+    public void acquireDevices() {
         SleepSenseDeviceService.instance()
                 .acquireDevices(2500)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -24,7 +29,8 @@ public class OnBoardActivity extends BaseActivity {
                         new Observer<String>() {
                             @Override
                             public void onCompleted() {
-                                Log.e("OnBoardActivity","completed acquiring devices..");
+                                LogService.i("OnBoardActivity", "completed acquiring devices..");
+
                                 int numberOfDevices = SleepSenseDeviceService.instance().countDevices();
 
                                 if (numberOfDevices == 0) {
@@ -41,15 +47,22 @@ public class OnBoardActivity extends BaseActivity {
 
                             @Override
                             public void onError(Throwable e) {
-                                Log.e("OnBoardActivity","error acquiring devices..",e);
+                                LogService.i("OnBoardActivity", "error acquiring devices..", e);
                             }
 
                             @Override
                             public void onNext(String s) {
                             }
                         });
+
+
     }
 
+    public void successContinue() {
+        finish();
+    }
+
+    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +78,25 @@ public class OnBoardActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction().add(R.id.on_board_layout_container,
                 OnBoardInitialFragment.newInstance()).commit();
 
+        mCompositeSubscription.add(SleepSenseDeviceService.instance()
+                .getEventObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
+            @Override
+            public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent sleepSenseDeviceServiceEvent) {
+                if (sleepSenseDeviceServiceEvent == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.StartedSearchingForDevices) {
+                    mPhoneImageView.animate().rotationBy(360).setDuration(2000).start();
+                } else if (sleepSenseDeviceServiceEvent == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.StartedSearchingForDevices) {
+
+                }
+            }
+        }));
 
     }
 
+    @Override
+    protected void onDestroy() {
+        mCompositeSubscription.clear();
+        super.onDestroy();
+    }
 }

@@ -21,7 +21,6 @@ import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseCommand;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
-import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -212,15 +211,15 @@ public class BaseTestFragment extends Fragment {
 
         updateControls(false);
 
-        SleepSenseDeviceService.instance().getChangeEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Action1<String>() {
+        SleepSenseDeviceService.instance().getEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
+                new Action1<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
                     @Override
-                    public void call(String message) {
-                       attachToPump();
+                    public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent message) {
+                       attachToBase();
                     }
                 });
 
-        attachToPump();
+        attachToBase();
 
         return view;
     }
@@ -314,7 +313,7 @@ public class BaseTestFragment extends Fragment {
         }
     }
 
-    public void attachToPump() {
+    public void attachToBase() {
 
         mBaseDevice = SleepSenseDeviceService.instance().getBaseDevice();
 

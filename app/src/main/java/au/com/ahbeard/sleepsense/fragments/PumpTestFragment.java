@@ -120,10 +120,10 @@ public class PumpTestFragment extends Fragment {
 
         updateControls(false);
 
-        SleepSenseDeviceService.instance().getChangeEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Action1<String>() {
+        SleepSenseDeviceService.instance().getEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
+                new Action1<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
                     @Override
-                    public void call(String message) {
+                    public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent message) {
                        attachToPump();
                     }
                 });

@@ -7,6 +7,9 @@ import android.util.Log;
 
 import java.util.UUID;
 
+import au.com.ahbeard.sleepsense.services.LogService;
+import au.com.ahbeard.sleepsense.utils.ByteUtils;
+
 /**
  * Created by neal on 14/01/2014.
  */
@@ -96,6 +99,18 @@ public class CharacteristicWriteOperation extends BluetoothOperation {
         return _value;
     }
 
+
+    @Override
+    public boolean replacesOperation(BluetoothOperation bluetoothOperation) {
+
+        if ( bluetoothOperation instanceof  CharacteristicWriteOperation ) {
+            CharacteristicWriteOperation characteristicWriteOperation = (CharacteristicWriteOperation) bluetoothOperation;
+            return ByteUtils.equals(characteristicWriteOperation.getValue(),getValue());
+        }
+
+        return false;
+    }
+
     @Override
     public String toString() {
 
@@ -112,8 +127,8 @@ public class CharacteristicWriteOperation extends BluetoothOperation {
     }
 
     @Override
-    public void perform(BluetoothGatt bluetoothGatt) {
-        Log.d("Device","actually performing write");
+    public boolean perform(BluetoothGatt bluetoothGatt) {
+        LogService.d("SleepSenseDeviceService","Actually performing write to device...");
         BluetoothGattService service = bluetoothGatt.getService(mServiceUUID);
         if (service != null) {
             BluetoothGattCharacteristic characteristic = service.getCharacteristic(mCharacteristicUUID);
@@ -123,5 +138,6 @@ public class CharacteristicWriteOperation extends BluetoothOperation {
                 bluetoothGatt.writeCharacteristic(characteristic);
             }
         }
+        return false;
     }
 }

@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/on_board_image_view_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
             android:src="@drawable/phone_happy"/>
 
         <View android:layout_width="wrap_content" android:layout_height="39dp"/>
@@ -27,7 +27,7 @@
         <FrameLayout
             android:id="@+id/on_board_layout_container"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp" android:layout_weight="1">
 
         </FrameLayout>
 
@@ -50,6 +50,5 @@
             android:src="@drawable/splash_logo"/>
 
     </LinearLayout>
-
 
 </FrameLayout>

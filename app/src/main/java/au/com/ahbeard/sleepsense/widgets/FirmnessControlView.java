@@ -152,8 +152,6 @@ public class FirmnessControlView extends View {
                 mYTranslate = getHeight() / 2;
                 mLastAngle = (float) Math.atan2(event.getX() - mXTranslate, -(event.getY() - mYTranslate));
 
-                Log.d("TOUCH", String.format("lastAngle: %f", mLastAngle));
-
                 return true;
 
             case MotionEvent.ACTION_MOVE:
@@ -170,8 +168,6 @@ public class FirmnessControlView extends View {
                     } else if (deltaAngle > Math.PI) {
                         deltaAngle -= Math.PI * 2;
                     }
-
-                    Log.d("TOUCH", String.format("lastAngle: %f", mLastAngle));
 
                     float deltaValue = 0.8f * deltaAngle / (float) Math.PI;
 
@@ -190,8 +186,6 @@ public class FirmnessControlView extends View {
                         postInvalidate();
 
                         mLastAngle = eventAngle;
-
-                        Log.d("TOUCH", String.format("%.5f", mTargetValue));
 
                     }
 

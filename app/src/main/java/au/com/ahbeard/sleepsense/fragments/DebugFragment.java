@@ -8,18 +8,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.DashboardActivity;
 import au.com.ahbeard.sleepsense.adapters.SimpleItemAnimator;
-import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
-import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
-import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
+import au.com.ahbeard.sleepsense.services.LogService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -42,7 +40,7 @@ public class DebugFragment extends Fragment {
 
     @OnClick(R.id.debug_button_clear)
     void clear() {
-        SleepSenseDeviceService.instance().clearDevices();
+        ((DashboardActivity)getActivity()).clearDevices();
     }
 
     @Bind(R.id.debug_recycler_view_log)
@@ -68,13 +66,13 @@ public class DebugFragment extends Fragment {
 
         updateControls(false);
 
-        mCompositeSubscription.add(SleepSenseDeviceService.instance().getLogObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Action1<String>() {
-                    @Override
-                    public void call(String message) {
-                        mLogAdapter.log(message);
-                    }
-                }));
+        mLogAdapter.setLogMessages(LogService.instance().getLogMessages(mLogAdapter.getMaxLogItems()));
+        mCompositeSubscription.add(LogService.instance().getLogObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<LogService.LogMessage>() {
+            @Override
+            public void call(LogService.LogMessage logMessage) {
+                mLogAdapter.log(logMessage);
+            }
+        }));
 
 
         return view;
@@ -100,13 +98,10 @@ public class DebugFragment extends Fragment {
     public class LogAdapter extends RecyclerView.Adapter<LogViewHolder> {
 
         int mMaxLogItems = 128;
-        List<String> mLogItems = new ArrayList<>();
+        List<LogService.LogMessage> mLogItems = new ArrayList<>();
+        private List<LogService.LogMessage> mLogMessages;
 
         public LogAdapter() {
-        }
-
-        public LogAdapter(int maxLogItems) {
-            mMaxLogItems = maxLogItems;
         }
 
         @Override
@@ -130,11 +125,20 @@ public class DebugFragment extends Fragment {
             notifyDataSetChanged();
         }
 
-        public void log(String message) {
+        public void log(LogService.LogMessage message) {
             if (mLogItems.size() >= mMaxLogItems) {
                 mLogItems.remove(0);
             }
             mLogItems.add(message);
+            notifyDataSetChanged();
+        }
+
+        public int getMaxLogItems() {
+            return mMaxLogItems;
+        }
+
+        public void setLogMessages(List<LogService.LogMessage> logMessages) {
+            mLogMessages = logMessages;
             notifyDataSetChanged();
         }
     }
@@ -149,26 +153,20 @@ public class DebugFragment extends Fragment {
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(String message) {
-            mDebugTextView.setText(message);
+        public void bind(LogService.LogMessage logMessage) {
+            mDebugTextView.setText(logMessage.getMessage());
         }
     }
 
     public void acquireDevice() {
-        // Attempt to grab the devices, then grab a SleepSense device, then connect to them all.
+
+        // Attempt to grab the devices.
         SleepSenseDeviceService.instance().acquireDevices(3500)
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(
                 new Observer<String>() {
                     @Override
                     public void onCompleted() {
-                        if ( SleepSenseDeviceService.instance().getPumpDevice() != null ) {
-                            SleepSenseDeviceService.instance().getPumpDevice().getLogObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
-                                @Override
-                                public void call(String message) {
-                                   mLogAdapter.log(message);
-                                }
-                            });
-                        }
+
                     }
 
                     @Override

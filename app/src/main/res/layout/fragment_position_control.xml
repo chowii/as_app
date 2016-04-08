@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/firmnessBackground"
-    android:gravity="top"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/firmnessBackground"
+              android:gravity="top"
+              android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -20,7 +21,7 @@
             android:text="Base Position"
             android:textColor="#4A4A4A"
             android:textSize="15sp"
-            app:typeface="OpenSansLight" />
+            app:typeface="OpenSansLight"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -28,164 +29,194 @@
             android:layout_gravity="right|top"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/help_icon_normal" />
+            android:src="@drawable/help_icon_normal"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_gravity="bottom"
-            android:background="#DBE3E6" />
+            android:background="#DBE3E6"/>
 
     </FrameLayout>
 
-    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:lineSpacingExtra="5sp"
-        android:text="Positions"
-        android:textColor="#4A4A4A"
-        android:textSize="15sp"
-        android:textAllCaps="true"
-        app:typeface="OpenSansLight" android:layout_marginTop="40dp" android:layout_marginBottom="0dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <au.com.ahbeard.sleepsense.widgets.StyledButton
-                android:id="@+id/position_button_rest"
-                android:drawableTop="@drawable/position_rest_icon"
-                android:text="Rest"
-                app:typeface="OpenSansLight"
-                style="@style/styledButton" />
-
-            <View
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
-
-            <au.com.ahbeard.sleepsense.widgets.StyledButton
-                android:id="@+id/position_button_recline"
-                android:drawableTop="@drawable/position_recline_icon"
-                android:text="Recline"
-                app:typeface="OpenSansLight"
-                style="@style/styledButton" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="20dp"
-            android:layout_height="20dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <au.com.ahbeard.sleepsense.widgets.StyledButton
-                android:id="@+id/position_button_relax"
-                android:drawableTop="@drawable/position_relax_icon"
-                android:text="Relax"
-                app:typeface="OpenSansLight"
-                style="@style/styledButton" />
-
-            <View
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
-
-            <au.com.ahbeard.sleepsense.widgets.StyledButton
-                android:id="@+id/position_button_recover"
-                android:drawableTop="@drawable/position_recover_icon"
-                android:text="Recover"
-                app:typeface="OpenSansLight"
-                style="@style/styledButton" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="40dp"
                 android:gravity="center"
                 android:lineSpacingExtra="5sp"
-                android:text="Head"
+                android:text="Positions"
                 android:textAllCaps="true"
                 android:textColor="#4A4A4A"
                 android:textSize="15sp"
-                app:typeface="OpenSansLight" />
+                app:typeface="OpenSansLight"/>
 
-            <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:lineSpacingExtra="5sp"
-                android:text="Foot"
-                android:textAllCaps="true"
-                android:textColor="#4A4A4A"
-                android:textSize="15sp"
-                app:typeface="OpenSansLight" />
+                android:layout_margin="20dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledButton
+                        android:id="@+id/position_button_rest"
+                        style="@style/styledButton"
+                        android:drawableTop="@drawable/position_rest_icon"
+                        android:text="Rest"
+                        app:topBorder="true"
+                        app:typeface="OpenSansLight"/>
+
+                    <View
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledButton
+                        android:id="@+id/position_button_recline"
+                        style="@style/styledButton"
+                        android:drawableTop="@drawable/position_recline_icon"
+                        android:text="Recline"
+                        app:topBorder="true"
+                        app:typeface="OpenSansLight"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledButton
+                        android:id="@+id/position_button_relax"
+                        style="@style/styledButton"
+                        android:drawableTop="@drawable/position_relax_icon"
+                        android:text="Relax"
+                        app:topBorder="true"
+                        app:typeface="OpenSansLight"/>
+
+                    <View
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledButton
+                        android:id="@+id/position_button_recover"
+                        style="@style/styledButton"
+                        android:drawableTop="@drawable/position_recover_icon"
+                        android:text="Recover"
+                        app:topBorder="true"
+                        app:typeface="OpenSansLight"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:lineSpacingExtra="5sp"
+                        android:text="Head"
+                        android:textAllCaps="true"
+                        android:textColor="#4A4A4A"
+                        android:textSize="15sp"
+                        app:typeface="OpenSansLight"/>
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:lineSpacingExtra="5sp"
+                        android:text="Foot"
+                        android:textAllCaps="true"
+                        android:textColor="#4A4A4A"
+                        android:textSize="15sp"
+                        app:typeface="OpenSansLight"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledImageButton
+                        android:id="@+id/position_button_head_position_up"
+                        style="@style/styledButton"
+                        android:src="@drawable/position_up_icon_normal"
+                        app:typeface="OpenSansLight"/>
+
+                    <View
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledImageButton
+                        android:id="@+id/position_button_head_position_down"
+                        style="@style/styledButton"
+                        android:src="@drawable/position_down_icon_normal"
+                        app:typeface="OpenSansLight"/>
+
+                    <View
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledImageButton
+                        android:id="@+id/position_button_foot_position_up"
+                        style="@style/styledButton"
+                        android:src="@drawable/position_up_icon_normal"
+                        app:typeface="OpenSansLight"/>
+
+                    <View
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledImageButton
+                        android:id="@+id/position_button_foot_position_down"
+                        style="@style/styledButton"
+                        android:src="@drawable/position_down_icon_normal"
+                        app:typeface="OpenSansLight"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <View
-            android:layout_width="20dp"
-            android:layout_height="10dp" />
+        <include layout="@layout/include_progress"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    </FrameLayout>
 
-            <au.com.ahbeard.sleepsense.widgets.StyledImageButton
-                android:id="@+id/position_button_head_position_up"
-                app:typeface="OpenSansLight"
-                style="@style/styledButton" android:src="@drawable/position_up_icon_normal"/>
-
-            <View
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
-
-            <au.com.ahbeard.sleepsense.widgets.StyledImageButton
-                android:id="@+id/position_button_head_position_down"
-                app:typeface="OpenSansLight"
-                style="@style/styledButton" android:src="@drawable/position_down_icon_normal"/>
-            <View
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
-
-            <au.com.ahbeard.sleepsense.widgets.StyledImageButton
-                android:id="@+id/position_button_foot_position_up"
-                app:typeface="OpenSansLight"
-                style="@style/styledButton" android:src="@drawable/position_up_icon_normal"/>
-            <View
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
-
-            <au.com.ahbeard.sleepsense.widgets.StyledImageButton
-                android:id="@+id/position_button_foot_position_down"
-                app:typeface="OpenSansLight"
-                style="@style/styledButton" android:src="@drawable/position_down_icon_normal"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
 
 </LinearLayout>

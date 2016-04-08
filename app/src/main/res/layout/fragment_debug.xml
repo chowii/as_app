@@ -9,7 +9,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/debug_recycler_view_log"
         android:layout_width="match_parent"
-        android:layout_height="10dp" android:layout_weight="1">
+        android:layout_height="0dp" android:layout_weight="1">
 
     </android.support.v7.widget.RecyclerView>
 
@@ -21,13 +21,13 @@
         android:id="@+id/debug_button_acquire"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Acquire Devices"/>
+        android:text="Find Devices"/>
 
     <Button
         android:id="@+id/debug_button_clear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Clear Devices"/>
+        android:text="Redo OnBoarding"/>
 
 </LinearLayout>
 

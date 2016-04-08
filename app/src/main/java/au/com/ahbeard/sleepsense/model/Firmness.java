@@ -67,7 +67,6 @@ public class Firmness {
     }
 
     public static int getDrawableLevelForControlValue(float controlValue) {
-        Log.d("CONTROL","CONTROL VALUE: " + controlValue);
         return Math.round(controlValue*10f);
     }
 

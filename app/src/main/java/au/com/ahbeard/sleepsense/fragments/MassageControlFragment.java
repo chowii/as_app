@@ -3,7 +3,6 @@ package au.com.ahbeard.sleepsense.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +10,17 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.bluetooth.Device;
+import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
+import au.com.ahbeard.sleepsense.bluetooth.base.BaseCommand;
+import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
+import au.com.ahbeard.sleepsense.bluetooth.base.BaseStatusEvent;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,25 +34,56 @@ public class MassageControlFragment extends Fragment {
     @Bind(R.id.massage_button_timer)
     View mTimerButton;
 
-    @OnClick(R.id.massage_button_timer)
-    void timerButtonClicked() {
-        mMassageTimerState = (mMassageTimerState + 1) % 4;
-        Log.d("TIMER","mMassageTimerState"+mMassageTimerState);
-        updateViews();
+    private BaseDevice mBaseDevice;
 
+    @OnClick(R.id.massage_button_head_plus)
+    void wholeBodyClicked() {
+        mBaseDevice.sendCommand(BaseCommand.wholeBody());
+    }
+
+    @OnClick(R.id.massage_button_whole_body)
+    void wholeBodyMassageClicked() {
+        mBaseDevice.sendCommand(BaseCommand.wholeBody());
+    }
+
+    @OnClick(R.id.massage_button_timer)
+    void timerClicked() {
+        mBaseDevice.sendCommand(BaseCommand.timer());
+    }
+
+    @OnClick(R.id.massage_button_head_plus)
+    void headPlusClicked() {
+        mBaseDevice.sendCommand(BaseCommand.headMassageIncrease());
+    }
+
+    @OnClick(R.id.massage_button_head_minus)
+    void headMinusClicked() {
+        mBaseDevice.sendCommand(BaseCommand.headMassageDecrease());
+    }
+
+    @OnClick(R.id.massage_button_foot_plus)
+    void footPlusClicked() {
+        mBaseDevice.sendCommand(BaseCommand.footMassageIncrease());
+    }
+
+    @OnClick(R.id.massage_button_foot_minus)
+    void footMinusClicked() {
+        mBaseDevice.sendCommand(BaseCommand.footMassageDecrease());
     }
 
     @Bind({R.id.massage_text_view_10_min, R.id.massage_text_view_20_min, R.id.massage_text_view_30_min})
     List<View> mTimeTextViews;
 
-    // Temporary while building back end.
-    private int mMassageTimerState = 0;
+    @Bind(R.id.progress_layout)
+    View mProgressLayout;
+
+    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     public MassageControlFragment() {
 
     }
 
-    private void updateViews() {
+    private void updateViews(int massageTimerState) {
 
         mTimerButton.setSelected(false);
 
@@ -53,7 +91,7 @@ public class MassageControlFragment extends Fragment {
             view.setSelected(false);
         }
 
-        switch (mMassageTimerState) {
+        switch (massageTimerState) {
             case 0:
                 break;
             case 1:
@@ -83,6 +121,10 @@ public class MassageControlFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,13 +140,38 @@ public class MassageControlFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
+        mBaseDevice = SleepSenseDeviceService.instance().getBaseDevice();
+
+        mCompositeSubscription.add(mBaseDevice.getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseStatusEvent>() {
+            @Override
+            public void call(BaseStatusEvent baseStatusEvent) {
+                if ( baseStatusEvent.isTimerLightActive() ) {
+                    updateViews(baseStatusEvent.getTimerLightStatus());
+                } else {
+                    updateViews(0);
+                }
+
+            }
+        }));
+
+        mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
+            @Override
+            public void call(Device device) {
+                if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
+                    mProgressLayout.setVisibility(View.VISIBLE);
+                } else {
+                    mProgressLayout.setVisibility(View.GONE);
+                }
+            }
+        }));
+
         return view;
 
     }
 
     @Override
     public void onDestroyView() {
-
+        mCompositeSubscription.clear();
         ButterKnife.unbind(this);
 
         super.onDestroyView();

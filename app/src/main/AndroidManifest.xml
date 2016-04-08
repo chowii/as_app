@@ -10,7 +10,7 @@
     <application
         android:name=".SleepSenseApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/launcher_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.OnBoardActivity" android:screenOrientation="userPortrait">
@@ -22,15 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.TestActivity"
-            android:label="Sleep Sense [T]" android:screenOrientation="userPortrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+        <!--<activity-->
+            <!--android:name=".activities.TestActivity"-->
+            <!--android:label="Sleep Sense [T]" android:screenOrientation="userPortrait">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
         <activity android:name=".activities.SleepTrackingActivity" android:screenOrientation="userPortrait">
         </activity>
     </application>

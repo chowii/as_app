@@ -1,10 +1,12 @@
 package au.com.ahbeard.sleepsense.bluetooth;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import au.com.ahbeard.sleepsense.bluetooth.tracker.EnableNotificationOperation;
 import rx.Observable;
@@ -41,7 +43,7 @@ public class BluetoothOperationQueue {
         return mObservable;
     }
 
-    public Queue<BluetoothOperation> mBluetoothOperations = new ArrayBlockingQueue<BluetoothOperation>(1024);
+    public ArrayList<BluetoothOperation> mBluetoothOperations = new ArrayList<>(1024);
 
     private boolean mIsRunning = false;
 
@@ -51,11 +53,30 @@ public class BluetoothOperationQueue {
         processQueue();
     }
 
-    public void addOperation(BluetoothOperation operation) {
+    public boolean addOperation(BluetoothOperation operation) {
 
-        mBluetoothOperations.add(operation);
+        synchronized (mBluetoothOperations) {
 
-        processQueue();
+            if (operation instanceof EnableNotificationOperation ) {
+                mBluetoothOperations.add(0,operation);
+                processQueue();
+                return true;
+            } else {
+                for ( int i=0; i < mBluetoothOperations.size(); i++ ) {
+                    if ( operation.replacesOperation(mBluetoothOperations.get(i))) {
+                        mBluetoothOperations.set(i,operation);
+                        processQueue();
+                        return true;
+                    }
+                }
+            }
+
+            mBluetoothOperations.add(operation);
+            processQueue();
+            return true;
+
+        }
+
 
     }
 
@@ -69,34 +90,31 @@ public class BluetoothOperationQueue {
 
     public void completeWriteOperation() {
 
-        if (mBluetoothOperations.peek() instanceof CharacteristicWriteOperation) {
-            completeOperation(mBluetoothOperations.peek());
+        if (mBluetoothOperations.get(0) instanceof CharacteristicWriteOperation) {
+            completeOperation(mBluetoothOperations.get(0));
         }
 
     }
 
     public void completeDescriptorWriteOperation() {
 
-        if (mBluetoothOperations.peek() instanceof EnableNotificationOperation) {
-            completeOperation(mBluetoothOperations.peek());
+        if (mBluetoothOperations.get(0) instanceof EnableNotificationOperation) {
+            completeOperation(mBluetoothOperations.get(0));
         }
 
     }
 
     public void completeReadOperation(UUID characteristic, byte[] value) {
 
-        if (mBluetoothOperations.peek() instanceof CharacteristicReadOperation) {
-            completeOperation(mBluetoothOperations.peek());
+        if (mBluetoothOperations.get(0) instanceof CharacteristicReadOperation) {
+            completeOperation(mBluetoothOperations.get(0));
         }
 
     }
 
     public void abortOperation(BluetoothOperation operation, String error) {
-
         operation.setStatus(BluetoothOperation.Status.Complete);
-
         processQueue();
-
     }
 
     /**
@@ -104,22 +122,22 @@ public class BluetoothOperationQueue {
      */
     private void processQueue() {
 
-        if ( ! mIsRunning ) {
+        if (!mIsRunning) {
             return;
         }
 
         while (mBluetoothOperations.size() > 0) {
-            if (mBluetoothOperations.peek().getStatus() == BluetoothOperation.Status.Queued) {
-                mBluetoothOperations.peek().setStatus(BluetoothOperation.Status.Running);
-                BluetoothOperation bluetoothOperation = mBluetoothOperations.element();
+            if (mBluetoothOperations.get(0).getStatus() == BluetoothOperation.Status.Queued) {
+                mBluetoothOperations.get(0).setStatus(BluetoothOperation.Status.Running);
+                BluetoothOperation bluetoothOperation = mBluetoothOperations.get(0);
                 for (Subscriber<? super BluetoothOperation> subscriber : subscribers.keySet()) {
                     subscriber.onNext(bluetoothOperation);
                 }
                 break;
-            } else if (mBluetoothOperations.peek().getStatus() == BluetoothOperation.Status.Running) {
+            } else if (mBluetoothOperations.get(0).getStatus() == BluetoothOperation.Status.Running) {
                 break;
-            } else  if (mBluetoothOperations.peek().getStatus() == BluetoothOperation.Status.Complete) {
-                mBluetoothOperations.remove();
+            } else if (mBluetoothOperations.get(0).getStatus() == BluetoothOperation.Status.Complete) {
+                mBluetoothOperations.remove(0);
             }
         }
     }

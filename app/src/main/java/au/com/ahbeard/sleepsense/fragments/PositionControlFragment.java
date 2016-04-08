@@ -3,6 +3,7 @@ package au.com.ahbeard.sleepsense.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +11,15 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseCommand;
-import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
+import au.com.ahbeard.sleepsense.bluetooth.base.BaseStatusEvent;
 import au.com.ahbeard.sleepsense.widgets.StyledButton;
 import au.com.ahbeard.sleepsense.widgets.StyledImageButton;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnTouch;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
@@ -30,7 +31,7 @@ public class PositionControlFragment extends Fragment {
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
-    @Bind({R.id.position_button_rest,R.id.position_button_recline,R.id.position_button_relax,R.id.position_button_recover})
+    @Bind({R.id.position_button_rest, R.id.position_button_recline, R.id.position_button_relax, R.id.position_button_recover})
     List<StyledButton> mPositionButtons;
 
     @Bind(R.id.position_button_head_position_up)
@@ -42,19 +43,23 @@ public class PositionControlFragment extends Fragment {
     @Bind(R.id.position_button_foot_position_down)
     StyledImageButton mFootPositionDownButton;
 
-    @OnClick({R.id.position_button_rest,R.id.position_button_recline,R.id.position_button_relax,R.id.position_button_recover})
+    @Bind(R.id.progress_layout)
+    View mProgressLayout;
+
+    @OnClick({R.id.position_button_rest, R.id.position_button_recline, R.id.position_button_relax, R.id.position_button_recover})
     void onClick(View clickedButton) {
 
-        if (clickedButton.getId()==R.id.position_button_rest) {
+        if (clickedButton.getId() == R.id.position_button_rest) {
             SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetFlat());
-        } else if (clickedButton.getId()==R.id.position_button_recline) {
+        } else if (clickedButton.getId() == R.id.position_button_recline) {
             SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetLounge());
-        } else if (clickedButton.getId()==R.id.position_button_relax) {
+        } else if (clickedButton.getId() == R.id.position_button_relax) {
             SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetTV());
-        } else if (clickedButton.getId()==R.id.position_button_recover) {
+        } else if (clickedButton.getId() == R.id.position_button_recover) {
             SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetZeroG());
         }
 
+        /*
         for ( StyledButton button : mPositionButtons ) {
             if ( button == clickedButton ) {
                 button.setSelected(true);
@@ -62,6 +67,7 @@ public class PositionControlFragment extends Fragment {
                 button.setSelected(false);
             }
         }
+        */
     }
 
     public PositionControlFragment() {
@@ -93,12 +99,23 @@ public class PositionControlFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_position_control, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
-        mCompositeSubscription.add(SleepSenseDeviceService.instance().getPumpDevice().getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
+        mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseStatusEvent>() {
             @Override
-            public void call(PumpEvent pumpEvent) {
+            public void call(BaseStatusEvent pumpEvent) {
 
+            }
+        }));
+
+        mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
+            @Override
+            public void call(Device device) {
+                if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
+                    mProgressLayout.setVisibility(View.VISIBLE);
+                } else {
+                    mProgressLayout.setVisibility(View.GONE);
+                }
             }
         }));
 

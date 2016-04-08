@@ -57,7 +57,14 @@ public class BluetoothOperation {
 
     }
 
-    public void perform(BluetoothGatt bluetoothGatt) {
+    public boolean perform(BluetoothGatt bluetoothGatt) {
 
+        return false;
     }
+
+    public boolean replacesOperation(BluetoothOperation bluetoothOperation) {
+        return false;
+    }
+
+
 }

@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.StateSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.widget.Button;
@@ -36,6 +37,10 @@ public class StyledButton extends Button {
     private Paint mBorderPaint = new Paint();
 
     private boolean mDrawTopBorder;
+    private boolean mDrawBottomBorder;
+
+    private boolean mActuallyDrawTopBorder;
+    private boolean mActuallyDrawBottomBorder;
 
     public StyledButton(Context context) {
         super(context);
@@ -59,16 +64,21 @@ public class StyledButton extends Button {
 
         mBorderPaint.setColor(getCurrentTextColor());
 
-        if (mDrawTopBorder) {
+        if (mActuallyDrawTopBorder) {
             canvas.drawLine(0, 0, canvas.getWidth(), 0, mBorderPaint);
+        }
+
+        if (mActuallyDrawBottomBorder) {
+            canvas.drawLine(0, canvas.getHeight(), canvas.getWidth(), canvas.getHeight(), mBorderPaint);
         }
 
     }
 
     @Override
-    public void setSelected(boolean selected) {
-        super.setSelected(selected);
-        mDrawTopBorder = selected;
+    protected void drawableStateChanged() {
+        super.drawableStateChanged();
+        mActuallyDrawTopBorder = mDrawTopBorder && (isPressed()||StateSet.stateSetMatches(getDrawableState(),SELECTED_STATE_SET));
+        mActuallyDrawBottomBorder = mDrawBottomBorder && (isPressed()||StateSet.stateSetMatches(getDrawableState(),SELECTED_STATE_SET));
         invalidate();
     }
 
@@ -103,6 +113,7 @@ public class StyledButton extends Button {
                 attrs, R.styleable.StyledView, defStyleAttr, 0);
 
         mDrawTopBorder = a.getBoolean(R.styleable.StyledView_topBorder, false);
+        mDrawBottomBorder = a.getBoolean(R.styleable.StyledView_bottomBorder, false);
 
         String typefaceName = a.getString(R.styleable.StyledView_typeface);
 
