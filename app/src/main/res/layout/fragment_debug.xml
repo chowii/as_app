@@ -21,7 +21,7 @@
         android:id="@+id/debug_button_acquire"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Find Devices"/>
+        android:text="Find Missing Devices"/>
 
     <Button
         android:id="@+id/debug_button_clear"

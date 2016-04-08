@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.OnBoardActivity;
@@ -37,6 +38,12 @@ public class OnBoardConnectionsFragment extends Fragment {
     @Bind(R.id.on_board_image_view_tracker_found)
     ImageView mTrackerFoundImageView;
 
+    @Bind(R.id.on_board_text_view_heading)
+    TextView mHeadingTextView;
+
+    @Bind(R.id.on_board_text_view_text)
+    TextView mTextTextView;
+
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     public static OnBoardConnectionsFragment newInstance() {
@@ -60,6 +67,14 @@ public class OnBoardConnectionsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_on_board_connections, container, false);
 
         ButterKnife.bind(this, view);
+
+        if ( SleepSenseDeviceService.instance().countDevices() == 0 ) {
+            mHeadingTextView.setText("Sorry");
+            mTextTextView.setText("I didn't find any devices.");
+        } else {
+            mHeadingTextView.setText("Success");
+            mTextTextView.setText("This is what I found.");
+        }
 
         mBaseFoundImageView.setImageResource(SleepSenseDeviceService.instance().hasBaseDevice() ? R.drawable.success_tick : R.drawable.failure_cross);
         mMattressFoundImageView.setImageResource(SleepSenseDeviceService.instance().hasPumpDevice() ? R.drawable.success_tick : R.drawable.failure_cross);

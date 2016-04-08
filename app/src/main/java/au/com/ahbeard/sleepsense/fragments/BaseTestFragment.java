@@ -184,15 +184,6 @@ public class BaseTestFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SleepSenseDeviceService.instance().getLogObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Action1<String>() {
-                    @Override
-                    public void call(String message) {
-                        mLogAdapter.log(message);
-                    }
-                });
-
-
     }
 
     @Override

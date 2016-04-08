@@ -29,23 +29,20 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by neal on 3/03/2016.
  */
 public class DashboardActivity extends BaseActivity {
 
-    private final DashboardFragment mHomeFragment = DashboardFragment.newInstance("", "");
-    private final FirmnessControlFragment mFirmnessControlFragment = FirmnessControlFragment.newInstance();
-    private final PositionControlFragment mPositionControlFragment = PositionControlFragment.newInstance();
-    private final MassageControlFragment mMassageControlFragment = MassageControlFragment.newInstance();
-    private final MoreFragment mMoreFragment = MoreFragment.newInstance("", "");
+    private final DashboardFragment mHomeFragment = DashboardFragment.newInstance();
 
     private final Fragment mDebugFragment = DebugFragment.newInstance();
-    private final Fragment mBaseTestFragment = BaseTestFragment.newInstance();
-    private final Fragment mPumpTestFragment = PumpTestFragment.newInstance();
 
     private HomeFragmentPagerAdapter mDashboardPagerAdapter;
+
+    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     @OnClick(R.id.dashboard_fab_start_sleep)
     void onStartSleepClicked() {
@@ -90,7 +87,7 @@ public class DashboardActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                mStartSleepFloatingActionButton.setVisibility(mDashboardPagerAdapter.getItem(position) == mHomeFragment ? View.VISIBLE : View.GONE);
+                mStartSleepFloatingActionButton.setVisibility(mDashboardPagerAdapter.getItem(position) instanceof DashboardFragment ? View.VISIBLE : View.GONE);
             }
 
             @Override
@@ -108,7 +105,12 @@ public class DashboardActivity extends BaseActivity {
             }
         });
 
-        mStartSleepFloatingActionButton.setVisibility(mDashboardPagerAdapter.getItem(0) == mHomeFragment ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mCompositeSubscription.clear();
+        super.onDestroy();
     }
 
     private void setupTabs() {
@@ -116,26 +118,27 @@ public class DashboardActivity extends BaseActivity {
         mDashboardPagerAdapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
 
         if (SleepSenseDeviceService.instance().hasTrackerDevice() ) {
-            mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, mHomeFragment);
+            mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, DashboardFragment.newInstance());
         }
 
         if (SleepSenseDeviceService.instance().hasPumpDevice() ) {
-            mDashboardPagerAdapter.addTab("Firmness",R.drawable.tab_firmness_unselected,R.drawable.tab_firmness_selected, mFirmnessControlFragment);
+            mDashboardPagerAdapter.addTab("Firmness",R.drawable.tab_firmness_unselected,R.drawable.tab_firmness_selected, FirmnessControlFragment.newInstance());
         }
 
         if (SleepSenseDeviceService.instance().hasBaseDevice() ) {
-            mDashboardPagerAdapter.addTab("Position",R.drawable.tab_position_unselected,R.drawable.tab_position_selected, mPositionControlFragment);
-            mDashboardPagerAdapter.addTab("Massage",R.drawable.tab_massage_unselected,R.drawable.tab_massage_selected, mMassageControlFragment);
+            mDashboardPagerAdapter.addTab("Position",R.drawable.tab_position_unselected,R.drawable.tab_position_selected, PositionControlFragment.newInstance());
+            mDashboardPagerAdapter.addTab("Massage",R.drawable.tab_massage_unselected,R.drawable.tab_massage_selected, MassageControlFragment.newInstance());
         }
 
-//        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, mMoreFragment);
+        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance());
+
         mDashboardPagerAdapter.addTab("Debug",R.drawable.debug_icon_normal,R.drawable.debug_icon_selected, mDebugFragment);
-//        mDashboardPagerAdapter.addTab("Base",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, mBaseTestFragment);
-//        mDashboardPagerAdapter.addTab("Pump",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, mPumpTestFragment);
 
         mViewPager.setAdapter(mDashboardPagerAdapter);
 
         mSimpleTabStrip.setViewPager(mViewPager);
+
+        mStartSleepFloatingActionButton.setVisibility(mDashboardPagerAdapter.getItem(0) == mHomeFragment ? View.VISIBLE : View.GONE);
 
     }
 
@@ -185,8 +188,6 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void clearDevices() {
-        // This is a hack until we make sure that the fragments can deal with null devices.
-        setupTabs();
         SleepSenseDeviceService.instance().clearDevices();
         Intent intent= new Intent(this,DashboardActivity.class);
         startActivity(intent);

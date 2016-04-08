@@ -177,6 +177,7 @@
                     android:minHeight="90dp"
                     android:orientation="horizontal"
                     android:padding="20dp"
+                    app:topBorder="true"
                     app:borderColor="@color/controlHighlight">
 
                     <ImageView

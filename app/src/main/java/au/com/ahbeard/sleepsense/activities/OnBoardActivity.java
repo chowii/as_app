@@ -22,7 +22,7 @@ public class OnBoardActivity extends BaseActivity {
     ImageView mPhoneImageView;
 
     public void acquireDevices() {
-        SleepSenseDeviceService.instance()
+        mCompositeSubscription.add(SleepSenseDeviceService.instance()
                 .acquireDevices(2500)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -53,7 +53,7 @@ public class OnBoardActivity extends BaseActivity {
                             @Override
                             public void onNext(String s) {
                             }
-                        });
+                        }));
 
 
     }

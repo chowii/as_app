@@ -52,7 +52,7 @@ public class StyledLinearLayout extends LinearLayout {
             canvas.drawLine(0, 0, canvas.getWidth(), 0, mBorderPaint);
         }
 
-        if (mActuallyDrawTopBorder) {
+        if (mActuallyDrawBottomBorder) {
             canvas.drawLine(0, canvas.getHeight(), canvas.getWidth(), canvas.getHeight(), mBorderPaint);
         }
 

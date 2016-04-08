@@ -19,10 +19,11 @@ public class SleepSenseDeviceFactory {
     public static boolean isSleepSenseDevice(BluetoothScanEvent.DeviceFoundEvent deviceFoundEvent) {
 
         // Neal's FitBit.
-        if ("ED:FD:CB:C2:05:91".equals(deviceFoundEvent.getDevice().getAddress())) {
-            return true;
-        }
+//        if ("ED:FD:CB:C2:05:91".equals(deviceFoundEvent.getDevice().getAddress())) {
+//            return true;
+//        }
 
+        // TODO: Abstract the checks out to the devices during on-boarding development.
         String name = deviceFoundEvent.getDevice().getName();
 
         if ("BLE Mini".equals(name)) {
@@ -44,13 +45,11 @@ public class SleepSenseDeviceFactory {
 
         List<Device> mDevices = new ArrayList<>();
 
-        if ("ED:FD:CB:C2:05:91".equals(deviceFoundEvent.getDevice().getAddress())) {
+//        if ("ED:FD:CB:C2:05:91".equals(deviceFoundEvent.getDevice().getAddress())) {
 //            mDevices.add(new DummyBaseDevice());
-//            DummyPumpDevice dummyPumpDevice = new DummyPumpDevice();
-//            dummyPumpDevice.link(context,deviceFoundEvent.getDevice());
-//            mDevices.add(dummyPumpDevice);
-            /// mDevices.add(new DummyTrackerDevice());
-        }
+//            mDevices.add(new DummyPumpDevice());
+//            mDevices.add(new DummyTrackerDevice());
+//        }
 
         String name = deviceFoundEvent.getDevice().getName();
 

@@ -21,6 +21,7 @@ import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
+import au.com.ahbeard.sleepsense.services.LogService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -32,8 +33,6 @@ import rx.subscriptions.CompositeSubscription;
  * A simple {@link Fragment} subclass.
  */
 public class PumpTestFragment extends Fragment {
-
-    LogAdapter mLogAdapter = new LogAdapter();
 
     PumpDevice mPumpDevice;
 
@@ -63,9 +62,6 @@ public class PumpTestFragment extends Fragment {
         mPumpDevice.stop(PumpDevice.Side.Left);
     }
 
-    @Bind(R.id.pump_test_recycler_view_log)
-    RecyclerView mLogRecyclerView;
-
     @Bind(R.id.pump_test_button_connect_disconnect)
     Button mConnectDisconnectButton;
 
@@ -93,15 +89,6 @@ public class PumpTestFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SleepSenseDeviceService.instance().getLogObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Action1<String>() {
-                    @Override
-                    public void call(String message) {
-                        mLogAdapter.log(message);
-                    }
-                });
-
-
     }
 
     @Override
@@ -111,10 +98,6 @@ public class PumpTestFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_pump_test, container, false);
 
         ButterKnife.bind(this, view);
-
-        mLogRecyclerView.setAdapter(mLogAdapter);
-        mLogRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mLogRecyclerView.setItemAnimator(new SimpleItemAnimator());
 
         mConnectDisconnectButton.setEnabled(false);
 
@@ -152,51 +135,6 @@ public class PumpTestFragment extends Fragment {
         return new PumpTestFragment();
     }
 
-    /**
-     * Log adapter... manages the log entries.
-     */
-    public class LogAdapter extends RecyclerView.Adapter<LogViewHolder> {
-
-        int mMaxLogItems = 128;
-        List<String> mLogItems = new ArrayList<>();
-
-        public LogAdapter() {
-        }
-
-        public LogAdapter(int maxLogItems) {
-            mMaxLogItems = maxLogItems;
-        }
-
-        @Override
-        public LogViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new LogViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_log, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(LogViewHolder holder, int position) {
-            holder.bind(mLogItems.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return mLogItems.size();
-        }
-
-        public void clear() {
-            mLogItems.clear();
-            notifyDataSetChanged();
-        }
-
-        public void log(String message) {
-            if (mLogItems.size() >= mMaxLogItems) {
-                mLogItems.remove(0);
-            }
-            mLogItems.add(message);
-            notifyDataSetChanged();
-        }
-    }
-
     public class LogViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.log_text_view)
@@ -221,18 +159,6 @@ public class PumpTestFragment extends Fragment {
             mConnectDisconnectButton.setEnabled(true);
             updateControls(mPumpDevice.isConnected());
 
-            mCompositeSubscription.add(
-                    mPumpDevice.getLogObservable()
-                            .subscribeOn(AndroidSchedulers.mainThread())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(
-                                    new Action1<String>() {
-                                        @Override
-                                        public void call(String message) {
-                                            mLogAdapter.log(message);
-                                        }
-                                    }));
-
             mCompositeSubscription.add(mPumpDevice.getDeviceEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
                     new Action1<Device.DeviceEvent>() {
                         @Override
@@ -249,7 +175,7 @@ public class PumpTestFragment extends Fragment {
                     new Action1<PumpEvent>() {
                         @Override
                         public void call(PumpEvent pumpEvent) {
-                            mLogAdapter.log("PUMP EVENT: " + pumpEvent.toString());
+                            LogService.d("PumpTestFragment","PUMP EVENT: " + pumpEvent.toString());
                         }
                     }));
 

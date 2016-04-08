@@ -161,7 +161,7 @@ public class DebugFragment extends Fragment {
     public void acquireDevice() {
 
         // Attempt to grab the devices.
-        SleepSenseDeviceService.instance().acquireDevices(3500)
+        mCompositeSubscription.add(SleepSenseDeviceService.instance().acquireDevices(3500)
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(
                 new Observer<String>() {
                     @Override
@@ -178,7 +178,7 @@ public class DebugFragment extends Fragment {
                     public void onNext(String s) {
 
                     }
-                });
+                }));
 
 
     }
