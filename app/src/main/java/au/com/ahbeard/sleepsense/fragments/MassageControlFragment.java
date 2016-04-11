@@ -15,6 +15,7 @@ import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseCommand;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseStatusEvent;
+import au.com.ahbeard.sleepsense.widgets.StyledLinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -32,14 +33,9 @@ public class MassageControlFragment extends Fragment {
 
 
     @Bind(R.id.massage_button_timer)
-    View mTimerButton;
+    StyledLinearLayout mTimerButton;
 
     private BaseDevice mBaseDevice;
-
-    @OnClick(R.id.massage_button_head_plus)
-    void wholeBodyClicked() {
-        mBaseDevice.sendCommand(BaseCommand.wholeBody());
-    }
 
     @OnClick(R.id.massage_button_whole_body)
     void wholeBodyMassageClicked() {

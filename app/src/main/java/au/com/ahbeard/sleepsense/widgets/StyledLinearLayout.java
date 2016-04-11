@@ -61,22 +61,21 @@ public class StyledLinearLayout extends LinearLayout {
     @Override
     protected void drawableStateChanged() {
         super.drawableStateChanged();
-        mActuallyDrawTopBorder = mDrawTopBorder && (isPressed()|| StateSet.stateSetMatches(getDrawableState(),SELECTED_STATE_SET));
-        mActuallyDrawBottomBorder = mDrawBottomBorder && (isPressed()||StateSet.stateSetMatches(getDrawableState(),SELECTED_STATE_SET));
+        mActuallyDrawTopBorder = mDrawTopBorder && (isPressed()|| isSelected());
+        mActuallyDrawBottomBorder = mDrawBottomBorder && (isPressed()||isSelected());
         invalidate();
     }
 
 
 
-    @Override
-    public void setSelected(boolean selected) {
-        super.setSelected(selected);
-        for (int i=0; i< getChildCount();i++) {
-            getChildAt(i).setSelected(selected);
-        }
-        mDrawTopBorder = selected;
-        invalidate();
-    }
+//    @Override
+//    public void setSelected(boolean selected) {
+//        super.setSelected(selected);
+//        for (int i=0; i< getChildCount();i++) {
+//            getChildAt(i).setSelected(selected);
+//        }
+//        invalidate();
+//    }
 
     public void init(AttributeSet attrs, int defStyleAttr) {
         // Load attributes
