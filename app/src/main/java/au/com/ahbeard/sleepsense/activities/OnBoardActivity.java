@@ -86,7 +86,7 @@ public class OnBoardActivity extends BaseActivity {
             public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent sleepSenseDeviceServiceEvent) {
                 if (sleepSenseDeviceServiceEvent == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.StartedSearchingForDevices) {
                     mPhoneImageView.animate().rotationBy(360).setDuration(2000).start();
-                } else if (sleepSenseDeviceServiceEvent == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.StartedSearchingForDevices) {
+                } else if (sleepSenseDeviceServiceEvent == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.FinishedSearchingForDevices) {
 
                 }
             }

@@ -15,8 +15,6 @@ public class BaseActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_COARSE_LOCATION = 123;
 
-    private boolean mBackgroundScanningAvailable;
-
     public void requestBackgroundScanningPermissions() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -39,7 +37,7 @@ public class BaseActivity extends AppCompatActivity {
                         PERMISSIONS_REQUEST_COARSE_LOCATION);
             }
         } else {
-            mBackgroundScanningAvailable = true;
+
         }
     }
 
@@ -51,14 +49,13 @@ public class BaseActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mBackgroundScanningAvailable = true;
                 } else {
 
                     final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
                     builder.setTitle("Functionality limited");
                     builder.setMessage(
-                            "Since location access has not been granted, this app will not be able to discover Bluetooth Devices when in the background.");
+                            "Since location access has not been granted, this app will not be able to discover Bluetooth Devices.");
                     builder.setPositiveButton(android.R.string.ok, null);
                     builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
 

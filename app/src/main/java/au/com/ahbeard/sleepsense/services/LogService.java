@@ -32,7 +32,7 @@ public class LogService {
     private PublishSubject<LogMessage> mLogMessagePublishSubject = PublishSubject.create();
 
     public Observable<LogMessage> getLogObservable() {
-        return mLogMessagePublishSubject;
+        return mLogMessagePublishSubject.onBackpressureBuffer();
     }
 
     public static void initialize(Context context, int maximumLogBufferSize) {

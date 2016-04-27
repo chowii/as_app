@@ -3,6 +3,8 @@ package au.com.ahbeard.sleepsense.bluetooth;
 import android.content.Context;
 import android.util.Log;
 
+import com.beddit.sensor.SensorManager;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,6 +61,8 @@ public class SleepSenseDeviceService {
     private SleepSenseDeviceService(Context context) {
 
         mContext = context;
+
+        SensorManager.init(context);
 
         mPumpDeviceAddress = PreferenceService.instance().getPumpDeviceAddress();
         mBaseDeviceAddress = PreferenceService.instance().getBaseDeviceAddress();
@@ -228,6 +232,11 @@ public class SleepSenseDeviceService {
         if ( mPumpDevice != null ) {
             PreferenceService.instance().clearPumpDeviceAddress();
             mPumpDevice = null;
+        }
+
+        if ( mTrackerDevice != null ) {
+            PreferenceService.instance().clearTrackerDeviceAddress();
+            mTrackerDevice = null;
         }
 
         mChangeEventPublishSubject.onNext(SleepSenseDeviceServiceEvent.DeviceListChanged);

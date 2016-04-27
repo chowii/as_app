@@ -7,6 +7,7 @@ import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.services.LogService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
+import au.com.ahbeard.sleepsense.services.SleepDataService;
 import au.com.ahbeard.sleepsense.services.TypefaceService;
 import rx.functions.Action1;
 
@@ -35,6 +36,7 @@ public class SleepSenseApplication extends Application {
         // Initialize these later.
         BluetoothService.initialize(this);
         SleepSenseDeviceService.initialize(this);
+        SleepDataService.initialize(this);
     }
 
     private void log(LogService.LogMessage logMessage) {

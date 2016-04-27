@@ -7,13 +7,11 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
-import android.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-import au.com.ahbeard.sleepsense.bluetooth.tracker.EnableNotificationOperation;
 import au.com.ahbeard.sleepsense.services.LogService;
 import rx.Observable;
 import rx.Observer;
@@ -91,6 +89,10 @@ public class Device extends BluetoothGattCallback {
 
     public void readDeviceInformation() {
 
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 
     private PublishSubject<CharacteristicWriteOperation> mBluetoothCommandSubject = PublishSubject.create();
@@ -322,6 +324,7 @@ public class Device extends BluetoothGattCallback {
         byte[] value = characteristic.getValue();
         LogService.d("SleepSenseDeviceService",String.format("onCharacteristicRead: %s",
                 CharacteristicWriteOperation.getReadableStringFromByteArray(value)));
+
         mBluetoothOperationQueue.completeReadOperation(characteristic.getUuid(), value);
     }
 

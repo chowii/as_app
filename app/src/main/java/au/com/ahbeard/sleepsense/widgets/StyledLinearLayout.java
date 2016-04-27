@@ -65,9 +65,6 @@ public class StyledLinearLayout extends LinearLayout {
         mActuallyDrawBottomBorder = mDrawBottomBorder && (isPressed()||isSelected());
         invalidate();
     }
-
-
-
 //    @Override
 //    public void setSelected(boolean selected) {
 //        super.setSelected(selected);

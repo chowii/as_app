@@ -10,6 +10,7 @@ import au.com.ahbeard.sleepsense.bluetooth.base.DummyBaseDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.DummyPumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.DummyTrackerDevice;
+import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 
 /**
  * Created by neal on 4/03/2016.
@@ -26,15 +27,19 @@ public class SleepSenseDeviceFactory {
         // TODO: Abstract the checks out to the devices during on-boarding development.
         String name = deviceFoundEvent.getDevice().getName();
 
-        if ("BLE Mini".equals(name)) {
-            return true;
-        }
+//        if ("BLE Mini".equals(name)) {
+//            return true;
+//        }
 
         if ("2618BL".equals(name)) {
             return true;
         }
 
         if (name != null && name.contains("base-i4")) {
+            return true;
+        }
+
+        if (name != null && name.startsWith("Beddit")) {
             return true;
         }
 
@@ -53,11 +58,11 @@ public class SleepSenseDeviceFactory {
 
         String name = deviceFoundEvent.getDevice().getName();
 
-        if ("BLE Mini".equals(name)) {
-            DummyPumpDevice dummyPumpDevice = new DummyPumpDevice();
-            dummyPumpDevice.link(context, deviceFoundEvent.getDevice());
-            mDevices.add(dummyPumpDevice);
-        }
+//        if ("BLE Mini".equals(name)) {
+//            DummyPumpDevice dummyPumpDevice = new DummyPumpDevice();
+//            dummyPumpDevice.link(context, deviceFoundEvent.getDevice());
+//            mDevices.add(dummyPumpDevice);
+//        }
 
         if ("2618BL".equals(name)) {
             PumpDevice pumpDevice = new PumpDevice();
@@ -69,6 +74,12 @@ public class SleepSenseDeviceFactory {
             BaseDevice baseDevice = new BaseDevice();
             baseDevice.link(context, deviceFoundEvent.getDevice());
             mDevices.add(baseDevice);
+        }
+
+        if (name != null && name.startsWith("Beddit")) {
+            TrackerDevice trackerDevice = new TrackerDevice();
+            trackerDevice.link(context, deviceFoundEvent.getDevice());
+            mDevices.add(trackerDevice);
         }
 
 

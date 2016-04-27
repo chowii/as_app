@@ -32,10 +32,20 @@ public class CharacteristicWriteOperation extends BluetoothOperation {
 
     }
 
+    /**
+     * Write a byte.
+     *
+     * @param value
+     */
     public void writeByte(int value) {
         mValue[mLength++] = (byte) (value & 0xff);
     }
 
+    /**
+     * Write a short.
+     *
+     * @param value
+     */
     public void writeShort(int value) {
 
         // Align on 2 byte boundary.
@@ -47,6 +57,12 @@ public class CharacteristicWriteOperation extends BluetoothOperation {
         mValue[mLength++] = (byte) ((value >> 8) & 0xff);
     }
 
+    /**
+     * Write a short at a given location.
+     *
+     * @param location
+     * @param value
+     */
     public void writeShort(int location, int value) {
 
         // Align on 2 byte boundary.
@@ -59,12 +75,21 @@ public class CharacteristicWriteOperation extends BluetoothOperation {
 
     }
 
+    /**
+     * Write a byte array.
+     *
+     * @param bytes
+     */
     public void writeBytes(byte[] bytes) {
         for (int i = 0; i < bytes.length; i++) {
             mValue[mLength++] = bytes[i];
         }
     }
 
+    /**
+     * Write a uint32 in little endian format.
+     * @param value
+     */
     public void writeUInt32(int value) {
         mValue[mLength++] = (byte) (value & 0xff);
         mValue[mLength++] = (byte) ((value >> 8) & 0xff);
@@ -73,6 +98,11 @@ public class CharacteristicWriteOperation extends BluetoothOperation {
     }
 
 
+    /**
+     * Write a character.
+     *
+     * @param value
+     */
     public void writeChar(int value) {
         mValue[mLength++] = (byte) (value & 0xff);
     }

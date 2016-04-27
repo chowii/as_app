@@ -1,4 +1,4 @@
-package au.com.ahbeard.sleepsense.bluetooth.tracker;
+package au.com.ahbeard.sleepsense.bluetooth;
 
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;

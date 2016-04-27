@@ -2,13 +2,9 @@ package au.com.ahbeard.sleepsense.bluetooth;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Queue;
 import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.PriorityBlockingQueue;
 
-import au.com.ahbeard.sleepsense.bluetooth.tracker.EnableNotificationOperation;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action0;

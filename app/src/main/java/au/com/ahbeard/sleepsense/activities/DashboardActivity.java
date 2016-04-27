@@ -14,14 +14,12 @@ import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
-import au.com.ahbeard.sleepsense.fragments.BaseTestFragment;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.DebugFragment;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MoreFragment;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
-import au.com.ahbeard.sleepsense.fragments.PumpTestFragment;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.widgets.SimpleTabStrip;
 import butterknife.Bind;
@@ -73,7 +71,6 @@ public class DashboardActivity extends BaseActivity {
         setContentView(R.layout.activity_dashboard);
 
         ButterKnife.bind(this);
-
 
         setupTabs();
 
@@ -138,7 +135,7 @@ public class DashboardActivity extends BaseActivity {
 
         mSimpleTabStrip.setViewPager(mViewPager);
 
-        mStartSleepFloatingActionButton.setVisibility(mDashboardPagerAdapter.getItem(0) == mHomeFragment ? View.VISIBLE : View.GONE);
+        mStartSleepFloatingActionButton.setVisibility(SleepSenseDeviceService.instance().hasTrackerDevice() ? View.VISIBLE : View.GONE);
 
     }
 
