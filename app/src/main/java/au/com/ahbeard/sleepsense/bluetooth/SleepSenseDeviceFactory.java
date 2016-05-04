@@ -33,7 +33,7 @@ public class SleepSenseDeviceFactory {
 //            return true;
 //        }
 
-        if ("2618BL".equals(name)) {
+        if (name != null && name.toLowerCase().contains("2618")) {
             Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(deviceFoundEvent.getAdvertisingData());
             return true;
         }
