@@ -64,6 +64,14 @@ public class PreferenceService {
         getSharedPreferences().edit().remove("trackerDeviceAddress").commit();
     }
 
+    public float getSleepTargetTime() {
+        return getSharedPreferences().getFloat("sleepTargetTime",8.0f);
+    }
+
+    public void getSleepTargetTime(float sleepTargetTime) {
+        getSharedPreferences().edit().putFloat("sleepTargetTime",sleepTargetTime).commit();
+    }
+
     private SharedPreferences getSharedPreferences() {
         return mContext.getSharedPreferences("preferences.dat", Context.MODE_PRIVATE);
     }

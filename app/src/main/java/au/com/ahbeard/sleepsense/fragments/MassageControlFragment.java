@@ -31,7 +31,6 @@ import rx.subscriptions.CompositeSubscription;
 public class MassageControlFragment extends Fragment {
 
 
-
     @Bind(R.id.massage_button_timer)
     StyledLinearLayout mTimerButton;
 
@@ -45,6 +44,11 @@ public class MassageControlFragment extends Fragment {
     @OnClick(R.id.massage_button_timer)
     void timerClicked() {
         mBaseDevice.sendCommand(BaseCommand.timer());
+    }
+
+    @OnClick(R.id.massage_button_stop)
+    void stopClicked() {
+        mBaseDevice.massageStop();
     }
 
     @OnClick(R.id.massage_button_head_plus)
@@ -83,7 +87,7 @@ public class MassageControlFragment extends Fragment {
 
         mTimerButton.setSelected(false);
 
-        for (View view: mTimeTextViews) {
+        for (View view : mTimeTextViews) {
             view.setSelected(false);
         }
 
@@ -118,7 +122,6 @@ public class MassageControlFragment extends Fragment {
     }
 
     /**
-     *
      * @param savedInstanceState
      */
     @Override
@@ -138,28 +141,35 @@ public class MassageControlFragment extends Fragment {
 
         mBaseDevice = SleepSenseDeviceService.instance().getBaseDevice();
 
-        mCompositeSubscription.add(mBaseDevice.getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseStatusEvent>() {
-            @Override
-            public void call(BaseStatusEvent baseStatusEvent) {
-                if ( baseStatusEvent.isTimerLightActive() ) {
-                    updateViews(baseStatusEvent.getTimerLightStatus());
-                } else {
-                    updateViews(0);
-                }
+        if (mBaseDevice != null) {
 
-            }
-        }));
+            mCompositeSubscription.add(mBaseDevice.getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseStatusEvent>() {
+                @Override
+                public void call(BaseStatusEvent baseStatusEvent) {
+                    if (baseStatusEvent.isTimerLightActive()) {
+                        updateViews(baseStatusEvent.getTimerLightStatus());
+                    } else {
+                        updateViews(0);
+                    }
 
-        mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
-            @Override
-            public void call(Device device) {
-                if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
-                    mProgressLayout.setVisibility(View.VISIBLE);
-                } else {
-                    mProgressLayout.setVisibility(View.GONE);
                 }
-            }
-        }));
+            }));
+
+            mCompositeSubscription.add(SleepSenseDeviceService.instance()
+                    .getBaseDevice()
+                    .getChangeObservable()
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
+                        @Override
+                        public void call(Device device) {
+                            if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
+                                mProgressLayout.setVisibility(View.VISIBLE);
+                            } else {
+                                mProgressLayout.setVisibility(View.GONE);
+                            }
+                        }
+                    }));
+
+        }
 
         return view;
 

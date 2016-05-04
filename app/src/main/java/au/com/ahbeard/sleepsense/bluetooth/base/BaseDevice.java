@@ -1,7 +1,5 @@
 package au.com.ahbeard.sleepsense.bluetooth.base;
 
-import android.util.Log;
-
 import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
@@ -32,6 +30,10 @@ public class BaseDevice extends Device {
     private Subscription mBaseStatusSubscription;
     private PublishSubject<BaseStatusEvent> mBaseEventPublishSubject = PublishSubject.create();
 
+    private boolean mMassageAlterState;
+    private int mMassageDesiredState;
+    private int mMassagePreviousState;
+
     public UUID[] getRequiredServiceUUIDs() {
         return REQUIRED_SERVICES;
     }
@@ -59,7 +61,7 @@ public class BaseDevice extends Device {
         mBaseEventPublishSubject.subscribe(new Action1<BaseStatusEvent>() {
             @Override
             public void call(BaseStatusEvent baseStatusEvent) {
-                if (baseStatusEvent.isHeadMotorRunning()||baseStatusEvent.isFootMotorRunning()) {
+                if (baseStatusEvent.isHeadMotorRunning() || baseStatusEvent.isFootMotorRunning()) {
                     mLastActiveTime = System.currentTimeMillis();
                 } else if (System.currentTimeMillis() - mLastActiveTime > DISCONNECT_AFTER) {
                     disconnect();
@@ -90,7 +92,7 @@ public class BaseDevice extends Device {
                     @Override
                     public void call(byte[] value) {
                         BaseStatusEvent baseStatusEvent = BaseStatusEvent.safeInstance(value);
-                        if (baseStatusEvent!=null){
+                        if (baseStatusEvent != null) {
                             mBaseEventPublishSubject.onNext(baseStatusEvent);
                         }
                     }
@@ -100,7 +102,7 @@ public class BaseDevice extends Device {
 
     @Override
     protected void onDisconnect() {
-        if ( mBaseStatusSubscription != null ) {
+        if (mBaseStatusSubscription != null) {
             mBaseStatusSubscription.unsubscribe();
             mBaseStatusSubscription = null;
         }
@@ -112,5 +114,10 @@ public class BaseDevice extends Device {
     public void sendCommand(CharacteristicWriteOperation command) {
         super.sendCommand(command);
         mLastActiveTime = System.currentTimeMillis();
+    }
+
+    public void massageStop() {
+        mMassageAlterState=true;
+        mMassageDesiredState = 0;
     }
 }

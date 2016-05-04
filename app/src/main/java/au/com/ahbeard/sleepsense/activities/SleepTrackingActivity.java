@@ -1,7 +1,6 @@
 package au.com.ahbeard.sleepsense.activities;
 
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
-import au.com.ahbeard.sleepsense.services.SleepDataService;
+import au.com.ahbeard.sleepsense.services.SleepService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -38,7 +37,7 @@ public class SleepTrackingActivity extends AppCompatActivity {
 
     @OnClick(R.id.sleep_tracking_button_batch_analysis)
     void onRunBatchAnalysis() {
-        SleepDataService.instance().runBatchAnalysis();
+        SleepService.instance().runBatchAnalysis();
     }
 
     @Bind(R.id.sleep_tracking_text_view_clock_time)

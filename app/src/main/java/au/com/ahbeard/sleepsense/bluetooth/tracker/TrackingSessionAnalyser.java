@@ -1,5 +1,7 @@
 package au.com.ahbeard.sleepsense.bluetooth.tracker;
 
+import android.util.Log;
+
 import com.beddit.analysis.AnalysisException;
 import com.beddit.analysis.InputSpec;
 import com.beddit.analysis.SampledFragment;
@@ -77,9 +79,19 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
         mTimeValueTrackFragmentPublishSubject.observeOn(Schedulers.io()).subscribe(
                 new TrackingSessionDataWriter(TrackerUtils.getCalendarDate(System.currentTimeMillis())));
 
-        mSensorDataObservable.observeOn(Schedulers.io()).subscribe(new Action1<SensorData>() {
+        mSensorDataObservable.observeOn(Schedulers.io()).subscribe(new Observer<SensorData>() {
             @Override
-            public void call(SensorData sensorData) {
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(SensorData sensorData) {
                 mTrackerDevice.logPacket();
             }
         });
@@ -109,6 +121,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
     @Override
     public void onSensorSessionReceivedData(SensorSession sensorSession, byte[] data, String trackName, int sampleIndex) {
         // Use the observable to publish the data to the computation thread.
+        LogService.e(TAG, "data recieved");
         mSensorDataObservable.onNext(new SensorData(data, trackName, sampleIndex, System.currentTimeMillis() - mAnalysisStartTime));
     }
 
@@ -180,6 +193,8 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
         try {
 
             mStreamingAnalysis = new StreamingAnalysis(inputSpec);
+
+            Log.d("TrackingSessionAnalyzer", "about to start streaming...");
 
             sensorSession.startStreaming();
 

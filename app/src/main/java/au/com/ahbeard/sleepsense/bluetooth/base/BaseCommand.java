@@ -106,6 +106,10 @@ public class BaseCommand extends CharacteristicWriteOperation {
         return createGeneralBaseCommand("MassageTimer");
     }
 
+    public static BaseCommand reset() {
+        return createGeneralBaseCommand("Reset");
+    }
+
     public static BaseCommand createGeneralBaseCommand(String identifier) {
 
         BaseCommand baseCommand = new BaseCommand(

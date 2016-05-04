@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/ahbeard-sleepsense-android.iml" filepath="$PROJECT_DIR$/ahbeard-sleepsense-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/beddit-mobile-android-sensor/beddit-mobile-android-sensor.iml" filepath="$PROJECT_DIR$/beddit-mobile-android-sensor/beddit-mobile-android-sensor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sleepsense-backend/sleepsense-backend.iml" filepath="$PROJECT_DIR$/sleepsense-backend/sleepsense-backend.iml" />
     </modules>
   </component>
 </project>

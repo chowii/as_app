@@ -62,14 +62,30 @@ public class Firmness {
         return pressure/60f;
     }
 
+    /**
+     * Snap the control to useable values.
+     *
+     * @param controlValue
+     * @return
+     */
     public static float snapControlValue(float controlValue) {
         return Math.round(controlValue*10f)/10f;
     }
 
+    /**
+     *
+     * @param controlValue
+     * @return
+     */
     public static int getDrawableLevelForControlValue(float controlValue) {
         return Math.round(controlValue*10f);
     }
 
+    /**
+     *
+     * @param targetValue
+     * @return
+     */
     public static int getPressureForControlValue(float targetValue) {
         return (int)(targetValue*60);
     }

@@ -1,7 +1,6 @@
 package au.com.ahbeard.sleepsense.services;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
 import com.beddit.analysis.AnalysisException;
@@ -25,29 +24,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerUtils;
-import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackingSessionDataWriter;
+import rx.Observer;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 
 /**
  * Service to save the sleep data.
  */
-public class SleepDataService {
+public class SleepService {
 
-    private static SleepDataService sSleepDataService;
+    private static SleepService sSleepService;
 
     private final Context mContext;
     private File mSleepDataStorageDirectory;
 
     public static void initialize(Context context) {
-        sSleepDataService = new SleepDataService(context);
+        sSleepService = new SleepService(context);
     }
 
-    public static SleepDataService instance() {
-        return sSleepDataService;
+    public static SleepService instance() {
+        return sSleepService;
     }
 
-    public SleepDataService(Context context) {
+    public SleepService(Context context) {
         mContext = context;
         mSleepDataStorageDirectory = context.getFilesDir();
     }
@@ -59,6 +58,34 @@ public class SleepDataService {
 
     public void runBatchAnalysis() {
 
+        Schedulers.io().createWorker().schedule(new Action0() {
+            @Override
+            public void call() {
+                CalendarDate analysisCalendarDate = TrackerUtils.getCalendarDate(System.currentTimeMillis());
+
+                RemoteSleepDataService.instance()
+                        .saveSleepData("" + System.currentTimeMillis(), new byte[]{1, 2, 3, 4})
+                        .subscribe(new Observer<String>() {
+
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("TAG", "error", e);
+                            }
+
+                            @Override
+                            public void onNext(String s) {
+
+                            }
+                        });
+
+            }
+        });
+
         Schedulers.computation().createWorker().schedule(new Action0() {
             @Override
             public void call() {
@@ -67,9 +94,6 @@ public class SleepDataService {
 
                 long currentTime = System.currentTimeMillis();
 
-                CalendarDate calendarDate = TrackerUtils.getCalendarDate(currentTime);
-
-                TrackingSessionDataWriter trackingSessionDataWriter = new TrackingSessionDataWriter(calendarDate);
                 List<BatchAnalysisResult> previousBatchAnalysisResults = new ArrayList<>();
 
                 long analysisTime = currentTime - 30 * MILLISECONDS_IN_DAY;
@@ -89,11 +113,12 @@ public class SleepDataService {
                             Log.d("BatchAnalysis", "No data...");
                         }
 
-                        analysisTime += MILLISECONDS_IN_DAY;
-
                     } catch (IOException | AnalysisException e) {
                         e.printStackTrace();
                     }
+
+                    analysisTime += MILLISECONDS_IN_DAY;
+
                 }
 
             }
@@ -113,7 +138,7 @@ public class SleepDataService {
     //
     public File getSessionOutputDirectory(CalendarDate calendarDate, long startTime) {
         File sessionOutputDirectory = new File(getOutputDirectory(calendarDate), "" + startTime);
-        if (! sessionOutputDirectory.exists()) {
+        if (!sessionOutputDirectory.exists()) {
             sessionOutputDirectory.mkdirs();
         }
 
@@ -126,7 +151,7 @@ public class SleepDataService {
      */
     public File getOutputDirectory(CalendarDate calendarDate) {
         return new File(mSleepDataStorageDirectory,
-                "SleepSense_"+stringFromCalendarDate(calendarDate));
+                "SleepSense_" + stringFromCalendarDate(calendarDate));
     }
 
     /**
@@ -150,7 +175,7 @@ public class SleepDataService {
                 sessionDataForDay,
                 previousBatchResults,
                 calendarDate,
-                new BatchAnalysisContext(8.0f * 3600f));
+                new BatchAnalysisContext(PreferenceService.instance().getSleepTargetTime()  * 3600f));
 
         TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
 
@@ -211,7 +236,7 @@ public class SleepDataService {
 
             if (matcher.matches()) {
 
-                Log.d("SleepDataService", "reading track file: " + trackFile);
+                Log.d("SleepService", "reading track file: " + trackFile);
 
                 String trackName = matcher.group(1);
                 String valueType = matcher.group(2);

@@ -101,51 +101,54 @@ public class PositionControlFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_position_control, container, false);
         ButterKnife.bind(this, view);
 
-        mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseStatusEvent>() {
-            @Override
-            public void call(BaseStatusEvent pumpEvent) {
+        if ( SleepSenseDeviceService.instance().getBaseDevice() !=null) {
+            mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseStatusEvent>() {
+                @Override
+                public void call(BaseStatusEvent pumpEvent) {
 
-            }
-        }));
-
-        mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
-            @Override
-            public void call(Device device) {
-                if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
-                    mProgressLayout.setVisibility(View.VISIBLE);
-                } else {
-                    mProgressLayout.setVisibility(View.GONE);
                 }
-            }
-        }));
+            }));
 
-        mHeadPositionUpButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
-            @Override
-            public void onPressPulse(StyledImageButton view) {
-                SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.headPositionUp());
-            }
-        });
+            mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
+                @Override
+                public void call(Device device) {
+                    if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
+                        mProgressLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        mProgressLayout.setVisibility(View.GONE);
+                    }
+                }
+            }));
 
-        mHeadPositionDownButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
-            @Override
-            public void onPressPulse(StyledImageButton view) {
-                SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.headPositionDown());
-            }
-        });
+            mHeadPositionUpButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
+                @Override
+                public void onPressPulse(StyledImageButton view) {
+                    SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.headPositionUp());
+                }
+            });
 
-        mFootPositionUpButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
-            @Override
-            public void onPressPulse(StyledImageButton view) {
-                SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.footPositionUp());
-            }
-        });
+            mHeadPositionDownButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
+                @Override
+                public void onPressPulse(StyledImageButton view) {
+                    SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.headPositionDown());
+                }
+            });
 
-        mFootPositionDownButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
-            @Override
-            public void onPressPulse(StyledImageButton view) {
-                SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.footPositionDown());
-            }
-        });
+            mFootPositionUpButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
+                @Override
+                public void onPressPulse(StyledImageButton view) {
+                    SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.footPositionUp());
+                }
+            });
+
+            mFootPositionDownButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
+                @Override
+                public void onPressPulse(StyledImageButton view) {
+                    SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.footPositionDown());
+                }
+            });
+
+        }
 
         return view;
     }

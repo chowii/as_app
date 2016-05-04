@@ -11,11 +11,10 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import au.com.ahbeard.sleepsense.services.SleepDataService;
+import au.com.ahbeard.sleepsense.services.SleepService;
 import rx.Observer;
 
 /**
@@ -114,7 +113,7 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
 
                 if (trackOutputStream == null) {
 
-                    File trackOutputFile = SleepDataService.instance().getTrackOutputFile(mCalendarDate, mStartTime, trackName, timeValueTrackFragment.getItemType());
+                    File trackOutputFile = SleepService.instance().getTrackOutputFile(mCalendarDate, mStartTime, trackName, timeValueTrackFragment.getItemType());
                     trackOutputStream = new FileOutputStream(trackOutputFile);
                     mTrackOutputStreams.put(trackName, trackOutputStream);
                 }
@@ -133,7 +132,7 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
      */
     public void writeSessionMetadata() throws IOException {
 
-        ObjectOutputStream fileOutputStream = new ObjectOutputStream(new FileOutputStream(new File(SleepDataService.instance().getSessionOutputDirectory(mCalendarDate, mStartTime), "metadata.dat")));
+        ObjectOutputStream fileOutputStream = new ObjectOutputStream(new FileOutputStream(new File(SleepService.instance().getSessionOutputDirectory(mCalendarDate, mStartTime), "metadata.dat")));
 
         fileOutputStream.writeLong(mStartTime);
         fileOutputStream.writeLong(mEndTime);
@@ -147,7 +146,7 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
      */
     public void writeError(Throwable throwable) throws IOException {
 
-        PrintWriter errorWriter = new PrintWriter(new FileWriter(new File(SleepDataService.instance().getSessionOutputDirectory(mCalendarDate, mStartTime), "error.log"),true));
+        PrintWriter errorWriter = new PrintWriter(new FileWriter(new File(SleepService.instance().getSessionOutputDirectory(mCalendarDate, mStartTime), "error.log"),true));
 
         throwable.printStackTrace(errorWriter);
 

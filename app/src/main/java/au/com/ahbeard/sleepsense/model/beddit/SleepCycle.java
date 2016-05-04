@@ -1,26 +1,19 @@
 package au.com.ahbeard.sleepsense.model.beddit;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
 /**
- * Created by neal on 20/04/2016.
+ * The timestamp and value represents the sleep depth at that time. The value is a floating
+ * point number between 0.0 and 1.0. Value 0.0 corresponds to deepest
+ * possible sleep and 1.0 to lightest possible sleep. There will be one
+ * data point every 2 minutes, beginning from the moment the subject is
+ * deemed to be sleeping and ending when the subject ultimately wakes up.
  */
 public class SleepCycle {
 
-
-    /*
-
-    The following stages are defined:
-* 65=away represents the start time of a period when the user is away from
-  the sensor.
-* 82=restless represents restless sleep
-* 83=sleep represents plain sleep
-* 87=wake represents the start time of the period when the user is awake and
-  present on top of the sensor.
-* 78=no signal represents a period of missing signal.
-* 71=gap represents a proposed division between two separate sleeps, e.g. day
-  nap and night sleep. The separation is proposed when no signal is received
-  for longer than four hours.
-
-     */
 
     private double mTimestamp;
     private float mCycle;
@@ -28,6 +21,21 @@ public class SleepCycle {
     public SleepCycle(double timestamp, float cycle) {
         mTimestamp = timestamp;
         mCycle = cycle;
+    }
+
+    public static int getLength() {
+        return 12;
+    }
+
+    public static SleepCycle create(int position, byte[] bytes) {
+        double timestamp = ByteBuffer.wrap(bytes,position,8).order(ByteOrder.LITTLE_ENDIAN).getDouble();
+        float cycle = ByteBuffer.wrap(bytes,position+8,4).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+        return new SleepCycle(timestamp,cycle);
+    }
+
+    public void write(OutputStream outputStream) throws IOException {
+        outputStream.write(ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putDouble(mTimestamp).array());
+        outputStream.write(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putFloat(mCycle).array());
     }
 
     public double getTimestamp() {

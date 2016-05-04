@@ -7,14 +7,12 @@ import com.beddit.analysis.CalendarDate;
 import com.beddit.analysis.TimeValueFragment;
 import com.beddit.analysis.TimeValueTrackFragment;
 
-import java.io.ByteArrayInputStream;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Calendar;
 
+import au.com.ahbeard.sleepsense.model.beddit.Actigram;
+import au.com.ahbeard.sleepsense.model.beddit.HeartRate;
 import au.com.ahbeard.sleepsense.model.beddit.SleepCycle;
 import au.com.ahbeard.sleepsense.model.beddit.SleepStage;
 import au.com.ahbeard.sleepsense.services.LogService;
@@ -41,7 +39,6 @@ public class TrackerUtils {
                 calendar.get(Calendar.DAY_OF_MONTH));
     }
 
-
     public static void logBatchAnalysisResult(BatchAnalysisResult batchAnalysisResult) {
 
         for (String name : batchAnalysisResult.getPropertyNames()) {
@@ -50,6 +47,7 @@ public class TrackerUtils {
         }
 
         for (String timeValueName : batchAnalysisResult.getTimeValueDataNames()) {
+
             TimeValueTrackFragment timeValueTrackFragment = batchAnalysisResult.getTimeValueData(timeValueName);
             LogService.d("BatchAnalysisResult", "->" + timeValueName + ":" + ConversionUtils.byteArrayToString(timeValueTrackFragment.getData(), " "));
 
@@ -64,12 +62,8 @@ public class TrackerUtils {
 
                     while (position < bytes.length) {
 
-                        double timestamp = ByteBuffer.wrap(bytes,position,8).order(ByteOrder.LITTLE_ENDIAN).getDouble();
-                        position+=8;
-                        int stage = bytes[position];
-                        position+=1;
-
-                        SleepStage sleepStage = new SleepStage(timestamp,stage);
+                        SleepStage sleepStage = SleepStage.create(position,bytes);
+                        position+=SleepStage.getLength();
 
                         Log.d("BatchAnalysisResult", String.format("sleep stage: %f - %s", sleepStage.getTimestamp(),sleepStage.getPresenceDescription() ));
                     }
@@ -84,15 +78,10 @@ public class TrackerUtils {
                     byte[] bytes = timeValueTrackFragment.getData();
 
                     while (position < bytes.length) {
+                        SleepCycle sleepCycle = SleepCycle.create(position,bytes);
+                        position+=SleepStage.getLength();
 
-                        double timestamp = ByteBuffer.wrap(bytes,position,8).order(ByteOrder.LITTLE_ENDIAN).getDouble();
-                        position+=8;
-                        float cycle = ByteBuffer.wrap(bytes,position,4).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                        position+=4;
-
-                        SleepCycle sleepStage = new SleepCycle(timestamp,cycle);
-
-                        Log.d("BatchAnalysisResult", String.format("sleep cycle: %f - %f", sleepStage.getTimestamp(),sleepStage.getCycle() ));
+                        Log.d("BatchAnalysisResult", String.format("sleep cycle: %f - %f", sleepCycle.getTimestamp(),sleepCycle.getCycle() ));
                     }
 
 
@@ -106,14 +95,11 @@ public class TrackerUtils {
 
                     while (position < bytes.length) {
 
-                        double timestamp = ByteBuffer.wrap(bytes,position,8).order(ByteOrder.LITTLE_ENDIAN).getDouble();
-                        position+=8;
-                        float cycle = ByteBuffer.wrap(bytes,position,4).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                        position+=4;
 
-                        SleepCycle sleepStage = new SleepCycle(timestamp,cycle);
+                        HeartRate heartRate =  HeartRate.create(position,bytes);
+                        position+=HeartRate.getLength();
 
-                        Log.d("BatchAnalysisResult", String.format("heart rate: %f - %f", sleepStage.getTimestamp(),sleepStage.getCycle() ));
+                        Log.d("BatchAnalysisResult", String.format("heart rate: %f - %f", heartRate.getTimestamp(),heartRate.getHeartRate() ));
                     }
 
 
@@ -127,14 +113,10 @@ public class TrackerUtils {
 
                     while (position < bytes.length) {
 
-                        double timestamp = ByteBuffer.wrap(bytes,position,8).order(ByteOrder.LITTLE_ENDIAN).getDouble();
-                        position+=8;
-                        float cycle = ByteBuffer.wrap(bytes,position,4).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                        position+=4;
+                        Actigram actigram = Actigram.create(position,bytes);
+                        position+=Actigram.getLength();
 
-                        SleepCycle sleepStage = new SleepCycle(timestamp,cycle);
-
-                        Log.d("BatchAnalysisResult", String.format("detected movements (over 60s): %f - %f", sleepStage.getTimestamp(),sleepStage.getCycle() ));
+                        Log.d("BatchAnalysisResult", String.format("detected movements (over 60s): %f - %f", actigram.getTimestamp(),actigram.getActigram() ));
                     }
 
 
