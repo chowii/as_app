@@ -4,6 +4,8 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
 import au.com.ahbeard.sleepsense.bluetooth.base.DummyBaseDevice;
@@ -32,16 +34,17 @@ public class SleepSenseDeviceFactory {
 //        }
 
         if ("2618BL".equals(name)) {
+            Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(deviceFoundEvent.getAdvertisingData());
             return true;
         }
 
-        if (name != null && name.contains("base-i4")) {
+        if (name != null && name.toLowerCase().contains("base-i4")) {
             return true;
         }
 
-        if (name != null && name.startsWith("Beddit")) {
-            return true;
-        }
+//        if (name != null && name.startsWith("Beddit")) {
+//            return true;
+//        }
 
         return false;
     }
@@ -76,11 +79,11 @@ public class SleepSenseDeviceFactory {
             mDevices.add(baseDevice);
         }
 
-        if (name != null && name.startsWith("Beddit")) {
-            TrackerDevice trackerDevice = new TrackerDevice();
-            trackerDevice.link(context, deviceFoundEvent.getDevice());
-            mDevices.add(trackerDevice);
-        }
+//        if (name != null && name.startsWith("Beddit")) {
+//            TrackerDevice trackerDevice = new TrackerDevice();
+//            trackerDevice.link(context, deviceFoundEvent.getDevice());
+//            mDevices.add(trackerDevice);
+//        }
 
 
         return mDevices;

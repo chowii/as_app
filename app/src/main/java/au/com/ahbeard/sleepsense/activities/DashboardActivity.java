@@ -66,6 +66,8 @@ public class DashboardActivity extends BaseActivity {
             Intent intent = new Intent(this, OnBoardActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
+            return;
         }
 
         setContentView(R.layout.activity_dashboard);
@@ -93,14 +95,14 @@ public class DashboardActivity extends BaseActivity {
             }
         });
 
-        SleepSenseDeviceService.instance().getEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
-            @Override
-            public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent event) {
-                if ( event == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.DeviceListChanged ) {
-                    setupTabs();
-                }
-            }
-        });
+//        SleepSenseDeviceService.instance().getEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
+//            @Override
+//            public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent event) {
+//                if ( event == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.DeviceListChanged ) {
+//                    setupTabs();
+//                }
+//            }
+//        });
 
     }
 
@@ -129,7 +131,7 @@ public class DashboardActivity extends BaseActivity {
 
         mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance());
 
-        mDashboardPagerAdapter.addTab("Debug",R.drawable.debug_icon_normal,R.drawable.debug_icon_selected, mDebugFragment);
+        // mDashboardPagerAdapter.addTab("Debug",R.drawable.debug_icon_normal,R.drawable.debug_icon_selected, mDebugFragment);
 
         mViewPager.setAdapter(mDashboardPagerAdapter);
 
@@ -185,8 +187,7 @@ public class DashboardActivity extends BaseActivity {
     }
 
     public void clearDevices() {
-        SleepSenseDeviceService.instance().clearDevices();
-        Intent intent= new Intent(this,DashboardActivity.class);
+        Intent intent= new Intent(this,ClearDevicesActivity.class);
         startActivity(intent);
         finish();
     }

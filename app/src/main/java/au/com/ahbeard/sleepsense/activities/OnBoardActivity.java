@@ -1,5 +1,6 @@
 package au.com.ahbeard.sleepsense.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -23,7 +24,7 @@ public class OnBoardActivity extends BaseActivity {
 
     public void acquireDevices() {
         mCompositeSubscription.add(SleepSenseDeviceService.instance()
-                .acquireDevices(2500)
+                .acquireDevices(3500)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         new Observer<String>() {
@@ -59,6 +60,9 @@ public class OnBoardActivity extends BaseActivity {
     }
 
     public void successContinue() {
+        Intent intent = new Intent(this, DashboardActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         finish();
     }
 
@@ -85,7 +89,7 @@ public class OnBoardActivity extends BaseActivity {
             @Override
             public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent sleepSenseDeviceServiceEvent) {
                 if (sleepSenseDeviceServiceEvent == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.StartedSearchingForDevices) {
-                    mPhoneImageView.animate().rotationBy(360).setDuration(2000).start();
+                    mPhoneImageView.animate().rotationBy(360).setDuration(3500).start();
                 } else if (sleepSenseDeviceServiceEvent == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.FinishedSearchingForDevices) {
 
                 }

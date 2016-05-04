@@ -111,15 +111,15 @@ public class FirmnessControlFragment extends Fragment {
             }
         });
 
-        mSubscriptions.add(SleepSenseDeviceService.instance().getEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
-            @Override
-            public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent event) {
-                if ( event == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.DeviceListChanged ) {
-                    connectPump();
-                }
-            }
-        }));
-
+//        mSubscriptions.add(SleepSenseDeviceService.instance().getEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
+//            @Override
+//            public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent event) {
+//                if ( event == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.DeviceListChanged ) {
+//                    connectPump();
+//                }
+//            }
+//        }));
+//
         connectPump();
 
         return view;

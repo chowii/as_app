@@ -25,7 +25,7 @@ public class PreferenceService {
     }
 
     public boolean requiresOnBoarding() {
-        return true;//!(getPumpDeviceAddress()==null&&getBaseDeviceAddress()==null&&getTrackerDeviceAddress()==null);
+        return getPumpDeviceAddress()==null&&getBaseDeviceAddress()==null;
     }
 
     public void setPumpDeviceAddress(String address) {
@@ -68,7 +68,7 @@ public class PreferenceService {
         return getSharedPreferences().getFloat("sleepTargetTime",8.0f);
     }
 
-    public void getSleepTargetTime(float sleepTargetTime) {
+    public void setSleepTargetTime(float sleepTargetTime) {
         getSharedPreferences().edit().putFloat("sleepTargetTime",sleepTargetTime).commit();
     }
 

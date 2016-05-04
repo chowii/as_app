@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.DashboardActivity;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,6 +18,11 @@ import au.com.ahbeard.sleepsense.R;
  * create an instance of this fragment.
  */
 public class MoreFragment extends Fragment {
+
+    @OnClick(R.id.debug_button_clear)
+    void clear() {
+        ((DashboardActivity)getActivity()).clearDevices();
+    }
 
     public MoreFragment() {
         // Required empty public constructor
@@ -45,7 +53,18 @@ public class MoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_more, container, false);
+        View view = inflater.inflate(R.layout.fragment_more, container, false);
+
+        ButterKnife.bind(this, view);
+
+
+        return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        ButterKnife.unbind(this);
+        super.onDestroyView();
     }
 
 }
