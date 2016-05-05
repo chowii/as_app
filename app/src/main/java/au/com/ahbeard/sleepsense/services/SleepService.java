@@ -1,6 +1,9 @@
 package au.com.ahbeard.sleepsense.services;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.beddit.analysis.AnalysisException;
@@ -11,6 +14,7 @@ import com.beddit.analysis.CalendarDate;
 import com.beddit.analysis.SessionData;
 import com.beddit.analysis.TimeValueFragment;
 import com.beddit.analysis.TimeValueTrackFragment;
+import com.beddit.analysis.TrackFragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -19,12 +23,13 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerUtils;
-import rx.Observer;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 
@@ -36,7 +41,9 @@ public class SleepService {
     private static SleepService sSleepService;
 
     private final Context mContext;
+
     private File mSleepDataStorageDirectory;
+    private SleepSQLiteHelper mSleepSQLiteHelper;
 
     public static void initialize(Context context) {
         sSleepService = new SleepService(context);
@@ -49,6 +56,8 @@ public class SleepService {
     public SleepService(Context context) {
         mContext = context;
         mSleepDataStorageDirectory = context.getFilesDir();
+        mSleepSQLiteHelper = new SleepSQLiteHelper(context);
+        mSleepSQLiteHelper.getReadableDatabase();
     }
 
 
@@ -58,68 +67,43 @@ public class SleepService {
 
     public void runBatchAnalysis() {
 
-        Schedulers.io().createWorker().schedule(new Action0() {
-            @Override
-            public void call() {
-                CalendarDate analysisCalendarDate = TrackerUtils.getCalendarDate(System.currentTimeMillis());
-
-                RemoteSleepDataService.instance()
-                        .saveSleepData("" + System.currentTimeMillis(), new byte[]{1, 2, 3, 4})
-                        .subscribe(new Observer<String>() {
-
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e("TAG", "error", e);
-                            }
-
-                            @Override
-                            public void onNext(String s) {
-
-                            }
-                        });
-
-            }
-        });
-
         Schedulers.computation().createWorker().schedule(new Action0() {
             @Override
             public void call() {
 
                 final long MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
 
-                long currentTime = System.currentTimeMillis();
+                Calendar calendar = Calendar.getInstance();
 
-                List<BatchAnalysisResult> previousBatchAnalysisResults = new ArrayList<>();
+                calendar.set(Calendar.HOUR_OF_DAY,0);
+                calendar.set(Calendar.MINUTE,0);
+                calendar.set(Calendar.SECOND,0);
+                calendar.set(Calendar.MILLISECOND,0);
 
-                long analysisTime = currentTime - 30 * MILLISECONDS_IN_DAY;
+                long periodStart = calendar.getTimeInMillis();
+                long periodEnd = periodStart + MILLISECONDS_IN_DAY;
 
-                while (analysisTime <= currentTime) {
-                    try {
+                CalendarDate calendarDate = new CalendarDate(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+                List<SessionData> sessionData = readSessionData(periodStart/1000D,periodEnd/1000D);
 
-                        CalendarDate analysisCalendarDate = TrackerUtils.getCalendarDate(analysisTime);
+                try {
 
-                        Log.d("BatchAnalysis", String.format("ANALYZING DATE: %d/%d/%d", analysisCalendarDate.getDay(), analysisCalendarDate.getMonth(), analysisCalendarDate.getYear()));
+                    BatchAnalysis batchAnalysis = new BatchAnalysis();
 
-                        if (hasDataForDate(analysisCalendarDate)) {
-                            Log.d("BatchAnalysis", "Analyzing...");
-                            BatchAnalysisResult batchAnalysisResult = runBatchAnalysis(previousBatchAnalysisResults, analysisCalendarDate);
-                            previousBatchAnalysisResults.add(batchAnalysisResult);
-                        } else {
-                            Log.d("BatchAnalysis", "No data...");
-                        }
+                    Log.d("BatchAnalysis", String.format("ANALYZING DATE: %d/%d/%d", calendarDate.getDay(), calendarDate.getMonth(), calendarDate.getYear()));
 
-                    } catch (IOException | AnalysisException e) {
-                        e.printStackTrace();
-                    }
+                    BatchAnalysisResult batchAnalysisResult = batchAnalysis.analyzeSessions(
+                            sessionData,
+                            new ArrayList<BatchAnalysisResult>(),
+                            calendarDate,
+                            new BatchAnalysisContext(PreferenceService.instance().getSleepTargetTime() * 3600f));
 
-                    analysisTime += MILLISECONDS_IN_DAY;
+                    TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
 
+                } catch (AnalysisException e) {
+                    e.printStackTrace();
                 }
+
 
             }
         });
@@ -175,7 +159,7 @@ public class SleepService {
                 sessionDataForDay,
                 previousBatchResults,
                 calendarDate,
-                new BatchAnalysisContext(PreferenceService.instance().getSleepTargetTime()  * 3600f));
+                new BatchAnalysisContext(PreferenceService.instance().getSleepTargetTime() * 3600f));
 
         TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
 
@@ -205,12 +189,114 @@ public class SleepService {
         List<SessionData> sessionDatas = new ArrayList<>();
 
         for (File sessionDirectory : sessionDirectories) {
-            sessionDatas.add(getSessionData(sessionDirectory));
+            SessionData sessionData = getSessionData(sessionDirectory);
+            if (sessionData != null) {
+                sessionDatas.add(sessionData);
+            }
         }
 
         return sessionDatas;
     }
 
+    public void writeSessionDataToDatabase(File sessionDirectory) throws IOException {
+        SessionData sessionData = getSessionData(sessionDirectory);
+        writeSessionDataToDatabase(sessionData);
+    }
+
+
+    /**
+     * Reconstruct the session data for batch analysis from the database.
+     *
+     * @param periodStartTime
+     * @param periodEndTime
+     * @return
+     */
+    public List<SessionData> readSessionData(double periodStartTime, double periodEndTime) {
+
+        SQLiteDatabase database = mSleepSQLiteHelper.getReadableDatabase();
+
+        List<SessionData> sessionData = new ArrayList<>();
+
+        Cursor sleepSessionCursor = database.rawQuery(SleepSessionContract.JOIN_QUERY,
+                new String[]{Double.toString(periodStartTime), Double.toString(periodEndTime)});
+
+        sleepSessionCursor.moveToFirst();
+
+        long currentSessionId = -1;
+        SessionData currentSessionData = null;
+
+        while (!sleepSessionCursor.isAfterLast()) {
+
+            long sessionId = sleepSessionCursor.getLong(sleepSessionCursor.getColumnIndex(SleepSessionContract.SleepSession.SESSION_ID));
+
+            if (currentSessionData == null || sessionId != currentSessionId) {
+
+                double startTime = sleepSessionCursor.getDouble(sleepSessionCursor.getColumnIndex(SleepSessionContract.SleepSession.START_TIME));
+                double endTime = sleepSessionCursor.getDouble(sleepSessionCursor.getColumnIndex(SleepSessionContract.SleepSession.END_TIME));
+                String timeZone = sleepSessionCursor.getString(sleepSessionCursor.getColumnIndex(SleepSessionContract.SleepSession.TIME_ZONE));
+
+                currentSessionId = sessionId;
+                currentSessionData = new SessionData(startTime, endTime, new TimeValueFragment());
+
+                sessionData.add(currentSessionData);
+
+            }
+
+            String trackName = sleepSessionCursor.getString(sleepSessionCursor.getColumnIndex(SleepSessionContract.SleepSessionTracks.TRACK_NAME));
+            String trackDataType = sleepSessionCursor.getString(sleepSessionCursor.getColumnIndex(SleepSessionContract.SleepSessionTracks.TRACK_DATA_TYPE));
+            byte[] trackData = sleepSessionCursor.getBlob(sleepSessionCursor.getColumnIndex(SleepSessionContract.SleepSessionTracks.TRACK_DATA));
+
+            currentSessionData.getRelativeTimeValueData().addTrackFragment(trackName,new TimeValueTrackFragment(trackData,trackDataType));
+
+            sleepSessionCursor.moveToNext();
+        }
+
+        sleepSessionCursor.close();
+
+        database.close();
+
+        return sessionData;
+
+    }
+
+    public void writeSessionDataToDatabase(SessionData sessionData) throws IOException {
+
+
+        SQLiteDatabase database = mSleepSQLiteHelper.getWritableDatabase();
+
+        database.beginTransaction();
+
+        ContentValues values = new ContentValues();
+
+        values.put(SleepSessionContract.SleepSession.START_TIME, sessionData.getStartTime());
+        values.put(SleepSessionContract.SleepSession.END_TIME, sessionData.getEndTime());
+        values.put(SleepSessionContract.SleepSession.TIME_ZONE, TimeZone.getDefault().getID());
+
+        long sessionId = database.insertOrThrow(SleepSessionContract.SleepSession.TABLE_NAME, null, values);
+
+        for (String trackName : sessionData.getRelativeTimeValueData().getNames()) {
+
+            TrackFragment trackFragment = sessionData.getRelativeTimeValueData().getTrackFragment(trackName);
+
+            ContentValues trackValues = new ContentValues();
+
+            trackValues.put(SleepSessionContract.SleepSession.SESSION_ID, sessionId);
+            trackValues.put(SleepSessionContract.SleepSessionTracks.TRACK_NAME, trackName);
+            trackValues.put(SleepSessionContract.SleepSessionTracks.TRACK_DATA_TYPE, trackFragment.getItemType());
+            trackValues.put(SleepSessionContract.SleepSessionTracks.TRACK_DATA, trackFragment.getData());
+
+            long rowId = database.insertOrThrow(SleepSessionContract.SleepSessionTracks.TABLE_NAME, null, trackValues);
+
+            Log.d("SleepService","ROW ID: " + rowId );
+
+        }
+
+        database.setTransactionSuccessful();
+        database.endTransaction();
+
+        database.close();
+
+    }
 
     /**
      * Get the sessionData for a single session.
@@ -219,6 +305,19 @@ public class SleepService {
      * @return
      */
     public SessionData getSessionData(File sessionDirectory) throws IOException {
+
+        File metadataFile = new File(sessionDirectory, "metadata.dat");
+
+        if (!metadataFile.exists()) {
+            return null;
+        }
+
+        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(metadataFile));
+
+        long startTime = objectInputStream.readLong();
+        long endTime = objectInputStream.readLong();
+
+        objectInputStream.close();
 
         TimeValueFragment timeValueFragment = new TimeValueFragment();
 
@@ -260,15 +359,6 @@ public class SleepService {
 
             }
         }
-
-        File metadataFile = new File(sessionDirectory, "metadata.dat");
-
-        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(metadataFile));
-
-        long startTime = objectInputStream.readLong();
-        long endTime = objectInputStream.readLong();
-
-        objectInputStream.close();
 
         return new SessionData(startTime / 1000D, endTime / 1000D, timeValueFragment);
 

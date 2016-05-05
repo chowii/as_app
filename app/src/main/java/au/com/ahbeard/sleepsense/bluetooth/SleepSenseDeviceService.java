@@ -224,20 +224,12 @@ public class SleepSenseDeviceService {
 
     public void clearDevices() {
 
-        if ( mBaseDevice != null ) {
-            PreferenceService.instance().clearBaseDeviceAddress();
-            mBaseDevice = null;
-        }
-
-        if ( mPumpDevice != null ) {
-            PreferenceService.instance().clearPumpDeviceAddress();
-            mPumpDevice = null;
-        }
-
-        if ( mTrackerDevice != null ) {
-            PreferenceService.instance().clearTrackerDeviceAddress();
-            mTrackerDevice = null;
-        }
+        PreferenceService.instance().clearBaseDeviceAddress();
+        mBaseDevice = null;
+        PreferenceService.instance().clearPumpDeviceAddress();
+        mPumpDevice = null;
+        PreferenceService.instance().clearTrackerDeviceAddress();
+        mTrackerDevice = null;
 
         mChangeEventPublishSubject.onNext(SleepSenseDeviceServiceEvent.DeviceListChanged);
     }

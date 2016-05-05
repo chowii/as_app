@@ -16,6 +16,12 @@ public class SleepSessionContract {
 
     private static final String COMMA_SEP = ",";
 
+    public static String JOIN_QUERY = "select sleep_session.session_id, start_time, end_time, time_zone, track_name, track_data, track_data_type " +
+            "from sleep_session, sleep_session_tracks " +
+            "where sleep_session.session_id = sleep_session_tracks.session_id " +
+                "and end_time >= ? and end_time < ? order by sleep_session.session_id, end_time";
+
+
     /*
      * Inner class that defines the table contents.
      */
@@ -23,18 +29,17 @@ public class SleepSessionContract {
 
         public static final String TABLE_NAME = "sleep_session";
 
-        public static final String SLEEP_ID = "sleep_id";
+        public static final String SESSION_ID = "session_id";
         public static final String TIME_ZONE = "time_zone";
         public static final String START_TIME = "start_time";
         public static final String END_TIME = "end_time";
 
         public static final String SQL_CREATE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
-                        _ID + " INTEGER PRIMARY KEY," +
-                        SLEEP_ID + LONG_TYPE + COMMA_SEP +
-                        TIME_ZONE + TEXT_TYPE + COMMA_SEP +
-                        START_TIME + LONG_TYPE + COMMA_SEP +
-                        END_TIME + LONG_TYPE + COMMA_SEP +
+                        SESSION_ID + " INTEGER PRIMARY KEY," +
+                        START_TIME + DOUBLE_TYPE + COMMA_SEP +
+                        END_TIME + DOUBLE_TYPE + COMMA_SEP +
+                        TIME_ZONE + TEXT_TYPE +
                 " )";
 
         public static final String SQL_DROP =
@@ -44,20 +49,18 @@ public class SleepSessionContract {
 
     public static abstract class SleepSessionTracks implements BaseColumns {
 
-        public static final String TABLE_NAME = "sleep_tracks";
+        public static final String TABLE_NAME = "sleep_session_tracks";
 
-        public static final String SLEEP_ID = "sleep_id";
         public static final String TRACK_NAME = "track_name";
         public static final String TRACK_DATA_TYPE = "track_data_type";
         public static final String TRACK_DATA = "track_data";
 
         public static final String SQL_CREATE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
-                        _ID + " INTEGER PRIMARY KEY," +
-                        SLEEP_ID + LONG_TYPE + COMMA_SEP +
+                        SleepSession.SESSION_ID + " INTEGER, " +
                         TRACK_NAME + TEXT_TYPE + COMMA_SEP +
                         TRACK_DATA_TYPE + TEXT_TYPE + COMMA_SEP +
-                        TRACK_DATA + BLOB_TYPE + COMMA_SEP +
+                        TRACK_DATA + BLOB_TYPE +
                         " )";
 
 

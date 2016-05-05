@@ -57,7 +57,7 @@ public class SleepContract {
         public static final String SQL_CREATE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         _ID + " INTEGER PRIMARY KEY," +
-                        SLEEP_ID + LONG_TYPE + COMMA_SEP +
+                        SLEEP_ID + INTEGER_TYPE + COMMA_SEP +
                         TIME_ZONE + TEXT_TYPE + COMMA_SEP +
                         START_TIME + DOUBLE_TYPE + COMMA_SEP +
                         END_TIME + DOUBLE_TYPE + COMMA_SEP +
@@ -85,7 +85,7 @@ public class SleepContract {
                         ALL_NIGHT_HRV_INDEX + FLOAT_TYPE + COMMA_SEP +
                         RESTING_HRV_INDEX + FLOAT_TYPE + COMMA_SEP +
                         TOTAL_SLEEP_SCORE + FLOAT_TYPE + COMMA_SEP +
-                        SLEEP_SCORE_VERSION + FLOAT_TYPE + COMMA_SEP +
+                        SLEEP_SCORE_VERSION + FLOAT_TYPE +
                 " )";
 
         public static final String SQL_DROP =
@@ -108,7 +108,7 @@ public class SleepContract {
                         _ID + " INTEGER PRIMARY KEY," +
                         SLEEP_ID + LONG_TYPE + COMMA_SEP +
                         TRACK_NAME + TEXT_TYPE + COMMA_SEP +
-                        TRACK_DATA + BLOB_TYPE + COMMA_SEP +
+                        TRACK_DATA + BLOB_TYPE +
                         " )";
 
 

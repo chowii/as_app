@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class SleepSQLiteHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "Sleep.db";
 
     public SleepSQLiteHelper(Context context) {
@@ -30,7 +30,12 @@ public class SleepSQLiteHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+    public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+        if ( oldVersion < 4 ) {
+            database.execSQL(SleepSessionContract.SleepSession.SQL_DROP);
+            database.execSQL(SleepSessionContract.SleepSession.SQL_CREATE);
+        }
     }
+
+
 }

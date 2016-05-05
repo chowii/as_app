@@ -42,9 +42,9 @@ public class SleepSenseDeviceFactory {
             return true;
         }
 
-//        if (name != null && name.startsWith("Beddit")) {
-//            return true;
-//        }
+        if (name != null && name.toLowerCase().contains("beddit")) {
+            return true;
+        }
 
         return false;
     }
@@ -79,11 +79,11 @@ public class SleepSenseDeviceFactory {
             mDevices.add(baseDevice);
         }
 
-//        if (name != null && name.startsWith("Beddit")) {
-//            TrackerDevice trackerDevice = new TrackerDevice();
-//            trackerDevice.link(context, deviceFoundEvent.getDevice());
-//            mDevices.add(trackerDevice);
-//        }
+        if (name != null && name.startsWith("Beddit")) {
+            TrackerDevice trackerDevice = new TrackerDevice();
+            trackerDevice.link(context, deviceFoundEvent.getDevice());
+            mDevices.add(trackerDevice);
+        }
 
 
         return mDevices;
