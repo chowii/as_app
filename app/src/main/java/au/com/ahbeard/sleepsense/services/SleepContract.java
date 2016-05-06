@@ -31,6 +31,7 @@ public class SleepContract {
         public static final String DAY = "day";
         public static final String MONTH = "month";
         public static final String YEAR = "year";
+        public static final String DAY_OF_WEEK = "day_of_week";
         public static final String RESTING_HEART_RATE = "resting_heart_rate";
         public static final String AVERAGE_RESPIRATION_RATE = "average_respiration_rate";
         public static final String SLEEP_TIME_TARGET = "sleep_time_target";
@@ -64,6 +65,7 @@ public class SleepContract {
                         DAY + INTEGER_TYPE + COMMA_SEP +
                         MONTH + INTEGER_TYPE + COMMA_SEP +
                         YEAR + INTEGER_TYPE + COMMA_SEP +
+                        DAY_OF_WEEK + INTEGER_TYPE + COMMA_SEP +
                         RESTING_HEART_RATE + FLOAT_TYPE + COMMA_SEP +
                         AVERAGE_RESPIRATION_RATE + FLOAT_TYPE + COMMA_SEP +
                         SLEEP_TIME_TARGET + FLOAT_TYPE + COMMA_SEP +

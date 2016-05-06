@@ -25,7 +25,7 @@ public class PreferenceService {
     }
 
     public boolean requiresOnBoarding() {
-        return getPumpDeviceAddress()==null&&getBaseDeviceAddress()==null;
+        return getPumpDeviceAddress()==null&&getBaseDeviceAddress()==null&&getTrackerDeviceAddress()==null;
     }
 
     public void setPumpDeviceAddress(String address) {

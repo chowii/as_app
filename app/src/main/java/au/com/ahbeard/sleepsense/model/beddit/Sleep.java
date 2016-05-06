@@ -1,8 +1,10 @@
 package au.com.ahbeard.sleepsense.model.beddit;
 
 import com.beddit.analysis.BatchAnalysisResult;
+import com.beddit.analysis.CalendarDate;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -24,6 +26,7 @@ public class Sleep {
     private int mDay;
     private int mMonth;
     private int mYear;
+    private int mDayOfWeek;
 
     private List<SleepStage> mSleepStages;
 
@@ -114,6 +117,10 @@ public class Sleep {
 
     public int getYear() {
         return mYear;
+    }
+
+    public int getDayOfWeek() {
+        return mDayOfWeek;
     }
 
     public List<Actigram> getActigrams() {
@@ -248,7 +255,12 @@ public class Sleep {
         sleep.mMonth = batchAnalysisResult.getDate().getMonth();
         sleep.mYear = batchAnalysisResult.getDate().getYear();
 
-        sleep.mSleepId = sleep.mYear * 1000 + sleep.mMonth * 100 + sleep.mDay;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(sleep.mDay,sleep.mMonth,sleep.mYear);
+
+        sleep.mDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        sleep.mSleepId = sleep.mYear * 10000 + sleep.mMonth * 100 + sleep.mDay;
 
         sleep.mStartTime = batchAnalysisResult.getStartTime();
         sleep.mEndTime = batchAnalysisResult.getEndTime();

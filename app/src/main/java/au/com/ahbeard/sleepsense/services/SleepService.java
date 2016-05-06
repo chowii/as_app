@@ -30,6 +30,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerUtils;
+import au.com.ahbeard.sleepsense.model.beddit.Sleep;
+import au.com.ahbeard.sleepsense.model.beddit.SleepProperty;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 
@@ -43,6 +45,7 @@ public class SleepService {
     private final Context mContext;
 
     private File mSleepDataStorageDirectory;
+
     private SleepSQLiteHelper mSleepSQLiteHelper;
 
     public static void initialize(Context context) {
@@ -75,16 +78,16 @@ public class SleepService {
 
                 Calendar calendar = Calendar.getInstance();
 
-                calendar.set(Calendar.HOUR_OF_DAY,0);
-                calendar.set(Calendar.MINUTE,0);
-                calendar.set(Calendar.SECOND,0);
-                calendar.set(Calendar.MILLISECOND,0);
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
 
                 long periodStart = calendar.getTimeInMillis();
                 long periodEnd = periodStart + MILLISECONDS_IN_DAY;
 
-                CalendarDate calendarDate = new CalendarDate(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
-                List<SessionData> sessionData = readSessionData(periodStart/1000D,periodEnd/1000D);
+                CalendarDate calendarDate = new CalendarDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                List<SessionData> sessionData = readSessionData(periodStart / 1000D, periodEnd / 1000D);
 
                 try {
 
@@ -121,7 +124,7 @@ public class SleepService {
     //
     //
     public File getSessionOutputDirectory(CalendarDate calendarDate, long startTime) {
-        File sessionOutputDirectory = new File(getOutputDirectory(calendarDate), "" + startTime);
+        File sessionOutputDirectory = new File(getSessionsDirectory(), Long.toString(startTime));
         if (!sessionOutputDirectory.exists()) {
             sessionOutputDirectory.mkdirs();
         }
@@ -130,12 +133,10 @@ public class SleepService {
     }
 
     /**
-     * @param calendarDate
      * @return
      */
-    public File getOutputDirectory(CalendarDate calendarDate) {
-        return new File(mSleepDataStorageDirectory,
-                "SleepSense_" + stringFromCalendarDate(calendarDate));
+    public File getSessionsDirectory() {
+        return new File(mSleepDataStorageDirectory, "sessions");
     }
 
     /**
@@ -151,7 +152,7 @@ public class SleepService {
 
         BatchAnalysis batchAnalysis = new BatchAnalysis();
 
-        File dayDirectory = getOutputDirectory(calendarDate);
+        File dayDirectory = getSessionsDirectory();
 
         List<SessionData> sessionDataForDay = getSessionDataForDay(dayDirectory);
 
@@ -163,12 +164,10 @@ public class SleepService {
 
         TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
 
+        writeSleepToDatabase(Sleep.fromBatchAnalysisResult(batchAnalysisResult));
+
         return batchAnalysisResult;
 
-    }
-
-    public boolean hasDataForDate(CalendarDate calendarDate) {
-        return getOutputDirectory(calendarDate).exists();
     }
 
     /**
@@ -246,7 +245,7 @@ public class SleepService {
             String trackDataType = sleepSessionCursor.getString(sleepSessionCursor.getColumnIndex(SleepSessionContract.SleepSessionTracks.TRACK_DATA_TYPE));
             byte[] trackData = sleepSessionCursor.getBlob(sleepSessionCursor.getColumnIndex(SleepSessionContract.SleepSessionTracks.TRACK_DATA));
 
-            currentSessionData.getRelativeTimeValueData().addTrackFragment(trackName,new TimeValueTrackFragment(trackData,trackDataType));
+            currentSessionData.getRelativeTimeValueData().addTrackFragment(trackName, new TimeValueTrackFragment(trackData, trackDataType));
 
             sleepSessionCursor.moveToNext();
         }
@@ -287,7 +286,7 @@ public class SleepService {
 
             long rowId = database.insertOrThrow(SleepSessionContract.SleepSessionTracks.TABLE_NAME, null, trackValues);
 
-            Log.d("SleepService","ROW ID: " + rowId );
+            Log.d("SleepService", "ROW ID: " + rowId);
 
         }
 
@@ -295,6 +294,56 @@ public class SleepService {
         database.endTransaction();
 
         database.close();
+
+    }
+
+    public void writeSleepToDatabase(Sleep sleep) throws IOException {
+
+        SQLiteDatabase database = mSleepSQLiteHelper.getWritableDatabase();
+
+        database.beginTransaction();
+
+        ContentValues values = new ContentValues();
+
+        values.put(SleepContract.Sleep.SLEEP_ID, sleep.getSleepId());
+        values.put(SleepContract.Sleep.TIME_ZONE, TimeZone.getDefault().getID());
+        values.put(SleepContract.Sleep.START_TIME, sleep.getStartTime());
+        values.put(SleepContract.Sleep.END_TIME, sleep.getEndTime());
+        values.put(SleepContract.Sleep.DAY, sleep.getDay());
+        values.put(SleepContract.Sleep.MONTH, sleep.getMonth());
+        values.put(SleepContract.Sleep.YEAR, sleep.getYear());
+        values.put(SleepContract.Sleep.DAY_OF_WEEK, sleep.getDayOfWeek());
+        values.put(SleepContract.Sleep.RESTING_HEART_RATE, sleep.getRestingHeartRate());
+        values.put(SleepContract.Sleep.AVERAGE_RESPIRATION_RATE, sleep.getAverageRespirationRate());
+        values.put(SleepContract.Sleep.SLEEP_TIME_TARGET, sleep.getSleepTimeTarget());
+        values.put(SleepContract.Sleep.SLEEP_LATENCY, sleep.getSleepLatency());
+        values.put(SleepContract.Sleep.SLEEP_EFFICIENCY, sleep.getSleepEfficiency());
+        values.put(SleepContract.Sleep.AWAY_EPISODE_COUNT, sleep.getPrimarySleepPeriodAwayEpiodeCount());
+        values.put(SleepContract.Sleep.AWAY_EPISODE_DURATION, sleep.getPrimarySleepPeriodAwayEpisodeDuration());
+        values.put(SleepContract.Sleep.SNORING_EPISODE_DURATION, sleep.getTotalSnoringEpisodeDuration());
+        values.put(SleepContract.Sleep.AWAY_TOTAL_TIME, sleep.getAwayTotalTime());
+        values.put(SleepContract.Sleep.SLEEP_TOTAL_TIME, sleep.getSleepTotalTime());
+        values.put(SleepContract.Sleep.RESTLESS_TOTAL_TIME, sleep.getRestlessTotalTime());
+        values.put(SleepContract.Sleep.WAKE_TOTAL_TIME, sleep.getWakeTotalTime());
+        values.put(SleepContract.Sleep.GAP_TOTAL_TIME, sleep.getGapTotalTime());
+        values.put(SleepContract.Sleep.MISSING_SIGNAL_TOTAL_TIME, sleep.getMissingSignalTotalTime());
+        values.put(SleepContract.Sleep.TOTAL_NAP_DURATION, sleep.getTotalNapDuration());
+        values.put(SleepContract.Sleep.ACTIVITY_INDEX, sleep.getActivityIndex());
+        values.put(SleepContract.Sleep.EVENING_HRV_INDEX, sleep.getEveningHRVIndex());
+        values.put(SleepContract.Sleep.MORNING_HRV_INDEX, sleep.getMorningHRVIndex());
+        values.put(SleepContract.Sleep.ALL_NIGHT_HRV_INDEX, sleep.getAllNightHRVIndex());
+        values.put(SleepContract.Sleep.RESTING_HRV_INDEX, sleep.getRestingHRVIndex());
+        values.put(SleepContract.Sleep.TOTAL_SLEEP_SCORE, sleep.getTotalSleepScore());
+        values.put(SleepContract.Sleep.SLEEP_SCORE_VERSION, sleep.getSleepScoreVersion());
+
+        long id = database.insertOrThrow(SleepContract.Sleep.TABLE_NAME, null, values);
+
+
+        database.setTransactionSuccessful();
+        database.endTransaction();
+
+        database.close();
+
 
     }
 
@@ -364,5 +413,33 @@ public class SleepService {
 
     }
 
+    public List<SleepProperty> readSleepScores(int daysBeforeToday, int length) {
 
+        SQLiteDatabase database = mSleepSQLiteHelper.getReadableDatabase();
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.DAY_OF_YEAR, -daysBeforeToday);
+
+        int endSleepId = calendar.get(Calendar.YEAR) * 10000 + (calendar.get(Calendar.MONTH) + 1) * 100 + calendar.get(Calendar.DAY_OF_MONTH);
+
+        calendar.add(Calendar.DAY_OF_YEAR, -length);
+        int startSleepId = calendar.get(Calendar.YEAR) * 10000 + (calendar.get(Calendar.MONTH) + 1) * 100 + calendar.get(Calendar.DAY_OF_MONTH);
+
+        Cursor sleepSessionCursor = database.rawQuery("select sleep_id, sleep_score from sleep where sleep_id > ? and sleep_id <= ? order by sleep_id asc",
+                new String[]{Integer.toString(startSleepId), Integer.toString(endSleepId)});
+
+        sleepSessionCursor.moveToFirst();
+
+        List<SleepProperty> mSleepScores = new ArrayList<>();
+
+        while ( ! sleepSessionCursor.isAfterLast() ) {
+            int sleepId = sleepSessionCursor.getInt(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.SLEEP_ID));
+            float sleepScore = sleepSessionCursor.getFloat(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.SLEEP_ID));
+            mSleepScores.add(new SleepProperty(sleepId,sleepScore));
+            sleepSessionCursor.moveToNext();
+        }
+
+        return mSleepScores;
+    }
 }

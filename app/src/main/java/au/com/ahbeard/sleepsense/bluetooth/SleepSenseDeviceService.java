@@ -142,7 +142,8 @@ public class SleepSenseDeviceService {
 
                         BluetoothService.instance().stopScanning();
 
-                        LogService.d("SleepSenseDeviceService",String.format("found %d SleepSense devices while scanning...", devices.size()));
+                        LogService.d("SleepSenseDeviceService",
+                                String.format("found %d SleepSense devices while scanning...", devices.size()));
 
                         boolean hasChanged = false;
 

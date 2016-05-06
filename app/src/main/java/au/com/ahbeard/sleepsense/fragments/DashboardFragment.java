@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.widgets.SleepSenseGraphView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,6 +70,9 @@ public class DashboardFragment extends Fragment {
     }
 
     public float[] fetchDataForDateRange(int daysBeforeToday, int length) {
+
+        SleepService.instance().readSleepScores(daysBeforeToday,length);
+
         float[] data = new float[length];
         for (int i=0; i< data.length; i++) {
             data[i] = -1000f;
@@ -107,6 +111,7 @@ public class DashboardFragment extends Fragment {
             public int getCount() {
                 return mNumberOfPagesBack;
             }
+
         });
 
 

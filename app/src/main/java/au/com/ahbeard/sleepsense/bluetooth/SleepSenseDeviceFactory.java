@@ -1,6 +1,7 @@
 package au.com.ahbeard.sleepsense.bluetooth;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
-import au.com.ahbeard.sleepsense.bluetooth.base.DummyBaseDevice;
-import au.com.ahbeard.sleepsense.bluetooth.pump.DummyPumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
-import au.com.ahbeard.sleepsense.bluetooth.tracker.DummyTrackerDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 
 /**
@@ -21,29 +19,30 @@ public class SleepSenseDeviceFactory {
 
     public static boolean isSleepSenseDevice(BluetoothScanEvent.DeviceFoundEvent deviceFoundEvent) {
 
-        // Neal's FitBit.
-//        if ("ED:FD:CB:C2:05:91".equals(deviceFoundEvent.getDevice().getAddress())) {
-//            return true;
-//        }
-
-        // TODO: Abstract the checks out to the devices during on-boarding development.
         String name = deviceFoundEvent.getDevice().getName();
-
-//        if ("BLE Mini".equals(name)) {
-//            return true;
-//        }
 
         if (name != null && name.toLowerCase().contains("2618")) {
             Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(deviceFoundEvent.getAdvertisingData());
-            return true;
+            for (UUID advertisedUUID : advertisedUUIDs) {
+                Log.d("SleepSenseDeviceFactory", "pump: " + advertisedUUID);
+            }
+            return advertisedUUIDs.contains(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
         }
 
         if (name != null && name.toLowerCase().contains("base-i4")) {
-            return true;
+            Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(deviceFoundEvent.getAdvertisingData());
+            for (UUID advertisedUUID : advertisedUUIDs) {
+                Log.d("SleepSenseDeviceFactory", "base: " + advertisedUUID);
+            }
+            return advertisedUUIDs.contains(UUID.fromString("0000ffb0-0000-1000-8000-00805f9b34fb"));
         }
 
         if (name != null && name.toLowerCase().contains("beddit")) {
-            return true;
+            Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(deviceFoundEvent.getAdvertisingData());
+            for (UUID advertisedUUID : advertisedUUIDs) {
+                Log.d("SleepSenseDeviceFactory", "beddit: " + advertisedUUID);
+            }
+            return advertisedUUIDs.contains(UUID.fromString("4ae71336-e44b-39bf-b9d2-752e234818a5"));
         }
 
         return false;
@@ -53,21 +52,9 @@ public class SleepSenseDeviceFactory {
 
         List<Device> mDevices = new ArrayList<>();
 
-//        if ("ED:FD:CB:C2:05:91".equals(deviceFoundEvent.getDevice().getAddress())) {
-//            mDevices.add(new DummyBaseDevice());
-//            mDevices.add(new DummyPumpDevice());
-//            mDevices.add(new DummyTrackerDevice());
-//        }
-
         String name = deviceFoundEvent.getDevice().getName();
 
-//        if ("BLE Mini".equals(name)) {
-//            DummyPumpDevice dummyPumpDevice = new DummyPumpDevice();
-//            dummyPumpDevice.link(context, deviceFoundEvent.getDevice());
-//            mDevices.add(dummyPumpDevice);
-//        }
-
-        if ("2618BL".equals(name)) {
+        if (name != null && name.toLowerCase().contains("2618")) {
             PumpDevice pumpDevice = new PumpDevice();
             pumpDevice.link(context, deviceFoundEvent.getDevice());
             mDevices.add(pumpDevice);
@@ -79,7 +66,7 @@ public class SleepSenseDeviceFactory {
             mDevices.add(baseDevice);
         }
 
-        if (name != null && name.startsWith("Beddit")) {
+        if (name != null && name.toLowerCase().contains("beddit")) {
             TrackerDevice trackerDevice = new TrackerDevice();
             trackerDevice.link(context, deviceFoundEvent.getDevice());
             mDevices.add(trackerDevice);

@@ -17,9 +17,11 @@ import com.beddit.synchronization.Synchronizer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import au.com.ahbeard.sleepsense.services.LogService;
 import rx.Observer;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -165,7 +167,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
      *
      * @param sensorSession
      */
-    private void startSensorSession(SensorSession sensorSession) {
+    private void startSensorSession(final SensorSession sensorSession) {
 
         mAnalysisStartTime = System.currentTimeMillis();
 
@@ -196,7 +198,12 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
 
             Log.d("TrackingSessionAnalyzer", "about to start streaming...");
 
-            sensorSession.startStreaming();
+            Schedulers.io().createWorker().schedule(new Action0() {
+                @Override
+                public void call() {
+                    sensorSession.startStreaming();
+                }
+            },2, TimeUnit.SECONDS);
 
         } catch (AnalysisException e) {
             e.printStackTrace();
@@ -291,7 +298,6 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
             mTimeValueTrackFragmentPublishSubject.onError(e);
         }
     }
-
 
     //
     // Structure to hold the sensor data to publish via the observable.
