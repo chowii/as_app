@@ -15,6 +15,7 @@ import java.util.List;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
+import au.com.ahbeard.sleepsense.fragments.WeeklyDashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.DebugFragment;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
@@ -25,16 +26,14 @@ import au.com.ahbeard.sleepsense.widgets.SimpleTabStrip;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by neal on 3/03/2016.
  */
-public class DashboardActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity {
 
-    private final DashboardFragment mHomeFragment = DashboardFragment.newInstance();
+    private final WeeklyDashboardFragment mHomeFragment = WeeklyDashboardFragment.newInstance();
 
     private final Fragment mDebugFragment = DebugFragment.newInstance();
 
@@ -70,7 +69,7 @@ public class DashboardActivity extends BaseActivity {
             return;
         }
 
-        setContentView(R.layout.activity_dashboard);
+        setContentView(R.layout.activity_home);
 
         ButterKnife.bind(this);
 
@@ -86,7 +85,7 @@ public class DashboardActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                mStartSleepFloatingActionButton.setVisibility(mDashboardPagerAdapter.getItem(position) instanceof DashboardFragment ? View.VISIBLE : View.GONE);
+                mStartSleepFloatingActionButton.setVisibility(mDashboardPagerAdapter.getItem(position) instanceof WeeklyDashboardFragment ? View.VISIBLE : View.GONE);
             }
 
             @Override

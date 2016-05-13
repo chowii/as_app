@@ -28,7 +28,7 @@ public class SleepTrackingActivity extends AppCompatActivity {
 
     @OnClick(R.id.sleep_tracking_button_start_stop)
     void onStartTracking() {
-        if (SleepSenseDeviceService.instance().getTrackerDevice().isTracking() ) {
+        if (SleepSenseDeviceService.instance().getTrackerDevice().isTracking()) {
             SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
         } else {
             SleepSenseDeviceService.instance().getTrackerDevice().startSensorSession();
@@ -52,7 +52,6 @@ public class SleepTrackingActivity extends AppCompatActivity {
     @Bind(R.id.sleep_tracking_button_start_stop)
     Button mStartStopButton;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,26 +59,33 @@ public class SleepTrackingActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mCalendar = Calendar.getInstance();
 
-        SleepSenseDeviceService.instance().getTrackerDevice().getTrackingStateObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<String>() {
-            @Override
-            public void call(String s) {
-                setButtonState();
-            }
-        });
+        SleepSenseDeviceService.instance().getTrackerDevice()
+                .getTrackingStateObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        setButtonState();
+                    }
+                });
 
-        SleepSenseDeviceService.instance().getTrackerDevice().getPacketCountObservable().sample(500,TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
-            @Override
-            public void call(Integer packetCount) {
-                mSampleCountTextView.setText(Integer.toString(packetCount));
-            }
-        });
+        SleepSenseDeviceService.instance().getTrackerDevice()
+                .getPacketCountObservable()
+                .sample(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer packetCount) {
+                        mSampleCountTextView.setText(Integer.toString(packetCount));
+                    }
+                });
 
-        SleepSenseDeviceService.instance().getTrackerDevice().startSensorSession();
+        // SleepSenseDeviceService.instance().getTrackerDevice().startSensorSession();
     }
 
     private void setButtonState() {
-        mStartStopButton.setText(SleepSenseDeviceService.instance().getTrackerDevice().isTracking()?"I'm Awake":"Start Sleep");
-        mStartStopButton.setVisibility(SleepSenseDeviceService.instance().getTrackerDevice().isTracking()? View.VISIBLE:View.GONE);
+        mStartStopButton.setText(SleepSenseDeviceService.instance().getTrackerDevice().isTracking() ? "I'm Awake" : "Start Sleep");
+        // mStartStopButton.setVisibility(SleepSenseDeviceService.instance().getTrackerDevice().isTracking() ? View.VISIBLE : View.GONE);
 
     }
 
@@ -101,7 +107,7 @@ public class SleepTrackingActivity extends AppCompatActivity {
                 mCalendar.setTimeInMillis(System.currentTimeMillis());
                 if (mMinutes != mCalendar.get(Calendar.MINUTE)) {
                     mHours = mCalendar.get(Calendar.HOUR);
-                    if ( mHours == 0 ) {
+                    if (mHours == 0) {
                         mHours = 12;
                     }
                     mMinutes = mCalendar.get(Calendar.MINUTE);
@@ -113,14 +119,12 @@ public class SleepTrackingActivity extends AppCompatActivity {
             }
         }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
-            @Override
-            public void call(Long elapsedTime) {
-                mClockTimeTextView.setText(String.format("%d:%02d",mHours,mMinutes));
-                mClockAmPmTextView.setText(mAMPM==Calendar.AM?"AM":"PM");
-            }
-        });
-
-
+                    @Override
+                    public void call(Long elapsedTime) {
+                        mClockTimeTextView.setText(String.format("%d:%02d", mHours, mMinutes));
+                        mClockAmPmTextView.setText(mAMPM == Calendar.AM ? "AM" : "PM");
+                    }
+                });
 
         setButtonState();
     }

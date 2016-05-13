@@ -14,25 +14,29 @@ public class Firmness {
 
     private String mLabel;
 
+    public static int MAX_PRESSURE = 40;
+
     public static final Map<Integer,Firmness> PRESSURE_TO_FIRMNESS;
 
     static  {
 
         Map<Integer,Firmness> _VALUES = new HashMap<>();
 
-        for (int p=0;p<12;p++) {
+        int range = MAX_PRESSURE / 5;
+
+        for (int p=0;p<range;p++) {
             _VALUES.put(p,new Firmness("Plush"));
         }
-        for (int p=12;p<24;p++) {
+        for (int p=range;p<range*2;p++) {
             _VALUES.put(p,new Firmness("Medium Plush"));
         }
-        for (int p=24;p<36;p++) {
+        for (int p=range*2;p<range*3;p++) {
             _VALUES.put(p,new Firmness("Medium"));
         }
-        for (int p=36;p<48;p++) {
+        for (int p=range*3;p<range*4;p++) {
             _VALUES.put(p,new Firmness("Medium Firm"));
         }
-        for (int p=48;p<=60;p++) {
+        for (int p=range*4;p<=range*5;p++) {
             _VALUES.put(p,new Firmness("Firm"));
         }
 
@@ -59,7 +63,7 @@ public class Firmness {
     }
 
     public static float getControlValueForPressure(int pressure) {
-        return pressure/60f;
+        return pressure/(float)MAX_PRESSURE;
     }
 
     /**
@@ -87,6 +91,6 @@ public class Firmness {
      * @return
      */
     public static int getPressureForControlValue(float targetValue) {
-        return (int)(targetValue*60);
+        return (int)(targetValue*MAX_PRESSURE);
     }
 }

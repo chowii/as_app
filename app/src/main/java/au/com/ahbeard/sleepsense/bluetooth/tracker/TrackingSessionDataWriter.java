@@ -1,12 +1,7 @@
 package au.com.ahbeard.sleepsense.bluetooth.tracker;
 
-import android.os.Environment;
-import android.util.Log;
-
-import com.beddit.analysis.CalendarDate;
 import com.beddit.analysis.TimeValueFragment;
 import com.beddit.analysis.TimeValueTrackFragment;
-import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,8 +21,6 @@ import rx.Observer;
  */
 public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
 
-    private CalendarDate mCalendarDate;
-
     private long mStartTime;
     private long mEndTime;
 
@@ -35,10 +28,9 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
 
     private File mSessionDirectory;
 
-    public TrackingSessionDataWriter(CalendarDate calendarDate) {
+    public TrackingSessionDataWriter() {
         mStartTime = System.currentTimeMillis();
-        mCalendarDate = calendarDate;
-        mSessionDirectory = SleepService.instance().getSessionOutputDirectory(mCalendarDate, mStartTime);
+        mSessionDirectory = SleepService.instance().getSessionOutputDirectory(mStartTime);
     }
 
     /**
@@ -123,7 +115,8 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
 
                 if (trackOutputStream == null) {
 
-                    File trackOutputFile = SleepService.instance().getTrackOutputFile(mCalendarDate, mStartTime, trackName, timeValueTrackFragment.getItemType());
+                    File trackOutputFile = SleepService.instance()
+                            .getTrackOutputFile(mStartTime, trackName, timeValueTrackFragment.getItemType());
                     trackOutputStream = new FileOutputStream(trackOutputFile);
                     mTrackOutputStreams.put(trackName, trackOutputStream);
                 }
@@ -141,8 +134,9 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
      * @throws IOException
      */
     public void writeSessionMetadata() throws IOException {
-        Log.d("EXTERNAL",""+Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
-        ObjectOutputStream fileOutputStream = new ObjectOutputStream(new FileOutputStream(new File(mSessionDirectory, "metadata.dat")));
+
+        ObjectOutputStream fileOutputStream = new ObjectOutputStream(
+                new FileOutputStream(new File(mSessionDirectory, "metadata.dat")));
 
         fileOutputStream.writeLong(mStartTime);
         fileOutputStream.writeLong(mEndTime);
@@ -156,7 +150,8 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
      */
     public void writeError(Throwable throwable) throws IOException {
 
-        PrintWriter errorWriter = new PrintWriter(new FileWriter(new File(mSessionDirectory, "error.log"),true));
+        PrintWriter errorWriter = new PrintWriter(new FileWriter(
+                new File(mSessionDirectory, "error.log"), true));
 
         throwable.printStackTrace(errorWriter);
 

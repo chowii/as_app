@@ -7,10 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Calendar;
+
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.activities.DashboardActivity;
+import au.com.ahbeard.sleepsense.activities.HomeActivity;
+import au.com.ahbeard.sleepsense.services.SleepService;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.functions.Action0;
+import rx.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,7 +26,17 @@ public class MoreFragment extends Fragment {
 
     @OnClick(R.id.debug_button_clear)
     void clear() {
-        ((DashboardActivity)getActivity()).clearDevices();
+        ((HomeActivity)getActivity()).clearDevices();
+    }
+
+    @OnClick(R.id.debug_button_generate_fake_data)
+    void generateFakeData() {
+        Schedulers.io().createWorker().schedule(new Action0() {
+            @Override
+            public void call() {
+                SleepService.instance().generateFakeData(Calendar.getInstance(),60);
+            }
+        });
     }
 
     public MoreFragment() {

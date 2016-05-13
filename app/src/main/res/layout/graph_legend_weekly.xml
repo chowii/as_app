@@ -33,6 +33,7 @@
         android:textSize="13sp"
         android:lineSpacingExtra="3sp"
         android:text="MON"
+        android:textAllCaps="true"
         android:textColor="@color/graphLegendColor"
         app:typeface="OpenSansRegular"
         android:layout_marginTop="12dp"/>

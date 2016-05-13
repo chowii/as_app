@@ -17,6 +17,8 @@ import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
  */
 public class SleepSenseDeviceFactory {
 
+    private static final boolean FIND_TRACKER = true;
+
     public static boolean isSleepSenseDevice(BluetoothScanEvent.DeviceFoundEvent deviceFoundEvent) {
 
         String name = deviceFoundEvent.getDevice().getName();
@@ -37,7 +39,7 @@ public class SleepSenseDeviceFactory {
             return advertisedUUIDs.contains(UUID.fromString("0000ffb0-0000-1000-8000-00805f9b34fb"));
         }
 
-        if (name != null && name.toLowerCase().contains("beddit")) {
+        if (FIND_TRACKER && name != null && name.toLowerCase().contains("beddit")) {
             Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(deviceFoundEvent.getAdvertisingData());
             for (UUID advertisedUUID : advertisedUUIDs) {
                 Log.d("SleepSenseDeviceFactory", "beddit: " + advertisedUUID);
@@ -66,7 +68,7 @@ public class SleepSenseDeviceFactory {
             mDevices.add(baseDevice);
         }
 
-        if (name != null && name.toLowerCase().contains("beddit")) {
+        if (FIND_TRACKER && name != null && name.toLowerCase().contains("beddit")) {
             TrackerDevice trackerDevice = new TrackerDevice();
             trackerDevice.link(context, deviceFoundEvent.getDevice());
             mDevices.add(trackerDevice);

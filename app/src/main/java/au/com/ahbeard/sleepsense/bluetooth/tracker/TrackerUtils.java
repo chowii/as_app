@@ -79,7 +79,7 @@ public class TrackerUtils {
 
                     while (position < bytes.length) {
                         SleepCycle sleepCycle = SleepCycle.create(position,bytes);
-                        position+=SleepStage.getLength();
+                        position+=SleepCycle.getLength();
 
                         Log.d("BatchAnalysisResult", String.format("sleep cycle: %f - %f", sleepCycle.getTimestamp(),sleepCycle.getCycle() ));
                     }

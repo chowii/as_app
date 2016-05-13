@@ -1,22 +1,23 @@
 package au.com.ahbeard.sleepsense.fragments;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.app.FragmentTabHost;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Random;
+import java.util.List;
+import java.util.Locale;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.services.SleepService;
-import au.com.ahbeard.sleepsense.widgets.SleepSenseGraphView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -27,12 +28,11 @@ import butterknife.ButterKnife;
  */
 public class DashboardFragment extends Fragment {
 
-    @Bind(R.id.dashboard_view_pager_graph)
-    ViewPager graphViewPager;
+    @Bind(R.id.dashboard_tab_host)
+    FragmentTabHost mTabHost;
 
     private Float[] mValues;
     private Calendar mCalendar;
-    private int mDayOfWeek;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -54,37 +54,6 @@ public class DashboardFragment extends Fragment {
 
         }
 
-        Random random = new Random(1234);
-
-        mValues = new Float[400];
-
-        for ( int i=0; i < mValues.length; i++ ) {
-            if ( random.nextFloat() > 0.1f ) {
-                mValues[i] = 40f + random.nextFloat() * 55f;
-            }
-        }
-
-        mCalendar = Calendar.getInstance();
-        mDayOfWeek = mCalendar.get(Calendar.DAY_OF_WEEK)-1;
-
-    }
-
-    public float[] fetchDataForDateRange(int daysBeforeToday, int length) {
-
-        SleepService.instance().readSleepScores(daysBeforeToday,length);
-
-        float[] data = new float[length];
-        for (int i=0; i< data.length; i++) {
-            data[i] = -1000f;
-        }
-        for (int i=mValues.length-daysBeforeToday-1,j=0;i < mValues.length && j < data.length ; i++,j++){
-            if (i > 0) {
-                if ( mValues[i] !=null ) {
-                    data[j] = mValues[i];
-                }
-            }
-        }
-        return data;
     }
 
     @Override
@@ -93,30 +62,11 @@ public class DashboardFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
-        graphViewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
-
-            private String[] mLabels = {null,"SUN","MON","TUE","WED","THU","FRI","SAT",null};
-            private int mWidth = 7;
-            private int mNumberOfPagesBack = 1024;
-
-            @Override
-            public Fragment getItem(int position) {
-                int offset = ( mNumberOfPagesBack - ( position + 1 ) ) * mWidth;
-                return GraphFragment.newInstance(fetchDataForDateRange(offset+1+mDayOfWeek,mWidth+2), mLabels);
-            }
-
-            @Override
-            public int getCount() {
-                return mNumberOfPagesBack;
-            }
-
-        });
-
-
-
-        graphViewPager.setCurrentItem(1023);
+        mTabHost.setup(getContext(),getChildFragmentManager(),android.R.id.tabcontent);
+        mTabHost.addTab(mTabHost.newTabSpec("DAILY").setIndicator("Daily"),DailyDashboardFragment.class,null);
+        mTabHost.addTab(mTabHost.newTabSpec("WEEKLY").setIndicator("Weekly"),WeeklyDashboardFragment.class,null);
 
         return view;
     }

@@ -2,7 +2,6 @@ package au.com.ahbeard.sleepsense.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
 import au.com.ahbeard.sleepsense.R;
@@ -60,7 +59,7 @@ public class OnBoardActivity extends BaseActivity {
     }
 
     public void successContinue() {
-        Intent intent = new Intent(this, DashboardActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();

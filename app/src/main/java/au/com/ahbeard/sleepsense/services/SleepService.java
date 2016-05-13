@@ -22,9 +22,13 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,6 +36,7 @@ import java.util.regex.Pattern;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerUtils;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepProperty;
+import au.com.ahbeard.sleepsense.model.beddit.TrackData;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 
@@ -63,67 +68,85 @@ public class SleepService {
         mSleepSQLiteHelper.getReadableDatabase();
     }
 
-
-    public static String stringFromCalendarDate(CalendarDate calendarDate) {
-        return String.format("%04d%02d%02d", calendarDate.getYear(), calendarDate.getMonth(), calendarDate.getDay());
-    }
-
     public void runBatchAnalysis() {
+
+//        try {
+//            checkSessionData();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
 
         Schedulers.computation().createWorker().schedule(new Action0() {
             @Override
             public void call() {
-
-                final long MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
-
                 Calendar calendar = Calendar.getInstance();
 
-                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
+                calendar.add(Calendar.DAY_OF_YEAR, -7);
 
-                long periodStart = calendar.getTimeInMillis();
-                long periodEnd = periodStart + MILLISECONDS_IN_DAY;
-
-                CalendarDate calendarDate = new CalendarDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                List<SessionData> sessionData = readSessionData(periodStart / 1000D, periodEnd / 1000D);
-
-                try {
-
-                    BatchAnalysis batchAnalysis = new BatchAnalysis();
-
-                    Log.d("BatchAnalysis", String.format("ANALYZING DATE: %d/%d/%d", calendarDate.getDay(), calendarDate.getMonth(), calendarDate.getYear()));
-
-                    BatchAnalysisResult batchAnalysisResult = batchAnalysis.analyzeSessions(
-                            sessionData,
-                            new ArrayList<BatchAnalysisResult>(),
-                            calendarDate,
-                            new BatchAnalysisContext(PreferenceService.instance().getSleepTargetTime() * 3600f));
-
-                    TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
-
-                } catch (AnalysisException e) {
-                    e.printStackTrace();
+                for (int i = 0; i < 7; i++) {
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+                    runBatchAnalysis(calendar);
                 }
-
-
             }
         });
+
+    }
+
+    public void runBatchAnalysis(final Calendar calendar) {
+
+        final long MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
+
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        long periodStart = calendar.getTimeInMillis();
+        long periodEnd = periodStart + MILLISECONDS_IN_DAY;
+
+        CalendarDate calendarDate = new CalendarDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+        List<SessionData> sessionData = readSessionData(periodStart / 1000D, periodEnd / 1000D);
+
+        if (sessionData.size() > 0) {
+
+            try {
+
+                BatchAnalysis batchAnalysis = new BatchAnalysis();
+
+                Log.d("BatchAnalysis", String.format("ANALYZING DATE: %d/%d/%d", calendarDate.getDay(), calendarDate.getMonth(), calendarDate.getYear()));
+
+                BatchAnalysisResult batchAnalysisResult = batchAnalysis.analyzeSessions(
+                        sessionData,
+                        new ArrayList<BatchAnalysisResult>(),
+                        calendarDate,
+                        new BatchAnalysisContext(PreferenceService.instance().getSleepTargetTime() * 3600f));
+
+                TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
+
+                writeSleepToDatabase(Sleep.fromBatchAnalysisResult(batchAnalysisResult));
+
+            } catch (AnalysisException e) {
+                // TODO: Log this exception online somewhere. There's not actually anything we can do to recover.
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
     //
     // Where to store each track.
     //
-    public File getTrackOutputFile(CalendarDate calendarDate, long startTime, String track, String type) {
-        return new File(getSessionOutputDirectory(calendarDate, startTime), track + "." + type + ".bin");
+    public File getTrackOutputFile(long startTime, String track, String type) {
+        return new File(getSessionOutputDirectory(startTime), track + "." + type + ".bin");
     }
 
     //
     //
     //
-    public File getSessionOutputDirectory(CalendarDate calendarDate, long startTime) {
+    public File getSessionOutputDirectory(long startTime) {
         File sessionOutputDirectory = new File(getSessionsDirectory(), Long.toString(startTime));
         if (!sessionOutputDirectory.exists()) {
             sessionOutputDirectory.mkdirs();
@@ -139,67 +162,24 @@ public class SleepService {
         return new File(mSleepDataStorageDirectory, "sessions");
     }
 
-    /**
-     * Run a batch analysis for a calendar date.
-     *
-     * @param previousBatchResults
-     * @param calendarDate
-     * @return
-     * @throws IOException
-     * @throws AnalysisException
-     */
-    public BatchAnalysisResult runBatchAnalysis(List<BatchAnalysisResult> previousBatchResults, CalendarDate calendarDate) throws IOException, AnalysisException {
-
-        BatchAnalysis batchAnalysis = new BatchAnalysis();
-
-        File dayDirectory = getSessionsDirectory();
-
-        List<SessionData> sessionDataForDay = getSessionDataForDay(dayDirectory);
-
-        BatchAnalysisResult batchAnalysisResult = batchAnalysis.analyzeSessions(
-                sessionDataForDay,
-                previousBatchResults,
-                calendarDate,
-                new BatchAnalysisContext(PreferenceService.instance().getSleepTargetTime() * 3600f));
-
-        TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
-
-        writeSleepToDatabase(Sleep.fromBatchAnalysisResult(batchAnalysisResult));
-
-        return batchAnalysisResult;
-
+    public void writeSessionDataToDatabase(File sessionDirectory) throws IOException {
+        SessionData sessionData = getSessionData(sessionDirectory);
+        if ( sessionData != null ) {
+            writeSessionDataToDatabase(sessionData);
+        }
     }
 
-    /**
-     * Get the sessionData in a given directory.
-     *
-     * @param dayDirectory
-     * @return
-     */
-    public List<SessionData> getSessionDataForDay(File dayDirectory) throws IOException {
+    public void checkSessionData() throws IOException {
 
-        File[] sessionDirectories = dayDirectory.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String filename) {
-                return filename.matches("\\d+");
-            }
-        });
+        File[] sessions = getSessionsDirectory().listFiles();
 
-        List<SessionData> sessionDatas = new ArrayList<>();
-
-        for (File sessionDirectory : sessionDirectories) {
-            SessionData sessionData = getSessionData(sessionDirectory);
-            if (sessionData != null) {
-                sessionDatas.add(sessionData);
+        for (File session : sessions) {
+            SessionData sessionData = getSessionData(session);
+            if ( sessionData != null ) {
+                writeSessionDataToDatabase(sessionData);
             }
         }
 
-        return sessionDatas;
-    }
-
-    public void writeSessionDataToDatabase(File sessionDirectory) throws IOException {
-        SessionData sessionData = getSessionData(sessionDirectory);
-        writeSessionDataToDatabase(sessionData);
     }
 
 
@@ -303,6 +283,10 @@ public class SleepService {
 
         database.beginTransaction();
 
+        // Remove any existing table entry.
+        database.delete(SleepContract.Sleep.TABLE_NAME, SleepContract.Sleep.SLEEP_ID + "=?", new String[]{Long.toString(sleep.getSleepId())});
+        database.delete(SleepContract.SleepTracks.TABLE_NAME, SleepContract.Sleep.SLEEP_ID + "=?", new String[]{Long.toString(sleep.getSleepId())});
+
         ContentValues values = new ContentValues();
 
         values.put(SleepContract.Sleep.SLEEP_ID, sleep.getSleepId());
@@ -338,6 +322,24 @@ public class SleepService {
 
         long id = database.insertOrThrow(SleepContract.Sleep.TABLE_NAME, null, values);
 
+        Log.d("SleepService", "id=" + id);
+
+        if ( sleep.getTrackDataByName() != null ) {
+
+            for (TrackData trackData : sleep.getTrackDataByName().values()) {
+                ContentValues trackDataValues = new ContentValues();
+                trackDataValues.put(SleepContract.Sleep.SLEEP_ID, sleep.getSleepId());
+                trackDataValues.put(SleepContract.SleepTracks.TRACK_NAME, trackData.getName());
+                trackDataValues.put(SleepContract.SleepTracks.TRACK_DATA_TYPE, trackData.getType());
+                trackDataValues.put(SleepContract.SleepTracks.TRACK_DATA, trackData.getData());
+
+                long trackId = database.insertOrThrow(SleepContract.SleepTracks.TABLE_NAME, null, trackDataValues);
+
+                Log.d("SleepService", "trackId=" + trackId);
+            }
+
+        }
+
 
         database.setTransactionSuccessful();
         database.endTransaction();
@@ -345,6 +347,10 @@ public class SleepService {
         database.close();
 
 
+    }
+
+    public Sleep getSleepFromDatabase(long sleepId) {
+        return Sleep.fromDatabase(mSleepSQLiteHelper,sleepId);
     }
 
     /**
@@ -357,16 +363,33 @@ public class SleepService {
 
         File metadataFile = new File(sessionDirectory, "metadata.dat");
 
-        if (!metadataFile.exists()) {
-            return null;
+        long startTime;
+        long endTime;
+
+        if (metadataFile.exists()) {
+
+            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(metadataFile));
+
+            startTime = objectInputStream.readLong();
+            endTime = objectInputStream.readLong();
+
+            objectInputStream.close();
+
+        } else {
+
+            startTime = Long.parseLong(sessionDirectory.getName());
+            endTime = 0;
+
+            for (File file : sessionDirectory.listFiles() ) {
+                endTime = Math.max(endTime,file.lastModified());
+            }
+
+            if ( endTime == 0 ) {
+                return null;
+            }
+
         }
 
-        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(metadataFile));
-
-        long startTime = objectInputStream.readLong();
-        long endTime = objectInputStream.readLong();
-
-        objectInputStream.close();
 
         TimeValueFragment timeValueFragment = new TimeValueFragment();
 
@@ -413,33 +436,135 @@ public class SleepService {
 
     }
 
-    public List<SleepProperty> readSleepScores(int daysBeforeToday, int length) {
+    /**
+     *
+     * @param startSleepId
+     * @param endSleepId
+     * @return
+     */
+    public float[] readSleepScores(int startSleepId, int endSleepId) {
+
+        Log.d("SleepService", String.format("startSleepId: %d endSleepId: %d", startSleepId, endSleepId));
 
         SQLiteDatabase database = mSleepSQLiteHelper.getReadableDatabase();
 
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.add(Calendar.DAY_OF_YEAR, -daysBeforeToday);
-
-        int endSleepId = calendar.get(Calendar.YEAR) * 10000 + (calendar.get(Calendar.MONTH) + 1) * 100 + calendar.get(Calendar.DAY_OF_MONTH);
-
-        calendar.add(Calendar.DAY_OF_YEAR, -length);
-        int startSleepId = calendar.get(Calendar.YEAR) * 10000 + (calendar.get(Calendar.MONTH) + 1) * 100 + calendar.get(Calendar.DAY_OF_MONTH);
-
-        Cursor sleepSessionCursor = database.rawQuery("select sleep_id, sleep_score from sleep where sleep_id > ? and sleep_id <= ? order by sleep_id asc",
+        Cursor sleepSessionCursor = database.rawQuery("select sleep_id, total_sleep_score from sleep where sleep_id >= ? and sleep_id <= ? order by sleep_id asc",
                 new String[]{Integer.toString(startSleepId), Integer.toString(endSleepId)});
 
         sleepSessionCursor.moveToFirst();
 
-        List<SleepProperty> mSleepScores = new ArrayList<>();
 
-        while ( ! sleepSessionCursor.isAfterLast() ) {
+        Map<Integer, SleepProperty> sleepScoreBySleepId = new HashMap<>();
+
+        while (!sleepSessionCursor.isAfterLast()) {
             int sleepId = sleepSessionCursor.getInt(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.SLEEP_ID));
-            float sleepScore = sleepSessionCursor.getFloat(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.SLEEP_ID));
-            mSleepScores.add(new SleepProperty(sleepId,sleepScore));
+            float sleepScore = sleepSessionCursor.getFloat(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.TOTAL_SLEEP_SCORE));
+            Log.d("Dashboard", String.format("sleep_id: %d sleep_score: %f", sleepId, sleepScore));
+            sleepScoreBySleepId.put(sleepId, new SleepProperty(sleepId, sleepScore));
             sleepSessionCursor.moveToNext();
         }
 
-        return mSleepScores;
+        List<Integer> sleepIdRange = generateSleepIdRange(startSleepId, endSleepId);
+
+        float[] sleepScores = new float[sleepIdRange.size()];
+        int i = 0;
+
+        for (Integer sleepId : sleepIdRange) {
+            sleepScores[i++] = sleepScoreBySleepId.containsKey(sleepId) ? sleepScoreBySleepId.get(sleepId).getValue() : -1;
+        }
+
+        return sleepScores;
+    }
+
+    /**
+     * Generate a range
+     *
+     * @param startSleepId
+     * @param endSleepId
+     * @return
+     */
+    public static List<Integer> generateSleepIdRange(int startSleepId, int endSleepId) {
+
+        List<Integer> sleepIds = new ArrayList<>();
+
+        Calendar calendar = getCalendar(startSleepId);
+
+        do {
+            sleepIds.add(getSleepId(calendar));
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+        } while (getSleepId(calendar) <= endSleepId);
+
+
+        return sleepIds;
+
+    }
+
+    /**
+     * Generate a range
+     *
+     * @param startSleepId
+     * @param endSleepId
+     * @return
+     */
+    public static String[] generateLabels(int startSleepId, int endSleepId, DateFormat dateFormat) {
+
+        List<String> labels = new ArrayList<>();
+
+        Calendar calendar = getCalendar(startSleepId);
+
+        do {
+            labels.add(dateFormat.format(calendar.getTime()));
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+        } while (getSleepId(calendar) <= endSleepId);
+
+        return labels.toArray(new String[labels.size()]);
+    }
+
+    /**
+     * @param calendar
+     * @return
+     */
+    public static int getSleepId(Calendar calendar) {
+        return calendar.get(Calendar.YEAR) * 10000 + (calendar.get(Calendar.MONTH) + 1) * 100 + calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
+     * @param sleepId
+     * @return
+     */
+    public static Calendar getCalendar(int sleepId) {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.YEAR, sleepId / 10000);
+        calendar.set(Calendar.MONTH, ((sleepId / 100) % 100) - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, sleepId % 100);
+
+        return calendar;
+    }
+
+    /**
+     *
+     * @param calendar
+     * @param days
+     */
+    public void generateFakeData(Calendar calendar, int days) {
+
+        int endSleepId = getSleepId(calendar);
+        calendar.add(Calendar.DAY_OF_YEAR, -days);
+        int startSleepId = getSleepId(calendar);
+
+        Random random = new Random(12412);
+
+        try {
+            for (int sleepId : generateSleepIdRange(startSleepId, endSleepId)) {
+                if ( random.nextFloat() > 0.2f ) {
+                    Sleep sleep = Sleep.generateRandom(sleepId,random);
+                    writeSleepToDatabase(sleep);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

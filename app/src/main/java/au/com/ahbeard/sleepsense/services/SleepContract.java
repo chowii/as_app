@@ -102,17 +102,22 @@ public class SleepContract {
         public static final String TABLE_NAME = "sleep_tracks";
 
         public static final String SLEEP_ID = "sleep_id";
-        public static final String TRACK_NAME = "track_name";
-        public static final String TRACK_DATA = "track_data";
+        public static final String TRACK_NAME = "name";
+        public static final String TRACK_DATA_TYPE = "data_type";
+        public static final String TRACK_DATA = "data";
 
         public static final String SQL_CREATE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         _ID + " INTEGER PRIMARY KEY," +
                         SLEEP_ID + LONG_TYPE + COMMA_SEP +
                         TRACK_NAME + TEXT_TYPE + COMMA_SEP +
+                        TRACK_DATA_TYPE + TEXT_TYPE + COMMA_SEP +
                         TRACK_DATA + BLOB_TYPE +
                         " )";
 
+
+        public static final String SQL_DROP =
+                "DROP TABLE IF EXISTS " + TABLE_NAME;
 
 
     }

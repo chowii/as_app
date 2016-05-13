@@ -36,6 +36,12 @@
         android:layout_height="0dp" android:layout_weight="1"></LinearLayout>
 
     <Button
+        android:id="@+id/debug_button_generate_fake_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Generate Fake Data" android:layout_margin="20dp"/>
+
+    <Button
         android:id="@+id/debug_button_clear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

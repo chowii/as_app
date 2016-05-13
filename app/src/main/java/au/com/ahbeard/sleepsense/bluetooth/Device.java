@@ -277,7 +277,8 @@ public class Device extends BluetoothGattCallback {
                         ));
 
                 if (getSetupNotifications()) {
-                    EnableNotificationOperation enableNotificationOperation = new EnableNotificationOperation(getServiceUUID(), getNotifyCharacteristicUUID());
+                    EnableNotificationOperation enableNotificationOperation =
+                            new EnableNotificationOperation(getServiceUUID(), getNotifyCharacteristicUUID());
                     mBluetoothOperationQueue.addOperation(enableNotificationOperation);
                 }
 

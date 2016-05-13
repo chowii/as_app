@@ -8,8 +8,6 @@ import java.util.Set;
  */
 public class PumpEvent {
 
-
-
     /*
 
     /// An example pump mStatus string (new format): "EX0250360250280200"

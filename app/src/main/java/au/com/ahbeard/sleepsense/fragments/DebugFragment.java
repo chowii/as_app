@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.activities.DashboardActivity;
+import au.com.ahbeard.sleepsense.activities.HomeActivity;
 import au.com.ahbeard.sleepsense.adapters.SimpleItemAnimator;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.services.LogService;
@@ -40,7 +40,7 @@ public class DebugFragment extends Fragment {
 
     @OnClick(R.id.debug_button_clear)
     void clear() {
-        ((DashboardActivity)getActivity()).clearDevices();
+        ((HomeActivity)getActivity()).clearDevices();
     }
 
     @Bind(R.id.debug_recycler_view_log)

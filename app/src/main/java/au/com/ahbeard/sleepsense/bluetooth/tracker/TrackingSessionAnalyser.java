@@ -79,7 +79,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
         });
 
         mTimeValueTrackFragmentPublishSubject.observeOn(Schedulers.io()).subscribe(
-                new TrackingSessionDataWriter(TrackerUtils.getCalendarDate(System.currentTimeMillis())));
+                new TrackingSessionDataWriter());
 
         mSensorDataObservable.observeOn(Schedulers.io()).subscribe(new Observer<SensorData>() {
             @Override

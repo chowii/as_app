@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="40dp"
+        android:paddingBottom="40dp"
+        >
+
+        <ImageView
+
+            android:id="@+id/statistic_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:src="@drawable/daily_view_circle" android:layout_marginRight="15dp"/>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:id="@+id/statistic_text_view_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:lineSpacingExtra="8dp"
+            android:text="Average SleepScore"
+            android:textColor="#6E788D"
+            android:textSize="14sp"
+            app:typeface="OpenSansRegular"/>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:id="@+id/statistic_text_view_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="8dp"
+            tools:text="85"
+            android:textColor="#6E788D"
+            android:textSize="14sp"
+            app:typeface="OpenSansRegular" android:layout_marginLeft="15dp"/>
+
+    </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#E0E0E0" android:layout_marginRight="20dp" android:layout_marginLeft="20dp"/>
+
+</LinearLayout>

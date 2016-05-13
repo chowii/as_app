@@ -7,11 +7,13 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.graphics.Shader;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,22 +31,38 @@ import butterknife.ButterKnife;
  * the other is an area for the graph labels (see the designs). The graph labels sit centered in that area and lined up
  * with the data point on the x axis.
  */
-public class SleepSenseGraphView extends ViewGroup {
+public class WeeklyGraphView extends ViewGroup {
+
+    private Object[] mIndexes;
+
+    public interface OnClickListener {
+        void onValueClicked(Object identifier);
+    }
 
     public static final float GRAPH_LEGEND_SPLIT = 0.5f;
+
+    private OnClickListener mOnClickListener;
+
     private Paint mLinePaint;
     private Paint mLineShadowPaint;
     private Paint mDividerPaint;
     private Paint mAreaPaint;
 
-    private List<Path> mAreaPaths;
     private List<PointF> mDividerPoints;
+    private List<Path> mAreaPaths;
+    private List<RectF> mAreaPathBounds;
+    private List<Boolean> mAreaPathStates;
+    private List<Object> mAreaPathIndexes;
+
+    private PointF mEventPoint = new PointF();
+    private PointF mDownPoint = new PointF();
 
 
     private Path mPath;
 
     private LinearGradient mAreaGradient;
 
+    // Yes, I know I would probably have been better using sparse arrays here ;-)
     private LegendViewHolder[] mLegendViewHolders;
     private Float[] mValues;
     private Float[] mRawPoints;
@@ -57,17 +75,17 @@ public class SleepSenseGraphView extends ViewGroup {
     private float mGraphRegionHeight;
     private float mLegendHeight;
 
-    public SleepSenseGraphView(Context context) {
+    public WeeklyGraphView(Context context) {
         super(context);
         init(context, null, 0);
     }
 
-    public SleepSenseGraphView(Context context, AttributeSet attrs) {
+    public WeeklyGraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs, 0);
     }
 
-    public SleepSenseGraphView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public WeeklyGraphView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr);
     }
@@ -80,10 +98,14 @@ public class SleepSenseGraphView extends ViewGroup {
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
 
         setWillNotDraw(false);
+        setClickable(true);
 
         mDividerPoints = new ArrayList<>();
 
         mAreaPaths = new ArrayList<>();
+        mAreaPathBounds = new ArrayList<>();
+        mAreaPathStates = new ArrayList<>();
+        mAreaPathIndexes = new ArrayList<>();
 
         mAreaPaint = new Paint();
         mAreaPaint.setShader(mAreaGradient);
@@ -114,7 +136,7 @@ public class SleepSenseGraphView extends ViewGroup {
 
     }
 
-    public void setValues(float[] values, String[] names, float minimum, float maximum) {
+    public void setValues(float[] values, String[] names, Object[] indexes, float minimum, float maximum) {
 
         Float[] _values = new Float[values.length];
 
@@ -122,14 +144,15 @@ public class SleepSenseGraphView extends ViewGroup {
             _values[i] = values[i] >= 0 ? values[i] : null;
         }
 
-        setValues(_values, names, minimum, maximum);
+        setValues(_values, names, indexes, minimum, maximum);
 
     }
 
     // We actually need to think of this as a window on some data not
-    public void setValues(Float[] values, String[] names, float minimum, float maximum) {
+    public void setValues(Float[] values, String[] names, Object[] indexes, float minimum, float maximum) {
 
         mValues = values;
+        mIndexes= indexes;
 
         float range = maximum - minimum;
 
@@ -150,7 +173,7 @@ public class SleepSenseGraphView extends ViewGroup {
 
         mLegendViewHolders = new LegendViewHolder[mValues.length];
 
-        if ( names != null ) {
+        if (names != null) {
             for (int i = 1; i < mValues.length - 1; i++) {
                 if (mValues[i] != null) {
                     View view = LayoutInflater.from(getContext()).inflate(R.layout.graph_legend_weekly, this, false);
@@ -169,14 +192,20 @@ public class SleepSenseGraphView extends ViewGroup {
 
     }
 
+    public void setOnClickListener(OnClickListener onClickListener) {
+        mOnClickListener = onClickListener;
+    }
+
     private void layout(int width, int height) {
 
         // Have to allocate here, since we don't know the size. Optimally we could do this when the graph canvas
         // changes size... actually if the values don't change, none of this changes, so we can set a "dirty" flag.
-
-
         mAreaPaths.clear();
         mDividerPoints.clear();
+        mAreaPathBounds.clear();
+        mAreaPathStates.clear();
+        mAreaPathIndexes.clear();
+
 
         mAreaPaint.setShader(new LinearGradient(
                 0, 0, 0, getHeight() * GRAPH_LEGEND_SPLIT,
@@ -184,7 +213,7 @@ public class SleepSenseGraphView extends ViewGroup {
                 getResources().getColor(R.color.graphAreaGradientEnd),
                 Shader.TileMode.MIRROR));
 
-        mColumnWidth = (float)width / (mRawPoints.length - 2);
+        mColumnWidth = (float) width / (mRawPoints.length - 2);
 
         mGraphRegionHeight = height * GRAPH_LEGEND_SPLIT;
         mLegendHeight = height - mGraphRegionHeight;
@@ -195,6 +224,7 @@ public class SleepSenseGraphView extends ViewGroup {
 
         mPath.reset();
 
+        // Lay out the raw points.
         for (int i = 0; i < mRawPoints.length; i++) {
             if (mRawPoints[i] != null) {
                 mPoints[i] = new PointF();
@@ -203,6 +233,7 @@ public class SleepSenseGraphView extends ViewGroup {
             }
         }
 
+        // Line up the legend view holders.
         for (int i = 0; i < mLegendViewHolders.length; i++) {
 
             if (mLegendViewHolders[i] == null)
@@ -230,8 +261,8 @@ public class SleepSenseGraphView extends ViewGroup {
             if (mPoints[i] == null)
                 continue;
 
-            boolean isFirstPoint = i==1;
-            boolean isLastPoint = i == mPoints.length-2;
+            boolean isFirstPoint = i == 1;
+            boolean isLastPoint = i == mPoints.length - 2;
 
             // Find left neighbour index...
             Integer nearestLeftNeighbourIndex = null;
@@ -308,10 +339,21 @@ public class SleepSenseGraphView extends ViewGroup {
             path.close();
 
             mAreaPaths.add(path);
+            mAreaPathBounds.add(computeBounds(path));
+            mAreaPathStates.add(false);
+            mAreaPathIndexes.add(mIndexes[i]);
+
         }
 
         mGraphNeedsRelayout = false;
 
+    }
+
+    @NonNull
+    private RectF computeBounds(Path path) {
+        RectF bounds = new RectF();
+        path.computeBounds(bounds, true);
+        return bounds;
     }
 
     @Override
@@ -323,6 +365,9 @@ public class SleepSenseGraphView extends ViewGroup {
 
         for (int i = 0; i < mAreaPaths.size(); i++) {
             canvas.drawPath(mAreaPaths.get(i), mAreaPaint);
+            if (mAreaPathStates.get(i)) {
+                canvas.drawPath(mAreaPaths.get(i), mAreaPaint);
+            }
         }
 
 //        for (int i = 0; i < mDividerPoints.size(); i++) {
@@ -353,9 +398,8 @@ public class SleepSenseGraphView extends ViewGroup {
 
         canvas.drawPath(mPath, mLinePaint);
 
-        if (mPoints.length<=14) {
+        if (mPoints.length <= 14) {
             for (int i = 0; i < mPoints.length; i++) {
-
                 if (mPoints[i] != null) {
                     canvas.drawCircle(mPoints[i].x, mPoints[i].y, 4, mLinePaint);
                 }
@@ -363,8 +407,57 @@ public class SleepSenseGraphView extends ViewGroup {
             }
         }
 
-
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+            for (int i = 0; i < mAreaPathBounds.size(); i++) {
+                if (mAreaPathBounds.get(i).contains(event.getX(), event.getY())) {
+                    mAreaPathStates.set(i, true);
+                    mDownPoint.set(event.getX(), event.getY());
+                    invalidate();
+                }
+            }
+
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            for (int i = 0; i < mAreaPathBounds.size(); i++) {
+                if (mAreaPathStates.get(i)) {
+                    mAreaPathStates.set(i, false);
+                    if ( mOnClickListener != null ) {
+                        mOnClickListener.onValueClicked(mAreaPathIndexes.get(i));
+                    }
+                    invalidate();
+                }
+            }
+
+        } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+            for (int i = 0; i < mAreaPathBounds.size(); i++) {
+                if (mAreaPathStates.get(i)) {
+                    mAreaPathStates.set(i, false);
+                    invalidate();
+                }
+            }
+
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            for (int i = 0; i < mAreaPathBounds.size(); i++) {
+                if (mAreaPathStates.get(i)) {
+                    mEventPoint.set(event.getX(), event.getY());
+                    // Check if we've either moved out of the bounds, or we've moved too much.
+                    if (!mAreaPathBounds.get(i).contains(event.getX(), event.getY())) {
+                        mAreaPathStates.set(i, false);
+                        invalidate();
+                    }
+                }
+            }
+        }
+
+        return super.onTouchEvent(event);
+    }
+
+
 
     class LegendViewHolder {
 

@@ -24,7 +24,7 @@
             android:screenOrientation="userPortrait" >
         </activity>
         <activity
-            android:name=".activities.DashboardActivity"
+            android:name=".activities.HomeActivity"
             android:screenOrientation="userPortrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

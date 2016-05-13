@@ -2,6 +2,7 @@ package au.com.ahbeard.sleepsense.bluetooth.pump;
 
 import android.bluetooth.BluetoothGatt;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -70,6 +71,8 @@ public class PumpDevice extends Device {
         mPumpEventSubject.subscribe(new Action1<PumpEvent>() {
             @Override
             public void call(PumpEvent pumpEvent) {
+
+                Log.d("PumpEvent",pumpEvent.toString());
 
                 mLeftChamberState.currentPressure = pumpEvent.getLeftPressure();
                 mRightChamberState.currentPressure = pumpEvent.getRightPressure();
