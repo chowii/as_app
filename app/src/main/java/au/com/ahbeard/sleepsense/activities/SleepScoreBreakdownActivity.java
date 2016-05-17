@@ -9,19 +9,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
-import au.com.ahbeard.sleepsense.model.beddit.SleepStage;
-import au.com.ahbeard.sleepsense.model.beddit.TimestampAndFloat;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.utils.StringUtils;
 import au.com.ahbeard.sleepsense.widgets.SleepScoreView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Subscription;
 
 public class SleepScoreBreakdownActivity extends AppCompatActivity {
 
@@ -68,23 +62,37 @@ public class SleepScoreBreakdownActivity extends AppCompatActivity {
             mSleepScoreView.setSleepScore(mSleep.getTotalSleepScore());
             mSleepScoreTextView.setText(Integer.toString(Math.round(mSleep.getTotalSleepScore())));
 
-            addStatistic(Color.WHITE,"Time sleeping",StringUtils.timeInSecondsSinceEpochToString(mSleep.getSleepTotalTime()));
+            int textColor = getResources().getColor(R.color.detailedSleepScoreTextColor);
+            int altTextColor = getResources().getColor(R.color.detailedSleepScoreAltTextColor);
 
-            if ( mSleep.getRestingHeartRate() !=null) {
-                addStatistic(Color.WHITE,"Resting heart rate",""+mSleep.getRestingHeartRate().intValue()+" bpm");
+            addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_time_sleeping), StringUtils.timeInSecondsSinceEpochToString(textColor,altTextColor,mSleep.getSleepTotalTime()));
+
+            if (mSleep.getRestingHeartRate() != null) {
+                addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_resting_heart_rate), StringUtils.valueSuffix(textColor,altTextColor,"" + mSleep.getRestingHeartRate().intValue()," bpm"));
             }
-            addStatistic(Color.WHITE,"Time to fall asleep",StringUtils.timeInSecondsSinceEpochToString(mSleep.getSleepLatency()));
-            addStatistic(Color.WHITE,"Sleep efficiency",String.format("%d%%",Math.round(mSleep.getSleepEfficiency()*100)));
-            addStatistic(Color.WHITE,"Restless sleep", StringUtils.timeInSecondsSinceEpochToString(mSleep.getRestlessTotalTime()));
-            addStatistic(Color.WHITE,"Awake", StringUtils.timeInSecondsSinceEpochToString(mSleep.getWakeTotalTime()));
-            addStatistic(Color.WHITE,"Out of bed", StringUtils.timeInSecondsSinceEpochToString(mSleep.getAwayTotalTime()));
-            addStatistic(Color.WHITE,"Snoring", StringUtils.timeInSecondsSinceEpochToString(mSleep.getTotalSnoringEpisodeDuration()));
+
+            addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_time_to_fall_asleep),
+                    StringUtils.timeInSecondsSinceEpochToString(textColor,altTextColor,mSleep.getSleepLatency()));
+            addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_sleep_efficiency),
+                    StringUtils.valueSuffix(textColor,altTextColor,String.format("%d", Math.round(mSleep.getSleepEfficiency() * 100))," %"),
+                    getText(R.string.lorem_ipsum));
+            addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_restless_sleep),
+                    StringUtils.timeInSecondsSinceEpochToString(textColor,altTextColor,mSleep.getRestlessTotalTime()));
+            addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_awake),
+                    StringUtils.timeInSecondsSinceEpochToString(textColor,altTextColor,mSleep.getWakeTotalTime()));
+            addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_out_of_bed),
+                    StringUtils.timeInSecondsSinceEpochToString(textColor,altTextColor,mSleep.getAwayTotalTime()));
+            addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_snoring),
+                    StringUtils.timeInSecondsSinceEpochToString(textColor,altTextColor,mSleep.getTotalSnoringEpisodeDuration()));
 
 
         }
 
     }
 
+    /**
+     *
+     */
     @Override
     protected void onStart() {
 
@@ -92,40 +100,95 @@ public class SleepScoreBreakdownActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *
+     */
     @Override
     protected void onStop() {
         super.onStop();
     }
 
+    /**
+     *
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
 
 
-    private StatisticViewHolder addStatistic(int color, String name, String value) {
+    /**
+     *
+     * @param color
+     * @param name
+     * @param value
+     * @return
+     */
+    private StatisticViewHolder addStatistic(int color, CharSequence name, CharSequence value ) {
+        return addStatistic(color,name,value,null);
+    }
+
+    /**
+     *
+     * @param color
+     * @param name
+     * @param value
+     * @param expandedText
+     *
+     * @return
+     */
+    private StatisticViewHolder addStatistic(int color, CharSequence name, CharSequence value, CharSequence expandedText ) {
 
         View view = LayoutInflater.from(this).inflate(R.layout.item_statistic, mStatisticsLayout, false);
 
-        StatisticViewHolder viewHolder = new StatisticViewHolder();
+        final StatisticViewHolder viewHolder = new StatisticViewHolder();
 
         ButterKnife.bind(viewHolder, view);
 
         viewHolder.nameTextView.setText(name);
         viewHolder.valueTextView.setText(value);
 
+        if ( expandedText != null ) {
+            viewHolder.expandCollapseImageView.setVisibility(View.VISIBLE);
+            viewHolder.expandedTextView.setText(expandedText);
+            viewHolder.layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (viewHolder.expandedLayout.getVisibility()==View.VISIBLE) {
+                        viewHolder.expandedLayout.setVisibility(View.GONE);
+                    } else {
+                        viewHolder.expandedLayout.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+        }
+
+
         mStatisticsLayout.addView(view);
 
         return viewHolder;
     }
 
+    /**
+     *
+     */
     public class StatisticViewHolder {
+
+        @Bind(R.id.statistic_layout)
+        public View layout;
         @Bind(R.id.statistic_image_view)
         public ImageView imageView;
         @Bind(R.id.statistic_text_view_name)
         public TextView nameTextView;
         @Bind(R.id.statistic_text_view_value)
         public TextView valueTextView;
+        @Bind(R.id.statistic_image_view_expand_collapse)
+        public ImageView expandCollapseImageView;
+        @Bind(R.id.statistic_layout_expanded)
+        public View expandedLayout;
+        @Bind(R.id.statistic_text_view_expanded_text)
+        public TextView expandedTextView;
 
     }
 

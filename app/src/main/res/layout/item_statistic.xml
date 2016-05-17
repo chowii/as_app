@@ -2,48 +2,100 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
     <LinearLayout
+        android:id="@+id/statistic_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:paddingBottom="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="40dp"
-        android:paddingBottom="40dp"
         >
 
         <ImageView
 
             android:id="@+id/statistic_image_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:src="@drawable/daily_view_circle" android:layout_marginRight="15dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/daily_view_circle"/>
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:id="@+id/statistic_text_view_name"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginRight="15dp"
             android:lineSpacingExtra="8dp"
             android:text="Average SleepScore"
             android:textColor="#6E788D"
             android:textSize="14sp"
             app:typeface="OpenSansRegular"/>
 
+        <ImageView
+
+            android:id="@+id/statistic_image_view_expand_collapse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/statistic_expand_normal"
+            android:visibility="gone"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+        </View>
+
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:id="@+id/statistic_text_view_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
             android:lineSpacingExtra="8dp"
-            tools:text="85"
             android:textColor="#6E788D"
-            android:textSize="14sp"
-            app:typeface="OpenSansRegular" android:layout_marginLeft="15dp"/>
+            android:textSize="13sp"
+            app:typeface="OpenSansRegular"
+            tools:text="85"/>
+
 
     </LinearLayout>
 
-    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="#E0E0E0" android:layout_marginRight="20dp" android:layout_marginLeft="20dp"/>
+    <LinearLayout
+        android:id="@+id/statistic_layout_expanded"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp" android:visibility="gone">
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:id="@+id/statistic_text_view_expanded_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="8dp"
+            android:textColor="#6E788D"
+            android:textSize="13sp"
+            app:typeface="OpenSansRegular"
+            tools:text="85"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#E0E0E0"/>
 
 </LinearLayout>

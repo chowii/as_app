@@ -1,6 +1,11 @@
 package au.com.ahbeard.sleepsense.utils;
 
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 
 
 /**
@@ -87,14 +92,47 @@ public class StringUtils {
         }
     }
 
+    public static CharSequence valueSuffix(int mainColor, int alternateColor, String value, String suffix) {
 
-    public static String timeInSecondsSinceEpochToString(Float timeInSecondsSinceEpoch) {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+
+        appendToSpannableStringBuilder(builder,value,new ForegroundColorSpan(mainColor));
+        appendToSpannableStringBuilder(builder,suffix,new ForegroundColorSpan(alternateColor));
+
+        return builder;
+    }
+
+    public static CharSequence timeInSecondsSinceEpochToString(int mainColor, int alternateColor, Float timeInSecondsSinceEpoch) {
+
         if (timeInSecondsSinceEpoch != null) {
+
             int sleepHours = (int) (timeInSecondsSinceEpoch / (60 * 60));
             int sleepMinutes = (int) (timeInSecondsSinceEpoch / (60)) % 60;
-            return sleepHours + " h " + sleepMinutes + " min";
+
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+
+            if ( sleepHours > 0 ) {
+                appendToSpannableStringBuilder(builder,Integer.toString(sleepHours),new ForegroundColorSpan(mainColor));
+                appendToSpannableStringBuilder(builder," h ",new ForegroundColorSpan(alternateColor));
+            }
+
+            appendToSpannableStringBuilder(builder,Integer.toString(sleepMinutes),new ForegroundColorSpan(mainColor));
+            appendToSpannableStringBuilder(builder," min",new ForegroundColorSpan(alternateColor));
+
+            return builder;
         } else {
             return "";
         }
+    }
+
+    public static void appendToSpannableStringBuilder(SpannableStringBuilder builder, CharSequence charSequence, Object object) {
+
+        SpannableString spannableString = new SpannableString(charSequence);
+
+        spannableString.setSpan(object,0,charSequence.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        builder.append(spannableString);
+
+
     }
 }

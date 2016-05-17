@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Sleepsense</string>
+
+
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</string>
+    <string name="sleep_score_breakdown_time_to_fall_asleep">Time to fall asleep</string>
+    <string name="sleep_score_breakdown_sleep_efficiency">Sleep efficiency</string>
+    <string name="sleep_score_breakdown_restless_sleep">Restless sleep</string>
+    <string name="sleep_score_breakdown_awake">Awake</string>
+    <string name="sleep_score_breakdown_out_of_bed">Out of bed</string>
+    <string name="sleep_score_breakdown_snoring">Snoring</string>
+    <string name="sleep_score_breakdown_resting_heart_rate">Resting heart rate</string>
+    <string name="sleep_score_breakdown_time_sleeping">Time sleeping</string>
 </resources>
