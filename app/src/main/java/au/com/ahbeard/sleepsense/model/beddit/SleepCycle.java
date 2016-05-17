@@ -12,7 +12,7 @@ import java.nio.ByteOrder;
  * data point every 2 minutes, beginning from the moment the subject is
  * deemed to be sleeping and ending when the subject ultimately wakes up.
  */
-public class SleepCycle {
+public class SleepCycle implements TimestampAndFloat {
 
 
     private double mTimestamp;
@@ -40,6 +40,16 @@ public class SleepCycle {
 
     public double getTimestamp() {
         return mTimestamp;
+    }
+
+    @Override
+    public float getValue() {
+        return mCycle;
+    }
+
+    @Override
+    public void setValue(float value) {
+        mCycle = value;
     }
 
     public float getCycle() {

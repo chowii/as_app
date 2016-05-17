@@ -63,6 +63,8 @@ public class SleepSessionContract {
                         TRACK_DATA + BLOB_TYPE +
                         " )";
 
+        public static final String SQL_DROP = "DROP TABLE IF EXISTS " + TABLE_NAME;
+
 
 
     }

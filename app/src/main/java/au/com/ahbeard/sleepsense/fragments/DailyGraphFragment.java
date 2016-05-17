@@ -1,5 +1,6 @@
 package au.com.ahbeard.sleepsense.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,17 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.SleepScoreBreakdownActivity;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepCycle;
 import au.com.ahbeard.sleepsense.model.beddit.SleepStage;
+import au.com.ahbeard.sleepsense.model.beddit.TimestampAndFloat;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.widgets.DailyGraphView;
 import au.com.ahbeard.sleepsense.widgets.SleepScoreView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by neal on 12/03/2016.
@@ -29,6 +34,13 @@ public class DailyGraphFragment extends Fragment {
 
     @Bind(R.id.sleep_score_view)
     SleepScoreView mSleepScoreView;
+
+    @OnClick(R.id.sleep_score_view)
+    void openSleepScoreBreakdown() {
+        Intent intent = new Intent(getActivity(),SleepScoreBreakdownActivity.class);
+        intent.putExtra("sleep_id",mSleepId);
+        getActivity().startActivity(intent);
+    }
 
     @Bind(R.id.daily_graph_text_view_sleep_score)
     TextView mSleepScoreTextView;
@@ -75,19 +87,10 @@ public class DailyGraphFragment extends Fragment {
             mSleepScoreView.setSleepScore(mSleep.getTotalSleepScore());
             mSleepScoreTextView.setText(Integer.toString(Math.round(mSleep.getTotalSleepScore())));
 
-            List<SleepCycle> sleepCycles = mSleep.getSleepCycles();
+            List<TimestampAndFloat> sleepCycles = new ArrayList<>();
+            sleepCycles.addAll(mSleep.getSleepCycles());
 
-            if ( sleepCycles != null && sleepCycles.size() > 0 ) {
-
-                Float[] values = new Float[sleepCycles.size()];
-
-                for (int i = 0; i < sleepCycles.size(); i++) {
-                    SleepCycle sleepCycle = sleepCycles.get(i);
-                    values[i]=sleepCycle.getCycle();
-                }
-
-                mGraphView.setValues(values, 0.0f, 4.0f);
-            }
+            mGraphView.setValues(sleepCycles, -0.5f, 4.0f);
 
         }
 

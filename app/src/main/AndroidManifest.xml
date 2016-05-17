@@ -36,6 +36,10 @@
             android:name=".activities.SleepTrackingActivity"
             android:screenOrientation="userPortrait" >
         </activity>
+        <activity
+            android:name=".activities.SleepScoreBreakdownActivity"
+            android:screenOrientation="userPortrait" >
+        </activity>
     </application>
 
 </manifest>

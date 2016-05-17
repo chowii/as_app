@@ -70,12 +70,11 @@ public class SleepService {
 
     public void runBatchAnalysis() {
 
-//        try {
-//            checkSessionData();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
+        try {
+            checkSessionData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Schedulers.computation().createWorker().schedule(new Action0() {
             @Override
@@ -127,7 +126,6 @@ public class SleepService {
                 writeSleepToDatabase(Sleep.fromBatchAnalysisResult(batchAnalysisResult));
 
             } catch (AnalysisException e) {
-                // TODO: Log this exception online somewhere. There's not actually anything we can do to recover.
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();

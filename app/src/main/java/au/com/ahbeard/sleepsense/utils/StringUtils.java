@@ -75,7 +75,7 @@ public class StringUtils {
     }
 
     public static String ordinal(int integer) {
-        String[] suffixes = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
+        String[] suffixes = new String[]{"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"};
         switch (integer % 100) {
             case 11:
             case 12:
@@ -84,6 +84,17 @@ public class StringUtils {
             default:
                 return integer + suffixes[integer % 10];
 
+        }
+    }
+
+
+    public static String timeInSecondsSinceEpochToString(Float timeInSecondsSinceEpoch) {
+        if (timeInSecondsSinceEpoch != null) {
+            int sleepHours = (int) (timeInSecondsSinceEpoch / (60 * 60));
+            int sleepMinutes = (int) (timeInSecondsSinceEpoch / (60)) % 60;
+            return sleepHours + " h " + sleepMinutes + " min";
+        } else {
+            return "";
         }
     }
 }

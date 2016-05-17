@@ -7,25 +7,19 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.RectF;
 import android.graphics.Shader;
-import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.model.beddit.TimestampAndFloat;
 import au.com.ahbeard.sleepsense.services.TypefaceService;
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * This is a graph divided into 2 areas. One is a scaled representation of the data from minimum value to maximum value
@@ -37,38 +31,27 @@ public class DailyGraphView extends ViewGroup {
     public static final float GRAPH_LEGEND_SPLIT = 0.9f;
 
     private Paint mLinePaint;
-    private Paint mLineShadowPaint;
-    private Paint mDividerPaint;
     private Paint mAreaPaint;
     private Paint mLabelPaint;
     private Paint mSideLabelPaint;
-    private float mTopPadding;
 
-    private List<PointF> mDividerPoints;
-    private List<Path> mAreaPaths;
-    private Path mAreaPathsCombined;
-    private List<RectF> mAreaPathBounds;
-    private List<Boolean> mAreaPathStates;
-    private List<Object> mAreaPathIndexes;
-
-    private PointF mEventPoint = new PointF();
-    private PointF mDownPoint = new PointF();
+    private float mGraphExtent;
+    private float mGraphRegionHeight;
 
     private Path mPath;
+    private Path mAreaPath;
 
     private LinearGradient mAreaGradient;
 
     // Yes, I know I would probably have been better using sparse arrays here ;-)
-    private Float[] mValues;
-    private Float[] mRawPoints;
+    private List<TimestampAndFloat> mValues;
+    private ArrayList<TimestampAndFloat> mNormalisedValues;
 
     private PointF[] mPoints;
 
     private boolean mGraphNeedsRelayout = true;
-    private float mColumnWidth;
-    private float mGraphExtent;
-    private float mGraphRegionHeight;
-    private float mLegendHeight;
+    private ArrayList<Legend> mLegends;
+
 
     public DailyGraphView(Context context) {
         super(context);
@@ -93,14 +76,6 @@ public class DailyGraphView extends ViewGroup {
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
 
         setWillNotDraw(false);
-        setClickable(true);
-
-        mDividerPoints = new ArrayList<>();
-
-        mAreaPaths = new ArrayList<>();
-        mAreaPathBounds = new ArrayList<>();
-        mAreaPathStates = new ArrayList<>();
-        mAreaPathIndexes = new ArrayList<>();
 
         mAreaPaint = new Paint();
         mAreaPaint.setShader(mAreaGradient);
@@ -114,65 +89,37 @@ public class DailyGraphView extends ViewGroup {
         mLinePaint.setAntiAlias(true);
         mLinePaint.setColor(Color.WHITE);
         mLinePaint.setStrokeWidth(
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics()));
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
         mLinePaint.setStyle(Paint.Style.STROKE);
 
-        mLineShadowPaint = new Paint(mLinePaint);
-        mLineShadowPaint.setColor(Color.GRAY);
-        mLineShadowPaint.setAlpha(64);
-
-        mDividerPaint = new Paint();
-        mDividerPaint.setStrokeWidth(
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
-        mDividerPaint.setAntiAlias(true);
-        mDividerPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-
         mLabelPaint = new Paint();
-        mLabelPaint.setColor(Color.WHITE);
+        mLabelPaint.setColor(Color.parseColor("#778CA2"));
         mLabelPaint.setStyle(Paint.Style.FILL);
         mLabelPaint.setAntiAlias(true);
         mLabelPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, getResources().getDisplayMetrics()));
         mLabelPaint.setTypeface(TypefaceService.instance().getTypeface("OpenSansRegular"));
 
         mSideLabelPaint = new Paint(mLabelPaint);
-        mSideLabelPaint.setAlpha(140);
-
-        mTopPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics());
+        mSideLabelPaint.setColor(Color.parseColor("#FFFFFF"));
+        mSideLabelPaint.setStrokeWidth(
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
+        mSideLabelPaint.setAlpha(180);
 
         mPath = new Path();
-
-    }
-
-    public void setValues(float[] values, float minimum, float maximum) {
-
-        Float[] _values = new Float[values.length];
-
-        for (int i = 0; i < values.length; i++) {
-            _values[i] = values[i] >= 0 ? values[i] : null;
-        }
-
-        setValues(_values, minimum, maximum);
+        mAreaPath = new Path();
 
     }
 
     // We actually need to think of this as a window on some data not
-    public void setValues(Float[] values, float minimum, float maximum) {
+    public void setValues(List<TimestampAndFloat> values, float minimum, float maximum) {
 
-        mValues = values;
+        mNormalisedValues = new ArrayList<>(values);
 
         float range = maximum - minimum;
 
-        // These represent an abstract 0.0 - 1.0 from the maximum to the minimum.
-        mRawPoints = new Float[mValues.length];
-
-        // Set up the existing point.
-        for (int i = 0; i < mValues.length; i++) {
-            if (mValues[i] != null) {
-                mRawPoints[i] = (mValues[i] - minimum) / range;
-            } else {
-                // Set it to just under 0... hacky, but will be fixed.
-                mRawPoints[i] = null;
-            }
+        // Normalise the values
+        for (TimestampAndFloat timestampAndFloat : mNormalisedValues) {
+            timestampAndFloat.setValue((timestampAndFloat.getValue() - minimum) / range);
         }
 
         removeAllViews();
@@ -192,13 +139,6 @@ public class DailyGraphView extends ViewGroup {
 
         // Have to allocate here, since we don't know the size. Optimally we could do this when the graph canvas
         // changes size... actually if the values don't change, none of this changes, so we can set a "dirty" flag.
-        mAreaPaths.clear();
-        mAreaPathsCombined = new Path();
-        mDividerPoints.clear();
-        mAreaPathBounds.clear();
-        mAreaPathStates.clear();
-        mAreaPathIndexes.clear();
-
 
         mAreaPaint.setShader(new LinearGradient(
                 0, 0, 0, getHeight() * GRAPH_LEGEND_SPLIT,
@@ -206,126 +146,87 @@ public class DailyGraphView extends ViewGroup {
                 getResources().getColor(R.color.graphAreaGradientEnd),
                 Shader.TileMode.MIRROR));
 
-        if (mRawPoints == null) {
-            mPoints = new PointF[0];
-            return;
-        }
-
-        mColumnWidth = (float) width / (mRawPoints.length - 2);
-
         mGraphRegionHeight = height * GRAPH_LEGEND_SPLIT;
-        mLegendHeight = height - mGraphRegionHeight;
         mGraphExtent = height * GRAPH_LEGEND_SPLIT - TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4,
                 getResources().getDisplayMetrics());
 
-        mPoints = new PointF[mRawPoints.length];
-
         mPath.reset();
+        mAreaPath.reset();
+
+        if (mNormalisedValues == null || mNormalisedValues.isEmpty()) {
+            mPoints = new PointF[0];
+            mGraphNeedsRelayout = false;
+            return;
+        }
+
+        mPoints = new PointF[mNormalisedValues.size()];
+
+        double startTime = mNormalisedValues.get(0).getTimestamp();
+        double endTime = mNormalisedValues.get(mNormalisedValues.size() - 1).getTimestamp();
+        double totalTimeUnits = endTime - startTime;
+        double widthPerTimeUnit = getWidth() / totalTimeUnits;
 
         // Lay out the raw points.
-        for (int i = 0; i < mRawPoints.length; i++) {
-            if (mRawPoints[i] != null) {
+        for (int i = 0; i < mNormalisedValues.size(); i++) {
+            if (mNormalisedValues.get(i) != null) {
                 mPoints[i] = new PointF();
-                mPoints[i].x = mColumnWidth * i - mColumnWidth / 2;
-                mPoints[i].y = mGraphRegionHeight - mGraphExtent * mRawPoints[i];
+                mPoints[i].x = (float) ((mNormalisedValues.get(i).getTimestamp() - startTime) * widthPerTimeUnit);
+                mPoints[i].y = mGraphRegionHeight - mGraphExtent * mNormalisedValues.get(i).getValue();
+                Log.d("Points", "point[" + i + "]: " + mPoints[i]);
             }
         }
 
-        for (int i = 1; i < mPoints.length - 1; i++) {
+        mAreaPath.moveTo(0, getHeight());
 
-            if (mPoints[i] == null)
-                continue;
-
-            boolean isFirstPoint = i == 1;
-            boolean isLastPoint = i == mPoints.length - 2;
-
-            // Find left neighbour index...
-            Integer nearestLeftNeighbourIndex = null;
-
-            for (int j = i - 1; j >= 0; j--) {
-                if (mPoints[j] != null) {
-                    nearestLeftNeighbourIndex = j;
-                    break;
-                }
-            }
-
-            Integer nearestRightNeighbourIndex = null;
-
-            // Find right neighbour...
-            for (int j = i + 1; j < mPoints.length; j++) {
-                if (mPoints[j] != null) {
-                    nearestRightNeighbourIndex = j;
-                    break;
-                }
-            }
-
-            // Build the left half of the path.
-            PointF leftStartPoint = new PointF();
-
-            leftStartPoint.x = mPoints[i].x - mColumnWidth / 2;
-
-            if (nearestLeftNeighbourIndex == null) {
-                leftStartPoint.y = mPoints[i].y;
-            } else {
-                float differenceInPixels = mPoints[nearestLeftNeighbourIndex].y - mPoints[i].y;
-                int differenceInIndexes = i - nearestLeftNeighbourIndex;
-                leftStartPoint.y = mPoints[i].y + (differenceInPixels / 2) / differenceInIndexes;
-            }
-
-            // Build the right half of the path
-            PointF rightStartPoint = new PointF();
-
-            // Round this, don't just convert it into an integer, otherwise we might lose a chunk on some devices.
-            rightStartPoint.x = mPoints[i].x + mColumnWidth / 2;
-
-            if (nearestRightNeighbourIndex == null) {
-                rightStartPoint.y = mPoints[i].y;
-            } else {
-                float differenceInPixels = mPoints[nearestRightNeighbourIndex].y - mPoints[i].y;
-                float differenceInIndexes = nearestRightNeighbourIndex - i;
-                rightStartPoint.y = mPoints[i].y + (differenceInPixels / 2) / differenceInIndexes;
-                if (differenceInIndexes < 1.5f) {
-                    mDividerPoints.add(rightStartPoint);
-                }
-
-            }
-
-            // Create the line segment.
-            if (nearestLeftNeighbourIndex != null && nearestLeftNeighbourIndex == i - 1) {
-                mPath.moveTo(leftStartPoint.x, leftStartPoint.y);
-                mPath.lineTo(mPoints[i].x, mPoints[i].y);
-            } else {
+        for (int i = 0; i < mPoints.length; i++) {
+            if (i == 0) {
                 mPath.moveTo(mPoints[i].x, mPoints[i].y);
+            } else {
+                mPath.lineTo(mPoints[i].x, mPoints[i].y);
             }
-
-            if (nearestRightNeighbourIndex != null && nearestRightNeighbourIndex == i + 1) {
-                mPath.lineTo(rightStartPoint.x, rightStartPoint.y);
-            }
-
-            // Create the area under the line segment.
-            Path path = new Path();
-
-            path.moveTo(leftStartPoint.x, leftStartPoint.y);
-            path.lineTo(mPoints[i].x, mPoints[i].y);
-            path.lineTo(rightStartPoint.x, rightStartPoint.y);
-            path.lineTo(rightStartPoint.x, getHeight());
-            path.lineTo(leftStartPoint.x, getHeight());
-
-            path.close();
-
-            mAreaPaths.add(path);
-            RectF bounds = new RectF();
-            path.computeBounds(bounds, true);
-            mAreaPathBounds.add(bounds);
-            mAreaPathStates.add(false);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                mAreaPathsCombined.op(path, Path.Op.UNION);
-            }
-
+            mAreaPath.lineTo(mPoints[i].x, mPoints[i].y);
         }
+
+        mAreaPath.lineTo(getWidth(), getHeight());
+        mAreaPath.close();
+
+        mLegends = new ArrayList<Legend>();
+
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTimeInMillis((long) (startTime * 1000f));
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTimeInMillis((long) (endTime * 1000f));
+
+        startCalendar.set(Calendar.MINUTE, 0);
+        startCalendar.set(Calendar.SECOND, 0);
+        startCalendar.set(Calendar.MILLISECOND, 0);
+        startCalendar.add(Calendar.HOUR_OF_DAY, 1);
+
+        endCalendar.set(Calendar.MINUTE, 0);
+        endCalendar.set(Calendar.SECOND, 0);
+        endCalendar.set(Calendar.MILLISECOND, 0);
+
+        int endHour = endCalendar.get(Calendar.HOUR_OF_DAY);
+
+        while (startCalendar.get(Calendar.HOUR_OF_DAY) != endHour) {
+            int hour = startCalendar.get(Calendar.HOUR);
+            if (hour == 0) {
+                hour = 12;
+            }
+            mLegends.add(new Legend(new PointF((float) ((startCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - getPaddingBottom()),
+                    String.format("%02d",hour)));
+
+            startCalendar.add(Calendar.HOUR_OF_DAY, 1);
+        }
+
+
+        mLegends.add(new Legend(new PointF((float) ((endCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - getPaddingBottom()),
+                String.format("%02d",endCalendar.get(Calendar.HOUR))));
 
         mGraphNeedsRelayout = false;
+
+
+
 
     }
 
@@ -336,99 +237,35 @@ public class DailyGraphView extends ViewGroup {
             layout(canvas.getWidth(), canvas.getHeight());
         }
 
-        if ( mAreaPathsCombined.isEmpty() ) {
-            for (int i = 0; i < mAreaPaths.size(); i++) {
-                canvas.drawPath(mAreaPaths.get(i), mAreaPaint);
-                if (mAreaPathStates.get(i)) {
-                    canvas.drawPath(mAreaPaths.get(i), mAreaPaint);
-                }
-            }
-
-        } else {
-            canvas.drawPath(mAreaPathsCombined,mAreaPaint);
-            for (int i = 0; i < mAreaPaths.size(); i++) {
-                if (mAreaPathStates.get(i)) {
-                    canvas.drawPath(mAreaPaths.get(i), mAreaPaint);
-                }
-            }
-        }
-
         super.onDraw(canvas);
 
+        canvas.drawPath(mAreaPath, mAreaPaint);
         canvas.drawPath(mPath, mLinePaint);
 
-        if (mPoints.length <= 14) {
-            for (int i = 0; i < mPoints.length; i++) {
-                if (mPoints[i] != null) {
-                    canvas.drawCircle(mPoints[i].x, mPoints[i].y, 4, mLinePaint);
-                }
+        if (mLegends != null) {
 
+            canvas.clipPath(mAreaPath);
+
+            for (Legend legend : mLegends) {
+                float legendWidth = mLabelPaint.measureText(legend.value);
+                canvas.drawText(legend.value, legend.center.x - legendWidth / 2f, legend.center.y - mLabelPaint.getFontMetrics().ascent/2, mLabelPaint);
+                canvas.drawLine(legend.center.x,0,legend.center.x,legend.center.y-mLabelPaint.getTextSize()/2,mSideLabelPaint);
+                canvas.drawLine(legend.center.x,legend.center.y+mLabelPaint.getFontMetrics().descent+mLabelPaint.getTextSize()/2,legend.center.x,canvas.getHeight(),mSideLabelPaint);
+
+                Log.d("POINTS",String.format("%f,%f -> %f,%f",legend.center.x,legend.center.y,legend.center.x,(float)canvas.getHeight() ));
             }
         }
 
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
 
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+    class Legend {
+        PointF center;
+        String value;
 
-            for (int i = 0; i < mAreaPathBounds.size(); i++) {
-                if (mAreaPathBounds.get(i).contains(event.getX(), event.getY())) {
-                    mAreaPathStates.set(i, true);
-                    mDownPoint.set(event.getX(), event.getY());
-                    invalidate();
-                }
-            }
-
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            for (int i = 0; i < mAreaPathBounds.size(); i++) {
-                if (mAreaPathStates.get(i)) {
-                    mAreaPathStates.set(i, false);
-                    // TODO: Fire event!
-                    invalidate();
-                }
-            }
-
-        } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
-            for (int i = 0; i < mAreaPathBounds.size(); i++) {
-                if (mAreaPathStates.get(i)) {
-                    mAreaPathStates.set(i, false);
-                    invalidate();
-                }
-            }
-
-        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            for (int i = 0; i < mAreaPathBounds.size(); i++) {
-                if (mAreaPathStates.get(i)) {
-                    mEventPoint.set(event.getX(), event.getY());
-                    // Check if we've either moved out of the bounds, or we've moved too much.
-                    if (!mAreaPathBounds.get(i).contains(event.getX(), event.getY())) {
-                        mAreaPathStates.set(i, false);
-                        invalidate();
-                    }
-                }
-            }
+        public Legend(PointF center, String value) {
+            this.center = center;
+            this.value = value;
         }
-
-        return super.onTouchEvent(event);
-    }
-
-    /**
-     *
-     */
-    class LegendViewHolder {
-
-        View mRoot;
-
-        @Bind(R.id.graph_legend_text_view_value)
-        TextView mValueTextView;
-
-        @Bind(R.id.graph_legend_text_view_text)
-        TextView mTextTextView;
-
-        @Bind(R.id.graph_legend_image_view_link)
-        ImageView mLinkImageView;
-
     }
 }
