@@ -37,9 +37,11 @@ public class DailyGraphFragment extends Fragment {
 
     @OnClick(R.id.sleep_score_view)
     void openSleepScoreBreakdown() {
-        Intent intent = new Intent(getActivity(),SleepScoreBreakdownActivity.class);
-        intent.putExtra("sleep_id",mSleepId);
-        getActivity().startActivity(intent);
+        if ( mSleep != null ) {
+            Intent intent = new Intent(getActivity(),SleepScoreBreakdownActivity.class);
+            intent.putExtra("sleep_id",mSleepId);
+            getActivity().startActivity(intent);
+        }
     }
 
     @Bind(R.id.daily_graph_text_view_sleep_score)

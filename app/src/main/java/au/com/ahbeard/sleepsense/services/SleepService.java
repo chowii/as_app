@@ -34,11 +34,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerUtils;
+import au.com.ahbeard.sleepsense.model.AggregateStatistics;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepProperty;
 import au.com.ahbeard.sleepsense.model.beddit.TrackData;
+import rx.Observable;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
+import rx.subjects.BehaviorSubject;
 
 /**
  * Service to save the sleep data.
@@ -52,6 +55,9 @@ public class SleepService {
     private File mSleepDataStorageDirectory;
 
     private SleepSQLiteHelper mSleepSQLiteHelper;
+    private AggregateStatistics mAggregateStatistics;
+
+    private BehaviorSubject<AggregateStatistics> mAggregateStatisticsPublishSubject = BehaviorSubject.create();
 
     public static void initialize(Context context) {
         sSleepService = new SleepService(context);
@@ -162,7 +168,7 @@ public class SleepService {
 
     public void writeSessionDataToDatabase(File sessionDirectory) throws IOException {
         SessionData sessionData = getSessionData(sessionDirectory);
-        if ( sessionData != null ) {
+        if (sessionData != null) {
             writeSessionDataToDatabase(sessionData);
         }
     }
@@ -173,7 +179,7 @@ public class SleepService {
 
         for (File session : sessions) {
             SessionData sessionData = getSessionData(session);
-            if ( sessionData != null ) {
+            if (sessionData != null) {
                 writeSessionDataToDatabase(sessionData);
             }
         }
@@ -322,7 +328,7 @@ public class SleepService {
 
         Log.d("SleepService", "id=" + id);
 
-        if ( sleep.getTrackDataByName() != null ) {
+        if (sleep.getTrackDataByName() != null) {
 
             for (TrackData trackData : sleep.getTrackDataByName().values()) {
                 ContentValues trackDataValues = new ContentValues();
@@ -348,7 +354,7 @@ public class SleepService {
     }
 
     public Sleep getSleepFromDatabase(long sleepId) {
-        return Sleep.fromDatabase(mSleepSQLiteHelper,sleepId);
+        return Sleep.fromDatabase(mSleepSQLiteHelper, sleepId);
     }
 
     /**
@@ -378,11 +384,11 @@ public class SleepService {
             startTime = Long.parseLong(sessionDirectory.getName());
             endTime = 0;
 
-            for (File file : sessionDirectory.listFiles() ) {
-                endTime = Math.max(endTime,file.lastModified());
+            for (File file : sessionDirectory.listFiles()) {
+                endTime = Math.max(endTime, file.lastModified());
             }
 
-            if ( endTime == 0 ) {
+            if (endTime == 0) {
                 return null;
             }
 
@@ -435,7 +441,6 @@ public class SleepService {
     }
 
     /**
-     *
      * @param startSleepId
      * @param endSleepId
      * @return
@@ -541,7 +546,6 @@ public class SleepService {
     }
 
     /**
-     *
      * @param calendar
      * @param days
      */
@@ -555,8 +559,8 @@ public class SleepService {
 
         try {
             for (int sleepId : generateSleepIdRange(startSleepId, endSleepId)) {
-                if ( random.nextFloat() > 0.2f ) {
-                    Sleep sleep = Sleep.generateRandom(sleepId,random);
+                if (random.nextFloat() > 0.2f) {
+                    Sleep sleep = Sleep.generateRandom(sleepId, random);
                     writeSleepToDatabase(sleep);
                 }
             }
@@ -564,5 +568,18 @@ public class SleepService {
             e.printStackTrace();
         }
 
+    }
+
+    public Observable<AggregateStatistics> getAggregateStatisticsObservable() {
+        return mAggregateStatisticsPublishSubject;
+    }
+
+    public AggregateStatistics getAggregateStatistics() {
+
+        if (mAggregateStatistics == null) {
+            mAggregateStatistics = new AggregateStatistics();
+        }
+
+        return mAggregateStatistics;
     }
 }

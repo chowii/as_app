@@ -9,9 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,12 +19,16 @@ import java.util.Locale;
 import java.util.Map;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.model.AggregateStatistics;
 import au.com.ahbeard.sleepsense.services.SleepService;
-import au.com.ahbeard.sleepsense.utils.StringUtils;
+import au.com.ahbeard.sleepsense.utils.StatisticsUtils;
 import au.com.ahbeard.sleepsense.widgets.LabelThingy;
 import au.com.ahbeard.sleepsense.widgets.WeeklyGraphView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +40,7 @@ public class WeeklyDashboardFragment extends Fragment {
     ThreadLocal<SimpleDateFormat> monthOfYear = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
-            return  new SimpleDateFormat("MMM ");
+            return new SimpleDateFormat("MMM ");
         }
     };
 
@@ -50,6 +52,12 @@ public class WeeklyDashboardFragment extends Fragment {
 
     @Bind(R.id.dashboard_labels_graph)
     LabelThingy mDashboardLabels;
+
+    CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+
+    private StatisticsUtils.StatisticViewHolder mAverageSleepScore;
+    private StatisticsUtils.StatisticViewHolder mOptimalBedtime;
+    private StatisticsUtils.StatisticViewHolder mOptimalMattressFirmness;
 
     public WeeklyDashboardFragment() {
         // Required empty public constructor
@@ -95,7 +103,7 @@ public class WeeklyDashboardFragment extends Fragment {
                 calendar.set(Calendar.DAY_OF_WEEK, 1);
 
                 // Count back the number of pages.
-                calendar.add(Calendar.DAY_OF_MONTH, (position - 1023)*7 -1);
+                calendar.add(Calendar.DAY_OF_MONTH, (position - 1023) * 7 - 1);
 
                 int startSleepId = SleepService.getSleepId(calendar);
 
@@ -106,16 +114,16 @@ public class WeeklyDashboardFragment extends Fragment {
                 String[] labels = SleepService.generateLabels(startSleepId, endSleepId,
                         new SimpleDateFormat("EEE", Locale.getDefault()));
 
-                List<Integer> sleepIdList = SleepService.generateSleepIdRange(startSleepId,endSleepId);
+                List<Integer> sleepIdList = SleepService.generateSleepIdRange(startSleepId, endSleepId);
 
                 int[] sleepIds = new int[sleepIdList.size()];
 
-                for ( int i=0;i< sleepIdList.size();i++) {
-                    sleepIds[i]=sleepIdList.get(i);
+                for (int i = 0; i < sleepIdList.size(); i++) {
+                    sleepIds[i] = sleepIdList.get(i);
                 }
 
                 // This needs to properly use the graph fragment.
-                WeeklyGraphFragment weeklyGraphFragment = WeeklyGraphFragment.newInstance(sleepIds,SleepService.instance().readSleepScores(startSleepId, endSleepId), labels);
+                WeeklyGraphFragment weeklyGraphFragment = WeeklyGraphFragment.newInstance(sleepIds, SleepService.instance().readSleepScores(startSleepId, endSleepId), labels);
                 weeklyGraphFragment.setOnClickListener(new WeeklyGraphView.OnClickListener() {
                     @Override
                     public void onValueClicked(Object identifier) {
@@ -134,7 +142,7 @@ public class WeeklyDashboardFragment extends Fragment {
 
         mDashboardLabels.setLabelProvider(new LabelThingy.LabelProvider() {
 
-            private Map<Integer,String> mLabels = new HashMap<>();
+            private Map<Integer, String> mLabels = new HashMap<>();
 
             @Override
             public String getLabel(int position) {
@@ -148,7 +156,7 @@ public class WeeklyDashboardFragment extends Fragment {
                     calendar.set(Calendar.DAY_OF_WEEK, 2);
 
                     // Count back the number of pages.
-                    calendar.add(Calendar.DAY_OF_MONTH, (position - 1023)*7 -1);
+                    calendar.add(Calendar.DAY_OF_MONTH, (position - 1023) * 7 - 1);
 
                     int startDay = calendar.get(Calendar.DAY_OF_MONTH);
                     String startMonth = monthOfYear.get().format(calendar.getTime());
@@ -161,12 +169,12 @@ public class WeeklyDashboardFragment extends Fragment {
                     String label;
 
                     if (startMonth.equals(endMonth)) {
-                        label = String.format("%s %d - %d",startMonth,startDay,endDay);
+                        label = String.format("%s %d - %d", startMonth, startDay, endDay);
                     } else {
-                        label = String.format("%s %d - %s %d",startMonth,startDay,endMonth,endDay);
+                        label = String.format("%s %d - %s %d", startMonth, startDay, endMonth, endDay);
                     }
 
-                    mLabels.put(position,label);
+                    mLabels.put(position, label);
 
                     return label;
                 }
@@ -175,6 +183,27 @@ public class WeeklyDashboardFragment extends Fragment {
 
         graphViewPager.addOnPageChangeListener(mDashboardLabels);
         graphViewPager.setCurrentItem(1023);
+
+        StatisticsUtils statisticsUtils = new StatisticsUtils(mStatisticsLayout);
+
+        mAverageSleepScore = statisticsUtils.addStatistic(Color.GREEN, "Average SleepScore", "85");
+        mOptimalBedtime = statisticsUtils.addStatistic(Color.GREEN, "Optimal Bedtime", "9:30 pm");
+        mOptimalMattressFirmness = statisticsUtils.addStatistic(Color.GREEN, "Optimal Mattress Firmness", "Medium Plush");
+        statisticsUtils.addStatistic(Color.GREEN, "Best Night", "24 Dec 2015");
+        statisticsUtils.addStatistic(Color.GREEN, "Worst Night", "24 Dec 2015");
+
+
+
+        mCompositeSubscription.add(SleepService.instance()
+                .getAggregateStatisticsObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<AggregateStatistics>() {
+                    @Override
+                    public void call(AggregateStatistics aggregateStatistics) {
+
+
+                    }
+                }));
 
         setupStatistics();
 
@@ -192,35 +221,13 @@ public class WeeklyDashboardFragment extends Fragment {
 
     private void setupStatistics() {
 
-        addStatistic(Color.GREEN,"Average SleepScore", "85");
-        addStatistic(Color.GREEN,"Optimal Bedtime", "9:30 pm");
-        addStatistic(Color.GREEN,"Optimal Mattress Firmness", "Medium Plush");
-        addStatistic(Color.GREEN,"Best Night", "24 Dec 2015");
-        addStatistic(Color.GREEN,"Worst Night", "24 Dec 2015");
+        // Move this off the main thread.
+        SleepService.instance().getAggregateStatistics();
+
+        //mCompositeSubscription.s
+
+
 
     }
 
-    private void addStatistic(int color, String name, String value) {
-
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.item_statistic,mStatisticsLayout,false);
-
-        StatisticViewHolder viewHolder = new StatisticViewHolder();
-
-        ButterKnife.bind(viewHolder,view);
-
-        viewHolder.nameTextView.setText(name);
-        viewHolder.valueTextView.setText(value);
-
-        mStatisticsLayout.addView(view);
-    }
-
-    public class StatisticViewHolder {
-        @Bind(R.id.statistic_image_view)
-        ImageView imageView;
-        @Bind(R.id.statistic_text_view_name)
-        TextView nameTextView;
-        @Bind(R.id.statistic_text_view_value)
-        TextView valueTextView;
-        
-    }
 }

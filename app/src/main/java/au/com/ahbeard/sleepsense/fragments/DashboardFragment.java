@@ -10,11 +10,13 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.zip.Inflater;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.services.SleepService;
@@ -65,10 +67,16 @@ public class DashboardFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mTabHost.setup(getContext(),getChildFragmentManager(),android.R.id.tabcontent);
-        mTabHost.addTab(mTabHost.newTabSpec("DAILY").setIndicator("Daily"),DailyDashboardFragment.class,null);
-        mTabHost.addTab(mTabHost.newTabSpec("WEEKLY").setIndicator("Weekly"),WeeklyDashboardFragment.class,null);
+        mTabHost.addTab(mTabHost.newTabSpec("DAILY").setIndicator(getTabIndicator("Daily")),DailyDashboardFragment.class,null);
+        mTabHost.addTab(mTabHost.newTabSpec("WEEKLY").setIndicator(getTabIndicator("Weekly")),WeeklyDashboardFragment.class,null);
 
         return view;
+    }
+
+    public View getTabIndicator(String title) {
+        View tabIndicator = LayoutInflater.from(getContext()).inflate(R.layout.item_dashboard_tab,mTabHost,false);
+        ((TextView)tabIndicator.findViewById(R.id.dashboard_tab_text_view_title)).setText(title);
+        return tabIndicator;
     }
 
     @Override
@@ -79,4 +87,6 @@ public class DashboardFragment extends Fragment {
         super.onDestroyView();
 
     }
+
+
 }

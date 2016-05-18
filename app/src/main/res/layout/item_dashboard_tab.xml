@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="100dp"
+              android:layout_height="wrap_content"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:background="@drawable/dashboard_tab"
+              android:orientation="vertical">
+
+    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:id="@+id/dashboard_tab_text_view_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="8dp"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:textAllCaps="true"
+        app:typeface="OpenSansRegular"
+        android:layout_gravity="center_horizontal|bottom"
+        tools:text="85"/>
+
+</LinearLayout>

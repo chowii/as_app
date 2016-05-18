@@ -22,6 +22,7 @@ import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepStage;
 import au.com.ahbeard.sleepsense.services.SleepService;
+import au.com.ahbeard.sleepsense.utils.StatisticsUtils;
 import au.com.ahbeard.sleepsense.utils.StringUtils;
 import au.com.ahbeard.sleepsense.widgets.LabelThingy;
 import butterknife.Bind;
@@ -62,9 +63,9 @@ public class DailyDashboardFragment extends Fragment {
 
     private Sleep mSleep;
 
-    private StatisticViewHolder mTotalTimeSlept;
-    private StatisticViewHolder mTimesOutOfBed;
-    private StatisticViewHolder mMattressFirmness;
+    private StatisticsUtils.StatisticViewHolder mTotalTimeSlept;
+    private StatisticsUtils.StatisticViewHolder mTimesOutOfBed;
+    private StatisticsUtils.StatisticViewHolder mMattressFirmness;
 
 
     public DailyDashboardFragment() {
@@ -176,13 +177,11 @@ public class DailyDashboardFragment extends Fragment {
                             public void call() {
 
                                 if (sleep != null) {
-                                    if (sleep.getSleepTotalTime() != null) {
-                                        int sleepHours = (int)(sleep.getSleepTotalTime()/(60*60));
-                                        int sleepMinutes = (int)(sleep.getSleepTotalTime()/(60))%60;
-                                        mTotalTimeSlept.valueTextView.setText(sleepHours+"h " + sleepMinutes+" min");
-                                    } else {
-                                        mTotalTimeSlept.valueTextView.setText("");
-                                    }
+
+                                    int textColor = getResources().getColor(R.color.detailedSleepScoreTextColor);
+                                    int altTextColor = getResources().getColor(R.color.detailedSleepScoreAltTextColor);
+
+                                    mTotalTimeSlept.valueTextView.setText(StatisticsUtils.timeInSecondsSinceEpochToString(textColor,altTextColor,sleep.getSleepTotalTime()));
 
                                     if (sleep.getSleepStages()!=null) {
                                         int numberOfTimesOutOfBed = 0;
@@ -192,7 +191,7 @@ public class DailyDashboardFragment extends Fragment {
                                             }
                                         }
 
-                                        mTimesOutOfBed.valueTextView.setText(Integer.toString(numberOfTimesOutOfBed));
+                                        mTimesOutOfBed.valueTextView.setText(StatisticsUtils.valueSuffix(textColor,altTextColor,Integer.toString(numberOfTimesOutOfBed)," times"));
                                     } else {
                                         mTimesOutOfBed.valueTextView.setText("");
                                     }
@@ -232,35 +231,12 @@ public class DailyDashboardFragment extends Fragment {
 
     private void setupStatistics() {
 
-        mTotalTimeSlept = addStatistic(Color.GREEN, "Total Time Slept", "");
-        mTimesOutOfBed = addStatistic(Color.GREEN, "Times out of Bed", "");
-        mMattressFirmness = addStatistic(Color.GREEN, "Mattress Firmness", "");
+        StatisticsUtils statisticsUtils = new StatisticsUtils(mStatisticsLayout);
+
+        mTotalTimeSlept = statisticsUtils.addStatistic(Color.GREEN, "Total Time Slept", "");
+        mTimesOutOfBed = statisticsUtils.addStatistic(Color.GREEN, "Times out of Bed", "");
+        mMattressFirmness = statisticsUtils.addStatistic(Color.GREEN, "Mattress Firmness", "");
 
     }
 
-    private StatisticViewHolder addStatistic(int color, String name, String value) {
-
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.item_statistic, mStatisticsLayout, false);
-
-        StatisticViewHolder viewHolder = new StatisticViewHolder();
-
-        ButterKnife.bind(viewHolder, view);
-
-        viewHolder.nameTextView.setText(name);
-        viewHolder.valueTextView.setText(value);
-
-        mStatisticsLayout.addView(view);
-
-        return viewHolder;
-    }
-
-    public class StatisticViewHolder {
-        @Bind(R.id.statistic_image_view)
-        public ImageView imageView;
-        @Bind(R.id.statistic_text_view_name)
-        public TextView nameTextView;
-        @Bind(R.id.statistic_text_view_value)
-        public TextView valueTextView;
-
-    }
 }
