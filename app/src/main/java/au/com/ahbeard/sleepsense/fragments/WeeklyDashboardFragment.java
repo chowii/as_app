@@ -58,6 +58,8 @@ public class WeeklyDashboardFragment extends Fragment {
     private StatisticsUtils.StatisticViewHolder mAverageSleepScore;
     private StatisticsUtils.StatisticViewHolder mOptimalBedtime;
     private StatisticsUtils.StatisticViewHolder mOptimalMattressFirmness;
+    private StatisticsUtils.StatisticViewHolder mBestNight;
+    private StatisticsUtils.StatisticViewHolder mWorstNight;
 
     public WeeklyDashboardFragment() {
         // Required empty public constructor
@@ -189,8 +191,8 @@ public class WeeklyDashboardFragment extends Fragment {
         mAverageSleepScore = statisticsUtils.addStatistic(Color.GREEN, "Average SleepScore", "85");
         mOptimalBedtime = statisticsUtils.addStatistic(Color.GREEN, "Optimal Bedtime", "9:30 pm");
         mOptimalMattressFirmness = statisticsUtils.addStatistic(Color.GREEN, "Optimal Mattress Firmness", "Medium Plush");
-        statisticsUtils.addStatistic(Color.GREEN, "Best Night", "24 Dec 2015");
-        statisticsUtils.addStatistic(Color.GREEN, "Worst Night", "24 Dec 2015");
+        mBestNight =statisticsUtils.addStatistic(Color.GREEN, "Best Night", "24 Dec 2015");
+        mWorstNight = statisticsUtils.addStatistic(Color.GREEN, "Worst Night", "24 Dec 2015");
 
 
 

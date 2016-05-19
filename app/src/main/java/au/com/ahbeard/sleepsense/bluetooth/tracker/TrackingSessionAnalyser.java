@@ -60,7 +60,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
         mTrackerDevice = trackerDevice;
 
         // Subscribe to the raw sensor data on a computation thread.
-        mSensorDataObservable.observeOn(Schedulers.computation()).subscribe(new Observer<SensorData>() {
+        mSensorDataObservable.onBackpressureBuffer().observeOn(Schedulers.computation()).subscribe(new Observer<SensorData>() {
             @Override
             public void onCompleted() {
                 endSensorSession();
@@ -78,10 +78,10 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
 
         });
 
-        mTimeValueTrackFragmentPublishSubject.observeOn(Schedulers.io()).subscribe(
+        mTimeValueTrackFragmentPublishSubject.onBackpressureBuffer().observeOn(Schedulers.io()).subscribe(
                 new TrackingSessionDataWriter());
 
-        mSensorDataObservable.observeOn(Schedulers.io()).subscribe(new Observer<SensorData>() {
+        mSensorDataObservable.onBackpressureBuffer().observeOn(Schedulers.io()).subscribe(new Observer<SensorData>() {
             @Override
             public void onCompleted() {
 

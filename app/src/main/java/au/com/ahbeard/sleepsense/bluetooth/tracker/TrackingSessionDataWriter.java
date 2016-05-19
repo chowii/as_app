@@ -3,6 +3,7 @@ package au.com.ahbeard.sleepsense.bluetooth.tracker;
 import com.beddit.analysis.TimeValueFragment;
 import com.beddit.analysis.TimeValueTrackFragment;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -41,7 +42,6 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
 
         mEndTime = System.currentTimeMillis();
 
-
         try {
 
             for (String trackName : mTrackOutputStreams.keySet()) {
@@ -57,6 +57,7 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
             writeSessionMetadata();
 
             SleepService.instance().writeSessionDataToDatabase(mSessionDirectory);
+            SleepService.instance().runBatchAnalysis();
 
         } catch (java.io.IOException e) {
             e.printStackTrace();
@@ -89,6 +90,11 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
                 }
 
                 writeSessionMetadata();
+
+                // Also attempt to run the batch analysis.
+                SleepService.instance().writeSessionDataToDatabase(mSessionDirectory);
+                SleepService.instance().runBatchAnalysis();
+
             }
 
         } catch (java.io.IOException ioe) {
@@ -117,9 +123,10 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
 
                     File trackOutputFile = SleepService.instance()
                             .getTrackOutputFile(mStartTime, trackName, timeValueTrackFragment.getItemType());
-                    trackOutputStream = new FileOutputStream(trackOutputFile);
+                    trackOutputStream = new BufferedOutputStream(new FileOutputStream(trackOutputFile),512);
                     mTrackOutputStreams.put(trackName, trackOutputStream);
                 }
+
                 trackOutputStream.write(timeValueTrackFragment.getData());
 
             } catch (java.io.IOException ioe) {

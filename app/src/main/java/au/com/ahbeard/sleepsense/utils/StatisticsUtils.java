@@ -29,6 +29,7 @@ public class StatisticsUtils {
      * @param color
      * @param name
      * @param value
+     *
      * @return
      */
     public StatisticViewHolder addStatistic(int color, CharSequence name, CharSequence value) {
@@ -40,6 +41,7 @@ public class StatisticsUtils {
      * @param name
      * @param value
      * @param expandedText
+     *
      * @return
      */
     public StatisticViewHolder addStatistic(int color, CharSequence name, CharSequence value, CharSequence expandedText) {
@@ -61,8 +63,10 @@ public class StatisticsUtils {
                 public void onClick(View v) {
                     if (viewHolder.expandedLayout.getVisibility() == View.VISIBLE) {
                         viewHolder.expandedLayout.setVisibility(View.GONE);
+                        viewHolder.expandCollapseImageView.setImageResource(R.drawable.statistic_expand_normal);
                     } else {
                         viewHolder.expandedLayout.setVisibility(View.VISIBLE);
+                        viewHolder.expandCollapseImageView.setImageResource(R.drawable.statistic_contract_normal);
                     }
                 }
             });

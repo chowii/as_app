@@ -42,6 +42,7 @@ import rx.Observable;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 
 /**
  * Service to save the sleep data.
@@ -56,6 +57,8 @@ public class SleepService {
 
     private SleepSQLiteHelper mSleepSQLiteHelper;
     private AggregateStatistics mAggregateStatistics;
+
+    private PublishSubject<Integer> mDataChangePublishSubject = PublishSubject.create();
 
     private BehaviorSubject<AggregateStatistics> mAggregateStatisticsPublishSubject = BehaviorSubject.create();
 
@@ -74,6 +77,9 @@ public class SleepService {
         mSleepSQLiteHelper.getReadableDatabase();
     }
 
+    /**
+     * Run a batch analysis for the previous 7 days.
+     */
     public void runBatchAnalysis() {
 
         try {
@@ -98,6 +104,11 @@ public class SleepService {
 
     }
 
+    /**
+     * Run a batch analysis for a given calendar date.
+     *
+     * @param calendar
+     */
     public void runBatchAnalysis(final Calendar calendar) {
 
         final long MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
@@ -162,17 +173,38 @@ public class SleepService {
     /**
      * @return
      */
+    public File getBackupSessionsDirectory() {
+        return new File(mSleepDataStorageDirectory, "backup");
+    }
+
+    /**
+     * @return
+     */
     public File getSessionsDirectory() {
         return new File(mSleepDataStorageDirectory, "sessions");
     }
 
+    /**
+     * Write the session data for a given File in the database.
+     *
+     * @param sessionDirectory
+     * @throws IOException
+     */
     public void writeSessionDataToDatabase(File sessionDirectory) throws IOException {
         SessionData sessionData = getSessionData(sessionDirectory);
         if (sessionData != null) {
             writeSessionDataToDatabase(sessionData);
+            getBackupSessionsDirectory().mkdirs();
+            File backupSessionDirectory = new File(getBackupSessionsDirectory(), sessionDirectory.getName());
+            sessionDirectory.renameTo(backupSessionDirectory);
         }
     }
 
+    /**
+     * Put any sessions that aren't in the database in the database.
+     *
+     * @throws IOException
+     */
     public void checkSessionData() throws IOException {
 
         File[] sessions = getSessionsDirectory().listFiles();
@@ -181,6 +213,9 @@ public class SleepService {
             SessionData sessionData = getSessionData(session);
             if (sessionData != null) {
                 writeSessionDataToDatabase(sessionData);
+                getBackupSessionsDirectory().mkdirs();
+                File backupSessionDirectory = new File(getBackupSessionsDirectory(), session.getName());
+                session.renameTo(backupSessionDirectory);
             }
         }
 
@@ -242,6 +277,12 @@ public class SleepService {
 
     }
 
+    /**
+     * Write session data to the database.
+     *
+     * @param sessionData
+     * @throws IOException
+     */
     public void writeSessionDataToDatabase(SessionData sessionData) throws IOException {
 
 
@@ -568,6 +609,10 @@ public class SleepService {
             e.printStackTrace();
         }
 
+    }
+
+    public Observable<Integer> getChangeObservable() {
+        return mDataChangePublishSubject;
     }
 
     public Observable<AggregateStatistics> getAggregateStatisticsObservable() {

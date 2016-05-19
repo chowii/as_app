@@ -1,4 +1,4 @@
-package au.com.ahbeard.sleepsense.bluetooth.base;
+    package au.com.ahbeard.sleepsense.bluetooth.base;
 
 import au.com.ahbeard.sleepsense.utils.ByteUtils;
 
