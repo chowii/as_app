@@ -18,8 +18,10 @@ import butterknife.OnClick;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class SleepTrackingActivity extends AppCompatActivity {
 
@@ -27,17 +29,16 @@ public class SleepTrackingActivity extends AppCompatActivity {
     private Subscription mClockSubscription;
 
     @OnClick(R.id.sleep_tracking_button_start_stop)
-    void onStartTracking() {
+    void onStopTracking() {
         if (SleepSenseDeviceService.instance().getTrackerDevice().isTracking()) {
-            SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
-        } else {
-            SleepSenseDeviceService.instance().getTrackerDevice().startSensorSession();
+            Schedulers.io().createWorker().schedule(new Action0() {
+                @Override
+                public void call() {
+                    SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
+                }
+            });
+            finish();
         }
-    }
-
-    @OnClick(R.id.sleep_tracking_button_batch_analysis)
-    void onRunBatchAnalysis() {
-        SleepService.instance().runBatchAnalysis();
     }
 
     @Bind(R.id.sleep_tracking_text_view_clock_time)
@@ -52,12 +53,25 @@ public class SleepTrackingActivity extends AppCompatActivity {
     @Bind(R.id.sleep_tracking_button_start_stop)
     Button mStartStopButton;
 
+    @Bind(R.id.sleep_tracking_layout_connecting)
+    View mConnectingLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_sleep_tracking);
+
         ButterKnife.bind(this);
+
         mCalendar = Calendar.getInstance();
+
+        if ( SleepSenseDeviceService.instance().getTrackerDevice().isTracking() ) {
+            mConnectingLayout.setVisibility(View.GONE);
+        } else {
+            mConnectingLayout.setVisibility(View.VISIBLE);
+        }
 
         SleepSenseDeviceService.instance().getTrackerDevice()
                 .getTrackingStateObservable()
@@ -65,7 +79,9 @@ public class SleepTrackingActivity extends AppCompatActivity {
                 .subscribe(new Action1<String>() {
                     @Override
                     public void call(String s) {
-                        setButtonState();
+                        if ( "STARTED".equals(s) ) {
+                            mConnectingLayout.animate().alpha(0.0f).setDuration(300).start();
+                        }
                     }
                 });
 
@@ -80,7 +96,7 @@ public class SleepTrackingActivity extends AppCompatActivity {
                     }
                 });
 
-        // SleepSenseDeviceService.instance().getTrackerDevice().startSensorSession();
+        SleepSenseDeviceService.instance().getTrackerDevice().startSensorSession();
     }
 
     private void setButtonState() {

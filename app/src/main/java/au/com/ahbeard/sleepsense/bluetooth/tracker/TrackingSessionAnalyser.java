@@ -123,7 +123,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
     @Override
     public void onSensorSessionReceivedData(SensorSession sensorSession, byte[] data, String trackName, int sampleIndex) {
         // Use the observable to publish the data to the computation thread.
-        LogService.e(TAG, "data recieved");
+        // LogService.e(TAG, "data recieved");
         mSensorDataObservable.onNext(new SensorData(data, trackName, sampleIndex, System.currentTimeMillis() - mAnalysisStartTime));
     }
 
@@ -202,11 +202,13 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
                 @Override
                 public void call() {
                     sensorSession.startStreaming();
+                    mTrackerDevice.logStateChange("STARTED");
                 }
             },2, TimeUnit.SECONDS);
 
+
         } catch (AnalysisException e) {
-            e.printStackTrace();
+            sensorSession.close();
         }
     }
 
@@ -267,10 +269,6 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
     private void endSensorSession() {
         try {
 
-            //
-            // I'M UNSURE AS TO WHETHER THIS LAST TIME VALUE FRAGMENT NEEDS TO BE ADDED TO THE
-            // SESSION DATAS AND IF SO WHAT START TIME AND END TIME TO GIVE IT.
-            //
             if (mStreamingAnalysis != null) {
                 LogService.d(TAG, "Finalizing analysis");
 

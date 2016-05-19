@@ -101,4 +101,8 @@ public class TrackerDevice extends Device {
     public void logPacket() {
         mPacketCountSubject.onNext(++mPacketCount);
     }
+
+    public void logStateChange(String stateChange) {
+        mTrackingStateSubject.onNext(stateChange);
+    }
 }

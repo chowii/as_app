@@ -29,6 +29,11 @@ public class MoreFragment extends Fragment {
         ((HomeActivity)getActivity()).clearDevices();
     }
 
+    @OnClick(R.id.sleep_tracking_button_batch_analysis)
+    void onRunBatchAnalysis() {
+        SleepService.instance().runBatchAnalysis();
+    }
+
     @OnClick(R.id.debug_button_generate_fake_data)
     void generateFakeData() {
         Schedulers.io().createWorker().schedule(new Action0() {

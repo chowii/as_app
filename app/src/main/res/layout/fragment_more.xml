@@ -33,18 +33,30 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1"></LinearLayout>
+        android:layout_height="0dp" android:layout_weight="1">
 
-    <Button
-        android:id="@+id/debug_button_generate_fake_data"
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Generate Fake Data" android:layout_margin="20dp"/>
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/debug_button_generate_fake_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generate Fake Data" />
+        <Button
+            android:id="@+id/sleep_tracking_button_batch_analysis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Run Batch Analysis" />
+        <Button
+            android:id="@+id/debug_button_clear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Redo OnBoarding" android:layout_margin="20dp"/>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/debug_button_clear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Redo OnBoarding" android:layout_margin="20dp"/>
 
 </LinearLayout>
