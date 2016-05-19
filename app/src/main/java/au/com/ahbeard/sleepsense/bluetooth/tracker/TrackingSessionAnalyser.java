@@ -221,9 +221,9 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
 
         // Append the data to the synchronizer and get the fragment if we have one.
         // the timestamps must be strictly incremental, but it is possible to get 2 packets
-        // at the same instant from the Beddit code.
-        if (sensorData.timestamp == mPreviousTimestamp) {
-            sensorData.timestamp += 1;
+        // at the same instant from the Beddit code.  With backpressure it's also possible we might get more.
+        if (sensorData.timestamp <= mPreviousTimestamp) {
+            sensorData.timestamp = mPreviousTimestamp + 1;
         }
 
         mPreviousTimestamp = sensorData.timestamp;

@@ -172,7 +172,7 @@ public class DailyGraphView extends ViewGroup {
                 mPoints[i] = new PointF();
                 mPoints[i].x = (float) ((mNormalisedValues.get(i).getTimestamp() - startTime) * widthPerTimeUnit);
                 mPoints[i].y = mGraphRegionHeight - mGraphExtent * mNormalisedValues.get(i).getValue();
-                Log.d("Points", "point[" + i + "]: " + mPoints[i]);
+                // Log.d("Points", "point[" + i + "]: " + mPoints[i]);
             }
         }
 

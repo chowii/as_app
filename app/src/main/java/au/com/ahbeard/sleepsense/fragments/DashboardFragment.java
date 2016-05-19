@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,9 @@ import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,8 +37,7 @@ public class DashboardFragment extends Fragment {
     @Bind(R.id.dashboard_tab_host)
     FragmentTabHost mTabHost;
 
-    private Float[] mValues;
-    private Calendar mCalendar;
+    private CompositeSubscription mCompositeSubscription= new CompositeSubscription();
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -67,8 +70,22 @@ public class DashboardFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mTabHost.setup(getContext(),getChildFragmentManager(),android.R.id.tabcontent);
+
         mTabHost.addTab(mTabHost.newTabSpec("DAILY").setIndicator(getTabIndicator("Daily")),DailyDashboardFragment.class,null);
         mTabHost.addTab(mTabHost.newTabSpec("WEEKLY").setIndicator(getTabIndicator("Weekly")),WeeklyDashboardFragment.class,null);
+
+        mCompositeSubscription.add(SleepService.instance().getSleepIdSelectedObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer sleepId) {
+                        Log.d("DASHBOARDFRAGMENT","sleepId selected called..." + sleepId);
+
+                        mTabHost.setCurrentTab(0);
+                    }
+                }));
+
+
 
         return view;
     }

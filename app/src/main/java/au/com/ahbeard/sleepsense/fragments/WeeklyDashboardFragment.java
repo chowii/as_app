@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,7 +130,8 @@ public class WeeklyDashboardFragment extends Fragment {
                 weeklyGraphFragment.setOnClickListener(new WeeklyGraphView.OnClickListener() {
                     @Override
                     public void onValueClicked(Object identifier) {
-
+                        Log.d("DGSGDS",""+identifier);
+                        SleepService.instance().notifySleepIdSelected((Integer)identifier);
                     }
                 });
                 return weeklyGraphFragment;
@@ -194,8 +196,6 @@ public class WeeklyDashboardFragment extends Fragment {
         mBestNight =statisticsUtils.addStatistic(Color.GREEN, "Best Night", "24 Dec 2015");
         mWorstNight = statisticsUtils.addStatistic(Color.GREEN, "Worst Night", "24 Dec 2015");
 
-
-
         mCompositeSubscription.add(SleepService.instance()
                 .getAggregateStatisticsObservable()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -207,6 +207,15 @@ public class WeeklyDashboardFragment extends Fragment {
                     }
                 }));
 
+        mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+            @Override
+            public void call(Integer sleepId) {
+                Log.d("WEEKLYDASHBOARDFRAGMENT","change observable..." + sleepId);
+                graphViewPager.getAdapter().notifyDataSetChanged();
+            }
+        }));
+
+
         setupStatistics();
 
         return view;
@@ -214,6 +223,8 @@ public class WeeklyDashboardFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+
+        mCompositeSubscription.clear();
 
         ButterKnife.unbind(this);
 

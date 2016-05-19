@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,7 +28,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,10 +64,14 @@ public class DailyDashboardFragment extends Fragment {
 
     private Sleep mSleep;
 
+
+    private Integer mSleepIdToJumpTo;
+
     private StatisticsUtils.StatisticViewHolder mTotalTimeSlept;
     private StatisticsUtils.StatisticViewHolder mTimesOutOfBed;
     private StatisticsUtils.StatisticViewHolder mMattressFirmness;
 
+    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     public DailyDashboardFragment() {
         // Required empty public constructor
@@ -84,15 +89,36 @@ public class DailyDashboardFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
 
+        Log.d("DAILYDASHBOARDFRAGMENT","onCreate called...");
+
         if (getArguments() != null) {
 
         }
+
+        mCompositeSubscription.add(SleepService.instance().getSleepIdSelectedObservable().subscribe(new Action1<Integer>() {
+            @Override
+            public void call(Integer sleepId) {
+                Log.d("DAILYDASHBOARDFRAGMENT","sleepId selected called..." + sleepId);
+                mSleepIdToJumpTo = sleepId;
+            }
+        }));
+
+        mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+            @Override
+            public void call(Integer sleepId) {
+                Log.d("DAILYDASHBOARDFRAGMENT","change observable..." + sleepId);
+                mGraphViewPager.getAdapter().notifyDataSetChanged();
+            }
+        }));
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Log.d("DAILYDASHBOARDFRAGMENT","onCreateView called...");
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_daily_dashboard, container, false);
 
@@ -100,6 +126,13 @@ public class DailyDashboardFragment extends Fragment {
 
         setupStatistics();
 
+        mCompositeSubscription.add(SleepService.instance().getSleepIdSelectedObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+            @Override
+            public void call(Integer sleepId) {
+                Log.d("DAILYDASHBOARDFRAGMENT","sleepId selected called..." + sleepId);
+                jumpToSleepId(sleepId);
+            }
+        }));
 
         mGraphViewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
 
@@ -150,10 +183,10 @@ public class DailyDashboardFragment extends Fragment {
             }
         });
 
-
         mGraphViewPager.addOnPageChangeListener(mGraphLabels);
 
         mGraphViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -211,13 +244,33 @@ public class DailyDashboardFragment extends Fragment {
             }
         });
 
-        mGraphViewPager.setCurrentItem(1023);
+        Log.d("DAILYDASHBOARDFRAGMENT","jump: " + mSleepIdToJumpTo);
+
+        if(mSleepIdToJumpTo!=null ) {
+            jumpToSleepId(mSleepIdToJumpTo);
+        } else {
+            mGraphViewPager.setCurrentItem(1023);
+        }
+
 
         return view;
     }
 
+    private void jumpToSleepId(Integer sleepId) {
+        Calendar calendar = Calendar.getInstance();
+        Calendar selectedCalendar = SleepService.getCalendar(sleepId);
+
+        int numberOfDays = (int)(calendar.getTimeInMillis() - selectedCalendar.getTimeInMillis())/(1000*60*60*24);
+
+        mGraphViewPager.setCurrentItem(1023-numberOfDays);
+
+        mSleepIdToJumpTo = null;
+    }
+
     @Override
     public void onDestroyView() {
+
+        mCompositeSubscription.clear();
 
         ButterKnife.unbind(this);
 
@@ -227,6 +280,12 @@ public class DailyDashboardFragment extends Fragment {
 
         super.onDestroyView();
 
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
     }
 
     private void setupStatistics() {

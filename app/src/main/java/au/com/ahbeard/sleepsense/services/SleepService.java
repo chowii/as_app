@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
+import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,6 +40,7 @@ import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepProperty;
 import au.com.ahbeard.sleepsense.model.beddit.TrackData;
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
@@ -59,6 +61,7 @@ public class SleepService {
     private AggregateStatistics mAggregateStatistics;
 
     private PublishSubject<Integer> mDataChangePublishSubject = PublishSubject.create();
+    private PublishSubject<Integer> mSleepIdSelectedSubject = PublishSubject.create();
 
     private BehaviorSubject<AggregateStatistics> mAggregateStatisticsPublishSubject = BehaviorSubject.create();
 
@@ -99,6 +102,8 @@ public class SleepService {
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     runBatchAnalysis(calendar);
                 }
+
+                mDataChangePublishSubject.onNext(-1);
             }
         });
 
@@ -271,8 +276,6 @@ public class SleepService {
 
         sleepSessionCursor.close();
 
-        database.close();
-
         return sessionData;
 
     }
@@ -311,14 +314,10 @@ public class SleepService {
 
             long rowId = database.insertOrThrow(SleepSessionContract.SleepSessionTracks.TABLE_NAME, null, trackValues);
 
-            Log.d("SleepService", "ROW ID: " + rowId);
-
         }
 
         database.setTransactionSuccessful();
         database.endTransaction();
-
-        database.close();
 
     }
 
@@ -367,8 +366,6 @@ public class SleepService {
 
         long id = database.insertOrThrow(SleepContract.Sleep.TABLE_NAME, null, values);
 
-        Log.d("SleepService", "id=" + id);
-
         if (sleep.getTrackDataByName() != null) {
 
             for (TrackData trackData : sleep.getTrackDataByName().values()) {
@@ -379,18 +376,12 @@ public class SleepService {
                 trackDataValues.put(SleepContract.SleepTracks.TRACK_DATA, trackData.getData());
 
                 long trackId = database.insertOrThrow(SleepContract.SleepTracks.TABLE_NAME, null, trackDataValues);
-
-                Log.d("SleepService", "trackId=" + trackId);
             }
 
         }
 
-
         database.setTransactionSuccessful();
         database.endTransaction();
-
-        database.close();
-
 
     }
 
@@ -490,35 +481,71 @@ public class SleepService {
 
         Log.d("SleepService", String.format("startSleepId: %d endSleepId: %d", startSleepId, endSleepId));
 
-        SQLiteDatabase database = mSleepSQLiteHelper.getReadableDatabase();
+        SQLiteDatabase database = null;
 
-        Cursor sleepSessionCursor = database.rawQuery("select sleep_id, total_sleep_score from sleep where sleep_id >= ? and sleep_id <= ? order by sleep_id asc",
-                new String[]{Integer.toString(startSleepId), Integer.toString(endSleepId)});
+        float[] sleepScores;
 
-        sleepSessionCursor.moveToFirst();
+        try {
+            database = mSleepSQLiteHelper.getReadableDatabase();
+
+            Cursor sleepSessionCursor = database.rawQuery(
+                    "select sleep_id, total_sleep_score from sleep where sleep_id >= ? and sleep_id <= ? order by sleep_id asc",
+                    new String[]{Integer.toString(startSleepId), Integer.toString(endSleepId)});
+
+            sleepSessionCursor.moveToFirst();
 
 
-        Map<Integer, SleepProperty> sleepScoreBySleepId = new HashMap<>();
+            Map<Integer, SleepProperty> sleepScoreBySleepId = new HashMap<>();
 
-        while (!sleepSessionCursor.isAfterLast()) {
-            int sleepId = sleepSessionCursor.getInt(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.SLEEP_ID));
-            float sleepScore = sleepSessionCursor.getFloat(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.TOTAL_SLEEP_SCORE));
-            Log.d("Dashboard", String.format("sleep_id: %d sleep_score: %f", sleepId, sleepScore));
-            sleepScoreBySleepId.put(sleepId, new SleepProperty(sleepId, sleepScore));
-            sleepSessionCursor.moveToNext();
-        }
+            while (!sleepSessionCursor.isAfterLast()) {
+                int sleepId = sleepSessionCursor.getInt(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.SLEEP_ID));
+                float sleepScore = sleepSessionCursor.getFloat(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.TOTAL_SLEEP_SCORE));
+                Log.d("Dashboard", String.format("sleep_id: %d sleep_score: %f", sleepId, sleepScore));
+                sleepScoreBySleepId.put(sleepId, new SleepProperty(sleepId, sleepScore));
+                sleepSessionCursor.moveToNext();
+            }
 
-        List<Integer> sleepIdRange = generateSleepIdRange(startSleepId, endSleepId);
+            List<Integer> sleepIdRange = generateSleepIdRange(startSleepId, endSleepId);
 
-        float[] sleepScores = new float[sleepIdRange.size()];
-        int i = 0;
+            sleepScores = new float[sleepIdRange.size()];
+            int i = 0;
 
-        for (Integer sleepId : sleepIdRange) {
-            sleepScores[i++] = sleepScoreBySleepId.containsKey(sleepId) ? sleepScoreBySleepId.get(sleepId).getValue() : -1;
+            for (Integer sleepId : sleepIdRange) {
+                sleepScores[i++] = sleepScoreBySleepId.containsKey(sleepId) ? sleepScoreBySleepId.get(sleepId).getValue() : -1;
+            }
+        } finally {
+
         }
 
         return sleepScores;
     }
+
+    public Observable<float[]> readSleepScoresAsync(final int startSleepId, final int endSleepId) {
+
+        return makeObservable(new Callable<float[]>() {
+            @Override
+            public float[] call() throws Exception {
+                return readSleepScores(startSleepId, endSleepId);
+            }
+        });
+
+    }
+
+    private static <T> Observable<T> makeObservable(final Callable<T> func) {
+        return Observable.create(
+                new Observable.OnSubscribe<T>() {
+                    @Override
+                    public void call(Subscriber<? super T> subscriber) {
+                        try {
+                            subscriber.onNext(func.call());
+                            subscriber.onCompleted();
+                        } catch (Exception ex) {
+                            subscriber.onError(ex);
+                        }
+                    }
+                });
+    }
+
 
     /**
      * Generate a range
@@ -613,6 +640,15 @@ public class SleepService {
 
     public Observable<Integer> getChangeObservable() {
         return mDataChangePublishSubject;
+    }
+
+
+    public void notifySleepIdSelected(Integer id) {
+        mSleepIdSelectedSubject.onNext(id);
+    }
+
+    public Observable<Integer> getSleepIdSelectedObservable() {
+        return mSleepIdSelectedSubject;
     }
 
     public Observable<AggregateStatistics> getAggregateStatisticsObservable() {

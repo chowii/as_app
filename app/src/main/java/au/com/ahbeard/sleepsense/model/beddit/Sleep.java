@@ -398,9 +398,7 @@ public class Sleep {
 
 
         } finally {
-            if ( database != null ) {
-                database.close();
-            }
+            // Don't close the DB connection.
         }
 
         return sleepBySleepId;
