@@ -2,6 +2,7 @@ package au.com.ahbeard.sleepsense.bluetooth.tracker;
 
 import com.beddit.analysis.TimeValueFragment;
 import com.beddit.analysis.TimeValueTrackFragment;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -75,6 +76,8 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
 
         try {
             writeError(e);
+            FirebaseCrash.log("Error thrown during sleep session capture...");
+            FirebaseCrash.report(e);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
