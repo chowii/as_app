@@ -121,6 +121,6 @@ public class DashboardFragment extends Fragment {
 
     public void onScroll(int scrollY) {
         tabContainerLayout.setTranslationY(-scrollY/2);
-        mStartSleepFAB.setTranslationX(scrollY/3);
+        mStartSleepFAB.setTranslationY(scrollY/2);
     }
 }

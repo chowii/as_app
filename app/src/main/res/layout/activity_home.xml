@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.OnBoardActivity">
@@ -11,8 +10,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:paddingBottom="56dp" android:clipToPadding="false">
 
         <au.com.ahbeard.sleepsense.widgets.NonSwipeableViewPager
             android:id="@+id/dashboard_view_pager"
@@ -23,21 +22,27 @@
 
     </FrameLayout>
 
-    <View
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/tabTopColor"/>
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/tabTopColor"/>
 
 
-    <au.com.ahbeard.sleepsense.widgets.SimpleTabStrip
-        android:id="@+id/dashboard_simple_tab_strip"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/tabBackgroundColor"
-        app:selectedTabColor="@color/tabSelectedColor"
-        app:tabColor="@color/tabUnselectedColor" app:tabLayout="@layout/tab_dashboard">
+        <au.com.ahbeard.sleepsense.widgets.SimpleTabStrip
+            android:id="@+id/dashboard_simple_tab_strip"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/tabBackgroundColor"
+            app:selectedTabColor="@color/tabSelectedColor"
+            app:tabColor="@color/tabUnselectedColor" app:tabLayout="@layout/tab_dashboard">
 
-    </au.com.ahbeard.sleepsense.widgets.SimpleTabStrip>
+        </au.com.ahbeard.sleepsense.widgets.SimpleTabStrip>
+    </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>

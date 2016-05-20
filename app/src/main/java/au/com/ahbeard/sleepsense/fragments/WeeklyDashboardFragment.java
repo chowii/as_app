@@ -135,7 +135,6 @@ public class WeeklyDashboardFragment extends Fragment {
                 weeklyGraphFragment.setOnClickListener(new WeeklyGraphView.OnClickListener() {
                     @Override
                     public void onValueClicked(Object identifier) {
-                        Log.d("DGSGDS",""+identifier);
                         SleepService.instance().notifySleepIdSelected((Integer)identifier);
                     }
                 });
@@ -215,7 +214,6 @@ public class WeeklyDashboardFragment extends Fragment {
         mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
             @Override
             public void call(Integer sleepId) {
-                Log.d("WEEKLYDASHBOARDFRAGMENT","change observable..." + sleepId);
                 graphViewPager.getAdapter().notifyDataSetChanged();
             }
         }));

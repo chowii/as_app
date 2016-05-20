@@ -182,7 +182,12 @@ public class DailyGraphView extends ViewGroup {
             if (i == 0) {
                 mPath.moveTo(mPoints[i].x, mPoints[i].y);
             } else {
-                mPath.lineTo(mPoints[i].x, mPoints[i].y);
+                if ( mNormalisedValues.get(i).getTimestamp() - mNormalisedValues.get(i-1).getTimestamp() > 180f ) {
+                    mPath.moveTo(mPoints[i].x, mPoints[i].y);
+                } else {
+                    mPath.lineTo(mPoints[i].x, mPoints[i].y);
+                }
+
             }
             mAreaPath.lineTo(mPoints[i].x, mPoints[i].y);
         }
@@ -190,7 +195,7 @@ public class DailyGraphView extends ViewGroup {
         mAreaPath.lineTo(getWidth(), getHeight());
         mAreaPath.close();
 
-        mLegends = new ArrayList<Legend>();
+        mLegends = new ArrayList<>();
 
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTimeInMillis((long) (startTime * 1000f));
@@ -209,16 +214,19 @@ public class DailyGraphView extends ViewGroup {
         int endHour = endCalendar.get(Calendar.HOUR_OF_DAY);
 
         while (startCalendar.get(Calendar.HOUR_OF_DAY) != endHour) {
+
             int hour = startCalendar.get(Calendar.HOUR);
+
             if (hour == 0) {
                 hour = 12;
             }
+
             mLegends.add(new Legend(new PointF((float) ((startCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - getPaddingBottom()),
                     String.format("%02d",hour)));
 
             startCalendar.add(Calendar.HOUR_OF_DAY, 1);
-        }
 
+        }
 
         mLegends.add(new Legend(new PointF((float) ((endCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - getPaddingBottom()),
                 String.format("%02d",endCalendar.get(Calendar.HOUR))));
@@ -247,7 +255,9 @@ public class DailyGraphView extends ViewGroup {
             canvas.clipPath(mAreaPath);
 
             for (Legend legend : mLegends) {
+
                 float legendWidth = mLabelPaint.measureText(legend.value);
+
                 canvas.drawText(legend.value, legend.center.x - legendWidth / 2f, legend.center.y - mLabelPaint.getFontMetrics().ascent/2, mLabelPaint);
                 canvas.drawLine(legend.center.x,0,legend.center.x,legend.center.y-mLabelPaint.getTextSize()/2,mSideLabelPaint);
                 canvas.drawLine(legend.center.x,legend.center.y+mLabelPaint.getFontMetrics().descent+mLabelPaint.getTextSize()/2,legend.center.x,canvas.getHeight(),mSideLabelPaint);
