@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.ScrollerCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,6 +51,9 @@ public class DailyDashboardFragment extends Fragment {
     @Bind(R.id.daily_dashboard_layout_statistics)
     LinearLayout mStatisticsLayout;
 
+    @Bind(R.id.daily_dashboard_scroll_view)
+    ScrollView mScrollView;
+
     ThreadLocal<SimpleDateFormat> dayOfWeek = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
@@ -63,7 +69,6 @@ public class DailyDashboardFragment extends Fragment {
     };
 
     private Sleep mSleep;
-
 
     private Integer mSleepIdToJumpTo;
 
@@ -244,13 +249,26 @@ public class DailyDashboardFragment extends Fragment {
             }
         });
 
-        Log.d("DAILYDASHBOARDFRAGMENT","jump: " + mSleepIdToJumpTo);
+        mScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if ( mScrollView != null ) {
+                    int scrollY = mScrollView.getScrollY();
+                    if ( getParentFragment() != null ) {
+                        if ( getParentFragment() instanceof DashboardFragment ) {
+                            ((DashboardFragment)getParentFragment()).onScroll(scrollY);
+                        }
+                    }
+                }
+            }
+        });
 
         if(mSleepIdToJumpTo!=null ) {
             jumpToSleepId(mSleepIdToJumpTo);
         } else {
             mGraphViewPager.setCurrentItem(1023);
         }
+
 
 
         return view;

@@ -21,15 +21,6 @@
 
         </au.com.ahbeard.sleepsense.widgets.NonSwipeableViewPager>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/dashboard_fab_start_sleep"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:src="@drawable/fab_icon_sleep"
-            app:elevation="6dp"
-            android:layout_margin="21dp"
-            app:pressedTranslationZ="12dp"/>
     </FrameLayout>
 
     <View

@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -53,6 +55,9 @@ public class WeeklyDashboardFragment extends Fragment {
 
     @Bind(R.id.dashboard_labels_graph)
     LabelThingy mDashboardLabels;
+
+    @Bind(R.id.weekly_dashboard_scroll_view)
+    ScrollView mScrollView;
 
     CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
@@ -215,6 +220,19 @@ public class WeeklyDashboardFragment extends Fragment {
             }
         }));
 
+        mScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if ( mScrollView != null ) {
+                    int scrollY = mScrollView.getScrollY();
+                    if ( getParentFragment() != null ) {
+                        if ( getParentFragment() instanceof DashboardFragment ) {
+                            ((DashboardFragment)getParentFragment()).onScroll(scrollY);
+                        }
+                    }
+                }
+            }
+        });
 
         setupStatistics();
 

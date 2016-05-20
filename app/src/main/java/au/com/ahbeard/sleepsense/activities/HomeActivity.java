@@ -41,15 +41,6 @@ public class HomeActivity extends BaseActivity {
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
-    @OnClick(R.id.dashboard_fab_start_sleep)
-    void onStartSleepClicked() {
-        Intent intent = new Intent(this, SleepTrackingActivity.class);
-        startActivity(intent);
-    }
-
-    @Bind(R.id.dashboard_fab_start_sleep)
-    FloatingActionButton mStartSleepFloatingActionButton;
-
     @Bind(R.id.dashboard_view_pager)
     ViewPager mViewPager;
 
@@ -85,7 +76,7 @@ public class HomeActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                mStartSleepFloatingActionButton.setVisibility(mDashboardPagerAdapter.getItem(position) instanceof WeeklyDashboardFragment ? View.VISIBLE : View.GONE);
+
             }
 
             @Override
@@ -136,7 +127,6 @@ public class HomeActivity extends BaseActivity {
 
         mSimpleTabStrip.setViewPager(mViewPager);
 
-        mStartSleepFloatingActionButton.setVisibility(SleepSenseDeviceService.instance().hasTrackerDevice() ? View.VISIBLE : View.GONE);
 
     }
 

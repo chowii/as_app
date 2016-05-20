@@ -1,7 +1,9 @@
 package au.com.ahbeard.sleepsense.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTabHost;
@@ -20,9 +22,11 @@ import java.util.Locale;
 import java.util.zip.Inflater;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.SleepTrackingActivity;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
@@ -36,6 +40,18 @@ public class DashboardFragment extends Fragment {
 
     @Bind(R.id.dashboard_tab_host)
     FragmentTabHost mTabHost;
+
+    @Bind(R.id.dashboard_layout_tab_container)
+    View tabContainerLayout;
+
+    @OnClick(R.id.dashboard_fab_start_sleep)
+    void onStartSleepClicked() {
+        Intent intent = new Intent(getActivity(), SleepTrackingActivity.class);
+        startActivity(intent);
+    }
+
+    @Bind(R.id.dashboard_fab_start_sleep)
+    FloatingActionButton mStartSleepFAB;
 
     private CompositeSubscription mCompositeSubscription= new CompositeSubscription();
 
@@ -85,8 +101,6 @@ public class DashboardFragment extends Fragment {
                     }
                 }));
 
-
-
         return view;
     }
 
@@ -98,12 +112,15 @@ public class DashboardFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-
+        mCompositeSubscription.clear();
         ButterKnife.unbind(this);
 
         super.onDestroyView();
 
     }
 
-
+    public void onScroll(int scrollY) {
+        tabContainerLayout.setTranslationY(-scrollY/2);
+        mStartSleepFAB.setTranslationX(scrollY/3);
+    }
 }

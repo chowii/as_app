@@ -96,7 +96,7 @@ public class SimpleTabStrip extends LinearLayout {
 
                 @Override
                 public void onClick(View v) {
-                    mViewPager.setCurrentItem(position);updateTabs(position);
+                    mViewPager.setCurrentItem(position,false);updateTabs(position);
                 }
             });
 

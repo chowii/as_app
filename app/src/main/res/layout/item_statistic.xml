@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
             android:lineSpacingExtra="8dp"
-            android:text="Average SleepScore"
+            android:text="Average Sleep Score"
             android:textColor="#6E788D"
             android:textSize="14sp"
             app:typeface="OpenSansRegular"/>
@@ -63,7 +63,6 @@
             app:typeface="OpenSansRegular"
             tools:text="85"/>
 
-
     </LinearLayout>
 
     <LinearLayout
@@ -80,17 +79,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="8dp"
-            android:textColor="#6E788D"
+            android:textColor="#007FC3"
             android:textSize="13sp"
             app:typeface="OpenSansRegular"
             tools:text="85"/>
-
-
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="20dp"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
