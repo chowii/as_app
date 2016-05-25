@@ -1,7 +1,9 @@
 package au.com.ahbeard.sleepsense.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,13 @@ import rx.schedulers.Schedulers;
  * create an instance of this fragment.
  */
 public class MoreFragment extends Fragment {
+
+    @OnClick(R.id.debug_button_power_management)
+    void powerManagement() {
+        Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+        startActivity(intent);
+    }
+
 
     @OnClick(R.id.debug_button_clear)
     void clear() {

@@ -14,7 +14,6 @@ public class SleepContract {
     private static final String FLOAT_TYPE = " FLOAT";
     private static final String BLOB_TYPE = " BLOB";
 
-
     private static final String COMMA_SEP = ",";
 
     /*
@@ -92,8 +91,6 @@ public class SleepContract {
 
         public static final String SQL_DROP =
                 "DROP TABLE IF EXISTS " + TABLE_NAME;
-
-
 
     }
 

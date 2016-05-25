@@ -77,6 +77,7 @@ public class DailyDashboardFragment extends Fragment {
     private StatisticsUtils.StatisticViewHolder mMattressFirmness;
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeSubscription mViewCompositeSubscription = new CompositeSubscription();
 
     public DailyDashboardFragment() {
         // Required empty public constructor
@@ -131,7 +132,7 @@ public class DailyDashboardFragment extends Fragment {
 
         setupStatistics();
 
-        mCompositeSubscription.add(SleepService.instance().getSleepIdSelectedObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+        mViewCompositeSubscription.add(SleepService.instance().getSleepIdSelectedObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
             @Override
             public void call(Integer sleepId) {
                 Log.d("DAILYDASHBOARDFRAGMENT","sleepId selected called..." + sleepId);
@@ -288,7 +289,7 @@ public class DailyDashboardFragment extends Fragment {
     @Override
     public void onDestroyView() {
 
-        mCompositeSubscription.clear();
+        mViewCompositeSubscription.clear();
 
         ButterKnife.unbind(this);
 
@@ -302,6 +303,8 @@ public class DailyDashboardFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+
+        mCompositeSubscription.clear();
 
         super.onDestroy();
     }

@@ -87,42 +87,50 @@
         </RelativeLayout>
 
         <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:background="#FD807B"/>-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#FD807B"/>-->
 
         <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:background="#CCDFEF"/>-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#CCDFEF"/>-->
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
             android:paddingBottom="20dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:paddingTop="20dp"
-            android:gravity="center"
             >
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:src="@drawable/sleepsense_logo" android:layout_marginTop="10dp" android:layout_marginBottom="10dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/sleepsense_logo"/>
 
             <au.com.ahbeard.sleepsense.widgets.StyledTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:gravity="center"
                 android:lineSpacingExtra="8dp"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque."
+                android:text="@string/sleep_score_breakdown_description"
                 android:textColor="#6E788D"
                 android:textSize="13sp"
-                android:gravity="center"
-                app:typeface="OpenSansRegular" android:layout_margin="20dp"/>
+                app:typeface="OpenSansRegular"/>
+
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:src="@drawable/powered_by_beddit_logo"  android:layout_marginTop="10dp" android:layout_marginBottom="10dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/powered_by_beddit_logo"/>
 
 
         </LinearLayout>

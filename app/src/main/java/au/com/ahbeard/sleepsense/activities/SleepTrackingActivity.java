@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
+import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -76,10 +77,10 @@ public class SleepTrackingActivity extends AppCompatActivity {
         SleepSenseDeviceService.instance().getTrackerDevice()
                 .getTrackingStateObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
+                .subscribe(new Action1<TrackerDevice.TrackerState>() {
                     @Override
-                    public void call(String s) {
-                        if ( "STARTED".equals(s) ) {
+                    public void call(TrackerDevice.TrackerState trackerState) {
+                        if (TrackerDevice.TrackerState.StartingTracking == trackerState ) {
                             mConnectingLayout.animate().alpha(0.0f).setDuration(300).start();
                         }
                     }
@@ -100,8 +101,6 @@ public class SleepTrackingActivity extends AppCompatActivity {
     }
 
     private void setButtonState() {
-        mStartStopButton.setText(SleepSenseDeviceService.instance().getTrackerDevice().isTracking() ? "I'm Awake" : "Start Sleep");
-        // mStartStopButton.setVisibility(SleepSenseDeviceService.instance().getTrackerDevice().isTracking() ? View.VISIBLE : View.GONE);
 
     }
 

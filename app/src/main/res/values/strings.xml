@@ -1,16 +1,34 @@
 <resources>
-    <string name="app_name">Sleepsense</string>
 
+    <string name="app_name">Sleepsense</string>
 
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</string>
-    <string name="sleep_score_breakdown_time_to_fall_asleep">Time to fall asleep</string>
-    <string name="sleep_score_breakdown_sleep_efficiency">Sleep efficiency</string>
-    <string name="sleep_score_breakdown_restless_sleep">Restless sleep</string>
-    <string name="sleep_score_breakdown_awake">Awake</string>
-    <string name="sleep_score_breakdown_out_of_bed">Out of bed</string>
-    <string name="sleep_score_breakdown_snoring">Snoring</string>
-    <string name="sleep_score_breakdown_resting_heart_rate">Resting heart rate</string>
+
+    <string name="sleep_score_breakdown_description">Improving your sleep starts with knowing what actually
+        happened while you were asleep! Your Sleep Score delivers a snapshot of your sleep quality and a full
+        report of your sleep patterns and quantity of your sleep.</string>
     <string name="sleep_score_breakdown_time_sleeping">Time sleeping</string>
+    <string name="sleep_score_breakdown_time_sleeping_txt">A measure of the total number of hours you slept during
+        the night. The average adult requires between 7–9 hours sleep. </string>
+    <string name="sleep_score_breakdown_time_to_fall_asleep">Time to fall asleep</string>
+    <string name="sleep_score_breakdown_time_to_fall_asleep_txt">A measure of the total time it took you to fall to sleep.
+        This phase of sleep is known as sleep latency.</string>
+    <string name="sleep_score_breakdown_sleep_efficiency">Sleep efficiency</string>
+    <string name="sleep_score_breakdown_sleep_efficiency_txt">A measure of the portion of time you were asleep
+        versus portion of time you spent lying awake. High sleep efficiency is above 85%.</string>
+    <string name="sleep_score_breakdown_restless_sleep">Restless sleep</string>
+    <string name="sleep_score_breakdown_restless_sleep_txt">A measure of the total time you were
+        restless during your sleep, but not awake.</string>
+    <string name="sleep_score_breakdown_awake">Awake</string>
+    <string name="sleep_score_breakdown_awake_txt">A measure of the total number of times during
+        your sleep that you woke up.</string>
+    <string name="sleep_score_breakdown_out_of_bed">Out of bed</string>
+    <string name="sleep_score_breakdown_out_of_bed_txt">A measure of the total number of times that you
+        broke your sleep entirely and got out of bed.</string>
+    <string name="sleep_score_breakdown_snoring">Snoring</string>
+    <string name="sleep_score_breakdown_snoring_txt">A measure of the total portion of time you spent snoring while you were asleep. </string>
+    <string name="sleep_score_breakdown_resting_heart_rate">Resting heart rate</string>
+    <string name="sleep_score_breakdown_resting_heart_rate_txt">Your average heart rate while sleeping.</string>
 </resources>

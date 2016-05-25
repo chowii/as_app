@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 import au.com.ahbeard.sleepsense.services.LogService;
 import rx.Observer;
 import rx.functions.Action0;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
@@ -109,6 +108,8 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
 
         LogService.d(TAG, "SENSOR DETAILS: " + sensorSession.getSensorDetails());
 
+        mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Connected);
+
         startSensorSession(sensorSession);
 
     }
@@ -135,6 +136,8 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
      */
     @Override
     public void onSensorSessionFinished(SensorSession sensorSession, SessionAccounting accounting, SensorException error) {
+
+        mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Disconnected);
 
         if (error == null) {
             LogService.d(TAG, "onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
@@ -202,7 +205,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
                 @Override
                 public void call() {
                     sensorSession.startStreaming();
-                    mTrackerDevice.logStateChange("STARTED");
+                    mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Tracking);
                 }
             },2, TimeUnit.SECONDS);
 

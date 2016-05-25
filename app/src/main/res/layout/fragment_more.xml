@@ -40,7 +40,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical" android:layout_margin="20dp">
+        <Button
+            android:id="@+id/debug_button_power_management"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pop Power Management Settings" />
         <Button
             android:id="@+id/debug_button_generate_fake_data"
             android:layout_width="match_parent"
@@ -55,7 +60,7 @@
             android:id="@+id/debug_button_clear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Redo OnBoarding" android:layout_margin="20dp"/>
+            android:text="Redo OnBoarding" />
     </LinearLayout>
 
 

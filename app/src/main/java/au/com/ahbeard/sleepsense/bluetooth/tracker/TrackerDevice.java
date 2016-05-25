@@ -21,11 +21,22 @@ public class TrackerDevice extends Device {
     private Sensor mSensor;
     private SensorSession mSensorSession;
 
-    private PublishSubject<String> mTrackingStateSubject = PublishSubject.create();
+    private PublishSubject<TrackerState> mTrackerStateSubject = PublishSubject.create();
     private PublishSubject<Integer> mPacketCountSubject = PublishSubject.create();
 
     private int mPacketCount = 0;
     private PowerManager.WakeLock mWakeLock;
+
+    private TrackerState mTrackerState;
+
+    public enum TrackerState {
+        Disconnected,
+        Connecting,
+        Connected,
+        StartingTracking,
+        Tracking,
+        Disconnecting
+    }
 
     public Sensor getSensor() {
 
@@ -64,7 +75,8 @@ public class TrackerDevice extends Device {
             mSensorSession = SensorManager.getInstance().createSession(getSensor());
             mSensorSession.setListener(new TrackingSessionAnalyser(this));
             mSensorSession.open();
-            mTrackingStateSubject.onNext("STARTING");
+            mTrackerState = TrackerState.StartingTracking;
+            mTrackerStateSubject.onNext(mTrackerState);
 
         } catch (SensorException e) {
             e.printStackTrace();
@@ -77,7 +89,8 @@ public class TrackerDevice extends Device {
         if (mSensorSession != null) {
             mSensorSession.close();
             mSensorSession = null;
-            mTrackingStateSubject.onNext("STOPPING");
+            mTrackerState=TrackerState.Disconnecting;
+            mTrackerStateSubject.onNext(mTrackerState);
         }
 
         if (mWakeLock != null) {
@@ -90,8 +103,8 @@ public class TrackerDevice extends Device {
         return mSensorSession != null;
     }
 
-    public Observable<String> getTrackingStateObservable() {
-        return mTrackingStateSubject;
+    public Observable<TrackerState> getTrackingStateObservable() {
+        return mTrackerStateSubject;
     }
 
     public Observable<Integer> getPacketCountObservable() {
@@ -102,7 +115,8 @@ public class TrackerDevice extends Device {
         mPacketCountSubject.onNext(++mPacketCount);
     }
 
-    public void logStateChange(String stateChange) {
-        mTrackingStateSubject.onNext(stateChange);
+    public void setTrackerState(TrackerState trackerState) {
+        mTrackerState = trackerState;
+        mTrackerStateSubject.onNext(mTrackerState);
     }
 }

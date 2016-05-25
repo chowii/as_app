@@ -3,10 +3,17 @@ package au.com.ahbeard.sleepsense.activities;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
+import android.view.WindowManager;
+
+import au.com.ahbeard.sleepsense.R;
 
 /**
  * Created by neal on 3/03/2016.
@@ -43,19 +50,22 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSIONS_REQUEST_COARSE_LOCATION: {
+
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // Don't do anything specifically here.
+
                 } else {
 
                     final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
                     builder.setTitle("Functionality limited");
-                    builder.setMessage(
-                            "Since location access has not been granted, this app will not be able to discover Bluetooth Devices.");
+                    builder.setMessage("Since location access has not been granted, this app will not be able to discover Bluetooth Devices.");
                     builder.setPositiveButton(android.R.string.ok, null);
                     builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
@@ -71,5 +81,6 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
     }
+
 
 }

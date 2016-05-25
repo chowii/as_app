@@ -70,7 +70,8 @@ public class SleepScoreBreakdownActivity extends AppCompatActivity {
             int altTextColor = getResources().getColor(R.color.detailedSleepScoreAltTextColor);
 
             mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_time_sleeping),
-                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getSleepTotalTime()));
+                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getSleepTotalTime()),
+                    getText(R.string.sleep_score_breakdown_time_sleeping_txt));
 
             if (mSleep.getRestingHeartRate() != null) {
                 mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_resting_heart_rate),
@@ -78,18 +79,23 @@ public class SleepScoreBreakdownActivity extends AppCompatActivity {
             }
 
             mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_time_to_fall_asleep),
-                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getSleepLatency()));
+                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getSleepLatency()),
+                    getText(R.string.sleep_score_breakdown_time_to_fall_asleep_txt));
             mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_sleep_efficiency),
                     StatisticsUtils.valueSuffix(textColor, altTextColor, String.format("%d", Math.round(mSleep.getSleepEfficiency() * 100)), " %"),
-                    getText(R.string.lorem_ipsum));
+                    getText(R.string.sleep_score_breakdown_sleep_efficiency_txt));
             mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_restless_sleep),
-                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getRestlessTotalTime()));
+                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getRestlessTotalTime()),
+                    getText(R.string.sleep_score_breakdown_restless_sleep_txt));
             mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_awake),
-                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getWakeTotalTime()));
+                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getWakeTotalTime()),
+                    getText(R.string.sleep_score_breakdown_awake_txt));
             mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_out_of_bed),
-                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getAwayTotalTime()));
+                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getAwayTotalTime()),
+                    getText(R.string.sleep_score_breakdown_out_of_bed_txt));
             mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_snoring),
-                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getTotalSnoringEpisodeDuration()));
+                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getTotalSnoringEpisodeDuration()),
+                    getText(R.string.sleep_score_breakdown_snoring_txt));
 
 
         }

@@ -16,6 +16,11 @@
 
     </style>
 
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="colorPrimary">@color/splashBackground</item>
+    </style>
+
     <style name="firmnessLabel">
         <item name="android:textSize">9sp</item>
         <item name="android:textAllCaps">true</item>
