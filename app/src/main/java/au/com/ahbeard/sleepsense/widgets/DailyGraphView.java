@@ -1,6 +1,7 @@
 package au.com.ahbeard.sleepsense.widgets;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -28,8 +29,6 @@ import au.com.ahbeard.sleepsense.services.TypefaceService;
  */
 public class DailyGraphView extends ViewGroup {
 
-    public static final float GRAPH_LEGEND_SPLIT = 0.9f;
-
     private Paint mLinePaint;
     private Paint mAreaPaint;
     private Paint mLabelPaint;
@@ -37,6 +36,9 @@ public class DailyGraphView extends ViewGroup {
 
     private float mGraphExtent;
     private float mGraphRegionHeight;
+
+    private float mXAxisLabelSpace;
+    private float mYAxisLabelSpace;
 
     private Path mPath;
     private Path mAreaPath;
@@ -76,6 +78,12 @@ public class DailyGraphView extends ViewGroup {
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
 
         setWillNotDraw(false);
+
+        final TypedArray a = getContext().obtainStyledAttributes(
+                attrs, R.styleable.Graph, defStyleAttr, 0);
+
+        mXAxisLabelSpace = a.getDimension(R.styleable.Graph_xAxisLabelSpace,0);
+        mYAxisLabelSpace = a.getDimension(R.styleable.Graph_yAxisLabelSpace,0);
 
         mAreaPaint = new Paint();
         mAreaPaint.setShader(mAreaGradient);
@@ -119,7 +127,7 @@ public class DailyGraphView extends ViewGroup {
 
         // Normalise the values
         for (TimestampAndFloat timestampAndFloat : mNormalisedValues) {
-            timestampAndFloat.setValue((timestampAndFloat.getValue() - minimum) / range);
+            timestampAndFloat.setValue(((1.0f-timestampAndFloat.getValue()) - minimum) / range );
         }
 
         removeAllViews();
@@ -140,14 +148,15 @@ public class DailyGraphView extends ViewGroup {
         // Have to allocate here, since we don't know the size. Optimally we could do this when the graph canvas
         // changes size... actually if the values don't change, none of this changes, so we can set a "dirty" flag.
 
+        mGraphRegionHeight =height - mXAxisLabelSpace;
+
         mAreaPaint.setShader(new LinearGradient(
-                0, 0, 0, getHeight() * GRAPH_LEGEND_SPLIT,
+                0, 0, 0, mGraphRegionHeight,
                 getResources().getColor(R.color.graphAreaGradientStart),
                 getResources().getColor(R.color.graphAreaGradientEnd),
                 Shader.TileMode.MIRROR));
 
-        mGraphRegionHeight = height * GRAPH_LEGEND_SPLIT;
-        mGraphExtent = height * GRAPH_LEGEND_SPLIT - TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4,
+        mGraphExtent = height - mXAxisLabelSpace - TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4,
                 getResources().getDisplayMetrics());
 
         mPath.reset();
@@ -172,7 +181,6 @@ public class DailyGraphView extends ViewGroup {
                 mPoints[i] = new PointF();
                 mPoints[i].x = (float) ((mNormalisedValues.get(i).getTimestamp() - startTime) * widthPerTimeUnit);
                 mPoints[i].y = mGraphRegionHeight - mGraphExtent * mNormalisedValues.get(i).getValue();
-                // Log.d("Points", "point[" + i + "]: " + mPoints[i]);
             }
         }
 
@@ -221,20 +229,17 @@ public class DailyGraphView extends ViewGroup {
                 hour = 12;
             }
 
-            mLegends.add(new Legend(new PointF((float) ((startCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - getPaddingBottom()),
+            mLegends.add(new Legend(new PointF((float) ((startCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - mXAxisLabelSpace/2),
                     String.format("%02d",hour)));
 
             startCalendar.add(Calendar.HOUR_OF_DAY, 1);
 
         }
 
-        mLegends.add(new Legend(new PointF((float) ((endCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - getPaddingBottom()),
+        mLegends.add(new Legend(new PointF((float) ((endCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - mXAxisLabelSpace/2),
                 String.format("%02d",endCalendar.get(Calendar.HOUR))));
 
         mGraphNeedsRelayout = false;
-
-
-
 
     }
 
@@ -260,7 +265,7 @@ public class DailyGraphView extends ViewGroup {
 
                 canvas.drawText(legend.value, legend.center.x - legendWidth / 2f, legend.center.y - mLabelPaint.getFontMetrics().ascent/2, mLabelPaint);
                 canvas.drawLine(legend.center.x,0,legend.center.x,legend.center.y-mLabelPaint.getTextSize()/2,mSideLabelPaint);
-                canvas.drawLine(legend.center.x,legend.center.y+mLabelPaint.getFontMetrics().descent+mLabelPaint.getTextSize()/2,legend.center.x,canvas.getHeight(),mSideLabelPaint);
+                //canvas.drawLine(legend.center.x,legend.center.y+mLabelPaint.getFontMetrics().descent+mLabelPaint.getTextSize()/2,legend.center.x,canvas.getHeight(),mSideLabelPaint);
 
                 Log.d("POINTS",String.format("%f,%f -> %f,%f",legend.center.x,legend.center.y,legend.center.x,(float)canvas.getHeight() ));
             }

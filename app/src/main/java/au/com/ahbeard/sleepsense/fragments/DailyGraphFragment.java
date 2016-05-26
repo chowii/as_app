@@ -92,7 +92,7 @@ public class DailyGraphFragment extends Fragment {
             List<TimestampAndFloat> sleepCycles = new ArrayList<>();
             sleepCycles.addAll(mSleep.getSleepCycles());
 
-            mGraphView.setValues(sleepCycles, -0.5f, 4.0f);
+            mGraphView.setValues(sleepCycles, 0.0f, 4.0f);
 
         }
 

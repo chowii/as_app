@@ -98,7 +98,7 @@ public class SleepService {
 
                 calendar.add(Calendar.DAY_OF_YEAR, -7);
 
-                for (int i = 0; i < 7; i++) {
+                for (int i = 0; i < 21; i++) {
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                     runBatchAnalysis(calendar);
                 }

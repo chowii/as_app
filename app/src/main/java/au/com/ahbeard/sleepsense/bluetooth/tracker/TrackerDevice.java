@@ -29,6 +29,10 @@ public class TrackerDevice extends Device {
 
     private TrackerState mTrackerState;
 
+    public TrackerState getTrackerState() {
+        return mTrackerState;
+    }
+
     public enum TrackerState {
         Disconnected,
         Connecting,

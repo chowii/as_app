@@ -24,6 +24,11 @@
         <attr name="selectedTabColor" format="reference"/>
     </declare-styleable>
 
+    <declare-styleable name="Graph">
+        <attr name="xAxisLabelSpace" format="dimension"/>
+        <attr name="yAxisLabelSpace" format="dimension"/>
+    </declare-styleable>
+
 
 
 </resources>

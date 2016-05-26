@@ -205,7 +205,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
                 @Override
                 public void call() {
                     sensorSession.startStreaming();
-                    mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Tracking);
+                    mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.StartingTracking);
                 }
             },2, TimeUnit.SECONDS);
 
@@ -221,6 +221,10 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
      * @param sensorData
      */
     private void processSensorData(SensorData sensorData) {
+
+        if ( mTrackerDevice.getTrackerState() != TrackerDevice.TrackerState.Tracking ) {
+            mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Tracking);
+        }
 
         // Append the data to the synchronizer and get the fragment if we have one.
         // the timestamps must be strictly incremental, but it is possible to get 2 packets

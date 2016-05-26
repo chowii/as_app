@@ -40,26 +40,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" android:layout_margin="20dp">
-        <Button
+        android:orientation="vertical" android:layout_margin="20dp" >
+        <au.com.ahbeard.sleepsense.widgets.StyledButton
             android:id="@+id/debug_button_power_management"
+            android:background="@drawable/sleep_sense_button_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#fff"
             android:text="Pop Power Management Settings" />
-        <Button
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+        <au.com.ahbeard.sleepsense.widgets.StyledButton
             android:id="@+id/debug_button_generate_fake_data"
+            android:background="@drawable/sleep_sense_button_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#fff"
             android:text="Generate Fake Data" />
-        <Button
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+        <au.com.ahbeard.sleepsense.widgets.StyledButton
             android:id="@+id/sleep_tracking_button_batch_analysis"
+            android:background="@drawable/sleep_sense_button_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#fff"
             android:text="Run Batch Analysis" />
-        <Button
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+        <au.com.ahbeard.sleepsense.widgets.StyledButton
             android:id="@+id/debug_button_clear"
+            android:background="@drawable/sleep_sense_button_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#fff"
             android:text="Redo OnBoarding" />
     </LinearLayout>
 

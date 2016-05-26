@@ -9,7 +9,7 @@
     <au.com.ahbeard.sleepsense.widgets.DailyGraphView
         android:id="@+id/graph_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" android:paddingBottom="30dp"/>
+        android:layout_height="match_parent" app:xAxisLabelSpace="50dp"/>
 
     <FrameLayout
         android:id="@+id/daily_graph_layout_sleep_score"
