@@ -214,13 +214,15 @@ public class SleepService {
 
         File[] sessions = getSessionsDirectory().listFiles();
 
-        for (File session : sessions) {
-            SessionData sessionData = getSessionData(session);
-            if (sessionData != null) {
-                writeSessionDataToDatabase(sessionData);
-                getBackupSessionsDirectory().mkdirs();
-                File backupSessionDirectory = new File(getBackupSessionsDirectory(), session.getName());
-                session.renameTo(backupSessionDirectory);
+        if ( sessions != null ) {
+            for (File session : sessions) {
+                SessionData sessionData = getSessionData(session);
+                if (sessionData != null) {
+                    writeSessionDataToDatabase(sessionData);
+                    getBackupSessionsDirectory().mkdirs();
+                    File backupSessionDirectory = new File(getBackupSessionsDirectory(), session.getName());
+                    session.renameTo(backupSessionDirectory);
+                }
             }
         }
 
