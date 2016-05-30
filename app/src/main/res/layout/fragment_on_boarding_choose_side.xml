@@ -1,0 +1,94 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             tools:context=".fragments.onboarding.OnBoardingChooseSideFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/onboarding_image_view_background_choose_sidefragment_on_boarding_choose_side.xml"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="1.0"
+            android:src="@drawable/onboarding_background_choose_side" android:adjustViewBounds="true"/>
+
+        <ImageView
+            android:id="@+id/onboarding_image_view_choose_left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="1.0"
+            android:src="@drawable/onboarding_background_choose_side_left" android:adjustViewBounds="true"/>
+
+        <ImageView
+            android:id="@+id/onboarding_image_view_choose_right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="1.0"
+            android:src="@drawable/onboarding_background_choose_side_right" android:adjustViewBounds="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center">
+            <View
+                android:id="@+id/onboarding_view_choose_right"
+                android:layout_width="0dp"
+                android:layout_height="300dp" android:layout_weight="1"/>
+            <View
+                android:id="@+id/onboarding_view_choose_left"
+                android:layout_width="0dp"
+                android:layout_height="300dp" android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:textColor="@color/onBoardHeaderTextColor"
+            app:typeface="OpenSansSemibold"
+            android:text="Please tap the side of the bed you sleep on"/>
+
+        <View android:layout_width="wrap_content" android:layout_height="25dp"/>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:textColor="@color/onBoardHeaderTextColor"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:lineSpacingExtra="10dp"
+            app:typeface="OpenSansRegular"
+            android:text="This will help me track your sleep accurately"/>
+
+        <View android:layout_width="wrap_content" android:layout_height="45dp"/>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledButton
+            android:id="@+id/on_board_button_continue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:background="@drawable/sleep_sense_button_blue"
+            android:stateListAnimator="@null"
+            android:text="Continue"
+            android:textColor="#fff"/>
+
+    </LinearLayout>
+
+</FrameLayout>

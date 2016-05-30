@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list android:id="@+id/selected"
+                android:oneshot="false"
+                xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/onboarding_phone_on_bed_frame_0" android:duration="200" />
+    <item android:drawable="@drawable/onboarding_phone_on_bed_frame_1" android:duration="250" />
+    <item android:drawable="@drawable/onboarding_phone_on_bed_frame_2" android:duration="300" />
+    <item android:drawable="@drawable/onboarding_phone_on_bed_frame_3" android:duration="350" />
+</animation-list>

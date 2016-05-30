@@ -77,7 +77,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#fff"
-            android:text="Redo OnBoarding" />
+            android:text="Redo On-Boarding" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+        <au.com.ahbeard.sleepsense.widgets.StyledButton
+            android:id="@+id/debug_button_new_onboarding"
+            android:background="@drawable/sleep_sense_button_blue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:text="New On-Boarding" />
     </LinearLayout>
 
 

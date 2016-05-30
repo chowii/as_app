@@ -38,6 +38,11 @@ public class MoreFragment extends Fragment {
         ((HomeActivity)getActivity()).clearDevices();
     }
 
+    @OnClick(R.id.debug_button_new_onboarding)
+    void newOnboarding() {
+        ((HomeActivity)getActivity()).doOnboarding();
+    }
+
     @OnClick(R.id.sleep_tracking_button_batch_analysis)
     void onRunBatchAnalysis() {
         SleepService.instance().runBatchAnalysis();

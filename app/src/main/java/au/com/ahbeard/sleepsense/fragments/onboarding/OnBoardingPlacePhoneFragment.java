@@ -1,7 +1,7 @@
-package au.com.ahbeard.sleepsense.fragments;
+package au.com.ahbeard.sleepsense.fragments.onboarding;
 
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,20 +12,31 @@ import android.widget.ImageView;
 import au.com.ahbeard.sleepsense.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class OnBoardingPlacePhoneFragment extends Fragment {
 
     public static final String ARG_SIDE = "side";
+
     public static final String VALUE_LEFT = "LEFT";
     public static final String VALUE_RIGHT = "RIGHT";
 
-    // TODO: Rename and change types of parameters
     private String mSide;
 
     private OnActionListener mListener;
 
     @Bind(R.id.onboarding_image_view_place_phone_bed)
     ImageView mPlacePhoneBedImageView;
+
+    @Bind(R.id.onboarding_image_view_phone)
+    ImageView mPhoneImageView;
+
+    @OnClick(R.id.on_board_button_continue)
+    void continueClicked() {
+        if ( mListener != null ) {
+            mListener.onPlacePhoneContinueClicked();
+        }
+    }
 
     public OnBoardingPlacePhoneFragment() {
         // Required empty public constructor
@@ -59,6 +70,10 @@ public class OnBoardingPlacePhoneFragment extends Fragment {
             mPlacePhoneBedImageView.setImageResource(R.drawable.onboarding_background_place_phone_left);
         } else {
             mPlacePhoneBedImageView.setImageResource(R.drawable.onboarding_background_place_phone_right);
+        }
+
+        if ( mPhoneImageView.getDrawable() instanceof AnimationDrawable ) {
+            ((AnimationDrawable)mPhoneImageView.getDrawable()).start();
         }
 
         return view;

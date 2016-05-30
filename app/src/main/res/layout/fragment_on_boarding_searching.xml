@@ -1,0 +1,155 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             tools:context=".fragments.onboarding.OnBoardingChooseSideFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/on_board_image_view_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="1.0"
+            android:src="@drawable/onboarding_phone_searching" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:id="@+id/on_board_searching_text_view_heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:textColor="@color/onBoardHeaderTextColor"
+            app:typeface="OpenSansSemibold"
+            android:text="I'm pairing"/>
+
+        <View android:layout_width="wrap_content" android:layout_height="25dp"/>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:id="@+id/on_board_searching_text_view_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:textColor="@color/onBoardHeaderTextColor"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:lineSpacingExtra="10dp"
+            app:typeface="OpenSansRegular"
+            android:text="Lorem ipsum dolor sequent"/>
+
+        <View android:layout_width="wrap_content" android:layout_height="25dp"/>
+
+        <LinearLayout
+            android:id="@+id/on_board_searching_layout_devices"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp">
+
+            <LinearLayout
+                android:id="@+id/on_board_searching_layout_mattress"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/on_board_searching_image_view_mattress_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/success_tick"
+                    android:layout_margin="12dp"/>
+
+                <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="10dp"
+                    android:textColor="@color/onBoardHeaderTextColor"
+                    app:typeface="OpenSansSemibold"
+                    android:text="MATTRESS"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/on_board_searching_layout_base"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/on_board_searching_image_view_base_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/success_tick"
+                    android:layout_margin="12dp"/>
+
+                <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="10dp"
+                    android:textColor="@color/onBoardHeaderTextColor"
+                    app:typeface="OpenSansSemibold"
+                    android:text="BASE"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/on_board_searching_layout_tracker"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/on_board_searching_image_view_tracker_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/success_tick"
+                    android:layout_margin="12dp"/>
+
+                <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="10dp"
+                    android:textColor="@color/onBoardHeaderTextColor"
+                    app:typeface="OpenSansSemibold"
+                    android:text="SLEEP TRACKER"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledButton
+            android:id="@+id/on_board_button_continue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:background="@drawable/sleep_sense_button_blue"
+            android:text="Continue"
+            android:textColor="#fff"/>
+
+    </LinearLayout>
+
+</FrameLayout>

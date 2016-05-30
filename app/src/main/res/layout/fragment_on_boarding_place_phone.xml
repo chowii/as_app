@@ -1,0 +1,72 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             tools:context=".fragments.onboarding.OnBoardingPlacePhoneFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/onboarding_image_view_place_phone_bed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="1.0"
+            android:src="@drawable/onboarding_background_place_phone_left" android:adjustViewBounds="true"/>
+        <ImageView
+            android:layout_marginTop="30dp"
+            android:id="@+id/onboarding_image_view_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1.0"
+            android:layout_gravity="center"
+            android:src="@drawable/onboarding_phone_on_bed" android:adjustViewBounds="true"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:textColor="@color/onBoardHeaderTextColor"
+            app:typeface="OpenSansSemibold"
+            android:text="Place your phone on your side of the bed"/>
+
+        <View android:layout_width="wrap_content" android:layout_height="25dp"/>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:textColor="@color/onBoardHeaderTextColor"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:lineSpacingExtra="10dp"
+            app:typeface="OpenSansRegular"
+            android:text="Align with your heart so we can track  your breathing and heat rate"/>
+
+        <View android:layout_width="wrap_content" android:layout_height="45dp"/>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledButton
+            android:id="@+id/on_board_button_continue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:background="@drawable/sleep_sense_button_blue"
+            android:stateListAnimator="@null"
+            android:text="My phone is on the bed"
+            android:textColor="#fff"/>
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,4 +1,4 @@
-package au.com.ahbeard.sleepsense.fragments;
+package au.com.ahbeard.sleepsense.fragments.onboarding;
 
 
 import android.os.Bundle;
@@ -15,8 +15,6 @@ import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**

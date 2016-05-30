@@ -31,4 +31,7 @@
     <string name="sleep_score_breakdown_snoring_txt">A measure of the total portion of time you spent snoring while you were asleep. </string>
     <string name="sleep_score_breakdown_resting_heart_rate">Resting heart rate</string>
     <string name="sleep_score_breakdown_resting_heart_rate_txt">Your average heart rate while sleeping.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

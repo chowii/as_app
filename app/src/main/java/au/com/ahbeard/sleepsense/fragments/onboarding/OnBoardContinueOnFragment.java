@@ -1,4 +1,4 @@
-package au.com.ahbeard.sleepsense.fragments;
+package au.com.ahbeard.sleepsense.fragments.onboarding;
 
 
 import android.os.Bundle;
@@ -8,27 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.activities.OnBoardActivity;
-import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
-import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OnBoardInitialFragment extends Fragment {
+public class OnBoardContinueOnFragment extends Fragment {
 
-    @OnClick(R.id.on_board_button_locate_devices)
-    void acquireDevices() {
-        ((OnBoardActivity)getActivity()).acquireDevices();
-    }
-
-    public static OnBoardInitialFragment newInstance() {
-        OnBoardInitialFragment fragment = new OnBoardInitialFragment();
+    public static OnBoardContinueOnFragment newInstance() {
+        OnBoardContinueOnFragment fragment = new OnBoardContinueOnFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -45,7 +33,7 @@ public class OnBoardInitialFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_on_board_initial, container, false);
+        View view = inflater.inflate(R.layout.fragment_on_board_continue_on, container, false);
 
         ButterKnife.bind(this,view);
 

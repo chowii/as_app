@@ -72,6 +72,14 @@ public class PreferenceService {
         getSharedPreferences().edit().putFloat("sleepTargetTime",sleepTargetTime).commit();
     }
 
+    public String getSideOfBed() {
+        return getSharedPreferences().getString("sideOfBed","LEFT");
+    }
+
+    public void setSideOfBed(String sideOfBed) {
+        getSharedPreferences().edit().putString("sideOfBed",sideOfBed).commit();
+    }
+
     private SharedPreferences getSharedPreferences() {
         return mContext.getSharedPreferences("preferences.dat", Context.MODE_PRIVATE);
     }

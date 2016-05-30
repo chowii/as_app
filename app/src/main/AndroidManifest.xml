@@ -20,6 +20,10 @@
             android:screenOrientation="userPortrait">
         </activity>
         <activity
+            android:name=".activities.NewOnBoardActivity"
+            android:screenOrientation="userPortrait">
+        </activity>
+        <activity
             android:name=".activities.ClearDevicesActivity"
             android:screenOrientation="userPortrait">
         </activity>

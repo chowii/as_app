@@ -181,4 +181,10 @@ public class HomeActivity extends BaseActivity {
         finish();
     }
 
+    public void doOnboarding() {
+        Intent intent= new Intent(this,NewOnBoardActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 }

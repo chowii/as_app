@@ -189,6 +189,110 @@ public class SleepSenseDeviceService {
         return mObservable;
     }
 
+
+
+    public Observable<SleepSenseDeviceAquisition> newAcquireDevices(long milliseconds) {
+
+        final PublishSubject<SleepSenseDeviceAquisition> mObservable = PublishSubject.create();
+
+        mChangeEventPublishSubject.onNext(SleepSenseDeviceServiceEvent.StartedSearchingForDevices);
+
+        BluetoothService.instance()
+                .startScanning()
+                .filter(new ScanningFilter())
+                .cast(BluetoothScanEvent.DeviceFoundEvent.class)
+                .take(milliseconds, TimeUnit.MILLISECONDS)
+                .toList()
+                .map(new Func1<List<BluetoothScanEvent.DeviceFoundEvent>, List<Device>>() {
+                    @Override
+                    public List<Device> call(List<BluetoothScanEvent.DeviceFoundEvent> deviceFoundEvents) {
+
+                        // Sort by RSSI.
+                        Collections.sort(deviceFoundEvents, new Comparator<BluetoothScanEvent.DeviceFoundEvent>() {
+                            @Override
+                            public int compare(BluetoothScanEvent.DeviceFoundEvent lhs,
+                                               BluetoothScanEvent.DeviceFoundEvent rhs) {
+                                return lhs.getRssi() - rhs.getRssi();
+                            }
+                        });
+
+                        ArrayList<Device> devices = new ArrayList<>();
+
+                        for (BluetoothScanEvent.DeviceFoundEvent deviceFoundEvent:deviceFoundEvents) {
+                            devices.addAll(SleepSenseDeviceFactory.factorySleepSenseDevice(mContext,deviceFoundEvent));
+                        }
+
+                        return devices;
+                    }
+                })
+                .subscribe(new Action1<List<Device>>() {
+                    @Override
+                    public void call(List<Device> devices) {
+
+                        BluetoothService.instance().stopScanning();
+
+                        LogService.d("SleepSenseDeviceService",
+                                String.format("found %d SleepSense devices while scanning...", devices.size()));
+
+                        SleepSenseDeviceAquisition sleepSenseDeviceAquisition = new SleepSenseDeviceAquisition();
+
+                        // Assign the closest of each device if we don't have one.
+                        for (Device device : devices) {
+
+                            if (device instanceof BaseDevice) {
+                                sleepSenseDeviceAquisition.getBaseDevices().add((BaseDevice) device);
+                                continue;
+                            }
+
+                            if (device instanceof PumpDevice) {
+                                sleepSenseDeviceAquisition.getPumpDevices().add((PumpDevice) device);
+                                continue;
+                            }
+
+                            if (device instanceof TrackerDevice) {
+                                sleepSenseDeviceAquisition.getTrackerDevices().add((TrackerDevice) device);
+                                continue;
+                            }
+                        }
+
+                        mObservable.onNext(sleepSenseDeviceAquisition);
+                        mObservable.onCompleted();
+
+                    }
+                });
+
+
+        return mObservable;
+    }
+
+    public void setDevices(BaseDevice baseDevice, PumpDevice pumpDevice, TrackerDevice trackerDevice) {
+
+        mBaseDevice = baseDevice;
+
+        if ( baseDevice != null) {
+            PreferenceService.instance().setBaseDeviceAddress(baseDevice.getAddress());
+        } else {
+            PreferenceService.instance().clearBaseDeviceAddress();
+        }
+
+        mPumpDevice = pumpDevice;
+
+        if ( pumpDevice != null) {
+            PreferenceService.instance().setPumpDeviceAddress(pumpDevice.getAddress());
+        } else {
+            PreferenceService.instance().clearPumpDeviceAddress();
+        }
+
+        mTrackerDevice = trackerDevice;
+
+        if ( trackerDevice != null) {
+            PreferenceService.instance().setTrackerDeviceAddress(trackerDevice.getAddress());
+        } else {
+            PreferenceService.instance().clearTrackerDeviceAddress();
+        }
+
+    }
+
     public boolean hasBaseDevice() {
         return mBaseDevice != null || mBaseDeviceAddress != null;
     }

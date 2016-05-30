@@ -6,8 +6,8 @@ import android.widget.ImageView;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
-import au.com.ahbeard.sleepsense.fragments.OnBoardConnectionsFragment;
-import au.com.ahbeard.sleepsense.fragments.OnBoardInitialFragment;
+import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardConnectionsFragment;
+import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardInitialFragment;
 import au.com.ahbeard.sleepsense.services.LogService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
