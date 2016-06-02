@@ -56,12 +56,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:textColor="@color/onBoardHeaderTextColor"
             app:typeface="OpenSansSemibold"
-            android:text="Please tap the side of the bed you sleep on"/>
+            android:text="@string/on_boarding_choose_side_heading"/>
 
         <View android:layout_width="wrap_content" android:layout_height="25dp"/>
 
@@ -69,13 +69,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:textColor="@color/onBoardHeaderTextColor"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:lineSpacingExtra="10dp"
             app:typeface="OpenSansRegular"
-            android:text="This will help me track your sleep accurately"/>
+            android:text="@string/on_boarding_choose_side_description"/>
 
         <View android:layout_width="wrap_content" android:layout_height="45dp"/>
 
@@ -86,7 +86,7 @@
             android:layout_margin="25dp"
             android:background="@drawable/sleep_sense_button_blue"
             android:stateListAnimator="@null"
-            android:text="Continue"
+            android:text="@string/button_continue"
             android:textColor="#fff"/>
 
     </LinearLayout>

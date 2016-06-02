@@ -115,6 +115,15 @@ public class PumpEvent {
         return mStatus.contains(PumpStatus.Inflating)||mStatus.contains(PumpStatus.Deflating);
     }
 
+    public int getPressure(String sideOfBed) {
+        if ( "left".equalsIgnoreCase(sideOfBed) ) {
+            return getLeftPressure();
+        } else {
+            return getRightPressure();
+        }
+    }
+
+
     @Override
     public String toString() {
         return "PumpEvent{" +

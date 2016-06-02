@@ -108,6 +108,15 @@ public class PumpCommand extends CharacteristicWriteOperation {
     }
 
     @NonNull
+    public static PumpCommand setPressure(String sideOfBed, int millibar) {
+        if ("left".equalsIgnoreCase(sideOfBed)) {
+            return createAdvancedPumpCommand(Chamber.Left, SetPressure, millibar);
+        } else {
+            return createAdvancedPumpCommand(Chamber.Right, SetPressure, millibar);
+        }
+    }
+
+    @NonNull
     public static PumpCommand setMemoryValue(Chamber chamber, int millibar) {
         return createAdvancedPumpCommand(chamber, SetMemoryValue, millibar);
     }

@@ -15,6 +15,9 @@ public class OnBoardingState {
         Inflating,
         InflationComplete,
         InflationError,
+        FirmnessControls,
+        PositionControls,
+        MassageControls
     }
 
     public int failedAttempts;

@@ -1,4 +1,4 @@
-package au.com.ahbeard.sleepsense.fragments.onboarding;
+package au.com.ahbeard.sleepsense.fragments;
 
 
 import android.os.Bundle;
@@ -6,31 +6,23 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.activities.OnBoardActivity;
-import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Use the {@link DashboardNoSleepsFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
-public class OnBoardInitialFragment extends Fragment {
+public class DashboardNoSleepsFragment extends Fragment {
 
-    @OnClick(R.id.on_board_button_locate_devices)
-    void acquireDevices() {
-        ((OnBoardActivity)getActivity()).acquireDevices();
-        mLocateDevicesButton.animate().alpha(0.0f).start();
+    public DashboardNoSleepsFragment() {
+        // Required empty public constructor
     }
 
-    @Bind(R.id.on_board_button_locate_devices)
-    Button mLocateDevicesButton;
-
-
-    public static OnBoardInitialFragment newInstance() {
-        OnBoardInitialFragment fragment = new OnBoardInitialFragment();
+    public static DashboardNoSleepsFragment newInstance() {
+        DashboardNoSleepsFragment fragment = new DashboardNoSleepsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -47,9 +39,9 @@ public class OnBoardInitialFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_on_board_initial, container, false);
+        View view = inflater.inflate(R.layout.fragment_dashboard_no_sleeps, container, false);
 
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
         return view;
     }
@@ -59,4 +51,5 @@ public class OnBoardInitialFragment extends Fragment {
         ButterKnife.unbind(this);
         super.onDestroyView();
     }
+
 }

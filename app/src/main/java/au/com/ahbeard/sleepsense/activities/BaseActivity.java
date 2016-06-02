@@ -44,7 +44,7 @@ public class BaseActivity extends AppCompatActivity {
                         PERMISSIONS_REQUEST_COARSE_LOCATION);
             }
         } else {
-
+            onScanningPermissionGranted();
         }
     }
 
@@ -57,15 +57,13 @@ public class BaseActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // Don't do anything specifically here.
-
+                    onScanningPermissionGranted();
                 } else {
 
                     final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
                     builder.setTitle("Functionality limited");
-                    builder.setMessage("Since location access has not been granted, this app will not be able to discover Bluetooth Devices.");
+                    builder.setMessage("Since location access has not been granted, this app will not be able to discover Bluetooth Devices near you.");
                     builder.setPositiveButton(android.R.string.ok, null);
                     builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
@@ -80,6 +78,10 @@ public class BaseActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    public void onScanningPermissionGranted() {
+
     }
 
 

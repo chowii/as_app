@@ -24,8 +24,6 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class OnBoardingSearchingFragment extends Fragment {
 
-    private OnActionListener mOnActionListener;
-
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     @Bind(R.id.on_board_button_continue)
@@ -68,10 +66,6 @@ public class OnBoardingSearchingFragment extends Fragment {
         }
     }
 
-    public interface OnActionListener {
-        void onSearchingAction();
-    }
-
     public OnBoardingSearchingFragment() {
         // Required empty public constructor
     }
@@ -104,6 +98,7 @@ public class OnBoardingSearchingFragment extends Fragment {
 
         mDevicesLayout.setVisibility(View.GONE);
 
+        mContinueButton.setAlpha(0.0f);
 
         mCompositeSubscription.add(((NewOnBoardActivity) getActivity()).getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<OnBoardingState>() {
             @Override
@@ -125,18 +120,17 @@ public class OnBoardingSearchingFragment extends Fragment {
                     mTrackerFoundImageView.setImageResource(onBoardingState.foundTracker ? R.drawable.success_tick : R.drawable.failure_cross);
 
                     if (onBoardingState.state == OnBoardingState.State.RequiredDevicesFound) {
-                        mContinueButton.setAlpha(1.0f);
-
+                        mContinueButton.animate().alpha(1.0f).start();
                         mHeadingTextView.setText("Success!");
                         mTextTextView.setText("This is what I found.");
                         mContinueButton.setText("Continue");
                     } else if (onBoardingState.state == OnBoardingState.State.DevicesMissingAllowRetry) {
-                        mContinueButton.setAlpha(1.0f);
+                        mContinueButton.animate().alpha(1.0f).start();
                         mHeadingTextView.setText("That's strange");
                         mTextTextView.setText("I can't seem to find everything.");
                         mContinueButton.setText("Try Again");
                     } else if (onBoardingState.state == OnBoardingState.State.DevicesMissingShowHelp) {
-                        mContinueButton.setAlpha(1.0f);
+                        mContinueButton.animate().alpha(1.0f).start();
                         mHeadingTextView.setText("That's strange");
                         mTextTextView.setText("I can't seem to find everything.");
                         mContinueButton.setText("Help Me");
@@ -153,6 +147,13 @@ public class OnBoardingSearchingFragment extends Fragment {
         mCompositeSubscription.clear();
         ButterKnife.unbind(this);
         super.onDestroyView();
+    }
+
+
+    private OnActionListener mOnActionListener;
+
+    public interface OnActionListener {
+        void onSearchingAction();
     }
 
     @Override

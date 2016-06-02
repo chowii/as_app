@@ -5,9 +5,10 @@
               android:layout_height="match_parent"
               android:background="@color/firmnessBackground"
               android:gravity="top"
-              android:orientation="vertical">
+              android:orientation="vertical" >
 
     <FrameLayout
+        android:id="@+id/controls_layout_header"
         android:layout_width="match_parent"
         android:layout_height="48dp">
 
@@ -40,6 +41,7 @@
 
 
     <LinearLayout
+        android:id="@+id/firmness_control_layout_choose_side"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/firmness_side_selection_background">
@@ -135,14 +137,14 @@
                 android:layout_height="wrap_content">
 
                 <FrameLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center">
 
                     <au.com.ahbeard.sleepsense.widgets.FirmnessControlView
                         android:id="@+id/firmness_control_firmness_control_left"
-                        android:layout_width="300dp"
-                        android:layout_height="300dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_margin="30dp"
                         app:dotRadius="2dp"

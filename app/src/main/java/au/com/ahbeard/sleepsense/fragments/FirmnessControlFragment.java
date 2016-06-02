@@ -1,8 +1,8 @@
 package au.com.ahbeard.sleepsense.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +49,15 @@ public class FirmnessControlFragment extends Fragment {
     @Bind(R.id.progress_layout)
     View mProgressLayout;
 
+    @Bind(R.id.controls_layout_header)
+    View mHeaderLayout;
+
+    @Bind(R.id.firmness_control_layout_choose_side)
+    View mChooseSideLayout;
+
+    private String mSide;
+    private boolean mControlOnly;
+
     @OnClick(R.id.firmness_control_text_view_left)
     void setLeftSideActive() {
         mLeftTextView.setDrawTopBorder(true);
@@ -80,6 +89,27 @@ public class FirmnessControlFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static FirmnessControlFragment newInstance() {
+        return newInstance("LEFT",false);
+    }
+
+    public static FirmnessControlFragment newInstance(String side, boolean controlOnly) {
+        FirmnessControlFragment firmnessControlFragment = new FirmnessControlFragment();
+        Bundle arguments = new Bundle();
+        arguments.putString("side",side);
+        arguments.putBoolean("controlOnly",controlOnly);
+        firmnessControlFragment.setArguments(arguments);
+        return firmnessControlFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments()!=null) {
+            mSide = getArguments().getString("side","LEFT");
+            mControlOnly = getArguments().getBoolean("controlOnly",false);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,9 +119,14 @@ public class FirmnessControlFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        setLeftSideActive();
+        if ( "left".equalsIgnoreCase(mSide)) {
+            setLeftSideActive();
+        } else {
+            setRightSideActive();
+        }
 
-
+        mHeaderLayout.setVisibility(mControlOnly?View.GONE:View.VISIBLE);
+        mChooseSideLayout.setVisibility(mControlOnly?View.GONE:View.VISIBLE);
 
         mFirmnessControlLeftView.setOnTargetValueSetListener(new FirmnessControlView.OnTargetValueSetListener() {
             @Override
@@ -111,15 +146,6 @@ public class FirmnessControlFragment extends Fragment {
             }
         });
 
-//        mSubscriptions.add(SleepSenseDeviceService.instance().getEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
-//            @Override
-//            public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent event) {
-//                if ( event == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.DeviceListChanged ) {
-//                    connectPump();
-//                }
-//            }
-//        }));
-//
         connectPump();
 
         return view;
@@ -133,22 +159,9 @@ public class FirmnessControlFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public static FirmnessControlFragment newInstance() {
-        return new FirmnessControlFragment();
-    }
-
     public void connectPump() {
 
         if ( SleepSenseDeviceService.instance().hasPumpDevice() ) {
-
-//            int currentLeftPressure = SleepSenseDeviceService.instance().getPumpDevice().getChamberState(PumpDevice.Side.Left).getCurrentPressure();
-//            int currentRightPressure = SleepSenseDeviceService.instance().getPumpDevice().getChamberState(PumpDevice.Side.Right).getCurrentPressure();
-//
-//            mFirmnessControlLeftView.setActualValue(Firmness.getControlValueForPressure(currentLeftPressure));
-//            mFirmnessControlRightView.setActualValue(Firmness.getControlValueForPressure(culorrentRightPressure));
-//
-//            mFirmnessLeftTextView.setText(Firmness.getFirmnessForPressure(currentLeftPressure).getLabel());
-//            mFirmnessRightTextView.setText(Firmness.getFirmnessForPressure(currentRightPressure).getLabel());
 
             mSubscriptions.add(SleepSenseDeviceService.instance().getPumpDevice().getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
                 @Override

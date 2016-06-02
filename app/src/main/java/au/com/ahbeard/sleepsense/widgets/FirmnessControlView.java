@@ -1,7 +1,6 @@
 package au.com.ahbeard.sleepsense.widgets;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,9 +16,8 @@ import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.model.Firmness;
 
 /**
- *
  * Created by neal on 8/03/2016.
- *
+ * <p/>
  * This control is
  */
 public class FirmnessControlView extends View {
@@ -108,7 +105,7 @@ public class FirmnessControlView extends View {
 
         float actualValue = value;
 
-        if ( mSetTargetValueWithActualValue ) {
+        if (mSetTargetValueWithActualValue) {
             mTargetValue = actualValue;
             mSetTargetValueWithActualValue = false;
         }
@@ -117,7 +114,7 @@ public class FirmnessControlView extends View {
             mLevelDrawable.setLevel(Firmness.getDrawableLevelForControlValue(actualValue));
         }
 
-        if ( actualValue > mTargetValue - 0.025f && actualValue < mTargetValue + 0.025f ) {
+        if (actualValue > mTargetValue - 0.025f && actualValue < mTargetValue + 0.025f) {
             mDotPaint.setColor(mTargetMetDotColor);
         } else {
             mDotPaint.setColor(mTargetNotMetDotColor);
@@ -204,7 +201,7 @@ public class FirmnessControlView extends View {
                 mTargetValue = Firmness.snapControlValue(mTargetValue);
                 mSetTargetValueWithActualValue = false;
 
-                if ( mOnTargetValueSetListener != null ) {
+                if (mOnTargetValueSetListener != null) {
                     mOnTargetValueSetListener.onTargetValueSet(mTargetValue);
                 }
 
@@ -224,20 +221,25 @@ public class FirmnessControlView extends View {
         if (isInEditMode()) {
             Paint paint = new Paint();
             paint.setColor(Color.LTGRAY);
-            canvas.drawCircle(getWidth()/2,getHeight()/2,getWidth()/2,paint);
+            canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2, paint);
             return;
         }
 
+        // How much to scale the knob by.
+        float mScaleWidth = (float) mForegroundDrawable.getIntrinsicWidth() / (float) canvas.getWidth();
+        float mScaleHeight = (float) mForegroundDrawable.getIntrinsicHeight() / (float) canvas.getHeight();
+
+
         if (mLevelDrawable != null) {
 
-            mLevelDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            mLevelDrawable.setBounds(0, 0, (int) (canvas.getWidth() * mScaleWidth), (int) (canvas.getHeight() * mScaleHeight));
             mLevelDrawable.draw(canvas);
 
         }
 
         if (mForegroundDrawable != null) {
 
-            mForegroundDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            mForegroundDrawable.setBounds(0, 0, (int) (canvas.getWidth() * mScaleWidth), (int) (canvas.getHeight() * mScaleHeight));
             mForegroundDrawable.draw(canvas);
 
         }
@@ -245,10 +247,6 @@ public class FirmnessControlView extends View {
         if (mKnobDrawable != null) {
 
             canvas.translate(canvas.getWidth() / 2, canvas.getHeight() / 2);
-
-            // How much to scale the knob by.
-            float mScaleWidth = (float) canvas.getWidth() / (float) mForegroundDrawable.getIntrinsicWidth();
-            float mScaleHeight = (float) canvas.getHeight() / (float) mForegroundDrawable.getIntrinsicHeight();
 
             int width = (int) (mKnobDrawable.getIntrinsicWidth() * mScaleWidth);
             int height = (int) (mKnobDrawable.getIntrinsicHeight() * mScaleHeight);
@@ -283,4 +281,20 @@ public class FirmnessControlView extends View {
 
 
     }
+
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+
+        if (width < height) {
+            setMeasuredDimension(width, width);
+        } else {
+            setMeasuredDimension(height, height);
+        }
+    }
+
 }

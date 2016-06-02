@@ -7,14 +7,19 @@ import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceAquisition;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
+import au.com.ahbeard.sleepsense.bluetooth.pump.PumpCommand;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
+import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingBluetoothFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingChooseSideFragment;
+import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingFirmnessControlsFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingHelpFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingInflateMattressFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingItemsFragment;
+import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingMassageControlsFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingPlacePhoneFragment;
+import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingPositionControlsFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingSearchingFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingState;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
@@ -31,7 +36,12 @@ public class NewOnBoardActivity extends BaseActivity implements
         OnBoardingItemsFragment.OnActionListener,
         OnBoardingChooseSideFragment.OnActionListener,
         OnBoardingPlacePhoneFragment.OnActionListener,
-        OnBoardingSearchingFragment.OnActionListener {
+        OnBoardingSearchingFragment.OnActionListener,
+        OnBoardingInflateMattressFragment.OnActionListener,
+        OnBoardingFirmnessControlsFragment.OnActionListener,
+        OnBoardingPositionControlsFragment.OnActionListener,
+        OnBoardingMassageControlsFragment.OnActionListener
+{
 
     private OnBoardingState mOnBoardingState = new OnBoardingState();
 
@@ -53,8 +63,6 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         super.onCreate(savedInstanceState);
 
-        requestBackgroundScanningPermissions();
-
         setContentView(R.layout.activity_new_onboard);
 
         ButterKnife.bind(this);
@@ -73,7 +81,7 @@ public class NewOnBoardActivity extends BaseActivity implements
     @Override
     public void onBluetoothContinueClicked() {
 
-        findInitialDevices();
+        requestBackgroundScanningPermissions();
 
         mCompositeSubscription.add(getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<OnBoardingState>() {
             @Override
@@ -86,6 +94,11 @@ public class NewOnBoardActivity extends BaseActivity implements
             }
         }));
 
+    }
+
+    @Override
+    public void onScanningPermissionGranted() {
+        findInitialDevices();
     }
 
     @Override
@@ -121,7 +134,6 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         acquireDevices();
 
-
     }
 
     @Override
@@ -149,10 +161,44 @@ public class NewOnBoardActivity extends BaseActivity implements
         }
     }
 
+    @Override
+    public void onInflateContinueClicked() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
+                OnBoardingFirmnessControlsFragment.newInstance()).commit();
+    }
+
+    @Override
+    public void onFirmnessControlsAction() {
+        if ( mOnBoardingState.requiredBase ) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
+                    OnBoardingPositionControlsFragment.newInstance()).commit();
+        } else {
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    @Override
+    public void onPositionControlsAction() {
+        if ( mOnBoardingState.requiredBase ) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
+                    OnBoardingMassageControlsFragment.newInstance()).commit();
+        }
+    }
+
+    @Override
+    public void onMassageControlsAction() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
 
     public void findInitialDevices() {
 
-        SleepSenseDeviceService.instance().newAcquireDevices(5000).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
+        SleepSenseDeviceService.instance().newAcquireDevices(2500).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
 
             @Override
             public void onCompleted() {
@@ -239,7 +285,6 @@ public class NewOnBoardActivity extends BaseActivity implements
                             mOnBoardingState.state = OnBoardingState.State.DevicesMissingAllowRetry;
                         }
 
-
                     } else {
                         mOnBoardingState.state = OnBoardingState.State.RequiredDevicesFound;
                         SleepSenseDeviceService.instance().setDevices(baseDevice, pumpDevice, trackerDevice);
@@ -265,11 +310,36 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     public void inflateMattress() {
 
+        SleepSenseDeviceService.instance().getPumpDevice().getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
+
+            long mStartedInflatingAt;
+
+            @Override
+            public void call(PumpEvent pumpEvent) {
+
+                if ( pumpEvent.isAdjusting() && mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound ) {
+                    mStartedInflatingAt = System.currentTimeMillis();
+                    mOnBoardingState.state = OnBoardingState.State.Inflating;
+                    mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
+                } else if ( ! pumpEvent.isAdjusting() && mOnBoardingState.state == OnBoardingState.State.Inflating ) {
+                    mOnBoardingState.state = OnBoardingState.State.InflationComplete;
+                    mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
+                } else if ( pumpEvent.isAdjusting() && mOnBoardingState.state == OnBoardingState.State.Inflating && ( System.currentTimeMillis() - mStartedInflatingAt ) > 30000 ){
+                    mOnBoardingState.state = OnBoardingState.State.InflationError;
+                    mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
+                }
+
+            }
+        });
+
+        SleepSenseDeviceService.instance().getPumpDevice().sendCommand(PumpCommand.setPressure(PreferenceService.instance().getSideOfBed(),20));
+
     }
 
     public Observable<OnBoardingState> getOnBoardingObservable() {
         return mOnBoardingEventPublishSubject;
     }
+
 
 
 }

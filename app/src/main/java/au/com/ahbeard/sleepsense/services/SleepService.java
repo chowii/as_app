@@ -103,6 +103,7 @@ public class SleepService {
                     runBatchAnalysis(calendar);
                 }
 
+                PreferenceService.instance().setHasRecordedASleep(true);
                 mDataChangePublishSubject.onNext(-1);
             }
         });

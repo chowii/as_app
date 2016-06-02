@@ -15,6 +15,7 @@ import java.util.List;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
+import au.com.ahbeard.sleepsense.fragments.DashboardNoSleepsFragment;
 import au.com.ahbeard.sleepsense.fragments.WeeklyDashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.DebugFragment;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
@@ -53,7 +54,7 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         if (PreferenceService.instance().requiresOnBoarding()) {
-            Intent intent = new Intent(this, OnBoardActivity.class);
+            Intent intent = new Intent(this, NewOnBoardActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
@@ -107,7 +108,11 @@ public class HomeActivity extends BaseActivity {
         mDashboardPagerAdapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
 
         if (SleepSenseDeviceService.instance().hasTrackerDevice() ) {
-            mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, DashboardFragment.newInstance());
+            if ( PreferenceService.instance().getHasRecordedASleep() ) {
+                mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, DashboardFragment.newInstance());
+            } else {
+                mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, DashboardNoSleepsFragment.newInstance());
+            }
         }
 
         if (SleepSenseDeviceService.instance().hasPumpDevice() ) {

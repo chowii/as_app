@@ -7,8 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import au.com.ahbeard.sleepsense.R;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -29,8 +31,12 @@ public class OnBoardingBluetoothFragment extends Fragment {
     void continueClicked() {
         if (mOnActionListener != null) {
             mOnActionListener.onBluetoothContinueClicked();
+            mContinueButton.animate().alpha(0.0f).start();
         }
     }
+
+    @Bind(R.id.on_board_button_continue)
+    Button mContinueButton;
 
     public static OnBoardingBluetoothFragment newInstance() {
         OnBoardingBluetoothFragment fragment = new OnBoardingBluetoothFragment();

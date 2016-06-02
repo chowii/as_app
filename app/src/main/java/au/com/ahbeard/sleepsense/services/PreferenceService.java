@@ -28,6 +28,14 @@ public class PreferenceService {
         return getPumpDeviceAddress()==null&&getBaseDeviceAddress()==null&&getTrackerDeviceAddress()==null;
     }
 
+    public void setHasRecordedASleep(boolean hasRecordedFirstSleep) {
+        getSharedPreferences().edit().putBoolean("hasRecordedFirstSleep", hasRecordedFirstSleep).commit();
+    }
+
+    public boolean getHasRecordedASleep() {
+        return getSharedPreferences().getBoolean("hasRecordedFirstSleep",false);
+    }
+
     public void setPumpDeviceAddress(String address) {
         getSharedPreferences().edit().putString("pumpDeviceAddress", address).commit();
     }

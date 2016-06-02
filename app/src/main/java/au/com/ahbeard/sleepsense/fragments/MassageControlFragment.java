@@ -36,6 +36,8 @@ public class MassageControlFragment extends Fragment {
 
     private BaseDevice mBaseDevice;
 
+    private boolean mControlOnly;
+
     @OnClick(R.id.massage_button_whole_body)
     void wholeBodyMassageClicked() {
         mBaseDevice.sendCommand(BaseCommand.wholeBody());
@@ -77,6 +79,9 @@ public class MassageControlFragment extends Fragment {
     @Bind(R.id.progress_layout)
     View mProgressLayout;
 
+    @Bind(R.id.controls_layout_header)
+    View mHeaderLayout;
+
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     public MassageControlFragment() {
@@ -111,12 +116,16 @@ public class MassageControlFragment extends Fragment {
         }
     }
 
+    public static MassageControlFragment newInstance() {
+        return newInstance(false);
+    }
     /**
      * @return A new instance of fragment MassageControlFragment.
      */
-    public static MassageControlFragment newInstance() {
+    public static MassageControlFragment newInstance(boolean controlOnly) {
         MassageControlFragment fragment = new MassageControlFragment();
         Bundle args = new Bundle();
+        args.putBoolean("controlOnly",controlOnly);
         fragment.setArguments(args);
         return fragment;
     }
@@ -128,6 +137,7 @@ public class MassageControlFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            mControlOnly = getArguments().getBoolean("controlOnly");
         }
     }
 
@@ -138,6 +148,8 @@ public class MassageControlFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_massage_control, container, false);
 
         ButterKnife.bind(this, view);
+
+        mHeaderLayout.setVisibility(mControlOnly?View.GONE:View.VISIBLE);
 
         mBaseDevice = SleepSenseDeviceService.instance().getBaseDevice();
 
@@ -178,6 +190,7 @@ public class MassageControlFragment extends Fragment {
     @Override
     public void onDestroyView() {
         mCompositeSubscription.clear();
+
         ButterKnife.unbind(this);
 
         super.onDestroyView();

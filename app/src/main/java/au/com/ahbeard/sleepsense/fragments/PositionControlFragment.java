@@ -31,6 +31,8 @@ public class PositionControlFragment extends Fragment {
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
+    private boolean mControlOnly;
+
     @Bind({R.id.position_button_rest, R.id.position_button_recline, R.id.position_button_relax, R.id.position_button_recover})
     List<StyledButton> mPositionButtons;
 
@@ -45,6 +47,9 @@ public class PositionControlFragment extends Fragment {
 
     @Bind(R.id.progress_layout)
     View mProgressLayout;
+
+    @Bind(R.id.controls_layout_header)
+    View mHeaderLayout;
 
     @OnClick({R.id.position_button_rest, R.id.position_button_recline, R.id.position_button_relax, R.id.position_button_recover})
     void onClick(View clickedButton) {
@@ -74,15 +79,14 @@ public class PositionControlFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment PositionControlFragment.
-     */
     public static PositionControlFragment newInstance() {
+        return newInstance(false);
+    }
+
+    public static PositionControlFragment newInstance(boolean controlOnly) {
         PositionControlFragment fragment = new PositionControlFragment();
         Bundle args = new Bundle();
+        args.putBoolean("controlOnly",controlOnly);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,7 +103,10 @@ public class PositionControlFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_position_control, container, false);
+
         ButterKnife.bind(this, view);
+
+        mHeaderLayout.setVisibility(mControlOnly?View.GONE:View.VISIBLE);
 
         if ( SleepSenseDeviceService.instance().getBaseDevice() !=null) {
             mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseStatusEvent>() {
@@ -169,6 +176,9 @@ public class PositionControlFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
+
+
 
 
 }
