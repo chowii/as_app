@@ -2,6 +2,7 @@ package au.com.ahbeard.sleepsense.fragments.onboarding;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -41,11 +42,8 @@ public class OnBoardingInflateMattressFragment extends Fragment {
     @Bind(R.id.onboarding_image_filling_mattress_happy)
     ImageView mMattressHappyImageView;
 
-    @Bind(R.id.onboarding_image_filling_mattress_in)
-    ImageView mMattressInImageView;
-
-    @Bind(R.id.onboarding_image_filling_mattress_out)
-    ImageView mMattressOutImageView;
+    @Bind(R.id.onboarding_image_filling_mattress_animated)
+    ImageView mMattressAnimatedImageView;
 
     @Bind(R.id.on_board_inflate_mattress_text_view_heading)
     TextView mHeadingTextView;
@@ -90,22 +88,22 @@ public class OnBoardingInflateMattressFragment extends Fragment {
             public void call(OnBoardingState onBoardingState) {
                 if ( onBoardingState.state == OnBoardingState.State.Inflating ) {
                     mMattressHappyImageView.setAlpha(0.0f);
-                    mMattressInImageView.setAlpha(1.0f);
-                    mMattressOutImageView.setAlpha(0.0f);
+                    mMattressAnimatedImageView.setAlpha(1.0f);
+                    ((AnimationDrawable)mMattressAnimatedImageView.getDrawable()).start();
                     mHeadingTextView.setText("I'm filling up");
                     mDescriptionTextView.setText("Please wait a few moments longer");
                 } else if ( onBoardingState.state == OnBoardingState.State.InflationComplete ) {
                     mMattressHappyImageView.setAlpha(1.0f);
-                    mMattressInImageView.setAlpha(0.0f);
-                    mMattressOutImageView.setAlpha(0.0f);
+                    ((AnimationDrawable)mMattressAnimatedImageView.getDrawable()).stop();
+                    mMattressAnimatedImageView.setAlpha(0.0f);
                     mHeadingTextView.setText("All done!");
                     mDescriptionTextView.setText("Now you're ready to adjust your comfort levels");
                     mContinueButton.setText("Continue");
                     mContinueButton.setAlpha(1.0f);
                 } else if ( onBoardingState.state == OnBoardingState.State.InflationError ) {
                     mMattressHappyImageView.setAlpha(1.0f);
-                    mMattressInImageView.setAlpha(0.0f);
-                    mMattressOutImageView.setAlpha(0.0f);
+                    ((AnimationDrawable)mMattressAnimatedImageView.getDrawable()).stop();
+                    mMattressAnimatedImageView.setAlpha(0.0f);
                     mHeadingTextView.setText("Hmmm");
                     mDescriptionTextView.setText("We seem to have difficulties filling your mattress");
                     mContinueButton.setText("Get help");

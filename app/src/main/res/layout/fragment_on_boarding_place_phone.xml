@@ -47,13 +47,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:textColor="@color/onBoardHeaderTextColor"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:lineSpacingExtra="10dp"
+            android:lineSpacingExtra="5sp"
             app:typeface="OpenSansRegular"
-            android:text="Align with your heart so we can track  your breathing and heart rate"/>
+            android:text="Align with your heart so we can track your breathing and heart rate"/>
 
         <View android:layout_width="wrap_content" android:layout_height="45dp"/>
 

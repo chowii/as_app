@@ -12,6 +12,7 @@ public class OnBoardingState {
         RequiredDevicesFound,
         DevicesMissingAllowRetry,
         DevicesMissingShowHelp,
+
         Inflating,
         InflationComplete,
         InflationError,

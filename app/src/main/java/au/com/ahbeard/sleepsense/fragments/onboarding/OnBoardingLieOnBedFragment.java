@@ -25,16 +25,10 @@ public class OnBoardingLieOnBedFragment extends Fragment {
 
     private OnActionListener mListener;
 
-    @Bind(R.id.onboarding_image_view_place_phone_bed)
-    ImageView mPlacePhoneBedImageView;
-
-    @Bind(R.id.onboarding_image_view_phone)
-    ImageView mPhoneImageView;
-
     @OnClick(R.id.on_board_button_continue)
     void continueClicked() {
         if ( mListener != null ) {
-            mListener.onPlacePhoneContinueClicked();
+            mListener.onLieOnBedContinueClicked();
         }
     }
 
@@ -62,19 +56,9 @@ public class OnBoardingLieOnBedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_on_boarding_place_phone, container, false);
+        View view = inflater.inflate(R.layout.fragment_on_boarding_lie_on_bed, container, false);
 
         ButterKnife.bind(this,view);
-
-        if ( VALUE_LEFT.equals(mSide)) {
-            mPlacePhoneBedImageView.setImageResource(R.drawable.onboarding_background_place_phone_left);
-        } else {
-            mPlacePhoneBedImageView.setImageResource(R.drawable.onboarding_background_place_phone_right);
-        }
-
-        if ( mPhoneImageView.getDrawable() instanceof AnimationDrawable ) {
-            ((AnimationDrawable)mPhoneImageView.getDrawable()).start();
-        }
 
         return view;
     }
@@ -100,6 +84,6 @@ public class OnBoardingLieOnBedFragment extends Fragment {
     }
 
     public interface OnActionListener {
-        void onPlacePhoneContinueClicked();
+        void onLieOnBedContinueClicked();
     }
 }

@@ -43,14 +43,12 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-
         <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
 
                 <View
                     android:layout_width="15dp"
@@ -206,6 +204,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="26dp">
+
+                        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                            android:id="@+id/massage_text_view_off"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:lineSpacingExtra="5sp"
+                            android:text="OFF"
+                            android:textAllCaps="true"
+                            android:textColor="@color/control_color"
+                            android:textSize="15sp"
+                            app:selectedTypeface="OpenSansRegular"
+                            app:typeface="OpenSansLight"/>
 
                         <au.com.ahbeard.sleepsense.widgets.StyledTextView
                             android:id="@+id/massage_text_view_10_min"

@@ -96,7 +96,7 @@ public class OnBoardingSearchingFragment extends Fragment {
             ((AnimationDrawable) mPhoneImageView.getDrawable()).start();
         }
 
-        mDevicesLayout.setVisibility(View.GONE);
+        mDevicesLayout.setVisibility(View.INVISIBLE);
 
         mContinueButton.setAlpha(0.0f);
 
@@ -104,7 +104,7 @@ public class OnBoardingSearchingFragment extends Fragment {
             @Override
             public void call(OnBoardingState onBoardingState) {
                 if (onBoardingState.state == OnBoardingState.State.Acquiring) {
-                    mDevicesLayout.setVisibility(View.GONE);
+                    mDevicesLayout.setVisibility(View.INVISIBLE);
                     return;
                 } else {
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceAquisition;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
@@ -17,6 +18,7 @@ import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingFirmnessControls
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingHelpFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingInflateMattressFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingItemsFragment;
+import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingLieOnBedFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingMassageControlsFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingPlacePhoneFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingPositionControlsFragment;
@@ -41,7 +43,8 @@ public class NewOnBoardActivity extends BaseActivity implements
         OnBoardingFirmnessControlsFragment.OnActionListener,
         OnBoardingPositionControlsFragment.OnActionListener,
         OnBoardingMassageControlsFragment.OnActionListener,
-        OnBoardingHelpFragment.OnActionListener
+        OnBoardingHelpFragment.OnActionListener,
+        OnBoardingLieOnBedFragment.OnActionListener
 {
 
     private OnBoardingState mOnBoardingState = new OnBoardingState();
@@ -176,6 +179,12 @@ public class NewOnBoardActivity extends BaseActivity implements
     @Override
     public void onInflateContinueClicked() {
         getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
+                OnBoardingLieOnBedFragment.newInstance(PreferenceService.instance().getSideOfBed())).commit();
+    }
+
+    @Override
+    public void onLieOnBedContinueClicked() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
                 OnBoardingFirmnessControlsFragment.newInstance()).commit();
     }
 
@@ -185,10 +194,7 @@ public class NewOnBoardActivity extends BaseActivity implements
             getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
                     OnBoardingPositionControlsFragment.newInstance()).commit();
         } else {
-            Intent intent = new Intent(this, HomeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
+            onMassageControlsAction();
         }
     }
 
@@ -204,6 +210,7 @@ public class NewOnBoardActivity extends BaseActivity implements
     public void onMassageControlsAction() {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(HomeActivity.EXTRA_SHOW_ON_BOARDING_COMPLETE_DIALOG,true);
         startActivity(intent);
         finish();
     }
@@ -336,6 +343,17 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     public void inflateMattress() {
 
+        SleepSenseDeviceService.instance().getPumpDevice().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
+            @Override
+            public void call(Device device) {
+                if ( mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound && device.isDisconnected() && device.getLastConnectionStatus() != 0 ) {
+                    // We had an error connecting to the pump.
+                    mOnBoardingState.state = OnBoardingState.State.InflationError;
+                    mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
+                }
+            }
+        });
+
         SleepSenseDeviceService.instance().getPumpDevice().getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
 
             long mStartedInflatingAt;
@@ -343,14 +361,14 @@ public class NewOnBoardActivity extends BaseActivity implements
             @Override
             public void call(PumpEvent pumpEvent) {
 
-                if ( pumpEvent.isAdjusting() && mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound ) {
+                if ( pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound ) {
                     mStartedInflatingAt = System.currentTimeMillis();
                     mOnBoardingState.state = OnBoardingState.State.Inflating;
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
-                } else if ( ! pumpEvent.isAdjusting() && mOnBoardingState.state == OnBoardingState.State.Inflating ) {
+                } else if ( ! pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state == OnBoardingState.State.Inflating ) {
                     mOnBoardingState.state = OnBoardingState.State.InflationComplete;
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
-                } else if ( pumpEvent.isAdjusting() && mOnBoardingState.state == OnBoardingState.State.Inflating && ( System.currentTimeMillis() - mStartedInflatingAt ) > 30000 ){
+                } else if ( pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state == OnBoardingState.State.Inflating && ( System.currentTimeMillis() - mStartedInflatingAt ) > 30000 ){
                     mOnBoardingState.state = OnBoardingState.State.InflationError;
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
                 }

@@ -34,16 +34,21 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class HomeActivity extends BaseActivity {
 
-    private final WeeklyDashboardFragment mHomeFragment = WeeklyDashboardFragment.newInstance();
-
-    private final Fragment mDebugFragment = DebugFragment.newInstance();
-
+    public static final String EXTRA_SHOW_ON_BOARDING_COMPLETE_DIALOG = "showOnBoardingCompleteDialog";
     private HomeFragmentPagerAdapter mDashboardPagerAdapter;
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     @Bind(R.id.dashboard_view_pager)
     ViewPager mViewPager;
+
+    @Bind(R.id.on_board_complete_dialog_layout)
+    View mOnBoardingCompleteDialogLayout;
+
+    @OnClick(R.id.on_board_complete_dialog_button)
+    void onClickBoardingComplete() {
+        mOnBoardingCompleteDialogLayout.setVisibility(View.GONE);
+    }
 
     @Bind(R.id.dashboard_simple_tab_strip)
     SimpleTabStrip mSimpleTabStrip;
@@ -64,6 +69,12 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_home);
 
         ButterKnife.bind(this);
+
+        if ( getIntent().getBooleanExtra(EXTRA_SHOW_ON_BOARDING_COMPLETE_DIALOG, false)) {
+            mOnBoardingCompleteDialogLayout.setAlpha(0.0f);
+            mOnBoardingCompleteDialogLayout.setVisibility(View.VISIBLE);
+            mOnBoardingCompleteDialogLayout.animate().setStartDelay(1000).alpha(1.0f).start();
+        }
 
         setupTabs();
 

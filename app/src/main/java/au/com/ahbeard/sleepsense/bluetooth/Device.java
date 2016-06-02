@@ -55,10 +55,7 @@ public class Device extends BluetoothGattCallback {
 
     private BluetoothOperationQueue mBluetoothOperationQueue = new BluetoothOperationQueue();
 
-    // Get the list of services
-    public UUID[] getAdvertisedServiceUUIDs() {
-        return new UUID[0];
-    }
+    private int mLastConnectionStatus = 0;
 
     // Get the list of services
     public UUID[] getRequiredServiceUUIDs() {
@@ -107,6 +104,8 @@ public class Device extends BluetoothGattCallback {
     private PublishSubject<Device> mChangeSubject = PublishSubject.create();
 
     private Context mContext;
+
+    private int XYZ;
 
     private int mConnectionState;
 
@@ -194,6 +193,8 @@ public class Device extends BluetoothGattCallback {
     public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
 
         LogService.i("Device",String.format("onConnectionStateChange: mStatus=%d newState=%d", status, newState));
+
+        mLastConnectionStatus = status;
 
         switch (newState) {
 
@@ -383,6 +384,10 @@ public class Device extends BluetoothGattCallback {
         return mBluetoothDevice != null ? mBluetoothDevice.getAddress() : null;
     }
 
+    public int getLastConnectionStatus() {
+        return mLastConnectionStatus;
+    }
+
     /**
      *
      */
@@ -397,6 +402,7 @@ public class Device extends BluetoothGattCallback {
     public static class DeviceDisconnectedEvent extends DeviceEvent {
 
     }
+
 
 
 }

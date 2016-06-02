@@ -33,7 +33,19 @@
             app:typeface="OpenSansSemibold"
             android:text="Please lie on the side of the bed you sleep on"/>
 
-      <View android:layout_width="wrap_content" android:layout_height="45dp"/>
+        <View android:layout_width="wrap_content" android:layout_height="20dp"/>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:textColor="@color/onBoardBodyTextColor"
+            android:lineSpacingExtra="10dp"
+            app:typeface="OpenSansRegular"
+            android:text="This will help me accurately adjust to you"/>
+
+        <View android:layout_width="wrap_content" android:layout_height="45dp"/>
 
         <au.com.ahbeard.sleepsense.widgets.StyledButton
             android:id="@+id/on_board_button_continue"
@@ -42,7 +54,7 @@
             android:layout_margin="25dp"
             android:background="@drawable/sleep_sense_button_blue"
             android:stateListAnimator="@null"
-            android:text="My phone is on the bed"
+            android:text="Tap when you're on the bed"
             android:textColor="#fff"/>
 
     </LinearLayout>
