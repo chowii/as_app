@@ -4,43 +4,34 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@drawable/onboarding_bluetooth_background"
+              android:padding="24dp"
               tools:context=".fragments.onboarding.OnBoardingBluetoothFragment">
 
-
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_margin="35dp">
+        <View android:layout_width="wrap_content" android:layout_height="160dp"/>
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="25dp"
+            android:textSize="30sp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:textColor="@color/onBoardHeaderTextColor"
+            android:textColor="#fff"
             app:typeface="OpenSansSemibold"
-            android:text="Bluetooth or bust"/>
+            android:text="Welcome!"/>
 
-        <View android:layout_width="wrap_content" android:layout_height="25dp"/>
+        <View android:layout_width="wrap_content" android:layout_height="24dp"/>
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="15dp"
-            android:textColor="@color/onBoardHeaderTextColor"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
+            android:textSize="16sp"
+            android:textColor="#fff"
             android:lineSpacingExtra="10dp"
             app:typeface="OpenSansRegular"
-            android:text="@string/lorem_ipsum"/>
-
-
-    </LinearLayout>
-
+            android:text="Let's find your sleeping devices and get your Sleepsense bed set up"/>
 
     <View
         android:layout_width="match_parent"
@@ -52,11 +43,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
-        android:background="@drawable/sleep_sense_button_blue"
+        android:background="@drawable/sleep_sense_button_white"
         android:stateListAnimator="@null"
-        android:text="Continue"
-        android:textColor="#fff"/>
+        android:text="Find my devices"
+        android:textColor="@color/whiteButtonTextColor"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"/>
+
+    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="13.5sp"
+        android:textColor="#fff"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:lineSpacingExtra="10dp"
+        app:typeface="OpenSansRegular"
+        android:text="Don't have a Sleepsense bed?\nFIND OUT MORE"/>
 
 
 </LinearLayout>

@@ -96,8 +96,8 @@ public class OnBoardingChooseSideFragment extends Fragment {
         mChooseLeftImageView.setAlpha(0.0f);
         mChooseRightImageView.setAlpha(0.0f);
 
-        ObjectAnimator.ofFloat(mChooseLeftImageView, "alpha", 0f, 1f, 0f, 1f, 0f, 0f).setDuration(2000).start();
-        ObjectAnimator.ofFloat(mChooseRightImageView, "alpha", 0f, 0f, 1f, 0f, 1f, 0f).setDuration(2000).start();
+        ObjectAnimator.ofFloat(mChooseLeftImageView, "alpha", 0f, 1f, 0f, 1f, 0f).setDuration(3000).start();
+        ObjectAnimator.ofFloat(mChooseRightImageView, "alpha", 0f, 1f, 0f, 1f, 0f).setDuration(3000).start();
 
         return view;
     }

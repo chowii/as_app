@@ -40,7 +40,8 @@ public class NewOnBoardActivity extends BaseActivity implements
         OnBoardingInflateMattressFragment.OnActionListener,
         OnBoardingFirmnessControlsFragment.OnActionListener,
         OnBoardingPositionControlsFragment.OnActionListener,
-        OnBoardingMassageControlsFragment.OnActionListener
+        OnBoardingMassageControlsFragment.OnActionListener,
+        OnBoardingHelpFragment.OnActionListener
 {
 
     private OnBoardingState mOnBoardingState = new OnBoardingState();
@@ -83,22 +84,16 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         requestBackgroundScanningPermissions();
 
-        mCompositeSubscription.add(getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<OnBoardingState>() {
-            @Override
-            public void call(OnBoardingState onBoardingState) {
-                if (onBoardingState.state == OnBoardingState.State.Locating) {
-                    // Need to do the permissions check here... after the permissions check is complete, then we do our other shit.
-                    getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                            OnBoardingItemsFragment.newInstance(onBoardingState.foundBase, onBoardingState.foundPump, onBoardingState.foundTracker)).commit();
-                }
-            }
-        }));
-
     }
 
     @Override
     public void onScanningPermissionGranted() {
+
         findInitialDevices();
+
+        // Need to do the permissions check here... after the permissions check is complete, then we do our other shit.
+        getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
+                OnBoardingItemsFragment.newInstance(true, mOnBoardingState.foundPump, mOnBoardingState.foundTracker)).commit();
     }
 
     @Override
@@ -108,10 +103,16 @@ public class NewOnBoardActivity extends BaseActivity implements
         mOnBoardingState.requiredTracker = hasTracker;
         mOnBoardingState.requiredPump = hasPump;
 
+        if ( ! hasPump ) {
+            mOnBoardingState.numberOfTrackersRequired = 1;
+        }
+
         getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
                 OnBoardingChooseSideFragment.newInstance()).commit();
 
     }
+
+
 
     @Override
     public void onChooseSideContinueClicked(String sideOfBed) {
@@ -120,8 +121,13 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         mOnBoardingState.sideOfBed = sideOfBed;
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                OnBoardingPlacePhoneFragment.newInstance(sideOfBed)).commit();
+        if ( mOnBoardingState.requiredTracker ) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
+                    OnBoardingPlacePhoneFragment.newInstance(sideOfBed)).commit();
+        } else {
+            onPlacePhoneContinueClicked();
+        }
+
 
     }
 
@@ -141,10 +147,16 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         if (mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                    OnBoardingInflateMattressFragment.newInstance()).commit();
+            if ( mOnBoardingState.foundPump ) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
+                        OnBoardingInflateMattressFragment.newInstance()).commit();
 
-            inflateMattress();
+                inflateMattress();
+            } else {
+                // Skip to base controls.
+                onFirmnessControlsAction();
+            }
+
 
         } else if (mOnBoardingState.state == OnBoardingState.State.DevicesMissingAllowRetry) {
 
@@ -196,6 +208,19 @@ public class NewOnBoardActivity extends BaseActivity implements
         finish();
     }
 
+    // HELP FLOW
+    @Override
+    public void onRetryButtonClicked() {
+        onPlacePhoneContinueClicked();
+    }
+
+    @Override
+    public void onCallButtonClicked() {
+
+    }
+
+
+
     public void findInitialDevices() {
 
         SleepSenseDeviceService.instance().newAcquireDevices(2500).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
@@ -209,7 +234,7 @@ public class NewOnBoardActivity extends BaseActivity implements
 
                     mOnBoardingState.foundBase = mAquiredDevices.getBaseDevices().size() > 0;
                     mOnBoardingState.foundPump = mAquiredDevices.getPumpDevices().size() > 0;
-                    mOnBoardingState.foundTracker = mAquiredDevices.getTrackerDevices().size() > 1;
+                    mOnBoardingState.foundTracker = mAquiredDevices.getTrackerDevices().size() > 0;
                     mOnBoardingState.state = OnBoardingState.State.Locating;
 
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
@@ -268,10 +293,11 @@ public class NewOnBoardActivity extends BaseActivity implements
                     }
 
                     if (mOnBoardingState.requiredTracker) {
-                        if (mAquiredDevices.getTrackerDevices().size() < 2) {
+                        if (mAquiredDevices.getTrackerDevices().size() < mOnBoardingState.numberOfTrackersRequired) {
                             failed = true;
                             mOnBoardingState.foundTracker = false;
                         } else {
+                            // Get the closest tracker.
                             trackerDevice = mAquiredDevices.getTrackerDevices().get(0);
                         }
                     }
@@ -339,7 +365,6 @@ public class NewOnBoardActivity extends BaseActivity implements
     public Observable<OnBoardingState> getOnBoardingObservable() {
         return mOnBoardingEventPublishSubject;
     }
-
 
 
 }

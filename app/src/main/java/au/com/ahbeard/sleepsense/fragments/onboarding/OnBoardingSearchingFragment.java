@@ -121,18 +121,21 @@ public class OnBoardingSearchingFragment extends Fragment {
 
                     if (onBoardingState.state == OnBoardingState.State.RequiredDevicesFound) {
                         mContinueButton.animate().alpha(1.0f).start();
-                        mHeadingTextView.setText("Success!");
-                        mTextTextView.setText("This is what I found.");
+                        mPhoneImageView.setImageResource(R.drawable.onboarding_phone_searching_success);
+                        mHeadingTextView.setText("Success");
+                        mTextTextView.setText("This is what I paired with");
                         mContinueButton.setText("Continue");
                     } else if (onBoardingState.state == OnBoardingState.State.DevicesMissingAllowRetry) {
+                        mPhoneImageView.setImageResource(R.drawable.onboarding_phone_worried);
                         mContinueButton.animate().alpha(1.0f).start();
                         mHeadingTextView.setText("That's strange");
-                        mTextTextView.setText("I can't seem to find everything.");
+                        mTextTextView.setText("I can't seem to pair with everything");
                         mContinueButton.setText("Try Again");
                     } else if (onBoardingState.state == OnBoardingState.State.DevicesMissingShowHelp) {
+                        mPhoneImageView.setImageResource(R.drawable.onboarding_phone_worried);
                         mContinueButton.animate().alpha(1.0f).start();
                         mHeadingTextView.setText("That's strange");
-                        mTextTextView.setText("I can't seem to find everything.");
+                        mTextTextView.setText("I can't seem to pair with everything");
                         mContinueButton.setText("Help Me");
                     }
                 }

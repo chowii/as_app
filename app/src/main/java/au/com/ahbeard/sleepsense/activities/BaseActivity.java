@@ -22,6 +22,8 @@ public class BaseActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_COARSE_LOCATION = 123;
 
+    private boolean mCallOnScanningPermissionGranted;
+
     public void requestBackgroundScanningPermissions() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -57,7 +59,9 @@ public class BaseActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    onScanningPermissionGranted();
+
+                    mCallOnScanningPermissionGranted  = true;
+
                 } else {
 
                     final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -84,5 +88,14 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
 
+        if ( mCallOnScanningPermissionGranted ) {
+            mCallOnScanningPermissionGranted = false;
+            onScanningPermissionGranted();
+        }
+
+    }
 }

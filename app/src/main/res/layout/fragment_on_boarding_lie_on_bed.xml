@@ -13,15 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:alpha="1.0"
-            android:src="@drawable/onboarding_background_place_phone_left" android:adjustViewBounds="true"/>
-        <ImageView
-            android:layout_marginTop="30dp"
-            android:id="@+id/onboarding_image_view_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="1.0"
-            android:layout_gravity="center"
-            android:src="@drawable/onboarding_phone_on_bed" android:adjustViewBounds="true"/>
+            android:src="@drawable/onboarding_bed_side_lying" android:adjustViewBounds="true"/>
     </FrameLayout>
 
     <LinearLayout
@@ -34,28 +26,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:textColor="@color/onBoardHeaderTextColor"
             app:typeface="OpenSansSemibold"
-            android:text="Place your phone on the side of the bed you sleep on"/>
+            android:text="Please lie on the side of the bed you sleep on"/>
 
-        <View android:layout_width="wrap_content" android:layout_height="25dp"/>
-
-        <au.com.ahbeard.sleepsense.widgets.StyledTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="15dp"
-            android:textColor="@color/onBoardHeaderTextColor"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
-            android:lineSpacingExtra="10dp"
-            app:typeface="OpenSansRegular"
-            android:text="Align with your heart so we can track  your breathing and heart rate"/>
-
-        <View android:layout_width="wrap_content" android:layout_height="45dp"/>
+      <View android:layout_width="wrap_content" android:layout_height="45dp"/>
 
         <au.com.ahbeard.sleepsense.widgets.StyledButton
             android:id="@+id/on_board_button_continue"

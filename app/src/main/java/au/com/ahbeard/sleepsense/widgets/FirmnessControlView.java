@@ -218,28 +218,32 @@ public class FirmnessControlView extends View {
 
         super.onDraw(canvas);
 
+        int fullWidth = canvas.getWidth();
+        int fullHeight = canvas.getHeight();
+
+//        // How much to scale the knob by.
+//        float scaleWidth = (float) mForegroundDrawable.getIntrinsicWidth() / (float) fullWidth;
+//        float scaleHeight = (float) mForegroundDrawable.getIntrinsicHeight() / (float) fullHeight;
+//
+//        canvas.scale(scaleWidth, scaleHeight);
+
         if (isInEditMode()) {
             Paint paint = new Paint();
             paint.setColor(Color.LTGRAY);
-            canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2, paint);
+            canvas.drawCircle(fullWidth / 2, fullHeight / 2, fullWidth / 2, paint);
             return;
         }
 
-        // How much to scale the knob by.
-        float mScaleWidth = (float) mForegroundDrawable.getIntrinsicWidth() / (float) canvas.getWidth();
-        float mScaleHeight = (float) mForegroundDrawable.getIntrinsicHeight() / (float) canvas.getHeight();
-
-
         if (mLevelDrawable != null) {
 
-            mLevelDrawable.setBounds(0, 0, (int) (canvas.getWidth() * mScaleWidth), (int) (canvas.getHeight() * mScaleHeight));
+            mLevelDrawable.setBounds(0, 0, fullWidth, fullHeight);
             mLevelDrawable.draw(canvas);
 
         }
 
         if (mForegroundDrawable != null) {
 
-            mForegroundDrawable.setBounds(0, 0, (int) (canvas.getWidth() * mScaleWidth), (int) (canvas.getHeight() * mScaleHeight));
+            mForegroundDrawable.setBounds(0, 0, fullWidth, fullHeight);
             mForegroundDrawable.draw(canvas);
 
         }
@@ -248,8 +252,8 @@ public class FirmnessControlView extends View {
 
             canvas.translate(canvas.getWidth() / 2, canvas.getHeight() / 2);
 
-            int width = (int) (mKnobDrawable.getIntrinsicWidth() * mScaleWidth);
-            int height = (int) (mKnobDrawable.getIntrinsicHeight() * mScaleHeight);
+            int width = mKnobDrawable.getIntrinsicWidth();
+            int height = mKnobDrawable.getIntrinsicHeight();
 
             float rotationAngle = -137f * TO_RADIANS + 274f * (mTargetValue) * TO_RADIANS;
 
@@ -259,10 +263,10 @@ public class FirmnessControlView extends View {
                     + mKnobCenterPoint.x * Math.sin(rotationAngle));
 
             mKnobDrawable.setBounds(
-                    (int) (-width / 2 + mRotatedKnobCenterPoint.x * canvas.getWidth() / 2),
-                    (int) (-height / 2 + mRotatedKnobCenterPoint.y * canvas.getHeight() / 2),
-                    (int) (width / 2 + mRotatedKnobCenterPoint.x * canvas.getWidth() / 2),
-                    (int) (height / 2 + +mRotatedKnobCenterPoint.y * canvas.getHeight() / 2)
+                    (int) (-width / 2 + mRotatedKnobCenterPoint.x * fullWidth / 2),
+                    (int) (-height / 2 + mRotatedKnobCenterPoint.y * fullHeight / 2),
+                    (int) (width / 2 + mRotatedKnobCenterPoint.x * fullWidth / 2),
+                    (int) (height / 2 + +mRotatedKnobCenterPoint.y * fullHeight / 2)
             );
 
             mKnobDrawable.draw(canvas);
@@ -274,8 +278,8 @@ public class FirmnessControlView extends View {
 
             // Log.d("TOUCH", "rotatedDot: " + mRotatedDotCenterPoint);
 
-            canvas.drawCircle(mRotatedDotCenterPoint.x * canvas.getWidth() / 2,
-                    mRotatedDotCenterPoint.y * canvas.getHeight() / 2, mDotRadius, mDotPaint);
+            canvas.drawCircle(mRotatedDotCenterPoint.x * fullWidth / 2,
+                    mRotatedDotCenterPoint.y * fullHeight / 2, mDotRadius, mDotPaint);
 
         }
 

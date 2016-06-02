@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#0074BF</color>
     <color name="colorAccent">#3C709C</color>
 
-    <color name="splashBackground">#CCDFEF</color>
+    <color name="splashBackground">#042234</color>
 
     <color name="onBoardHeaderTextColor">#4A4A4A</color>
     <color name="onBoardBodyTextColor">#994A4A4A</color>
@@ -33,6 +33,8 @@
 
     <color name="detailedSleepScoreTextColor">#3C709C</color>
     <color name="detailedSleepScoreAltTextColor">#806E788D</color>
+
+    <color name="whiteButtonTextColor">#588FB4</color>
 
 
 </resources>

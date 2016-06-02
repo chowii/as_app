@@ -30,6 +30,8 @@ public class OnBoardingState {
     public boolean requiredPump;
     public boolean requiredTracker;
 
+    public int numberOfTrackersRequired = 2;
+
     public boolean foundBase;
     public boolean foundPump;
     public boolean foundTracker;

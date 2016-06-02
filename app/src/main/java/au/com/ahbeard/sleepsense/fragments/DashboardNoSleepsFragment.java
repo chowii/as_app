@@ -1,6 +1,7 @@
 package au.com.ahbeard.sleepsense.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.SleepTrackingActivity;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +19,12 @@ import butterknife.ButterKnife;
  * create an instance of this fragment.
  */
 public class DashboardNoSleepsFragment extends Fragment {
+
+    @OnClick(R.id.dashboard_fab_start_sleep)
+    void onStartSleepClicked() {
+        Intent intent = new Intent(getActivity(), SleepTrackingActivity.class);
+        startActivity(intent);
+    }
 
     public DashboardNoSleepsFragment() {
         // Required empty public constructor

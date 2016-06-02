@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -30,6 +33,9 @@ public class OnBoardingHelpFragment extends Fragment {
             mOnActionListener.onRetryButtonClicked();
         }
     }
+
+    @Bind(R.id.on_boarding_help_web_view)
+    WebView mWebView;
 
     public interface OnActionListener {
         void onRetryButtonClicked();
@@ -61,6 +67,18 @@ public class OnBoardingHelpFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_on_boarding_help, container, false);
 
         ButterKnife.bind(this,view);
+
+        mWebView.getSettings().setJavaScriptEnabled(true);
+
+        mWebView.setWebChromeClient(new WebChromeClient(){
+
+        });
+
+        mWebView.setWebViewClient(new WebViewClient(){
+
+        });
+
+        mWebView.loadUrl("http://share.mentallyfriendly.com/sleepsense/#!/faq");
 
         return view;
     }

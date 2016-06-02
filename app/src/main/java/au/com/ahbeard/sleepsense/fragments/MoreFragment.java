@@ -26,26 +26,9 @@ import rx.schedulers.Schedulers;
  */
 public class MoreFragment extends Fragment {
 
-    @OnClick(R.id.debug_button_power_management)
-    void powerManagement() {
-        Intent intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
-        startActivity(intent);
-    }
-
-
-    @OnClick(R.id.debug_button_clear)
-    void clear() {
-        ((HomeActivity)getActivity()).clearDevices();
-    }
-
     @OnClick(R.id.debug_button_new_onboarding)
-    void newOnboarding() {
+    void clear() {
         ((HomeActivity)getActivity()).doOnboarding();
-    }
-
-    @OnClick(R.id.sleep_tracking_button_batch_analysis)
-    void onRunBatchAnalysis() {
-        SleepService.instance().runBatchAnalysis();
     }
 
     @OnClick(R.id.debug_button_generate_fake_data)

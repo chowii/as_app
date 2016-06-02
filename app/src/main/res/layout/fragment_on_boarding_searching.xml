@@ -1,18 +1,19 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+              android:orientation="vertical"
              xmlns:app="http://schemas.android.com/apk/res-auto"
              tools:context=".fragments.onboarding.OnBoardingChooseSideFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp" android:layout_weight="1" android:layout_marginTop="20dp">
 
         <ImageView
             android:id="@+id/on_board_image_view_phone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:alpha="1.0"
             android:src="@drawable/onboarding_phone_searching" />
 
@@ -29,12 +30,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="20dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
+            android:textSize="20sp"
             android:textColor="@color/onBoardHeaderTextColor"
             app:typeface="OpenSansSemibold"
-            android:text="I'm pairing"/>
+            android:text="I'm pairing to your devices"/>
 
         <View android:layout_width="wrap_content" android:layout_height="25dp"/>
 
@@ -43,13 +42,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="15dp"
-            android:textColor="@color/onBoardHeaderTextColor"
+            android:textSize="15sp"
+            android:textColor="@color/onBoardBodyTextColor"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:lineSpacingExtra="10dp"
             app:typeface="OpenSansRegular"
-            android:text="Lorem ipsum dolor sequent"/>
+            android:text="Please wait a moment"/>
 
         <View android:layout_width="wrap_content" android:layout_height="25dp"/>
 
@@ -152,4 +151,4 @@
 
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>

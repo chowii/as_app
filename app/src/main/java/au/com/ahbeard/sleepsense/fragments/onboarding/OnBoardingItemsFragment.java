@@ -9,11 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.NewOnBoardActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +33,11 @@ public class OnBoardingItemsFragment extends Fragment {
     private boolean mHasPump;
     private boolean mHasTracker;
 
+    private int mNoOfTimesHeaderClicked;
+    private boolean mCanChangeHasMattress;
+
+    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+
     public interface OnActionListener {
         void onItemsContinueClicked(boolean hasMattress, boolean hasTracker, boolean hasBase);
     }
@@ -35,10 +45,36 @@ public class OnBoardingItemsFragment extends Fragment {
     @Bind(R.id.on_board_button_mattress)
     ImageView mMattressImageView;
 
-//    @OnClick(R.id.on_board_button_mattress)
-//    void mattressClicked() {
-//
-//    }
+    @Bind(R.id.onboarding_image_view_bed_with_headboard)
+    ImageView mMattressItemImageView;
+
+    @Bind(R.id.onboarding_layout_items)
+    View mItemsLayout;
+
+    @Bind(R.id.on_boarding_items_text_view_header)
+    TextView mHeaderTextView;
+
+    @Bind(R.id.on_boarding_items_text_view_description)
+    TextView mDescriptionTextView;
+
+    @OnClick(R.id.on_board_button_mattress)
+    void mattressClicked() {
+
+        if (mCanChangeHasMattress) {
+            mMattressImageView.setSelected(!mMattressImageView.isSelected());
+
+            if ( mMattressImageView.isSelected() ) {
+                mMattressItemImageView.setAlpha(0.0f);
+
+                mMattressItemImageView.animate().alpha(1.0f).setDuration(250).start();
+            } else {
+                mMattressItemImageView.setAlpha(1.0f);
+
+                mMattressItemImageView.animate().alpha(0.0f).setDuration(250).start();
+            }
+        }
+    }
+
 
     @Bind(R.id.on_board_button_tracker)
     ImageView mTrackerImageView;
@@ -72,6 +108,7 @@ public class OnBoardingItemsFragment extends Fragment {
 
     @OnClick(R.id.on_board_button_base)
     void baseClicked() {
+
         mBaseImageView.setSelected(!mBaseImageView.isSelected());
 
         if ( mBaseImageView.isSelected() ) {
@@ -92,6 +129,13 @@ public class OnBoardingItemsFragment extends Fragment {
     void continueClicked() {
         if ( mOnActionListener != null ) {
             mOnActionListener.onItemsContinueClicked(mMattressImageView.isSelected(),mTrackerImageView.isSelected(),mBaseImageView.isSelected());
+        }
+    }
+
+    @OnClick(R.id.on_boarding_items_text_view_header)
+    void headerClicked() {
+        if ( ++mNoOfTimesHeaderClicked >= 2 ) {
+            mCanChangeHasMattress = true;
         }
     }
 
@@ -135,17 +179,36 @@ public class OnBoardingItemsFragment extends Fragment {
 
         ButterKnife.bind(this,view);
 
-        mMattressImageView.setSelected(true);
+        mItemsLayout.setAlpha(0.0f);
 
-        mBaseImageView.setSelected(mHasBase);
-        mBaseItemImageView.setAlpha(mBaseImageView.isSelected()?1.0f:0.0f);
+        mCompositeSubscription.add(((NewOnBoardActivity)getActivity()).getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<OnBoardingState>() {
+            @Override
+            public void call(OnBoardingState onBoardingState) {
+                if (onBoardingState.state == OnBoardingState.State.Locating) {
 
-        mMattressImageView.setSelected(true);
-        mMattressImageView.setAlpha(1.0f);
+                    mHasPump = true;
+                    mHasBase = onBoardingState.foundBase;
+                    mHasTracker = onBoardingState.foundTracker;
 
-        mTrackerImageView.setSelected(mHasTracker);
-        mTrackerItemImageView.setAlpha(mTrackerImageView.isSelected()?1.0f:0.0f);
+                    mBaseImageView.setSelected(mHasBase);
+                    mBaseItemImageView.setAlpha(mBaseImageView.isSelected()?1.0f:0.0f);
 
+                    mMattressImageView.setSelected(mHasPump);
+                    mMattressItemImageView.setAlpha(mMattressImageView.isSelected()?1.0f:0.0f);
+
+                    mTrackerImageView.setSelected(mHasTracker);
+                    mTrackerItemImageView.setAlpha(mTrackerImageView.isSelected()?1.0f:0.0f);
+
+                    mHeaderTextView.setText("Success!");
+                    mDescriptionTextView.setText("This is what I found. Tap on the item if it's missing and I'll double check");
+
+                    mItemsLayout.animate().alpha(1.0f).start();
+                }
+            }
+        }));
+
+        mHeaderTextView.setText("I'm searching ...");
+        mDescriptionTextView.setText("Please wait while I locate your sleeping devices");
 
         return view;
 
@@ -153,6 +216,7 @@ public class OnBoardingItemsFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        mCompositeSubscription.clear();
         ButterKnife.unbind(this);
         super.onDestroyView();
     }
