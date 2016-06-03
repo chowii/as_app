@@ -1,7 +1,9 @@
 package au.com.ahbeard.sleepsense.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
@@ -102,9 +104,9 @@ public class NewOnBoardActivity extends BaseActivity implements
     @Override
     public void onItemsContinueClicked(boolean hasPump, boolean hasTracker, boolean hasBase) {
 
-        mOnBoardingState.requiredBase = hasBase;
-        mOnBoardingState.requiredTracker = hasTracker;
         mOnBoardingState.requiredPump = hasPump;
+        mOnBoardingState.requiredTracker = hasTracker;
+        mOnBoardingState.requiredBase = hasBase;
 
         if ( ! hasPump ) {
             mOnBoardingState.numberOfTrackersRequired = 1;
@@ -264,6 +266,24 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+// Add the buttons
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        }).setMessage("Close Sleepsense before setting up your sleep hardware?").create().show();
+
+    }
+
     public void acquireDevices() {
 
         SleepSenseDeviceService.instance().newAcquireDevices(5000).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
@@ -272,7 +292,7 @@ public class NewOnBoardActivity extends BaseActivity implements
             public void onCompleted() {
 
                 if (mAquiredDevices == null) {
-                    // EPIC FAIL
+
                 } else {
 
                     boolean failed = false;

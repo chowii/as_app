@@ -1,63 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/firmnessBackground"
               android:gravity="top"
-              android:background="@color/firmnessBackground">
+              android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="48dp">
+
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
-            android:layout_weight="1"
-            android:text="More"
-            android:textSize="15sp"
-            android:lineSpacingExtra="5sp"
-            android:textColor="#4A4A4A"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
+            android:lineSpacingExtra="5sp"
+            android:text="More"
+            android:textColor="#4A4A4A"
+            android:textSize="15sp"
             app:typeface="OpenSansLight"/>
+
         <ImageView
-            android:layout_marginTop="10dp" android:layout_marginRight="20dp"
-            android:layout_gravity="right|top"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:src="@drawable/help_icon_normal"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|top"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/help_icon_normal"/>
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp" android:background="#DBE3E6" android:layout_gravity="bottom"/>
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="#DBE3E6"/>
 
     </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1">
+        android:layout_height="20dp">
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="#DBE3E6"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#fff"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:lineSpacingExtra="5sp"
+            android:text="App Version"
+            android:textColor="#6E788D"
+            android:textSize="15sp"
+            app:typeface="OpenSansRegular"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:lineSpacingExtra="5sp"
+            android:text="0.4"
+            android:textColor="#6E788D"
+            android:textSize="15sp"
+            app:typeface="OpenSansRegular"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="#DBE3E6"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" android:padding="20dp" android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:padding="20dp">
+
         <au.com.ahbeard.sleepsense.widgets.StyledButton
             android:id="@+id/debug_button_generate_fake_data"
-            android:background="@drawable/sleep_sense_button_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#fff"
-            android:text="Re-run batch analysis" />
+            android:background="@drawable/sleep_sense_button_blue"
+            android:text="Re-run batch analysis"
+            android:textColor="#fff"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="10dp"/>
+
         <au.com.ahbeard.sleepsense.widgets.StyledButton
             android:id="@+id/debug_button_new_onboarding"
-            android:background="@drawable/sleep_sense_button_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#fff"
-            android:text="New On-Boarding" />
+            android:background="@drawable/sleep_sense_button_blue"
+            android:text="New On-Boarding"
+            android:textColor="#fff"/>
     </LinearLayout>
 
 

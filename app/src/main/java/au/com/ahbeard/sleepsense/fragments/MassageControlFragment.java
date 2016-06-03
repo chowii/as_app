@@ -90,8 +90,8 @@ public class MassageControlFragment extends ControlFragment {
             view.setSelected(false);
         }
 
-        mTimerButton.setSelected(true);
-        mTimeTextViews.get(massageTimerState.getTimerLightStatus()).setSelected(true);
+        mTimerButton.setSelected(massageTimerState.getTimerLightNormalised()>0);
+        mTimeTextViews.get(massageTimerState.getTimerLightNormalised()).setSelected(true);
 
     }
 
@@ -131,6 +131,8 @@ public class MassageControlFragment extends ControlFragment {
         mHeaderLayout.setVisibility(mControlOnly?View.GONE:View.VISIBLE);
 
         mBaseDevice = SleepSenseDeviceService.instance().getBaseDevice();
+
+        mBaseDevice.connect();
 
         if (mBaseDevice != null) {
 
