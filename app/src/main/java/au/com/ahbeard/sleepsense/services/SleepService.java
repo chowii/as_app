@@ -25,6 +25,7 @@ import java.io.ObjectInputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,6 +131,7 @@ public class SleepService {
         CalendarDate calendarDate = new CalendarDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
         List<SessionData> sessionData = readSessionData(periodStart / 1000D, periodEnd / 1000D);
 
+
         if (sessionData.size() > 0) {
 
             try {
@@ -137,6 +139,10 @@ public class SleepService {
                 BatchAnalysis batchAnalysis = new BatchAnalysis();
 
                 Log.d("BatchAnalysis", String.format("ANALYZING DATE: %d/%d/%d", calendarDate.getDay(), calendarDate.getMonth(), calendarDate.getYear()));
+
+                for ( SessionData sessionData1: sessionData ) {
+                    Log.d("BatchAnalysis", String.format("SESSSION DATA: %s to %s",new Date((long)sessionData1.getStartTime()*1000),new Date((long)sessionData1.getEndTime()*1000)));
+                }
 
                 BatchAnalysisResult batchAnalysisResult = batchAnalysis.analyzeSessions(
                         sessionData,

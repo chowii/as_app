@@ -184,19 +184,19 @@ public class OnBoardingItemsFragment extends Fragment {
         mCompositeSubscription.add(((NewOnBoardActivity)getActivity()).getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<OnBoardingState>() {
             @Override
             public void call(OnBoardingState onBoardingState) {
-                if (onBoardingState.state == OnBoardingState.State.Locating) {
+                if (onBoardingState.state == OnBoardingState.State.ChoosingDevices) {
 
                     mHasPump = true;
                     mHasBase = onBoardingState.foundBase;
                     mHasTracker = onBoardingState.foundTracker;
 
-                    mBaseImageView.setSelected(mHasBase);
+                    mBaseImageView.setSelected(onBoardingState.foundBase);
                     mBaseItemImageView.setAlpha(mBaseImageView.isSelected()?1.0f:0.0f);
 
-                    mMattressImageView.setSelected(mHasPump);
+                    mMattressImageView.setSelected(true);
                     mMattressItemImageView.setAlpha(mMattressImageView.isSelected()?1.0f:0.0f);
 
-                    mTrackerImageView.setSelected(mHasTracker);
+                    mTrackerImageView.setSelected(onBoardingState.foundTracker);
                     mTrackerItemImageView.setAlpha(mTrackerImageView.isSelected()?1.0f:0.0f);
 
                     mHeaderTextView.setText("Success!");

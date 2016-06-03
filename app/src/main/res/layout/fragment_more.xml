@@ -40,14 +40,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" android:layout_margin="20dp" >
+        android:orientation="vertical" android:padding="20dp" android:clipToPadding="false">
         <au.com.ahbeard.sleepsense.widgets.StyledButton
             android:id="@+id/debug_button_generate_fake_data"
             android:background="@drawable/sleep_sense_button_blue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#fff"
-            android:text="Generate Fake Data" />
+            android:text="Re-run batch analysis" />
         <View
             android:layout_width="match_parent"
             android:layout_height="10dp"/>

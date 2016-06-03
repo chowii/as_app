@@ -93,9 +93,9 @@ public class SleepScoreBreakdownActivity extends AppCompatActivity {
             mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_out_of_bed),
                     StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getAwayTotalTime()),
                     getText(R.string.sleep_score_breakdown_out_of_bed_txt));
-            mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_snoring),
-                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getTotalSnoringEpisodeDuration()),
-                    getText(R.string.sleep_score_breakdown_snoring_txt));
+//            mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_snoring),
+//                    StatisticsUtils.timeInSecondsSinceEpochToString(textColor, altTextColor, mSleep.getTotalSnoringEpisodeDuration()),
+//                    getText(R.string.sleep_score_breakdown_snoring_txt));
 
 
         }

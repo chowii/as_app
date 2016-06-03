@@ -242,7 +242,7 @@ public class NewOnBoardActivity extends BaseActivity implements
                     mOnBoardingState.foundBase = mAquiredDevices.getBaseDevices().size() > 0;
                     mOnBoardingState.foundPump = mAquiredDevices.getPumpDevices().size() > 0;
                     mOnBoardingState.foundTracker = mAquiredDevices.getTrackerDevices().size() > 0;
-                    mOnBoardingState.state = OnBoardingState.State.Locating;
+                    mOnBoardingState.state = OnBoardingState.State.ChoosingDevices;
 
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
 

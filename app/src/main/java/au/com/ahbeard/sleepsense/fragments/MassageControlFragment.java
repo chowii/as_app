@@ -28,7 +28,7 @@ import rx.subscriptions.CompositeSubscription;
  * Use the {@link MassageControlFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MassageControlFragment extends Fragment {
+public class MassageControlFragment extends ControlFragment {
 
 
     @Bind(R.id.massage_button_timer)
@@ -75,9 +75,6 @@ public class MassageControlFragment extends Fragment {
 
     @Bind({R.id.massage_text_view_10_min, R.id.massage_text_view_20_min, R.id.massage_text_view_30_min})
     List<View> mTimeTextViews;
-
-    @Bind(R.id.progress_layout)
-    View mProgressLayout;
 
     @Bind(R.id.controls_layout_header)
     View mHeaderLayout;
@@ -174,9 +171,9 @@ public class MassageControlFragment extends Fragment {
                         @Override
                         public void call(Device device) {
                             if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
-                                mProgressLayout.setVisibility(View.VISIBLE);
+                                startProgress();
                             } else {
-                                mProgressLayout.setVisibility(View.GONE);
+                                stopProgress();
                             }
                         }
                     }));

@@ -27,7 +27,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  *
  */
-public class PositionControlFragment extends Fragment {
+public class PositionControlFragment extends ControlFragment {
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
@@ -44,9 +44,6 @@ public class PositionControlFragment extends Fragment {
     StyledImageButton mFootPositionUpButton;
     @Bind(R.id.position_button_foot_position_down)
     StyledImageButton mFootPositionDownButton;
-
-    @Bind(R.id.progress_layout)
-    View mProgressLayout;
 
     @Bind(R.id.controls_layout_header)
     View mHeaderLayout;
@@ -121,9 +118,9 @@ public class PositionControlFragment extends Fragment {
                 @Override
                 public void call(Device device) {
                     if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
-                        mProgressLayout.setVisibility(View.VISIBLE);
+                        startProgress();
                     } else {
-                        mProgressLayout.setVisibility(View.GONE);
+                        stopProgress();
                     }
                 }
             }));

@@ -26,7 +26,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * The pump controls, excluding left and right selection, but this control does know about left and right.
  */
-public class FirmnessControlFragment extends Fragment {
+public class FirmnessControlFragment extends ControlFragment {
 
     @Bind(R.id.firmness_control_firmness_control_left)
     FirmnessControlView mFirmnessControlLeftView;
@@ -45,12 +45,6 @@ public class FirmnessControlFragment extends Fragment {
 
     @Bind(R.id.firmness_control_text_view_firmness_right)
     TextView mFirmnessRightTextView;
-
-    @Bind(R.id.progress_layout)
-    View mProgressLayout;
-
-    @Bind(R.id.controls_layout_header)
-    View mHeaderLayout;
 
     @Bind(R.id.firmness_control_layout_choose_side)
     View mChooseSideLayout;
@@ -189,9 +183,9 @@ public class FirmnessControlFragment extends Fragment {
                 @Override
                 public void call(Device device) {
                     if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
-                        mProgressLayout.setVisibility(View.VISIBLE);
+                        startProgress();
                     } else {
-                        mProgressLayout.setVisibility(View.GONE);
+                        stopProgress();
                     }
                 }
             }));

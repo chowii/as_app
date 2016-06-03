@@ -33,12 +33,13 @@ public class MoreFragment extends Fragment {
 
     @OnClick(R.id.debug_button_generate_fake_data)
     void generateFakeData() {
-        Schedulers.io().createWorker().schedule(new Action0() {
-            @Override
-            public void call() {
-                SleepService.instance().generateFakeData(Calendar.getInstance(),60);
-            }
-        });
+//        Schedulers.io().createWorker().schedule(new Action0() {
+//            @Override
+//            public void call() {
+//                SleepService.instance().generateFakeData(Calendar.getInstance(),60);
+//            }
+//        });
+        SleepService.instance().runBatchAnalysis();
     }
 
     public MoreFragment() {

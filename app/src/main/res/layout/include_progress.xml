@@ -5,12 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/progress_layout"
     android:orientation="horizontal"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="top|end"
-    android:layout_margin="15dp"
+    android:layout_width="match_parent"
+    android:layout_height="58dp"
+    android:layout_gravity="bottom"
     android:gravity="center"
-    android:background="#4ccc"
+    android:background="#68B9F3"
     android:padding="10dp"
     android:visibility="gone"
     tools:visibility="visible"
@@ -19,15 +18,22 @@
     <au.com.ahbeard.sleepsense.widgets.StyledTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CONNECTING"
-        android:textColor="#4A4A4A"
-        app:typeface="OpenSansLight"
-        android:layout_marginEnd="5dp"/>
+        android:text="Connection timeout"
+        android:textColor="#ffffff"
+        app:typeface="OpenSansLight"/>
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleSmall"
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent" android:layout_weight="1"/>
+
+    <au.com.ahbeard.sleepsense.widgets.StyledTextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Try again"
+        android:textAllCaps="true"
+        android:textColor="#ffffff"
+        app:typeface="OpenSansSemiBold"/>
+
 
 </LinearLayout>
 
