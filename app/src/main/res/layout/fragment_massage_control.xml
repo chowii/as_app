@@ -12,6 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="48dp">
 
+        <ImageView
+            android:id="@+id/image_view_progress_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/progress_animated" />
+
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -299,7 +307,6 @@
 
             </LinearLayout>
         </ScrollView>
-
 
         <include layout="@layout/include_progress"/>
 

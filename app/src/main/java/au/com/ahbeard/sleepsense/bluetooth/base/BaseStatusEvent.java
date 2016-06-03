@@ -91,6 +91,10 @@ public class BaseStatusEvent {
         return mTimerLightStatus;
     }
 
+    public int getTimerLightNormalised() {
+        return mTimerLightStatus == 0xff ? 0x00 : mTimerLightStatus;
+    }
+
     public boolean isHeadMotorRunning() {
         return (mMultiStatus & 0x01) == 0x01;
     }

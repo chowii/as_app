@@ -184,6 +184,16 @@ public class FirmnessControlFragment extends ControlFragment {
                 public void call(Device device) {
                     if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
                         startProgress();
+                        mFirmnessRightTextView.setText("Connecting");
+                    } else if ( device.getConnectionState() == Device.CONNECTION_STATE_DISCONNECTED && device.getLastConnectionStatus() > 0 ){
+                        stopProgress();
+                        showToast("Connection timeout","Try again",new Action1<Void>(){
+                            @Override
+                            public void call(Void aVoid) {
+                                connectPump();
+                            }
+
+                        });
                     } else {
                         stopProgress();
                     }

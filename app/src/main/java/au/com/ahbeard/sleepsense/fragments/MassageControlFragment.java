@@ -73,11 +73,8 @@ public class MassageControlFragment extends ControlFragment {
         mBaseDevice.sendCommand(BaseCommand.footMassageDecrease());
     }
 
-    @Bind({R.id.massage_text_view_10_min, R.id.massage_text_view_20_min, R.id.massage_text_view_30_min})
+    @Bind({R.id.massage_text_view_off,R.id.massage_text_view_10_min, R.id.massage_text_view_20_min, R.id.massage_text_view_30_min})
     List<View> mTimeTextViews;
-
-    @Bind(R.id.controls_layout_header)
-    View mHeaderLayout;
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
@@ -85,7 +82,7 @@ public class MassageControlFragment extends ControlFragment {
 
     }
 
-    private void updateViews(int massageTimerState) {
+    private void updateViews(BaseStatusEvent massageTimerState) {
 
         mTimerButton.setSelected(false);
 
@@ -93,24 +90,9 @@ public class MassageControlFragment extends ControlFragment {
             view.setSelected(false);
         }
 
-        switch (massageTimerState) {
-            case 0:
-                break;
-            case 1:
-                mTimerButton.setSelected(true);
-                mTimeTextViews.get(0).setSelected(true);
-                break;
-            case 2:
-                mTimerButton.setSelected(true);
-                mTimeTextViews.get(1).setSelected(true);
-                break;
-            case 3:
-                mTimerButton.setSelected(true);
-                mTimeTextViews.get(2).setSelected(true);
-                break;
-            default:
+        mTimerButton.setSelected(true);
+        mTimeTextViews.get(massageTimerState.getTimerLightStatus()).setSelected(true);
 
-        }
     }
 
     public static MassageControlFragment newInstance() {
@@ -155,11 +137,7 @@ public class MassageControlFragment extends ControlFragment {
             mCompositeSubscription.add(mBaseDevice.getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseStatusEvent>() {
                 @Override
                 public void call(BaseStatusEvent baseStatusEvent) {
-                    if (baseStatusEvent.isTimerLightActive()) {
-                        updateViews(baseStatusEvent.getTimerLightStatus());
-                    } else {
-                        updateViews(0);
-                    }
+                    updateViews(baseStatusEvent);
 
                 }
             }));
@@ -172,6 +150,15 @@ public class MassageControlFragment extends ControlFragment {
                         public void call(Device device) {
                             if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
                                 startProgress();
+                            } else if ( device.getConnectionState() == Device.CONNECTION_STATE_DISCONNECTED && device.getLastConnectionStatus() > 0 ){
+                                stopProgress();
+                                showToast("Connection timeout","Try again",new Action1<Void>(){
+                                    @Override
+                                    public void call(Void aVoid) {
+                                        SleepSenseDeviceService.instance().getBaseDevice().connect();
+                                    }
+
+                                });
                             } else {
                                 stopProgress();
                             }

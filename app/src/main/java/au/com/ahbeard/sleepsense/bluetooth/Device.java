@@ -51,8 +51,6 @@ public class Device extends BluetoothGattCallback {
 
     private static final String TAG = "Device";
 
-    private long mConnectIssuedAt;
-
     private BluetoothOperationQueue mBluetoothOperationQueue = new BluetoothOperationQueue();
 
     private int mLastConnectionStatus = 0;
@@ -149,10 +147,14 @@ public class Device extends BluetoothGattCallback {
     }
 
     private Timer mConnectionTimer;
+    private long mConnectionTimeout = 10000;
+    private long mConnectIssuedAt;
 
     public void connect() {
         LogService.d("Device","connecting...");
         if (mBluetoothDevice != null && mBluetoothGatt == null) {
+
+            mConnectIssuedAt = System.currentTimeMillis();
 
             // Set up a timer to
             mConnectionTimer = new Timer();

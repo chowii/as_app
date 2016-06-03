@@ -1,16 +1,15 @@
 package au.com.ahbeard.sleepsense.fragments;
 
 import android.graphics.drawable.AnimationDrawable;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
 import butterknife.Bind;
+import butterknife.OnClick;
+import rx.functions.Action1;
 
 /**
  * Created by neal on 2/06/2016.
@@ -18,28 +17,59 @@ import butterknife.Bind;
 public class ControlFragment extends Fragment {
 
     @Bind(R.id.image_view_progress_icon)
-    ImageView mProgressImageView;
+    protected ImageView mProgressImageView;
 
     @Bind(R.id.controls_layout_header)
-    View mHeaderLayout;
+    protected View mHeaderLayout;
 
-    @Nullable
+    @Bind(R.id.progress_layout)
+    protected View mLayout;
+
+    @Bind(R.id.progress_layout_text_view_message)
+    protected TextView mMessageTextView;
+
+    @Bind(R.id.progress_layout_text_view_action)
+    protected TextView mActionTextView;
+
+    private Action1<Void> mAction;
+
+    @OnClick(R.id.progress_layout_text_view_action)
+    protected void progressAction() {
+        if (mAction != null) {
+            mAction.call(null);
+            mLayout.setVisibility(View.GONE);
+        }
+    }
+
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+    public void onStart() {
+        super.onStart();
+        stopProgress();
     }
 
     protected void startProgress() {
-        if ( mProgressImageView != null && mProgressImageView.getVisibility() == View.INVISIBLE ) {
+        if (mProgressImageView != null && mProgressImageView.getVisibility() == View.INVISIBLE) {
             mProgressImageView.setVisibility(View.VISIBLE);
-            ((AnimationDrawable)mProgressImageView.getDrawable()).start();
+            ((AnimationDrawable) mProgressImageView.getDrawable()).start();
         }
     }
 
     protected void stopProgress() {
-        if ( mProgressImageView != null && mProgressImageView.getVisibility() == View.VISIBLE ) {
-            ((AnimationDrawable)mProgressImageView.getDrawable()).stop();
+        if (mProgressImageView != null && mProgressImageView.getVisibility() == View.VISIBLE) {
+            ((AnimationDrawable) mProgressImageView.getDrawable()).stop();
             mProgressImageView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    protected void showToast(String message, String actionText, Action1<Void> action) {
+
+        mAction = action;
+
+        mMessageTextView.setText(message);
+        mActionTextView.setText(actionText);
+
+        mLayout.setVisibility(View.VISIBLE);
+
     }
 }

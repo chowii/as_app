@@ -16,6 +16,7 @@
     tools:showIn="@layout/fragment_position_control">
 
     <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:id="@+id/progress_layout_text_view_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Connection timeout"
@@ -27,6 +28,7 @@
         android:layout_height="match_parent" android:layout_weight="1"/>
 
     <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:id="@+id/progress_layout_text_view_action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Try again"

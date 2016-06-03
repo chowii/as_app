@@ -45,9 +45,6 @@ public class PositionControlFragment extends ControlFragment {
     @Bind(R.id.position_button_foot_position_down)
     StyledImageButton mFootPositionDownButton;
 
-    @Bind(R.id.controls_layout_header)
-    View mHeaderLayout;
-
     @OnClick({R.id.position_button_rest, R.id.position_button_recline, R.id.position_button_relax, R.id.position_button_recover})
     void onClick(View clickedButton) {
 
@@ -119,9 +116,20 @@ public class PositionControlFragment extends ControlFragment {
                 public void call(Device device) {
                     if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
                         startProgress();
+                    } else if ( device.getConnectionState() == Device.CONNECTION_STATE_DISCONNECTED && device.getLastConnectionStatus() > 0 ){
+                        stopProgress();
+                        showToast("Connection timeout","Try again",new Action1<Void>(){
+                            @Override
+                            public void call(Void aVoid) {
+                                SleepSenseDeviceService.instance().getBaseDevice().connect();
+                            }
+
+                        });
                     } else {
                         stopProgress();
                     }
+
+
                 }
             }));
 
