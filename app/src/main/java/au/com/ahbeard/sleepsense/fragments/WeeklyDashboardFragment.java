@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,9 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.model.AggregateStatistics;
+import au.com.ahbeard.sleepsense.model.Firmness;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.utils.StatisticsUtils;
 import au.com.ahbeard.sleepsense.widgets.LabelThingy;
@@ -47,6 +50,20 @@ public class WeeklyDashboardFragment extends Fragment {
         }
     };
 
+    ThreadLocal<SimpleDateFormat> fancyDate = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("dd MMM yyyy");
+        }
+    };
+
+    ThreadLocal<SimpleDateFormat> optimalBeditme = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("hh:mm a");
+        }
+    };
+
     @Bind(R.id.dashboard_view_pager_graph)
     ViewPager graphViewPager;
 
@@ -58,6 +75,9 @@ public class WeeklyDashboardFragment extends Fragment {
 
     @Bind(R.id.weekly_dashboard_scroll_view)
     ScrollView mScrollView;
+
+    @Bind(R.id.dashboard_text_view_sleep_tip_text)
+    TextView mSleepTipText;
 
     CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
@@ -194,11 +214,11 @@ public class WeeklyDashboardFragment extends Fragment {
 
         StatisticsUtils statisticsUtils = new StatisticsUtils(mStatisticsLayout);
 
-        mAverageSleepScore = statisticsUtils.addStatistic(Color.GREEN, "Average SleepScore", "85");
-        mOptimalBedtime = statisticsUtils.addStatistic(Color.GREEN, "Optimal Bedtime", "9:30 pm");
-        mOptimalMattressFirmness = statisticsUtils.addStatistic(Color.GREEN, "Optimal Mattress Firmness", "Medium Plush");
-        mBestNight =statisticsUtils.addStatistic(Color.GREEN, "Best Night", "24 Dec 2015");
-        mWorstNight = statisticsUtils.addStatistic(Color.GREEN, "Worst Night", "24 Dec 2015");
+        mAverageSleepScore = statisticsUtils.addStatistic(Color.GREEN, "Average SleepScore", null);
+        mOptimalBedtime = statisticsUtils.addStatistic(Color.GREEN, "Optimal Bedtime", null);
+        mOptimalMattressFirmness = statisticsUtils.addStatistic(Color.GREEN, "Optimal Mattress Firmness", null);
+        mBestNight =statisticsUtils.addStatistic(Color.GREEN, "Best Night", null);
+        mWorstNight = statisticsUtils.addStatistic(Color.GREEN, "Worst Night", null);
 
         mCompositeSubscription.add(SleepService.instance()
                 .getAggregateStatisticsObservable()
@@ -232,7 +252,28 @@ public class WeeklyDashboardFragment extends Fragment {
             }
         });
 
-        setupStatistics();
+        String[] sleepTips = getResources().getStringArray(R.array.sleep_tips);
+        mSleepTipText.setText(sleepTips[new Random().nextInt(sleepTips.length)]);
+
+        SleepService.instance().getAggregateStatisticsObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AggregateStatistics>() {
+            @Override
+            public void call(AggregateStatistics aggregateStatistics) {
+                mAverageSleepScore.valueTextView.setText(Integer.toString(aggregateStatistics.getAverageSleepScore().intValue()));
+                if ( aggregateStatistics.getBestNight()!=null) {
+                    mBestNight.valueTextView.setText(format(fancyDate.get(),aggregateStatistics.getBestNight()));
+                }
+                if ( aggregateStatistics.getWorstNight()!=null) {
+                    mWorstNight.valueTextView.setText(format(fancyDate.get(),aggregateStatistics.getWorstNight()));
+                }
+                if ( aggregateStatistics.getOptimalBedtime() != null ) {
+                    mOptimalBedtime.valueTextView.setText(format(optimalBeditme.get(),aggregateStatistics.getOptimalBedtime()));
+                }
+                if ( aggregateStatistics.getOptimalMattressFirmness() !=null ) {
+                    mOptimalMattressFirmness.valueTextView.setText(Firmness.getFirmnessForPressure(aggregateStatistics.getOptimalMattressFirmness()).getLabel());
+                }
+            }
+        });
+
 
         return view;
     }
@@ -248,15 +289,14 @@ public class WeeklyDashboardFragment extends Fragment {
 
     }
 
-    private void setupStatistics() {
-
-        // Move this off the main thread.
-        SleepService.instance().getAggregateStatistics();
-
-        //mCompositeSubscription.s
-
-
-
+    public String format(SimpleDateFormat simpleDateFormat, Calendar calendar) {
+        if ( calendar == null ) {
+            return null;
+        } else {
+            simpleDateFormat.setCalendar(calendar);
+            return simpleDateFormat.format(calendar.getTime());
+        }
     }
+
 
 }

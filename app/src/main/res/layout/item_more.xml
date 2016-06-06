@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/more_layout"
+              android:layout_width="match_parent"
+              android:layout_height="45dp"
+              android:gravity="center_vertical"
+              android:background="#fff"
+              android:orientation="horizontal"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp">
+
+    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:id="@+id/more_text_view_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:lineSpacingExtra="5sp"
+        android:text="App Version"
+        android:textColor="#6E788D"
+        android:textSize="15sp"
+        app:typeface="OpenSansRegular"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1"/>
+
+    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:id="@+id/more_text_view_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:lineSpacingExtra="5sp"
+        android:text="0.4"
+        android:textColor="#6E788D"
+        android:textSize="15sp"
+        app:typeface="OpenSansRegular"/>
+
+    <ImageView
+        android:id="@+id/more_image_view_chevron"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/more_chevron_normal"/>
+
+</LinearLayout>

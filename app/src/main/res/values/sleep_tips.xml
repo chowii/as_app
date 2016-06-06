@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sleep_tips">
+        <item>Stick to a sleep schedule and go to bed at the same time every day</item>
+        <item>Stick to a sleep schedule, even on weekends</item>
+        <item>If you need an alarm clock to wake, set an earlier bedtime</item>
+        <item>Avoid sleeping in, even on weekends</item>
+        <item>To make up for lost sleep, nap during the day instead of sleeping in</item>
+        <item>Limit naps to 15–20 minutes in the early afternoon</item>
+        <item>Spend more time outside during the day to help your body produce melatonin</item>
+        <item>Let natural light into your home or workspace during the day</item>
+        <item>Try listening to calming music or audiobooks before bed</item>
+        <item>Read a good old-fashion book before bed</item>
+        <item>Finish exercising at least 3 hours before bedtime</item>
+        <item>Stretch, meditate or practice yoga before bedtime</item>
+        <item>Design your sleep space to establish the conditions you need for sleep</item>
+        <item>Silence any noise in your sleep space by using earplugs</item>
+        <item>Lower the temperature of your room so it’s cool</item>
+        <item>Avoid spicy or acidic foods that may cause stomach upset or heartburn</item>
+        <item>Set dinner time earlier and avoid eating within 2 hours of bedtime</item>
+        <item>Avoid drinking alcohol before bed as it interferes with your sleep cycle</item>
+        <item>Avoid sugary foods before bed</item>
+        <item>Sleep on a comfortable pillow</item>
+        <item>Buy a new pillow, especially if they haven’t been replaced for a while</item>
+        <item>Take work materials, computers and televisions out of your sleep space</item>
+        <item>Use your bed only for sleep and sex</item>
+        <item>Practice deep breathing before bed</item>
+        <item>Practice muscle relaxation by tensing and then relaxing your muscles</item>
+        <item>Visualise a peaceful, restful place at bedtime</item>
+        <item>Visualise and imagine yourself somewhere calm before bed</item>
+        <item>Keep your room dark, cool and quiet</item>
+        <item>Your bed covers should leave you with enough rooms to stretch and turn</item>
+        <item>Practice breathing exercises if you wake during the night</item>
+        <item>Make a journal of the sleep-friendly choices you made during the day</item>
+        <item>Read a book by a soft light before bed</item>
+        <item>Wind down in the evening by making simple preparations for the next day</item>
+        <item>Avoid activities in your sleep space that you associate with anxiety</item>
+        <item>Evaluate your sleep patterns, identify bad habits and omit them</item>
+        <item>Include physical activity in your daily routine but not close to bedtime</item>
+        <item>Create a bedtime ritual to help your body relax</item>
+        <item>Take a warm shower, read a book or listen to calming music before bed</item>
+        <item>Turn off bright lights an hour before bed or use only dim lighting</item>
+        <item>Avoid television and electronic screens one hour before bed</item>
+        <item>Wash your sheets weekly and keep your sleep space hygienic</item>
+        <item>Block out light with window shades or an eye mask</item>
+        <item>If you don’t fall asleep within 15 minutes get up and do something relaxing</item>
+        <item>Don’t go to bed either hungry or too full</item>
+        <item>Limit how much you drink before bed to prevent trips to the toilet</item>
+        <item>Avoid caffeine, nicotine and alcohol for a better quality sleep</item>
+        <item>Limit daytime naps</item>
+        <item>If you’re a shift worker block out sunlight during daytime sleep</item>
+        <item>Manage stress by writing a to–do list 2–3 hours before bed</item>
+        <item>Limit your exposure to light in the evenings</item>
+        <item>If a pet regularly wakes you during sleep, keep it out of your sleep space</item>
+        <item>Open your curtains in the morning to help your sleep wake cycle</item>
+        <item>Block out your clock in your sleep space</item>
+        <item>Remove your television from your sleep space</item>
+        <item>Set an alarm to go to bed and begin a calming routine</item>
+        <item>Resist the urge to hit snooze because it can disturb the REM sleep phase</item>
+        <item>Cut out caffeine after lunchtime</item>
+    </string-array>
+</resources>

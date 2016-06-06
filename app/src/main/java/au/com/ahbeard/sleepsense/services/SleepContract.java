@@ -53,6 +53,7 @@ public class SleepContract {
         public static final String RESTING_HRV_INDEX = "resting_hrv_index";
         public static final String TOTAL_SLEEP_SCORE = "total_sleep_score";
         public static final String SLEEP_SCORE_VERSION = "sleep_score_version";
+        public static final String MATTRESS_FIRMNESS = "mattress_firmness";
 
         public static final String SQL_CREATE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
@@ -86,11 +87,14 @@ public class SleepContract {
                         ALL_NIGHT_HRV_INDEX + FLOAT_TYPE + COMMA_SEP +
                         RESTING_HRV_INDEX + FLOAT_TYPE + COMMA_SEP +
                         TOTAL_SLEEP_SCORE + FLOAT_TYPE + COMMA_SEP +
-                        SLEEP_SCORE_VERSION + FLOAT_TYPE +
-                " )";
+                        SLEEP_SCORE_VERSION + FLOAT_TYPE + COMMA_SEP +
+                        MATTRESS_FIRMNESS + FLOAT_TYPE +
+                        " )";
 
         public static final String SQL_DROP =
                 "DROP TABLE IF EXISTS " + TABLE_NAME;
+
+        public static final String ALTER_TABLE_ADD_MATTRESS_FIRMNESS = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN " + MATTRESS_FIRMNESS + FLOAT_TYPE;
 
     }
 

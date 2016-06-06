@@ -101,6 +101,9 @@ public class Sleep {
     // resting_HRV_index
     private Float mRestingHRVIndex;
 
+    // resting_HRV_index
+    private Float mMattressFirmness;
+
     // total_sleep_score
     Float mTotalSleepScore;
 
@@ -235,6 +238,10 @@ public class Sleep {
 
     public Float getSleepScoreVersion() {
         return mSleepScoreVersion;
+    }
+
+    public Float getMattressFirmness() {
+        return mMattressFirmness;
     }
 
     public Map<String, TrackData> getTrackDataByName() {
@@ -448,6 +455,7 @@ public class Sleep {
         sleep.mRestingHRVIndex = cursor.getFloat(cursor.getColumnIndex(SleepContract.Sleep.RESTING_HRV_INDEX));
         sleep.mTotalSleepScore = cursor.getFloat(cursor.getColumnIndex(SleepContract.Sleep.TOTAL_SLEEP_SCORE));
         sleep.mSleepScoreVersion = cursor.getFloat(cursor.getColumnIndex(SleepContract.Sleep.SLEEP_SCORE_VERSION));
+        sleep.mMattressFirmness = cursor.getFloat(cursor.getColumnIndex(SleepContract.Sleep.MATTRESS_FIRMNESS));
 
         sleep.mTrackDataByName = new HashMap<>();
 

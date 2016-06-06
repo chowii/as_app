@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class SleepSQLiteHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 19;
+    public static final int DATABASE_VERSION = 20;
     public static final String DATABASE_NAME = "Sleep.db";
 
     public SleepSQLiteHelper(Context context) {
@@ -59,6 +59,10 @@ public class SleepSQLiteHelper extends SQLiteOpenHelper {
 
         if (oldVersion < 19) {
             database.execSQL(MattressFirmnessContract.MattressFirmness.SQL_CREATE);
+        }
+
+        if (oldVersion < 20) {
+            database.execSQL(SleepContract.Sleep.ALTER_TABLE_ADD_MATTRESS_FIRMNESS);
         }
 
     }

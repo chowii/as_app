@@ -14,13 +14,16 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.model.Firmness;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepStage;
 import au.com.ahbeard.sleepsense.services.SleepService;
@@ -53,6 +56,9 @@ public class DailyDashboardFragment extends Fragment {
 
     @Bind(R.id.daily_dashboard_scroll_view)
     ScrollView mScrollView;
+
+    @Bind(R.id.dashboard_text_view_sleep_tip_text)
+    TextView mSleepTipText;
 
     ThreadLocal<SimpleDateFormat> dayOfWeek = new ThreadLocal<SimpleDateFormat>() {
         @Override
@@ -232,8 +238,15 @@ public class DailyDashboardFragment extends Fragment {
 
                                         mTimesOutOfBed.valueTextView.setText(StatisticsUtils.valueSuffix(textColor,altTextColor,Integer.toString(numberOfTimesOutOfBed)," times"));
                                     } else {
-                                        mTimesOutOfBed.valueTextView.setText("");
+                                        mTimesOutOfBed.valueTextView.setText(null);
                                     }
+
+                                    if ( sleep.getMattressFirmness() != null ) {
+                                        mMattressFirmness.valueTextView.setText(Firmness.getFirmnessForPressure(sleep.getMattressFirmness().intValue()).getLabel());
+                                    } else {
+                                        mMattressFirmness.valueTextView.setText(null);
+                                    }
+
 
                                 }
 
@@ -271,6 +284,8 @@ public class DailyDashboardFragment extends Fragment {
         }
 
 
+        String[] sleepTips = getResources().getStringArray(R.array.sleep_tips);
+        mSleepTipText.setText(sleepTips[new Random().nextInt(sleepTips.length)]);
 
         return view;
     }

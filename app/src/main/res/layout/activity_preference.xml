@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/controls_layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:id="@+id/image_view_progress_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/progress_animated" android:visibility="gone"/>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:id="@+id/help_text_view_heading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:lineSpacingExtra="5sp"
+            android:text="Preferences"
+            android:textColor="#6E788D"
+            android:textSize="17sp"
+            app:typeface="OpenSansRegular"/>
+
+        <ImageView
+            android:id="@+id/image_view_help_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/help_icon_normal" android:visibility="gone"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="#E4E4E4"/>
+
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:padding="40dp">
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="Sleep target"
+                android:textColor="#3C709C"
+                android:textSize="17sp"
+                app:typeface="OpenSansSemiBold"/>
+            <View android:layout_width="match_parent" android:layout_height="13dp"/>
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="Set your sleep goal to receive\n an accurate Sleep Score"
+                android:textColor="#6E788D"
+                android:textSize="13sp"
+                app:typeface="OpenSansSemiBold"/>
+
+            <View android:layout_width="match_parent" android:layout_height="13dp"/>
+            <SeekBar
+                android:id="@+id/preference_seek_bar_sleep_target"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <View android:layout_width="match_parent" android:layout_height="13dp"/>
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:id="@+id/preference_text_view_sleep_goal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="Sleep goal 6h 30m"
+                android:textColor="#806E788D"
+                android:textSize="13sp"
+                app:typeface="OpenSansSemiBold"/>
+
+
+            <View android:layout_width="match_parent" android:layout_height="46dp"/>
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="My devices"
+                android:textColor="#3C709C"
+                android:textSize="17sp"
+                app:typeface="OpenSansSemiBold"/>
+            <View android:layout_width="match_parent" android:layout_height="13dp"/>
+
+            <LinearLayout
+                android:id="@+id/preference_layout_devices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/more_divider"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:showDividers="middle|beginning|end">
+
+            </LinearLayout>
+
+
+            <View android:layout_width="match_parent" android:layout_height="46dp"/>
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="Reset Sleepsense"
+                android:textColor="#3C709C"
+                android:textSize="17sp"
+                app:typeface="OpenSansSemiBold"/>
+            <View android:layout_width="match_parent" android:layout_height="13dp"/>
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="Reset to pair a new device or track a different side of the bed"
+                android:textColor="#6E788D"
+                android:textSize="13sp"
+                app:typeface="OpenSansSemiBold"/>
+            <View android:layout_width="match_parent" android:layout_height="13dp"/>
+            <au.com.ahbeard.sleepsense.widgets.StyledButton
+                android:id="@+id/on_board_button_try_again"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/sleep_sense_button_white"
+                android:text="Reset Sleepsense"
+                android:textColor="@color/whiteButtonTextColor"/>
+            <View android:layout_width="match_parent" android:layout_height="13dp"/>
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="You will not lose any tracking data"
+                android:textColor="#6E788D"
+                android:textSize="13sp"
+                app:typeface="OpenSansSemiBold"/>
+            <View android:layout_width="match_parent" android:layout_height="40dp"/>
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+</LinearLayout>

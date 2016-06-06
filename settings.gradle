@@ -1,1 +1,1 @@
-include ':app', ':beddit-mobile-android-sensor', ':sleepsense-backend'
+include ':app', ':beddit-mobile-android-sensor'

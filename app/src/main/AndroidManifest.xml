@@ -39,8 +39,18 @@
             android:name=".activities.SleepScoreBreakdownActivity"
             android:screenOrientation="userPortrait">
         </activity>
-        <activity android:name=".activities.SplashActivity"
-                  android:screenOrientation="userPortrait" android:theme="@style/SplashTheme">
+        <activity
+            android:name=".activities.HelpActivity"
+            android:screenOrientation="userPortrait">
+        </activity>
+        <activity
+            android:name=".activities.PreferenceActivity"
+            android:screenOrientation="userPortrait">
+        </activity>
+        <activity
+            android:name=".activities.SplashActivity"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

@@ -36,5 +36,6 @@
 
 
     <string name="button_continue">Continue</string>
+    <string name="title_activity_preference">PreferenceActivity</string>
 
 </resources>

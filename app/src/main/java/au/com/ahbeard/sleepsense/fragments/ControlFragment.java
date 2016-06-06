@@ -8,11 +8,13 @@ import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.functions.Action1;
 
 /**
- * Created by neal on 2/06/2016.
+ * THIS CLASS WAS DEPRECATED AND CODE WAS COPIED INTO SUBCLASSES BECAUSE BUTTERKNIFE DOESN'T HANDLE INJECTION
+ * VERY WELL WITH INCREMENTAL BUILDS :-(
  */
 public class ControlFragment extends Fragment {
 
@@ -59,6 +61,14 @@ public class ControlFragment extends Fragment {
             ((AnimationDrawable) mProgressImageView.getDrawable()).stop();
             mProgressImageView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    protected void bind(View view) {
+        ButterKnife.bind(this,view);
+    }
+
+    protected void unbind() {
+        ButterKnife.unbind(this);
     }
 
     protected void showToast(String message, String actionText, Action1<Void> action) {

@@ -40,6 +40,7 @@ import au.com.ahbeard.sleepsense.model.AggregateStatistics;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepProperty;
 import au.com.ahbeard.sleepsense.model.beddit.TrackData;
+import au.com.ahbeard.sleepsense.utils.OptimalBedtimeCalculator;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action0;
@@ -59,12 +60,13 @@ public class SleepService {
     private File mSleepDataStorageDirectory;
 
     private SleepSQLiteHelper mSleepSQLiteHelper;
-    private AggregateStatistics mAggregateStatistics;
+    private AggregateStatistics mAggregateStatistics = new AggregateStatistics();
 
     private PublishSubject<Integer> mDataChangePublishSubject = PublishSubject.create();
     private PublishSubject<Integer> mSleepIdSelectedSubject = PublishSubject.create();
 
-    private BehaviorSubject<AggregateStatistics> mAggregateStatisticsPublishSubject = BehaviorSubject.create();
+    private BehaviorSubject<AggregateStatistics> mAggregateStatisticsBehaviourSubject = BehaviorSubject.create();
+    private boolean mAggregateStatisticsCalculated;
 
     public static void initialize(Context context) {
         sSleepService = new SleepService(context);
@@ -105,7 +107,11 @@ public class SleepService {
                 }
 
                 PreferenceService.instance().setHasRecordedASleep(true);
+
                 mDataChangePublishSubject.onNext(-1);
+
+                updateAggregateStatistics();
+
             }
         });
 
@@ -140,8 +146,8 @@ public class SleepService {
 
                 Log.d("BatchAnalysis", String.format("ANALYZING DATE: %d/%d/%d", calendarDate.getDay(), calendarDate.getMonth(), calendarDate.getYear()));
 
-                for ( SessionData sessionData1: sessionData ) {
-                    Log.d("BatchAnalysis", String.format("SESSSION DATA: %s to %s",new Date((long)sessionData1.getStartTime()*1000),new Date((long)sessionData1.getEndTime()*1000)));
+                for (SessionData sessionData1 : sessionData) {
+                    Log.d("BatchAnalysis", String.format("SESSSION DATA: %s to %s", new Date((long) sessionData1.getStartTime() * 1000), new Date((long) sessionData1.getEndTime() * 1000)));
                 }
 
                 BatchAnalysisResult batchAnalysisResult = batchAnalysis.analyzeSessions(
@@ -221,7 +227,7 @@ public class SleepService {
 
         File[] sessions = getSessionsDirectory().listFiles();
 
-        if ( sessions != null ) {
+        if (sessions != null) {
             for (File session : sessions) {
                 SessionData sessionData = getSessionData(session);
                 if (sessionData != null) {
@@ -491,13 +497,14 @@ public class SleepService {
         Log.d("SleepService", String.format("startSleepId: %d endSleepId: %d", startSleepId, endSleepId));
 
         SQLiteDatabase database = null;
+        Cursor sleepSessionCursor = null;
 
         float[] sleepScores;
 
         try {
             database = mSleepSQLiteHelper.getReadableDatabase();
 
-            Cursor sleepSessionCursor = database.rawQuery(
+            sleepSessionCursor = database.rawQuery(
                     "select sleep_id, total_sleep_score from sleep where sleep_id >= ? and sleep_id <= ? order by sleep_id asc",
                     new String[]{Integer.toString(startSleepId), Integer.toString(endSleepId)});
 
@@ -522,7 +529,11 @@ public class SleepService {
             for (Integer sleepId : sleepIdRange) {
                 sleepScores[i++] = sleepScoreBySleepId.containsKey(sleepId) ? sleepScoreBySleepId.get(sleepId).getValue() : -1;
             }
+
         } finally {
+            if ( sleepSessionCursor != null ) {
+                sleepSessionCursor.close();
+            }
 
         }
 
@@ -622,6 +633,125 @@ public class SleepService {
         return calendar;
     }
 
+    public Observable<Integer> getChangeObservable() {
+        return mDataChangePublishSubject;
+    }
+
+
+    public void notifySleepIdSelected(Integer id) {
+        mSleepIdSelectedSubject.onNext(id);
+    }
+
+    public Observable<Integer> getSleepIdSelectedObservable() {
+        return mSleepIdSelectedSubject;
+    }
+
+    public Observable<AggregateStatistics> getAggregateStatisticsObservable() {
+
+        if ( ! mAggregateStatisticsCalculated ) {
+            mAggregateStatisticsCalculated =true;
+            Schedulers.io().createWorker().schedule(new Action0() {
+                @Override
+                public void call() {
+                    updateAggregateStatistics();
+                }
+            });
+        }
+
+        return mAggregateStatisticsBehaviourSubject;
+    }
+
+    public void updateAggregateStatistics() {
+
+        Log.d("SleepService", "updateAggregateStatistics called..");
+
+        mAggregateStatisticsCalculated = true;
+
+        SQLiteDatabase database = null;
+        Cursor sleepSessionCursor = null;
+
+        try {
+            database = mSleepSQLiteHelper.getReadableDatabase();
+
+            Calendar calendar = Calendar.getInstance();
+
+            int endSleepId = getSleepId(calendar);
+            calendar.add(Calendar.DAY_OF_YEAR, -89);
+            int startSleepId = getSleepId(calendar);
+
+            sleepSessionCursor = database.rawQuery(
+                    "select sleep_id, total_sleep_score, mattress_firmness, start_time from sleep where sleep_id >= ? and sleep_id <= ? order by sleep_id asc",
+                    new String[]{Integer.toString(startSleepId), Integer.toString(endSleepId)});
+
+            sleepSessionCursor.moveToFirst();
+
+            float smallestSleepScore = Float.MAX_VALUE;
+            int smallestSleepScoreSleepId = 0;
+            float highestSleepScore = Float.MIN_VALUE;
+            float highestSleepScoreMattressFirmness = 0;
+            int highestSleepScoreSleepId = 0;
+            float sumOfSleepScores = 0;
+            int countOfSleepScores = 0;
+
+            OptimalBedtimeCalculator optimalBedtimeCalculator = new OptimalBedtimeCalculator();
+
+            while (!sleepSessionCursor.isAfterLast()) {
+
+                double startTime = sleepSessionCursor.getDouble(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.START_TIME));
+                int sleepId = sleepSessionCursor.getInt(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.SLEEP_ID));
+                float sleepScore = sleepSessionCursor.getFloat(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.TOTAL_SLEEP_SCORE));
+                float mattressFirmness = sleepSessionCursor.getFloat(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.MATTRESS_FIRMNESS));
+
+                countOfSleepScores += 1;
+                sumOfSleepScores += sleepScore;
+
+                optimalBedtimeCalculator.add(startTime, sleepScore);
+
+                if (sleepScore < smallestSleepScore) {
+                    smallestSleepScore = sleepScore;
+                    smallestSleepScoreSleepId = sleepId;
+                }
+
+                if (sleepScore > highestSleepScore) {
+                    highestSleepScore = sleepScore;
+                    highestSleepScoreSleepId = sleepId;
+                    highestSleepScoreMattressFirmness = mattressFirmness;
+                }
+
+                sleepSessionCursor.moveToNext();
+
+            }
+
+            mAggregateStatistics.setAverageSleepScore(sumOfSleepScores / countOfSleepScores);
+
+            if (highestSleepScoreSleepId > 0) {
+                mAggregateStatistics.setBestNight(getCalendar(highestSleepScoreSleepId));
+                mAggregateStatistics.setOptimalMattressFirmness((int) highestSleepScoreMattressFirmness);
+            }
+
+            if (smallestSleepScoreSleepId > 0) {
+                mAggregateStatistics.setWorstNight(getCalendar(smallestSleepScoreSleepId));
+            }
+
+            mAggregateStatistics.setOptimalBedtime(optimalBedtimeCalculator.getResult());
+
+            mAggregateStatisticsBehaviourSubject.onNext(mAggregateStatistics);
+
+
+        } finally {
+            if (sleepSessionCursor != null) {
+                sleepSessionCursor.close();
+            }
+        }
+
+    }
+
+
+    /**
+     * TEST METHODS
+     */
+
+
     /**
      * @param calendar
      * @param days
@@ -647,29 +777,6 @@ public class SleepService {
 
     }
 
-    public Observable<Integer> getChangeObservable() {
-        return mDataChangePublishSubject;
-    }
 
 
-    public void notifySleepIdSelected(Integer id) {
-        mSleepIdSelectedSubject.onNext(id);
-    }
-
-    public Observable<Integer> getSleepIdSelectedObservable() {
-        return mSleepIdSelectedSubject;
-    }
-
-    public Observable<AggregateStatistics> getAggregateStatisticsObservable() {
-        return mAggregateStatisticsPublishSubject;
-    }
-
-    public AggregateStatistics getAggregateStatistics() {
-
-        if (mAggregateStatistics == null) {
-            mAggregateStatistics = new AggregateStatistics();
-        }
-
-        return mAggregateStatistics;
-    }
 }

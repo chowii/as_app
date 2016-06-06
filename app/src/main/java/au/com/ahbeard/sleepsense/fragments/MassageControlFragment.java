@@ -1,11 +1,14 @@
 package au.com.ahbeard.sleepsense.fragments;
 
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -28,7 +31,7 @@ import rx.subscriptions.CompositeSubscription;
  * Use the {@link MassageControlFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MassageControlFragment extends ControlFragment {
+public class MassageControlFragment extends Fragment {
 
 
     @Bind(R.id.massage_button_timer)
@@ -127,6 +130,7 @@ public class MassageControlFragment extends ControlFragment {
         View view = inflater.inflate(R.layout.fragment_massage_control, container, false);
 
         ButterKnife.bind(this, view);
+        bind(view);
 
         mHeaderLayout.setVisibility(mControlOnly?View.GONE:View.VISIBLE);
 
@@ -176,11 +180,76 @@ public class MassageControlFragment extends ControlFragment {
     @Override
     public void onDestroyView() {
         mCompositeSubscription.clear();
-
+    unbind();
         ButterKnife.unbind(this);
 
         super.onDestroyView();
     }
+
+    @Bind(R.id.image_view_progress_icon)
+    protected ImageView mProgressImageView;
+
+    @Bind(R.id.controls_layout_header)
+    protected View mHeaderLayout;
+
+    @Bind(R.id.progress_layout)
+    protected View mLayout;
+
+    @Bind(R.id.progress_layout_text_view_message)
+    protected TextView mMessageTextView;
+
+    @Bind(R.id.progress_layout_text_view_action)
+    protected TextView mActionTextView;
+
+    private Action1<Void> mAction;
+
+    @OnClick(R.id.progress_layout_text_view_action)
+    protected void progressAction() {
+        if (mAction != null) {
+            mAction.call(null);
+            mLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        stopProgress();
+    }
+
+    protected void startProgress() {
+        if (mProgressImageView != null && mProgressImageView.getVisibility() == View.INVISIBLE) {
+            mProgressImageView.setVisibility(View.VISIBLE);
+            ((AnimationDrawable) mProgressImageView.getDrawable()).start();
+        }
+    }
+
+    protected void stopProgress() {
+        if (mProgressImageView != null && mProgressImageView.getVisibility() == View.VISIBLE) {
+            ((AnimationDrawable) mProgressImageView.getDrawable()).stop();
+            mProgressImageView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    protected void bind(View view) {
+        ButterKnife.bind(this,view);
+    }
+
+    protected void unbind() {
+        ButterKnife.unbind(this);
+    }
+
+    protected void showToast(String message, String actionText, Action1<Void> action) {
+
+        mAction = action;
+
+        mMessageTextView.setText(message);
+        mActionTextView.setText(actionText);
+
+        mLayout.setVisibility(View.VISIBLE);
+
+    }
+
 
 
 }

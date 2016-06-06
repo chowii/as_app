@@ -1,11 +1,13 @@
 package au.com.ahbeard.sleepsense.fragments;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
@@ -26,7 +28,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * The pump controls, excluding left and right selection, but this control does know about left and right.
  */
-public class FirmnessControlFragment extends ControlFragment {
+public class FirmnessControlFragment extends Fragment {
 
     @Bind(R.id.firmness_control_firmness_control_left)
     FirmnessControlView mFirmnessControlLeftView;
@@ -112,6 +114,7 @@ public class FirmnessControlFragment extends ControlFragment {
         View view = inflater.inflate(R.layout.fragment_firmness, container, false);
 
         ButterKnife.bind(this, view);
+        bind(view);
 
         if ( "left".equalsIgnoreCase(mSide)) {
             setLeftSideActive();
@@ -149,6 +152,7 @@ public class FirmnessControlFragment extends ControlFragment {
     @Override
     public void onDestroyView() {
         mSubscriptions.clear();
+        unbind();
         ButterKnife.unbind(this);
         super.onDestroyView();
     }
@@ -204,5 +208,70 @@ public class FirmnessControlFragment extends ControlFragment {
         }
 
     }
+
+    @Bind(R.id.image_view_progress_icon)
+    protected ImageView mProgressImageView;
+
+    @Bind(R.id.controls_layout_header)
+    protected View mHeaderLayout;
+
+    @Bind(R.id.progress_layout)
+    protected View mLayout;
+
+    @Bind(R.id.progress_layout_text_view_message)
+    protected TextView mMessageTextView;
+
+    @Bind(R.id.progress_layout_text_view_action)
+    protected TextView mActionTextView;
+
+    private Action1<Void> mAction;
+
+    @OnClick(R.id.progress_layout_text_view_action)
+    protected void progressAction() {
+        if (mAction != null) {
+            mAction.call(null);
+            mLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        stopProgress();
+    }
+
+    protected void startProgress() {
+        if (mProgressImageView != null && mProgressImageView.getVisibility() == View.INVISIBLE) {
+            mProgressImageView.setVisibility(View.VISIBLE);
+            ((AnimationDrawable) mProgressImageView.getDrawable()).start();
+        }
+    }
+
+    protected void stopProgress() {
+        if (mProgressImageView != null && mProgressImageView.getVisibility() == View.VISIBLE) {
+            ((AnimationDrawable) mProgressImageView.getDrawable()).stop();
+            mProgressImageView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    protected void bind(View view) {
+        ButterKnife.bind(this,view);
+    }
+
+    protected void unbind() {
+        ButterKnife.unbind(this);
+    }
+
+    protected void showToast(String message, String actionText, Action1<Void> action) {
+
+        mAction = action;
+
+        mMessageTextView.setText(message);
+        mActionTextView.setText(actionText);
+
+        mLayout.setVisibility(View.VISIBLE);
+
+    }
+
 
 }
