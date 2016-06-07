@@ -12,6 +12,8 @@ import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
 import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.ValueChangeEvent;
+import au.com.ahbeard.sleepsense.services.PreferenceService;
+import au.com.ahbeard.sleepsense.services.SleepService;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -27,6 +29,7 @@ public class PumpDevice extends Device {
     private Subscription mPumpStatusSubscription;
 
     private long mLastActiveTime;
+    private boolean mStoreFirmnessOnDisconnect;
 
     public enum Side {
         Left,
@@ -63,6 +66,11 @@ public class PumpDevice extends Device {
         super.onServicesDiscovered(gatt, status);
     }
 
+    public void connectToGetFirmness() {
+        mStoreFirmnessOnDisconnect=true;
+        connect();
+    }
+
     public PumpDevice() {
 
         super();
@@ -82,6 +90,10 @@ public class PumpDevice extends Device {
                 if (pumpEvent.isAdjusting()) {
                     mLastActiveTime = System.currentTimeMillis();
                 } else if (System.currentTimeMillis() - mLastActiveTime > 3000 ) {
+                    // Store last mattress firmness?
+                    if ( mStoreFirmnessOnDisconnect ) {
+                        SleepService.instance().writeMattressFirmnessToDatabase(System.currentTimeMillis(),pumpEvent.getPressure(PreferenceService.instance().getSideOfBed()));
+                    }
                     disconnect();
                 }
 

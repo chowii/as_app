@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseCommand;
@@ -189,8 +190,17 @@ public class PositionControlFragment extends Fragment {
     }
 
 
+
+    // Everything from here down should be in a superclass, but thanks to
+    // ButterKnife not dealing properly with incremental builds, it's not.
+
     @Bind(R.id.image_view_progress_icon)
     protected ImageView mProgressImageView;
+
+    @OnClick(R.id.image_view_help_icon)
+    void onHelpClicked() {
+        startActivity(HelpActivity.getIntent(getActivity(),"Mattress Firmness", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+    }
 
     @Bind(R.id.controls_layout_header)
     protected View mHeaderLayout;

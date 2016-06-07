@@ -16,17 +16,16 @@
             android:id="@+id/image_view_progress_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:layout_marginLeft="20dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="20dp"
             android:src="@drawable/progress_animated"/>
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
             android:lineSpacingExtra="5sp"
-            android:text="Mattress Firmness"
+            android:text="@string/mattress_firmness_screen_title"
             android:textColor="#4A4A4A"
             android:textSize="15sp"
             app:typeface="OpenSansLight"/>
@@ -35,8 +34,8 @@
             android:id="@+id/image_view_help_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="20dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="20dp"
             android:src="@drawable/help_icon_normal"/>
 
         <View

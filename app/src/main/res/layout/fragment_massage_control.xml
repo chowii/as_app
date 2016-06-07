@@ -25,15 +25,16 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:lineSpacingExtra="5sp"
-            android:text="Massage Settings"
+            android:text="@string/massage_settings_screen_title"
             android:textColor="#4A4A4A"
             android:textSize="15sp"
             app:typeface="OpenSansLight"/>
 
         <ImageView
+            android:id="@+id/image_view_help_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|top"
+            android:layout_gravity="right|center_vertical"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/help_icon_normal"/>

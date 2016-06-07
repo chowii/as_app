@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
@@ -209,8 +210,16 @@ public class FirmnessControlFragment extends Fragment {
 
     }
 
+    // Everything from here down should be in a superclass, but thanks to
+    // ButterKnife not dealing properly with incremental builds, it's not.
+
     @Bind(R.id.image_view_progress_icon)
     protected ImageView mProgressImageView;
+
+    @OnClick(R.id.image_view_help_icon)
+    void onHelpClicked() {
+        startActivity(HelpActivity.getIntent(getActivity(),"Mattress Firmness", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+    }
 
     @Bind(R.id.controls_layout_header)
     protected View mHeaderLayout;

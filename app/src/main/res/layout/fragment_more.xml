@@ -29,18 +29,19 @@
                 app:typeface="OpenSansLight"/>
 
             <ImageView
+                android:id="@+id/image_view_help_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|top"
+                android:layout_gravity="right|center_vertical"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/help_icon_normal"/>
+                android:src="@drawable/help_icon_normal" android:visibility="gone"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_gravity="bottom"
-                android:background="#DBE3E6"/>
+                android:background="#DBE3E6" />
 
         </FrameLayout>
 
