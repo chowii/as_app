@@ -14,7 +14,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class OnBoardingLieOnBedFragment extends Fragment {
+public class OnBoardingLieOnBedFragment  extends OnBoardingFragment {
 
     public static final String ARG_SIDE = "side";
 

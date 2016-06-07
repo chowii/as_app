@@ -19,7 +19,7 @@
             android:layout_marginRight="32dp"
             android:textColor="#fff"
             app:typeface="OpenSansSemibold"
-            android:text="Welcome!"/>
+            android:text="@string/on_boarding_bluetooth_title"/>
 
         <View android:layout_width="wrap_content" android:layout_height="24dp"/>
 
@@ -31,7 +31,7 @@
             android:textColor="#fff"
             android:lineSpacingExtra="10dp"
             app:typeface="OpenSansRegular"
-            android:text="Let's find your sleeping devices and get your Sleepsense bed set up"/>
+            android:text="@string/on_boarding_bluetooth_description"/>
 
     <View
         android:layout_width="match_parent"
@@ -45,7 +45,7 @@
         android:layout_margin="25dp"
         android:background="@drawable/sleep_sense_button_white"
         android:stateListAnimator="@null"
-        android:text="Find my devices"
+        android:text="@string/on_boarding_bluetooth_button_find_my_devices"
         android:textColor="@color/whiteButtonTextColor"/>
 
     <View
@@ -54,6 +54,7 @@
         android:layout_weight="2"/>
 
     <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:id="@+id/on_board_text_view_find_out_more"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -63,7 +64,7 @@
         android:layout_marginRight="32dp"
         android:lineSpacingExtra="10dp"
         app:typeface="OpenSansRegular"
-        android:text="Don't have a Sleepsense bed?\nFIND OUT MORE"/>
+        android:text="@string/on_boarding_bluetooth_link_find_out_more"/>
 
 
 </LinearLayout>

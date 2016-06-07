@@ -18,7 +18,7 @@ import butterknife.OnClick;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OnBoardingFirmnessControlsFragment extends Fragment {
+public class OnBoardingFirmnessControlsFragment  extends OnBoardingFragment {
 
     @OnClick(R.id.on_board_button_continue)
     void continueClicked() {

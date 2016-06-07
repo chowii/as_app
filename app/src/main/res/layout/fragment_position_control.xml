@@ -33,6 +33,7 @@
             app:typeface="OpenSansLight"/>
 
         <ImageView
+            android:id="@+id/image_view_help_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"

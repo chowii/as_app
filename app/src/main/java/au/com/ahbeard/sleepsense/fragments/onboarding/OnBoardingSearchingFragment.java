@@ -22,7 +22,7 @@ import rx.subscriptions.CompositeSubscription;
 
 /**
  */
-public class OnBoardingSearchingFragment extends Fragment {
+public class OnBoardingSearchingFragment  extends OnBoardingFragment {
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 

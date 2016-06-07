@@ -1,9 +1,11 @@
 package au.com.ahbeard.sleepsense.fragments.onboarding;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.MailTo;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +13,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import au.com.ahbeard.sleepsense.R;
 import butterknife.Bind;
@@ -20,7 +21,7 @@ import butterknife.OnClick;
 
 /**
  */
-public class OnBoardingHelpFragment extends Fragment {
+public class OnBoardingHelpFragment extends OnBoardingFragment {
 
     private OnActionListener mOnActionListener;
 
@@ -39,6 +40,7 @@ public class OnBoardingHelpFragment extends Fragment {
 
     public interface OnActionListener {
         void onRetryButtonClicked();
+
         void onCallButtonClicked();
     }
 
@@ -66,16 +68,52 @@ public class OnBoardingHelpFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_on_boarding_help, container, false);
 
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
         mWebView.getSettings().setJavaScriptEnabled(true);
 
-        mWebView.setWebChromeClient(new WebChromeClient(){
+        mWebView.setWebChromeClient(new WebChromeClient() {
+
 
         });
 
-        mWebView.setWebViewClient(new WebViewClient(){
+        mWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (MailTo.isMailTo(url)) {
+                    MailTo mailTo = MailTo.parse(url);
+                    Intent mailIntent = createEmailIntent(getContext(), mailTo.getTo(), mailTo.getSubject(), mailTo.getBody(), mailTo.getCc());
+                    PackageManager packageManager = getActivity().getPackageManager();
+                    if (mailIntent.resolveActivity(packageManager) != null) {
+                        startActivity(mailIntent);
+                    } else {
+                        Log.d("Help", "No facility available to handle mailto: url");
+                    }
+                    return false;
+                } else if (url.startsWith("tel:")) {
+                    Intent telephoneIntent = new Intent(url);
+                    PackageManager packageManager = getActivity().getPackageManager();
+                    if (telephoneIntent.resolveActivity(packageManager) != null) {
+                        startActivity(telephoneIntent);
+                    } else {
+                        Log.d("Help", "No facility available to handle tel: url");
+                    }
+                    return true;
+                } else {
+                    view.loadUrl(url);
+                }
+                return true;
+            }
 
+            private Intent createEmailIntent(Context context, String address, String subject, String body, String cc) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
+                intent.putExtra(Intent.EXTRA_TEXT, body);
+                intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                intent.putExtra(Intent.EXTRA_CC, cc);
+                intent.setType("message/rfc822");
+                return intent;
+            }
         });
 
         mWebView.loadUrl("http://share.mentallyfriendly.com/sleepsense/#!/faq");
@@ -103,5 +141,15 @@ public class OnBoardingHelpFragment extends Fragment {
         mOnActionListener = null;
     }
 
+    @Override
+    public boolean onBackPressed() {
 
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+            return true;
+        } else {
+            return super.onBackPressed();
+        }
+
+    }
 }

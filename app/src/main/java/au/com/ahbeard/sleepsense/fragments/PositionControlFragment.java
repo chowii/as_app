@@ -199,7 +199,7 @@ public class PositionControlFragment extends Fragment {
 
     @OnClick(R.id.image_view_help_icon)
     void onHelpClicked() {
-        startActivity(HelpActivity.getIntent(getActivity(),"Mattress Firmness", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+        startActivity(HelpActivity.getIntent(getActivity(),"Position Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
     }
 
     @Bind(R.id.controls_layout_header)

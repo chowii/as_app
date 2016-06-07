@@ -97,13 +97,14 @@ public class SleepService {
         Schedulers.computation().createWorker().schedule(new Action0() {
             @Override
             public void call() {
+
                 Calendar calendar = Calendar.getInstance();
 
                 calendar.add(Calendar.DAY_OF_YEAR, -7);
 
-                for (int i = 0; i < 21; i++) {
-                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+                for (int i = 0; i < 7; i++) {
                     runBatchAnalysis(calendar);
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
                 }
 
                 PreferenceService.instance().setHasRecordedASleep(true);
@@ -158,7 +159,13 @@ public class SleepService {
 
                 TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
 
-                writeSleepToDatabase(Sleep.fromBatchAnalysisResult(batchAnalysisResult));
+                Sleep sleep = Sleep.fromBatchAnalysisResult(batchAnalysisResult);
+
+                // Find the mattress firmness at the time the sleep was started.
+
+                sleep.setMattressFirmness(20.0f);
+
+                writeSleepToDatabase(sleep);
 
             } catch (AnalysisException e) {
                 e.printStackTrace();
@@ -378,6 +385,7 @@ public class SleepService {
         values.put(SleepContract.Sleep.RESTING_HRV_INDEX, sleep.getRestingHRVIndex());
         values.put(SleepContract.Sleep.TOTAL_SLEEP_SCORE, sleep.getTotalSleepScore());
         values.put(SleepContract.Sleep.SLEEP_SCORE_VERSION, sleep.getSleepScoreVersion());
+        values.put(SleepContract.Sleep.MATTRESS_FIRMNESS, sleep.getMattressFirmness());
 
         long id = database.insertOrThrow(SleepContract.Sleep.TABLE_NAME, null, values);
 
@@ -722,7 +730,11 @@ public class SleepService {
 
             }
 
-            mAggregateStatistics.setAverageSleepScore(sumOfSleepScores / countOfSleepScores);
+            if( countOfSleepScores > 0 ) {
+                mAggregateStatistics.setAverageSleepScore(sumOfSleepScores / countOfSleepScores);
+            } else {
+                mAggregateStatistics.setAverageSleepScore(0.0f);
+            }
 
             if (highestSleepScoreSleepId > 0) {
                 mAggregateStatistics.setBestNight(getCalendar(highestSleepScoreSleepId));
@@ -778,5 +790,21 @@ public class SleepService {
     }
 
 
+    public void writeMattressFirmnessToDatabase(long timeRead, int pressure) {
 
+        SQLiteDatabase database = mSleepSQLiteHelper.getWritableDatabase();
+
+        database.beginTransaction();
+
+        ContentValues values = new ContentValues();
+
+        values.put(MattressFirmnessContract.MattressFirmness.TIME_READ, timeRead);
+        values.put(MattressFirmnessContract.MattressFirmness.PRESSURE, pressure);
+
+        long sessionId = database.insertOrThrow(MattressFirmnessContract.MattressFirmness.TABLE_NAME, null, values);
+
+        database.setTransactionSuccessful();
+        database.endTransaction();
+
+    }
 }

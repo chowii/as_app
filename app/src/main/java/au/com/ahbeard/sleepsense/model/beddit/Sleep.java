@@ -577,4 +577,8 @@ public class Sleep {
         sleep.mSleepScoreVersion=666.0f;
         return sleep;
     }
+
+    public void setMattressFirmness(float mattressFirmness) {
+        mMattressFirmness = mattressFirmness;
+    }
 }

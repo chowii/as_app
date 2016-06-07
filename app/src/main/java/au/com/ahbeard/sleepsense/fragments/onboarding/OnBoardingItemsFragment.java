@@ -25,7 +25,7 @@ import rx.subscriptions.CompositeSubscription;
  * Use the {@link OnBoardingItemsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OnBoardingItemsFragment extends Fragment {
+public class OnBoardingItemsFragment  extends OnBoardingFragment {
 
     private OnActionListener mOnActionListener;
 

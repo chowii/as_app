@@ -17,7 +17,7 @@ import butterknife.OnClick;
 
 /**
  */
-public class OnBoardingChooseSideFragment extends Fragment {
+public class OnBoardingChooseSideFragment extends OnBoardingFragment {
 
     private OnActionListener mOnActionListener;
 

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -19,7 +20,7 @@ import butterknife.OnClick;
  * Use the {@link OnBoardingBluetoothFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OnBoardingBluetoothFragment extends Fragment {
+public class OnBoardingBluetoothFragment extends OnBoardingFragment {
 
     private OnActionListener mOnActionListener;
 
@@ -33,6 +34,11 @@ public class OnBoardingBluetoothFragment extends Fragment {
             mOnActionListener.onBluetoothContinueClicked();
             mContinueButton.animate().alpha(0.0f).start();
         }
+    }
+
+    @OnClick(R.id.on_board_text_view_find_out_more)
+    void findOutMoreClicked() {
+        startActivity(HelpActivity.getIntent(getActivity(),"More About Sleepsense", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
     }
 
     @Bind(R.id.on_board_button_continue)

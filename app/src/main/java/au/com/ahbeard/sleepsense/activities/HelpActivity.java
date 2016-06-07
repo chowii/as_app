@@ -1,7 +1,9 @@
 package au.com.ahbeard.sleepsense.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.MailTo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.webkit.WebChromeClient;
@@ -56,10 +58,41 @@ public class HelpActivity extends BaseActivity {
 
         });
         mWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.startsWith("mailto:")) {
+                    MailTo mailTo = MailTo.parse(url);
+                    Intent mailIntent = newEmailIntent(HelpActivity.this, mailTo.getTo(), mailTo.getSubject(), mailTo.getBody(), mailTo.getCc());
+                    startActivity(mailIntent);
+                    view.reload();
+                } else {
+                    view.loadUrl(url);
+                }
+                return true;
+            }
 
+            private Intent newEmailIntent(Context context, String address, String subject, String body, String cc) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[] { address });
+                intent.putExtra(Intent.EXTRA_TEXT, body);
+                intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                intent.putExtra(Intent.EXTRA_CC, cc);
+                intent.setType("message/rfc822");
+                return intent;
+            }
         });
 
         mWebView.loadUrl(mURL);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if ( mWebView.canGoBack() ) {
+            mWebView.goBack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

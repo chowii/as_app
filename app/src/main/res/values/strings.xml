@@ -32,13 +32,19 @@
     <string name="sleep_score_breakdown_resting_heart_rate">Resting heart rate</string>
     <string name="sleep_score_breakdown_resting_heart_rate_txt">Your average heart rate while sleeping.</string>
 
-    <string name="on_boarding_choose_side_description">This will help me adjust to you accurately</string>
-
-
     <string name="button_continue">Continue</string>
 
     <string name="mattress_firmness_screen_title">Mattress Firmness</string>
     <string name="massage_settings_screen_title">Massage Settings</string>
     <string name="base_position_screen_title">Base Position</string>
+
+    <string name="on_boarding_bluetooth_title">Welcome!</string>
+    <string name="on_boarding_bluetooth_description">Let\'s find your sleeping devices and get your Sleepsense bed set up</string>
+    <string name="on_boarding_bluetooth_button_find_my_devices">Find my devices</string>
+    <string name="on_boarding_bluetooth_link_find_out_more">Don\'t have a Sleepsense bed?\nFIND OUT MORE</string>
+
+    <string name="on_boarding_choose_side_description">This will help me adjust to you accurately</string>
+    <string name="on_boarding_close_warning">Close Sleepsense before setting up your sleep hardware?</string>
+
 
 </resources>

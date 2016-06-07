@@ -23,7 +23,7 @@ import rx.subscriptions.CompositeSubscription;
 
 /**
  */
-public class OnBoardingInflateMattressFragment extends Fragment {
+public class OnBoardingInflateMattressFragment  extends OnBoardingFragment {
 
     private OnActionListener mOnActionListener;
 

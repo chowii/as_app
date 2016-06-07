@@ -21,6 +21,7 @@ public class OptimalBedtimeCalculator {
         Log.d("OptimalBeditimeCalc",String.format("startTime: %f sleepScore: %f",startTime,sleepScore));
 
         if ( startTime > 0 ) {
+
             mCalendar.setTimeInMillis((long) (startTime * 1000));
             mCalendar.add(Calendar.MINUTE, -15);
 
@@ -33,7 +34,13 @@ public class OptimalBedtimeCalculator {
 
             mSleepScoreCounts[slot]++;
             mSleepScoreSums[slot]+=sleepScore;
-            mSleepScoreAverages[slot]=mSleepScoreSums[slot]/mSleepScoreCounts[slot];
+
+            if ( mSleepScoreCounts[slot] > 0 ) {
+                mSleepScoreAverages[slot]=mSleepScoreSums[slot]/mSleepScoreCounts[slot];
+            } else {
+                mSleepScoreAverages[slot]=0;
+            }
+
         }
 
     }

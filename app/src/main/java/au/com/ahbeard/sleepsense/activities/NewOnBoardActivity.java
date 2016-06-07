@@ -17,6 +17,7 @@ import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingBluetoothFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingChooseSideFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingFirmnessControlsFragment;
+import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingHelpFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingInflateMattressFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingItemsFragment;
@@ -46,10 +47,11 @@ public class NewOnBoardActivity extends BaseActivity implements
         OnBoardingPositionControlsFragment.OnActionListener,
         OnBoardingMassageControlsFragment.OnActionListener,
         OnBoardingHelpFragment.OnActionListener,
-        OnBoardingLieOnBedFragment.OnActionListener
-{
+        OnBoardingLieOnBedFragment.OnActionListener {
 
     private OnBoardingState mOnBoardingState = new OnBoardingState();
+
+    private OnBoardingFragment mCurrentFragment;
 
     private SleepSenseDeviceAquisition mAquiredDevices;
 
@@ -73,8 +75,7 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         ButterKnife.bind(this);
 
-        getSupportFragmentManager().beginTransaction().add(R.id.new_onboard_layout_container,
-                OnBoardingBluetoothFragment.newInstance()).commit();
+        transitionTo(OnBoardingBluetoothFragment.newInstance());
 
     }
 
@@ -96,9 +97,13 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         findInitialDevices();
 
-        // Need to do the permissions check here... after the permissions check is complete, then we do our other shit.
-        getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                OnBoardingItemsFragment.newInstance(true, mOnBoardingState.foundPump, mOnBoardingState.foundTracker)).commit();
+        transitionTo(OnBoardingItemsFragment.newInstance(true, mOnBoardingState.foundPump, mOnBoardingState.foundTracker));
+
+    }
+
+    protected void transitionTo(OnBoardingFragment onBoardingFragment) {
+        mCurrentFragment = onBoardingFragment;
+        getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,onBoardingFragment).commit();
     }
 
     @Override
@@ -108,15 +113,13 @@ public class NewOnBoardActivity extends BaseActivity implements
         mOnBoardingState.requiredTracker = hasTracker;
         mOnBoardingState.requiredBase = hasBase;
 
-        if ( ! hasPump ) {
+        if (!hasPump) {
             mOnBoardingState.numberOfTrackersRequired = 1;
         }
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                OnBoardingChooseSideFragment.newInstance()).commit();
+        transitionTo(OnBoardingChooseSideFragment.newInstance());
 
     }
-
 
 
     @Override
@@ -126,9 +129,8 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         mOnBoardingState.sideOfBed = sideOfBed;
 
-        if ( mOnBoardingState.requiredTracker ) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                    OnBoardingPlacePhoneFragment.newInstance(sideOfBed)).commit();
+        if (mOnBoardingState.requiredTracker) {
+            transitionTo(OnBoardingPlacePhoneFragment.newInstance(sideOfBed));
         } else {
             onPlacePhoneContinueClicked();
         }
@@ -140,8 +142,7 @@ public class NewOnBoardActivity extends BaseActivity implements
     public void onPlacePhoneContinueClicked() {
 
         // Do the actual searching...
-        getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                OnBoardingSearchingFragment.newInstance()).commit();
+        transitionTo(OnBoardingSearchingFragment.newInstance());
 
         acquireDevices();
 
@@ -152,9 +153,8 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         if (mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound) {
 
-            if ( mOnBoardingState.foundPump ) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                        OnBoardingInflateMattressFragment.newInstance()).commit();
+            if (mOnBoardingState.foundPump) {
+                transitionTo(OnBoardingInflateMattressFragment.newInstance());
 
                 inflateMattress();
             } else {
@@ -165,36 +165,31 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         } else if (mOnBoardingState.state == OnBoardingState.State.DevicesMissingAllowRetry) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                    OnBoardingSearchingFragment.newInstance()).commit();
+            transitionTo(OnBoardingSearchingFragment.newInstance());
 
             acquireDevices();
 
         } else if (mOnBoardingState.state == OnBoardingState.State.DevicesMissingShowHelp) {
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                    OnBoardingHelpFragment.newInstance()).commit();
+            transitionTo(OnBoardingHelpFragment.newInstance());
 
         }
     }
 
     @Override
     public void onInflateContinueClicked() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                OnBoardingLieOnBedFragment.newInstance(PreferenceService.instance().getSideOfBed())).commit();
+        transitionTo(OnBoardingLieOnBedFragment.newInstance(PreferenceService.instance().getSideOfBed()));
     }
 
     @Override
     public void onLieOnBedContinueClicked() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                OnBoardingFirmnessControlsFragment.newInstance()).commit();
+        transitionTo(OnBoardingFirmnessControlsFragment.newInstance());
     }
 
     @Override
     public void onFirmnessControlsAction() {
-        if ( mOnBoardingState.requiredBase ) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                    OnBoardingPositionControlsFragment.newInstance()).commit();
+        if (mOnBoardingState.requiredBase) {
+            transitionTo(OnBoardingPositionControlsFragment.newInstance());
         } else {
             onMassageControlsAction();
         }
@@ -202,9 +197,8 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     @Override
     public void onPositionControlsAction() {
-        if ( mOnBoardingState.requiredBase ) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,
-                    OnBoardingMassageControlsFragment.newInstance()).commit();
+        if (mOnBoardingState.requiredBase) {
+            transitionTo(OnBoardingMassageControlsFragment.newInstance());
         }
     }
 
@@ -212,7 +206,7 @@ public class NewOnBoardActivity extends BaseActivity implements
     public void onMassageControlsAction() {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(HomeActivity.EXTRA_SHOW_ON_BOARDING_COMPLETE_DIALOG,true);
+        intent.putExtra(HomeActivity.EXTRA_SHOW_ON_BOARDING_COMPLETE_DIALOG, true);
         startActivity(intent);
         finish();
     }
@@ -225,9 +219,8 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     @Override
     public void onCallButtonClicked() {
-
+        // Need telephone number to call here.
     }
-
 
 
     public void findInitialDevices() {
@@ -269,18 +262,17 @@ public class NewOnBoardActivity extends BaseActivity implements
     @Override
     public void onBackPressed() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-// Add the buttons
-        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                finish();
-            }
-        });
-        builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-            }
-        }).setMessage("Close Sleepsense before setting up your sleep hardware?").create().show();
+        if ( mCurrentFragment != null &&! mCurrentFragment.onBackPressed()) {
+            new AlertDialog.Builder(this).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    finish();
+                }
+            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            }).setMessage(getString(R.string.on_boarding_close_warning)).create().show();
+        }
 
     }
 
@@ -307,6 +299,7 @@ public class NewOnBoardActivity extends BaseActivity implements
                             mOnBoardingState.foundBase = false;
                         } else {
                             baseDevice = mAquiredDevices.getBaseDevices().get(0);
+                            mOnBoardingState.foundBase = true;
                         }
                     }
 
@@ -316,6 +309,7 @@ public class NewOnBoardActivity extends BaseActivity implements
                             mOnBoardingState.foundPump = false;
                         } else {
                             pumpDevice = mAquiredDevices.getPumpDevices().get(0);
+                            mOnBoardingState.foundPump = true;
                         }
                     }
 
@@ -326,6 +320,7 @@ public class NewOnBoardActivity extends BaseActivity implements
                         } else {
                             // Get the closest tracker.
                             trackerDevice = mAquiredDevices.getTrackerDevices().get(0);
+                            mOnBoardingState.foundTracker = true;
                         }
                     }
 
@@ -366,7 +361,7 @@ public class NewOnBoardActivity extends BaseActivity implements
         SleepSenseDeviceService.instance().getPumpDevice().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
             @Override
             public void call(Device device) {
-                if ( mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound && device.isDisconnected() && device.getLastConnectionStatus() != 0 ) {
+                if (mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound && device.isDisconnected() && device.getLastConnectionStatus() != 0) {
                     // We had an error connecting to the pump.
                     mOnBoardingState.state = OnBoardingState.State.InflationError;
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
@@ -381,14 +376,17 @@ public class NewOnBoardActivity extends BaseActivity implements
             @Override
             public void call(PumpEvent pumpEvent) {
 
-                if ( pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound ) {
+                if (pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state ==
+                        OnBoardingState.State.RequiredDevicesFound) {
                     mStartedInflatingAt = System.currentTimeMillis();
                     mOnBoardingState.state = OnBoardingState.State.Inflating;
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
-                } else if ( ! pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state == OnBoardingState.State.Inflating ) {
+                } else if (!pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state ==
+                        OnBoardingState.State.Inflating) {
                     mOnBoardingState.state = OnBoardingState.State.InflationComplete;
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
-                } else if ( pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state == OnBoardingState.State.Inflating && ( System.currentTimeMillis() - mStartedInflatingAt ) > 30000 ){
+                } else if (pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state ==
+                        OnBoardingState.State.Inflating && (System.currentTimeMillis() - mStartedInflatingAt) > 30000) {
                     mOnBoardingState.state = OnBoardingState.State.InflationError;
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
                 }
@@ -396,7 +394,7 @@ public class NewOnBoardActivity extends BaseActivity implements
             }
         });
 
-        SleepSenseDeviceService.instance().getPumpDevice().sendCommand(PumpCommand.setPressure(PreferenceService.instance().getSideOfBed(),20));
+        SleepSenseDeviceService.instance().getPumpDevice().sendCommand(PumpCommand.setPressure(PreferenceService.instance().getSideOfBed(), 20));
 
     }
 
