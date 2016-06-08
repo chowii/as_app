@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -23,10 +24,13 @@ import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MoreFragment;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
+import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.widgets.SimpleTabStrip;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -44,6 +48,7 @@ public class HomeActivity extends BaseActivity {
 
     @Bind(R.id.on_board_complete_dialog_layout)
     View mOnBoardingCompleteDialogLayout;
+    private boolean mHasRecordedASleep;
 
     @OnClick(R.id.on_board_complete_dialog_button)
     void onClickBoardingComplete() {
@@ -97,14 +102,12 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-//        SleepSenseDeviceService.instance().getEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
-//            @Override
-//            public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent event) {
-//                if ( event == SleepSenseDeviceService.SleepSenseDeviceServiceEvent.DeviceListChanged ) {
-//                    setupTabs();
-//                }
-//            }
-//        });
+        mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+            @Override
+            public void call(Integer sleepId) {
+                if ( mHasRecordedASleep != PreferenceService.instance().getHasRecordedASleep());
+            }
+        }));
 
     }
 
@@ -119,7 +122,8 @@ public class HomeActivity extends BaseActivity {
         mDashboardPagerAdapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
 
         if (SleepSenseDeviceService.instance().hasTrackerDevice() ) {
-            if ( PreferenceService.instance().getHasRecordedASleep() ) {
+            mHasRecordedASleep = PreferenceService.instance().getHasRecordedASleep();
+            if (mHasRecordedASleep) {
                 mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, DashboardFragment.newInstance());
             } else {
                 mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, DashboardNoSleepsFragment.newInstance());
@@ -189,12 +193,6 @@ public class HomeActivity extends BaseActivity {
         public int getSelectedIconResourceId(int position) {
             return mSelectedTabIconResourceIds.get(position);
         }
-    }
-
-    public void clearDevices() {
-        Intent intent= new Intent(this,ClearDevicesActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     public void doOnboarding() {

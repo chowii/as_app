@@ -500,14 +500,14 @@ public class SleepService {
      * @param endSleepId
      * @return
      */
-    public float[] readSleepScores(int startSleepId, int endSleepId) {
+    public Float[] readSleepScores(int startSleepId, int endSleepId) {
 
         Log.d("SleepService", String.format("startSleepId: %d endSleepId: %d", startSleepId, endSleepId));
 
         SQLiteDatabase database = null;
         Cursor sleepSessionCursor = null;
 
-        float[] sleepScores;
+        Float[] sleepScores;
 
         try {
             database = mSleepSQLiteHelper.getReadableDatabase();
@@ -531,11 +531,11 @@ public class SleepService {
 
             List<Integer> sleepIdRange = generateSleepIdRange(startSleepId, endSleepId);
 
-            sleepScores = new float[sleepIdRange.size()];
+            sleepScores = new Float[sleepIdRange.size()];
             int i = 0;
 
             for (Integer sleepId : sleepIdRange) {
-                sleepScores[i++] = sleepScoreBySleepId.containsKey(sleepId) ? sleepScoreBySleepId.get(sleepId).getValue() : -1;
+                sleepScores[i++] = sleepScoreBySleepId.containsKey(sleepId) ? sleepScoreBySleepId.get(sleepId).getValue() : null;
             }
 
         } finally {
@@ -548,11 +548,11 @@ public class SleepService {
         return sleepScores;
     }
 
-    public Observable<float[]> readSleepScoresAsync(final int startSleepId, final int endSleepId) {
+    public Observable<Float[]> readSleepScoresAsync(final int startSleepId, final int endSleepId) {
 
-        return makeObservable(new Callable<float[]>() {
+        return makeObservable(new Callable<Float[]>() {
             @Override
-            public float[] call() throws Exception {
+            public Float[] call() throws Exception {
                 return readSleepScores(startSleepId, endSleepId);
             }
         });
@@ -774,7 +774,7 @@ public class SleepService {
         calendar.add(Calendar.DAY_OF_YEAR, -days);
         int startSleepId = getSleepId(calendar);
 
-        Random random = new Random(12412);
+        Random random = new Random();
 
         try {
             for (int sleepId : generateSleepIdRange(startSleepId, endSleepId)) {
@@ -783,6 +783,10 @@ public class SleepService {
                     writeSleepToDatabase(sleep);
                 }
             }
+
+            mDataChangePublishSubject.onNext(-1);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }

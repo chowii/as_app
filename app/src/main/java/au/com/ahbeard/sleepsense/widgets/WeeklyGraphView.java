@@ -136,18 +136,6 @@ public class WeeklyGraphView extends ViewGroup {
 
     }
 
-    public void setValues(float[] values, String[] names, Object[] indexes, float minimum, float maximum) {
-
-        Float[] _values = new Float[values.length];
-
-        for (int i = 0; i < values.length; i++) {
-            _values[i] = values[i] >= 0 ? values[i] : null;
-        }
-
-        setValues(_values, names, indexes, minimum, maximum);
-
-    }
-
     // We actually need to think of this as a window on some data not
     public void setValues(Float[] values, String[] names, Object[] indexes, float minimum, float maximum) {
 
@@ -206,6 +194,9 @@ public class WeeklyGraphView extends ViewGroup {
         mAreaPathStates.clear();
         mAreaPathIndexes.clear();
 
+        if ( mRawPoints == null ) {
+            return;
+        }
 
         mAreaPaint.setShader(new LinearGradient(
                 0, 0, 0, getHeight() * GRAPH_LEGEND_SPLIT,
@@ -363,6 +354,10 @@ public class WeeklyGraphView extends ViewGroup {
             layout(canvas.getWidth(), canvas.getHeight());
         }
 
+        if ( mRawPoints == null ) {
+            return;
+        }
+
         for (int i = 0; i < mAreaPaths.size(); i++) {
             canvas.drawPath(mAreaPaths.get(i), mAreaPaint);
             if (mAreaPathStates.get(i)) {
@@ -370,31 +365,7 @@ public class WeeklyGraphView extends ViewGroup {
             }
         }
 
-//        for (int i = 0; i < mDividerPoints.size(); i++) {
-//            PointF dividerPoint = mDividerPoints.get(i);
-//            mDividerPaint.setShader(new LinearGradient(
-//                    0, dividerPoint.y, 0, mGraphRegionHeight,
-//                    Color.TRANSPARENT,
-//                    getResources().getColor(R.color.graphDividerColor),
-//                    Shader.TileMode.CLAMP));
-//            canvas.drawLine(dividerPoint.x, dividerPoint.y, dividerPoint.x, getHeight(), mDividerPaint);
-////            Log.d("GRAPH", "dividerPoint" + dividerPoint);
-//        }
-
         super.onDraw(canvas);
-
-//        // Draw the "drop shadow".
-//        canvas.save();
-//        canvas.translate(0,2);
-//        canvas.drawPath(mPath, mLineShadowPaint);
-//        for (int i = 0; i < mPoints.length; i++) {
-//
-//            if (mPoints[i] != null) {
-//                canvas.drawCircle(mPoints[i].x, mPoints[i].y, 4, mLineShadowPaint);
-//            }
-//
-//        }
-//        canvas.restore();
 
         canvas.drawPath(mPath, mLinePaint);
 

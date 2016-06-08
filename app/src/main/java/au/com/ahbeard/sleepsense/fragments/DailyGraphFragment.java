@@ -9,13 +9,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.SleepScoreBreakdownActivity;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
-import au.com.ahbeard.sleepsense.model.beddit.SleepCycle;
-import au.com.ahbeard.sleepsense.model.beddit.SleepStage;
 import au.com.ahbeard.sleepsense.model.beddit.TimestampAndFloat;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.widgets.DailyGraphView;
@@ -23,6 +22,9 @@ import au.com.ahbeard.sleepsense.widgets.SleepScoreView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by neal on 12/03/2016.
@@ -34,6 +36,7 @@ public class DailyGraphFragment extends Fragment {
 
     @Bind(R.id.sleep_score_view)
     SleepScoreView mSleepScoreView;
+    private int mSleepId;
 
     @OnClick(R.id.sleep_score_view)
     void openSleepScoreBreakdown() {
@@ -42,6 +45,7 @@ public class DailyGraphFragment extends Fragment {
             intent.putExtra("sleep_id",mSleepId);
             getActivity().startActivity(intent);
         }
+//        SleepService.instance().generateFakeData(Calendar.getInstance(),7);
     }
 
     @Bind(R.id.daily_graph_text_view_sleep_score)
@@ -53,8 +57,11 @@ public class DailyGraphFragment extends Fragment {
     @Bind(R.id.daily_graph_layout_no_sleep_recorded)
     View mNoSleepRecordedView;
 
-    private int mSleepId;
+    private int mDaysBeforeToday;
+
     private Sleep mSleep;
+
+    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +69,7 @@ public class DailyGraphFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mSleepId = getArguments().getInt("sleep_id");
+            mDaysBeforeToday = getArguments().getInt("days_before_today");
         }
 
     }
@@ -75,6 +82,23 @@ public class DailyGraphFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
+        updateData();
+
+        mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+            @Override
+            public void call(Integer sleepId) {
+                updateData();
+            }
+        }));
+
+        return view;
+    }
+
+    private void updateData() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, mDaysBeforeToday);
+
+        mSleepId = SleepService.getSleepId(calendar);
         mSleep = SleepService.instance().getSleepFromDatabase(mSleepId);
 
         if (mSleep == null) {
@@ -95,20 +119,19 @@ public class DailyGraphFragment extends Fragment {
             mGraphView.setValues(sleepCycles, 0.0f, 4.0f);
 
         }
-
-        return view;
     }
 
     @Override
     public void onDestroyView() {
+        mCompositeSubscription.clear();
         ButterKnife.unbind(this);
         super.onDestroyView();
     }
 
-    public static DailyGraphFragment newInstance(int sleepId) {
+    public static DailyGraphFragment newInstance(int daysBeforeToday) {
         DailyGraphFragment fragment = new DailyGraphFragment();
         Bundle args = new Bundle();
-        args.putInt("sleep_id", sleepId);
+        args.putInt("days_before_today", daysBeforeToday);
         fragment.setArguments(args);
         return fragment;
     }

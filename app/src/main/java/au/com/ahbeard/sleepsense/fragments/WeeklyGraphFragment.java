@@ -7,28 +7,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.widgets.WeeklyGraphView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by neal on 12/03/2016.
  */
 public class WeeklyGraphFragment extends Fragment {
 
-    public interface OnClickListener {
-        void onClick(int sleepId);
-    }
-
-    private WeeklyGraphView.OnClickListener mOnClickListener;
-
     @Bind(R.id.graph_view)
     WeeklyGraphView mGraphView;
 
-    private float[] mValues;
-    private String[] mLabels;
-    private int[] mSleepIds;
+    private int mWeeksBeforeThisWeek;
+
+    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,42 +41,58 @@ public class WeeklyGraphFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        Integer[] sleepIds = new Integer[mSleepIds.length];
+        Calendar calendar = Calendar.getInstance();
 
-        for (int i = 0; i < mSleepIds.length; i++) {
-            sleepIds[i] = mSleepIds[i];
+        // Find the start of the week and subtract one day.
+        calendar.set(Calendar.DAY_OF_WEEK, 1);
+
+        // Count back the number of pages.
+        calendar.add(Calendar.DAY_OF_YEAR, mWeeksBeforeThisWeek * 7 - 1);
+
+        int startSleepId = SleepService.getSleepId(calendar);
+
+        calendar.add(Calendar.DAY_OF_YEAR, 7 + 1);
+
+        int endSleepId = SleepService.getSleepId(calendar);
+
+        final String[] labels = SleepService.generateLabels(startSleepId, endSleepId,
+                new SimpleDateFormat("EEE", Locale.getDefault()));
+
+        List<Integer> sleepIdList = SleepService.generateSleepIdRange(startSleepId, endSleepId);
+
+        final Integer[] sleepIds = new Integer[sleepIdList.size()];
+
+        for (int i = 0; i < sleepIdList.size(); i++) {
+            sleepIds[i] = sleepIdList.get(i);
         }
 
-        Log.d("WeeklyGraphFragment","sleepIds: "+org.apache.commons.lang3.ArrayUtils.toString(sleepIds));
-        Log.d("WeeklyGraphFragment","values: "+org.apache.commons.lang3.ArrayUtils.toString(mValues));
-
-        mGraphView.setValues(mValues, mLabels, sleepIds, 20, 100);
-        mGraphView.setOnClickListener(new WeeklyGraphView.OnClickListener() {
+        mCompositeSubscription.add(SleepService.instance().readSleepScoresAsync(startSleepId, endSleepId).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Float[]>() {
             @Override
-            public void onValueClicked(Object identifier) {
-                if ( mOnClickListener != null ) {
-                    mOnClickListener.onValueClicked(identifier);
-                }
+            public void call(Float[] sleepScores) {
+                mGraphView.setValues(sleepScores, labels, sleepIds, 20, 100);
+                mGraphView.setOnClickListener(new WeeklyGraphView.OnClickListener() {
+                    @Override
+                    public void onValueClicked(Object identifier) {
+                        SleepService.instance().notifySleepIdSelected((Integer)identifier);
+                    }
+                });
             }
-        });
-
-
+        }));
 
         return view;
     }
 
     @Override
     public void onDestroyView() {
+        mCompositeSubscription.clear();
         ButterKnife.unbind(this);
         super.onDestroyView();
     }
 
-    public static WeeklyGraphFragment newInstance(int[] sleepIds, float[] values, String[] names) {
+    public static WeeklyGraphFragment newInstance(int weeksBeforeThisWeek) {
         WeeklyGraphFragment fragment = new WeeklyGraphFragment();
         Bundle args = new Bundle();
-        args.putIntArray("sleep_ids", sleepIds);
-        args.putFloatArray("values", values);
-        args.putStringArray("labels", names);
+        args.putInt("weeks_before_this_week", weeksBeforeThisWeek);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,14 +103,9 @@ public class WeeklyGraphFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mValues = getArguments().getFloatArray("values");
-            mLabels = getArguments().getStringArray("labels");
-            mSleepIds = getArguments().getIntArray("sleep_ids");
+            mWeeksBeforeThisWeek = getArguments().getInt("weeks_before_this_week");
         }
 
     }
 
-    public void setOnClickListener(WeeklyGraphView.OnClickListener onClickListener) {
-        mOnClickListener = onClickListener;
-    }
 }

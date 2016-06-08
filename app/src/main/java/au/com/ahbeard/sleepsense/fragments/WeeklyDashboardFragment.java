@@ -65,7 +65,7 @@ public class WeeklyDashboardFragment extends Fragment {
     };
 
     @Bind(R.id.dashboard_view_pager_graph)
-    ViewPager graphViewPager;
+    ViewPager mGraphViewPager;
 
     @Bind(R.id.weekly_dashboard_layout_statistics)
     LinearLayout mStatisticsLayout;
@@ -117,56 +117,9 @@ public class WeeklyDashboardFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        graphViewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
+        MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(1024);
 
-            private int mWidth = 7;
-            private int mNumberOfPagesBack = 1024;
-
-            @Override
-            public Fragment getItem(int position) {
-
-                Calendar calendar = Calendar.getInstance();
-
-                // Find the start of the week and subtract one day.
-                calendar.set(Calendar.DAY_OF_WEEK, 1);
-
-                // Count back the number of pages.
-                calendar.add(Calendar.DAY_OF_MONTH, (position - 1023) * 7 - 1);
-
-                int startSleepId = SleepService.getSleepId(calendar);
-
-                calendar.add(Calendar.DAY_OF_YEAR, mWidth + 1);
-
-                int endSleepId = SleepService.getSleepId(calendar);
-
-                String[] labels = SleepService.generateLabels(startSleepId, endSleepId,
-                        new SimpleDateFormat("EEE", Locale.getDefault()));
-
-                List<Integer> sleepIdList = SleepService.generateSleepIdRange(startSleepId, endSleepId);
-
-                int[] sleepIds = new int[sleepIdList.size()];
-
-                for (int i = 0; i < sleepIdList.size(); i++) {
-                    sleepIds[i] = sleepIdList.get(i);
-                }
-
-                // This needs to properly use the graph fragment.
-                WeeklyGraphFragment weeklyGraphFragment = WeeklyGraphFragment.newInstance(sleepIds, SleepService.instance().readSleepScores(startSleepId, endSleepId), labels);
-                weeklyGraphFragment.setOnClickListener(new WeeklyGraphView.OnClickListener() {
-                    @Override
-                    public void onValueClicked(Object identifier) {
-                        SleepService.instance().notifySleepIdSelected((Integer)identifier);
-                    }
-                });
-                return weeklyGraphFragment;
-            }
-
-            @Override
-            public int getCount() {
-                return mNumberOfPagesBack;
-            }
-
-        });
+        mGraphViewPager.setAdapter(adapter);
 
         mDashboardLabels.setLabelProvider(new LabelThingy.LabelProvider() {
 
@@ -209,8 +162,8 @@ public class WeeklyDashboardFragment extends Fragment {
             }
         });
 
-        graphViewPager.addOnPageChangeListener(mDashboardLabels);
-        graphViewPager.setCurrentItem(1023);
+        mGraphViewPager.addOnPageChangeListener(mDashboardLabels);
+        mGraphViewPager.setCurrentItem(1024-1);
 
         StatisticsUtils statisticsUtils = new StatisticsUtils(mStatisticsLayout);
 
@@ -220,21 +173,10 @@ public class WeeklyDashboardFragment extends Fragment {
         mBestNight =statisticsUtils.addStatistic(Color.GREEN, "Best Night", null);
         mWorstNight = statisticsUtils.addStatistic(Color.GREEN, "Worst Night", null);
 
-        mCompositeSubscription.add(SleepService.instance()
-                .getAggregateStatisticsObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<AggregateStatistics>() {
-                    @Override
-                    public void call(AggregateStatistics aggregateStatistics) {
-
-
-                    }
-                }));
-
         mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
             @Override
             public void call(Integer sleepId) {
-                graphViewPager.getAdapter().notifyDataSetChanged();
+                mGraphViewPager.getAdapter().notifyDataSetChanged();
             }
         }));
 
@@ -255,7 +197,7 @@ public class WeeklyDashboardFragment extends Fragment {
         String[] sleepTips = getResources().getStringArray(R.array.sleep_tips);
         mSleepTipText.setText(sleepTips[new Random().nextInt(sleepTips.length)]);
 
-        SleepService.instance().getAggregateStatisticsObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AggregateStatistics>() {
+        mCompositeSubscription.add(SleepService.instance().getAggregateStatisticsObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AggregateStatistics>() {
             @Override
             public void call(AggregateStatistics aggregateStatistics) {
                 mAverageSleepScore.valueTextView.setText(Integer.toString(aggregateStatistics.getAverageSleepScore().intValue()));
@@ -272,8 +214,7 @@ public class WeeklyDashboardFragment extends Fragment {
                     mOptimalMattressFirmness.valueTextView.setText(Firmness.getFirmnessForPressure(aggregateStatistics.getOptimalMattressFirmness()).getLabel());
                 }
             }
-        });
-
+        }));
 
         return view;
     }
@@ -299,4 +240,26 @@ public class WeeklyDashboardFragment extends Fragment {
     }
 
 
+    private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+
+        private int mNumberOfPagesBack;
+
+        public MyFragmentPagerAdapter(int numberOfPagesBack) {
+            super(getChildFragmentManager());
+            mNumberOfPagesBack = numberOfPagesBack;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return WeeklyGraphFragment.newInstance(position - mNumberOfPagesBack + 1);
+        }
+
+        @Override
+        public int getCount() {
+            return mNumberOfPagesBack;
+        }
+
+
+
+    }
 }

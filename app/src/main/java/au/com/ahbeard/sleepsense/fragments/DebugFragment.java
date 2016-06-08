@@ -33,11 +33,6 @@ public class DebugFragment extends Fragment {
 
     LogAdapter mLogAdapter = new LogAdapter();
 
-    @OnClick(R.id.debug_button_clear)
-    void clear() {
-        ((HomeActivity)getActivity()).clearDevices();
-    }
-
     @Bind(R.id.debug_recycler_view_log)
     RecyclerView mLogRecyclerView;
 
