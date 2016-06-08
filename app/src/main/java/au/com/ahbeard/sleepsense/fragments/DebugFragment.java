@@ -33,11 +33,6 @@ public class DebugFragment extends Fragment {
 
     LogAdapter mLogAdapter = new LogAdapter();
 
-    @OnClick(R.id.debug_button_acquire)
-    void acquire() {
-        acquireDevice();
-    }
-
     @OnClick(R.id.debug_button_clear)
     void clear() {
         ((HomeActivity)getActivity()).clearDevices();
@@ -158,28 +153,4 @@ public class DebugFragment extends Fragment {
         }
     }
 
-    public void acquireDevice() {
-
-        // Attempt to grab the devices.
-        mCompositeSubscription.add(SleepSenseDeviceService.instance().acquireDevices(3500)
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Observer<String>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-
-                    }
-                }));
-
-
-    }
 }

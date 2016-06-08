@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.activities.OnBoardActivity;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import butterknife.ButterKnife;

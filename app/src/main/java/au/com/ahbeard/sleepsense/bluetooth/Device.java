@@ -390,6 +390,15 @@ public class Device extends BluetoothGattCallback {
         return mLastConnectionStatus;
     }
 
+    public String getName() {
+        if ( mBluetoothDevice!=null) {
+            return mBluetoothDevice.getName();
+        } else {
+            return "NO BLUETOOTH DEVICE";
+        }
+    }
+
+
     /**
      *
      */

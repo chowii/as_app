@@ -10,6 +10,8 @@ import android.util.Log;
 import org.apache.commons.lang3.StringUtils;
 
 import au.com.ahbeard.sleepsense.services.LogService;
+import au.com.ahbeard.sleepsense.utils.ConversionUtils;
+import rx.Observable;
 import rx.functions.Action0;
 import rx.subjects.PublishSubject;
 
@@ -49,7 +51,8 @@ public class BluetoothService extends BluetoothGattCallback {
                 public void onLeScan(final BluetoothDevice device, int rssi,
                                      byte[] scanRecord) {
 
-                    LogService.e(TAG, String.format("device: %s rssi: %d name: '%s'", device.getAddress(), rssi, device.getName()));
+                    LogService.e(TAG, String.format("device: %s rssi: %d name: '%s' scanRecord: %s",
+                            device.getAddress(), rssi, device.getName(), ConversionUtils.byteArrayToString(scanRecord," ")));
 
                     // Check the address of the device.
                     if (StringUtils.isNotEmpty(device.getName())) {
@@ -66,9 +69,13 @@ public class BluetoothService extends BluetoothGattCallback {
     }
 
     // TODO: There is a chance this could start scanning before the subscription takes effect.
-    public PublishSubject<BluetoothScanEvent> startScanning() {
-        _scan(true);
-        return mBluetoothScanningSubject;
+    public Observable<BluetoothScanEvent> startScanning() {
+        return mBluetoothScanningSubject.doOnSubscribe(new Action0() {
+            @Override
+            public void call() {
+                _scan(true);
+            }
+        });
     }
 
     public void stopScanning() {

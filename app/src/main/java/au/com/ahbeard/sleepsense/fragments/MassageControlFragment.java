@@ -137,9 +137,9 @@ public class MassageControlFragment extends Fragment {
 
         mBaseDevice = SleepSenseDeviceService.instance().getBaseDevice();
 
-        mBaseDevice.connect();
-
         if (mBaseDevice != null) {
+
+            mBaseDevice.connect();
 
             mCompositeSubscription.add(mBaseDevice.getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseStatusEvent>() {
                 @Override

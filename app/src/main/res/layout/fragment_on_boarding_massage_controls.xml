@@ -4,8 +4,7 @@
               android:orientation="vertical"
               android:gravity="center"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              tools:context=".fragments.onboarding.OnBoardInitialFragment">
+              android:layout_height="match_parent">
 
     <FrameLayout android:id="@+id/on_boarding_layout_controls"
                  android:layout_width="match_parent"

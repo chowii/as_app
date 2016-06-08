@@ -44,7 +44,7 @@ public class SleepSenseDeviceFactory {
             for (UUID advertisedUUID : advertisedUUIDs) {
                 Log.d("SleepSenseDeviceFactory", "beddit: " + advertisedUUID);
             }
-            return advertisedUUIDs.contains(UUID.fromString("4ae71336-e44b-39bf-b9d2-752e234818a5"));
+            return true;//advertisedUUIDs.contains(UUID.fromString("4ae71336-e44b-39bf-b9d2-752e234818a5"));
         }
 
         return false;
