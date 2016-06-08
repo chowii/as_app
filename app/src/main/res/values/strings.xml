@@ -45,6 +45,9 @@
 
     <string name="on_boarding_choose_side_description">This will help me adjust to you accurately</string>
     <string name="on_boarding_close_warning">Close Sleepsense before setting up your sleep hardware?</string>
+    <string name="preference_dialog_yes">Yes, I\'m sure</string>
+    <string name="preference_dialog_message">Are you sure you want to reset Sleepsense? You will not lose your sleep data</string>
+    <string name="preferences_sleep_target_time">Sleep target %1$dh %2$dmin</string>
 
 
 </resources>
