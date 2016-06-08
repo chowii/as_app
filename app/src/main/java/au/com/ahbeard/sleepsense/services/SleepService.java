@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -103,8 +105,8 @@ public class SleepService {
                 calendar.add(Calendar.DAY_OF_YEAR, -7);
 
                 for (int i = 0; i < 7; i++) {
-                    runBatchAnalysis(calendar);
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
+                    runBatchAnalysis(calendar);
                 }
 
                 PreferenceService.instance().setHasRecordedASleep(true);
@@ -136,10 +138,25 @@ public class SleepService {
         long periodEnd = periodStart + MILLISECONDS_IN_DAY;
 
         CalendarDate calendarDate = new CalendarDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
-        List<SessionData> sessionData = readSessionData(periodStart / 1000D, periodEnd / 1000D);
+        List<SessionData> sessionDatas = readSessionData(periodStart / 1000D, periodEnd / 1000D);
 
 
-        if (sessionData.size() > 0) {
+        Log.d("BatchAnalysisPrep",String.format("date: %s",calendar.getTime()));
+        Log.d("BatchAnalysisPrep",String.format("sessionDatas.size(): %d",sessionDatas.size()));
+
+        HashSet<Double> sessionDataStarts = new HashSet<>();
+
+        // Fix any duplicates caused by re-running batch analysis and grabbing the same session again (really only a problem on the test device I'm using).
+        for (Iterator<SessionData> i = sessionDatas.iterator(); i.hasNext(); ) {
+            SessionData sessionData = i.next();
+            if ( sessionDataStarts.contains(sessionData.getStartTime())) {
+                i.remove();
+            } else {
+                sessionDataStarts.add(sessionData.getStartTime());
+            }
+        }
+
+        if (sessionDatas.size() > 0) {
 
             try {
 
@@ -147,12 +164,12 @@ public class SleepService {
 
                 Log.d("BatchAnalysis", String.format("ANALYZING DATE: %d/%d/%d", calendarDate.getDay(), calendarDate.getMonth(), calendarDate.getYear()));
 
-                for (SessionData sessionData1 : sessionData) {
+                for (SessionData sessionData1 : sessionDatas) {
                     Log.d("BatchAnalysis", String.format("SESSSION DATA: %s to %s", new Date((long) sessionData1.getStartTime() * 1000), new Date((long) sessionData1.getEndTime() * 1000)));
                 }
 
                 BatchAnalysisResult batchAnalysisResult = batchAnalysis.analyzeSessions(
-                        sessionData,
+                        sessionDatas,
                         new ArrayList<BatchAnalysisResult>(),
                         calendarDate,
                         new BatchAnalysisContext(PreferenceService.instance().getSleepTargetTime() * 3600f));
