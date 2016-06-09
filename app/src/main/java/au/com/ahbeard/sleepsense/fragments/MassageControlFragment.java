@@ -52,11 +52,6 @@ public class MassageControlFragment extends Fragment {
         mBaseDevice.sendCommand(BaseCommand.timer());
     }
 
-    @OnClick(R.id.massage_button_stop)
-    void stopClicked() {
-        mBaseDevice.massageStop();
-    }
-
     @OnClick(R.id.massage_button_head_plus)
     void headPlusClicked() {
         mBaseDevice.sendCommand(BaseCommand.headMassageIncrease());
@@ -77,6 +72,9 @@ public class MassageControlFragment extends Fragment {
         mBaseDevice.sendCommand(BaseCommand.footMassageDecrease());
     }
 
+    @Bind({R.id.massage_text_view_full_off,R.id.massage_text_view_full_low, R.id.massage_text_view_full_medium, R.id.massage_text_view_full_high})
+    List<View> mIntensityTextViews;
+
     @Bind({R.id.massage_text_view_off,R.id.massage_text_view_10_min, R.id.massage_text_view_20_min, R.id.massage_text_view_30_min})
     List<View> mTimeTextViews;
 
@@ -94,8 +92,14 @@ public class MassageControlFragment extends Fragment {
             view.setSelected(false);
         }
 
+        for (View view : mIntensityTextViews) {
+            view.setSelected(false);
+        }
+
         mTimerButton.setSelected(massageTimerState.getTimerLightNormalised()>0);
+
         mTimeTextViews.get(massageTimerState.getTimerLightNormalised()).setSelected(true);
+        mIntensityTextViews.get(massageTimerState.getIntensityLightNormalised()).setSelected(true);
 
     }
 
@@ -152,6 +156,7 @@ public class MassageControlFragment extends Fragment {
             mCompositeSubscription.add(SleepSenseDeviceService.instance()
                     .getBaseDevice()
                     .getChangeObservable()
+                    .onBackpressureBuffer()
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
                         @Override
                         public void call(Device device) {

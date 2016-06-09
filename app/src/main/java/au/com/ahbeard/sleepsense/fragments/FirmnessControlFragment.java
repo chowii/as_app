@@ -57,8 +57,8 @@ public class FirmnessControlFragment extends Fragment {
 
     @OnClick(R.id.firmness_control_text_view_left)
     void setLeftSideActive() {
-        mLeftTextView.setDrawTopBorder(true);
-        mRightTextView.setDrawTopBorder(false);
+        mLeftTextView.setDrawBottomBorder(true);
+        mRightTextView.setDrawBottomBorder(false);
         mLeftTextView.setTextColor(getResources().getColor(R.color.controlHighlight));
         mRightTextView.setTextColor(getResources().getColor(R.color.controlNormal));
         mFirmnessControlLeftView.setVisibility(View.VISIBLE);
@@ -70,8 +70,8 @@ public class FirmnessControlFragment extends Fragment {
 
     @OnClick(R.id.firmness_control_text_view_right)
     void setRightSideActive() {
-        mLeftTextView.setDrawTopBorder(false);
-        mRightTextView.setDrawTopBorder(true);
+        mLeftTextView.setDrawBottomBorder(false);
+        mRightTextView.setDrawBottomBorder(true);
         mLeftTextView.setTextColor(getResources().getColor(R.color.controlNormal));
         mRightTextView.setTextColor(getResources().getColor(R.color.controlHighlight));
         mFirmnessControlLeftView.setVisibility(View.GONE);
@@ -144,10 +144,15 @@ public class FirmnessControlFragment extends Fragment {
             }
         });
 
-        connectPump();
 
         return view;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        connectPump();
     }
 
     @Override
@@ -184,7 +189,7 @@ public class FirmnessControlFragment extends Fragment {
                 }
             }));
 
-            mSubscriptions.add(SleepSenseDeviceService.instance().getPumpDevice().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
+            mSubscriptions.add(SleepSenseDeviceService.instance().getPumpDevice().getChangeObservable().onBackpressureBuffer().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
                 @Override
                 public void call(Device device) {
                     if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {

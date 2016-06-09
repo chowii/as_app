@@ -24,6 +24,7 @@ public class StyledTextView extends TextView {
     private Paint mBorderPaint = new Paint();
 
     private boolean mDrawTopBorder = false;
+    private boolean mDrawBottomBorder = false;
 
     private Typeface mTypeface;
     private Typeface mSelectedTypeface;
@@ -103,6 +104,10 @@ public class StyledTextView extends TextView {
         this.mDrawTopBorder = mDrawTopBorder;
     }
 
+    public void setDrawBottomBorder(boolean mDrawTopBorder) {
+        this.mDrawBottomBorder = mDrawTopBorder;
+    }
+
     @Override
     public void setTextColor(int color) {
         super.setTextColor(color);
@@ -116,6 +121,9 @@ public class StyledTextView extends TextView {
 
         if (mDrawTopBorder) {
             canvas.drawLine(0, 0, canvas.getWidth(), 0, mBorderPaint);
+        }
+        if (mDrawBottomBorder) {
+            canvas.drawLine(0, canvas.getHeight()-mBorderPaint.getStrokeWidth()-1, canvas.getWidth(),  canvas.getHeight()-mBorderPaint.getStrokeWidth()-1, mBorderPaint);
         }
     }
 }

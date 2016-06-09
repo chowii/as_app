@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -22,7 +23,15 @@ import au.com.ahbeard.sleepsense.model.Firmness;
  */
 public class FirmnessControlView extends View {
 
+    private static float START_ANGLE = -139f;
+    private static float SWEEP = 274f;
+
     private OnTargetValueSetListener mOnTargetValueSetListener;
+    private float mActualValue;
+    private float mForegroundInset;
+    private float mForegroundShadowOffset;
+    private RectF mValueRect;
+    private RectF mForegroundRect;
 
     public interface OnTargetValueSetListener {
         void onTargetValueSet(float targetValue);
@@ -31,10 +40,7 @@ public class FirmnessControlView extends View {
     public static final float TO_RADIANS = 0.01745329252f;
     public static final float FROM_RADIANS = 1f / TO_RADIANS;
 
-    private Drawable mLevelDrawable;
-    private Drawable mForegroundDrawable;
     private Drawable mKnobDrawable;
-    private Drawable mRotatingDrawable;
 
     private int mTargetMetDotColor = Color.DKGRAY;
     private int mTargetNotMetDotColor = Color.DKGRAY;
@@ -45,6 +51,10 @@ public class FirmnessControlView extends View {
     private PointF mDotCenterPoint = new PointF(0.0f, -0.8f);
 
     private Paint mDotPaint = new Paint();
+    private Paint mWedgePaint = new Paint();
+    private Paint mBackgroundPaint = new Paint();
+    private Paint mForegroundPaint = new Paint();
+    private Paint mForegroundShadowPaint = new Paint();
 
     private PointF mRotatedKnobCenterPoint = new PointF();
     private PointF mRotatedDotCenterPoint = new PointF();
@@ -71,8 +81,6 @@ public class FirmnessControlView extends View {
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.FirmnessControlView, defStyleAttr, 0);
 
-        mLevelDrawable = a.getDrawable(R.styleable.FirmnessControlView_levelDrawable);
-        mForegroundDrawable = a.getDrawable(R.styleable.FirmnessControlView_foregroundDrawable);
         mKnobDrawable = a.getDrawable(R.styleable.FirmnessControlView_knobDrawable);
 
         mTargetMetDotColor = a.getColor(R.styleable.FirmnessControlView_targetMetDotColor, Color.DKGRAY);
@@ -81,40 +89,28 @@ public class FirmnessControlView extends View {
         mDotRadius = a.getDimension(R.styleable.FirmnessControlView_dotRadius,
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, context.getResources().getDisplayMetrics()));
 
-    }
+        mWedgePaint.setColor(getResources().getColor(R.color.firmnessControllerColor));
+        mBackgroundPaint.setColor(getResources().getColor(R.color.firmnessControllerBackgroundColor));
+        mForegroundPaint.setColor(getResources().getColor(R.color.firmnessControllerForegroundColor));
+        mForegroundShadowPaint.setColor(getResources().getColor(R.color.firmnessControllerForegroundShadowColor));
 
-    public Drawable getLevelDrawable() {
-        return mLevelDrawable;
-    }
+        mForegroundInset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, context.getResources().getDisplayMetrics());
+        mForegroundShadowOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, context.getResources().getDisplayMetrics());
 
-    public void setLevelDrawable(Drawable levelDrawable) {
-        mLevelDrawable = levelDrawable;
-    }
-
-    public Drawable getForegroundDrawable() {
-        return mForegroundDrawable;
-    }
-
-    public void setForegroundDrawable(Drawable foregroundDrawable) {
-        mForegroundDrawable = foregroundDrawable;
     }
 
     private boolean mSetTargetValueWithActualValue = true;
 
     public void setActualValue(float value) {
 
-        float actualValue = value;
+        mActualValue = value;
 
         if (mSetTargetValueWithActualValue) {
-            mTargetValue = actualValue;
+            mTargetValue = mActualValue;
             mSetTargetValueWithActualValue = false;
         }
 
-        if (mLevelDrawable != null) {
-            mLevelDrawable.setLevel(Firmness.getDrawableLevelForControlValue(actualValue));
-        }
-
-        if (actualValue > mTargetValue - 0.025f && actualValue < mTargetValue + 0.025f) {
+        if (mActualValue > mTargetValue - 0.025f && mActualValue < mTargetValue + 0.025f) {
             mDotPaint.setColor(mTargetMetDotColor);
         } else {
             mDotPaint.setColor(mTargetNotMetDotColor);
@@ -214,18 +210,19 @@ public class FirmnessControlView extends View {
     }
 
     @Override
+    protected void onSizeChanged(int width, int height, int oldw, int oldh) {
+        mValueRect = new RectF(0, 0, width, height);
+        mForegroundRect = new RectF(mForegroundInset, mForegroundInset, width - mForegroundInset, height - mForegroundInset);
+
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
 
         super.onDraw(canvas);
 
         int fullWidth = canvas.getWidth();
         int fullHeight = canvas.getHeight();
-
-//        // How much to scale the knob by.
-//        float scaleWidth = (float) mForegroundDrawable.getIntrinsicWidth() / (float) fullWidth;
-//        float scaleHeight = (float) mForegroundDrawable.getIntrinsicHeight() / (float) fullHeight;
-//
-//        canvas.scale(scaleWidth, scaleHeight);
 
         if (isInEditMode()) {
             Paint paint = new Paint();
@@ -234,19 +231,20 @@ public class FirmnessControlView extends View {
             return;
         }
 
-        if (mLevelDrawable != null) {
+        canvas.drawArc(mValueRect, START_ANGLE - 90, SWEEP, true, mBackgroundPaint);
+        canvas.drawArc(mValueRect, START_ANGLE - 90, SWEEP * mActualValue, true, mWedgePaint);
 
-            mLevelDrawable.setBounds(0, 0, fullWidth, fullHeight);
-            mLevelDrawable.draw(canvas);
 
+        for ( int i=0; i <= 10; i++) {
+            float sweepPercentage = i/10.0f;
+            canvas.drawArc(mValueRect, START_ANGLE - 90 +sweepPercentage*SWEEP, 1f, true, mForegroundPaint);
         }
 
-        if (mForegroundDrawable != null) {
-
-            mForegroundDrawable.setBounds(0, 0, fullWidth, fullHeight);
-            mForegroundDrawable.draw(canvas);
-
-        }
+        canvas.save();
+        canvas.translate(0,mForegroundShadowOffset);
+        canvas.drawArc(mForegroundRect, START_ANGLE - 90, 360, false, mForegroundShadowPaint);
+        canvas.restore();
+        canvas.drawArc(mForegroundRect, START_ANGLE - 90, 360, false, mForegroundPaint);
 
         if (mKnobDrawable != null) {
 
@@ -255,7 +253,8 @@ public class FirmnessControlView extends View {
             int width = mKnobDrawable.getIntrinsicWidth();
             int height = mKnobDrawable.getIntrinsicHeight();
 
-            float rotationAngle = -137f * TO_RADIANS + 274f * (mTargetValue) * TO_RADIANS;
+            //
+            float rotationAngle = START_ANGLE * TO_RADIANS + SWEEP * (mTargetValue) * TO_RADIANS;
 
             mRotatedKnobCenterPoint.x = (float) (mKnobCenterPoint.x * Math.cos(rotationAngle)
                     - mKnobCenterPoint.y * Math.sin(rotationAngle));

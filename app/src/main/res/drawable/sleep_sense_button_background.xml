@@ -22,8 +22,37 @@
                 <inset android:insetRight="1dp" android:insetBottom="1dp">
                     <shape android:shape="rectangle">
                         <corners android:radius="4dp" />
-                        <solid android:color="#eeeeee"/>
-                        <stroke android:color="#eeeeee" android:width="0.5dp"/>
+                        <solid android:color="@color/controlHighlight"/>
+                        <stroke android:color="@color/controlHighlight" android:width="0.5dp"/>
+                    </shape>
+                </inset>
+            </item>
+        </layer-list>
+    </item>
+    <item android:state_selected="true">
+        <layer-list>
+            <item >
+                <inset android:insetLeft="1dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="4dp" />
+                        <solid android:color="#20DDDDDD"/>
+                    </shape>
+                </inset>
+            </item>
+            <item>
+                <inset android:insetTop="1dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="4dp" />
+                        <solid android:color="#BECED4"/>
+                    </shape>
+                </inset>
+            </item>
+            <item>
+                <inset android:insetRight="1dp" android:insetBottom="1dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="4dp" />
+                        <solid android:color="#fff" />
+                        <stroke android:color="@color/controlHighlight" android:width="1dp"/>
                     </shape>
                 </inset>
             </item>
@@ -52,7 +81,7 @@
                     <shape android:shape="rectangle">
                         <corners android:radius="4dp" />
                         <solid android:color="#ffffff"/>
-                        <stroke android:color="#eeeeee" android:width="0.5dp"/>
+                        <stroke android:color="@color/controlShadowColor" android:width="0.5dp"/>
                     </shape>
                 </inset>
             </item>

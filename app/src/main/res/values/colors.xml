@@ -19,10 +19,14 @@
     <color name="firmnessDotGood">#34DABA</color>
     <color name="firmnessDotBad">#FD8B87</color>
 
-    <color name="controlHighlight">#FD8B87</color>
+    <color name="controlHighlight">#4FB2EA</color>
     <color name="controlNormal">#6E788D</color>
 
-    <color name="firmnessBackground">#FAFAFA</color>
+    <color name="controlShadowColor">#BECED4</color>
+
+    <color name="firmnessBackground">#F4F4F4</color>
+    <color name="positionBackground">#F4F4F4</color>
+    <color name="massageBackground">#F4F4F4</color>
 
     <color name="graphAreaGradientStart">#EAF4FA</color>
     <color name="graphAreaGradientMiddle">#C8E8F6</color>
@@ -36,5 +40,11 @@
 
     <color name="whiteButtonTextColor">#588FB4</color>
 
+    <color name="firmnessControllerColor">#4FB2EA</color>
+    <color name="firmnessControllerBackgroundColor">#E7E7E7</color>
+    <color name="firmnessControllerForegroundColor">#FFFFFF</color>
+    <color name="firmnessControllerForegroundShadowColor">#BECED4</color>
+
+    <color name="paddingBackgroundColor">#00000000</color>
 
 </resources>

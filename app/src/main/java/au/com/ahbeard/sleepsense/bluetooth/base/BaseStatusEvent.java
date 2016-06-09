@@ -1,5 +1,7 @@
     package au.com.ahbeard.sleepsense.bluetooth.base;
 
+import android.util.Log;
+
 import au.com.ahbeard.sleepsense.utils.ByteUtils;
 
 /**
@@ -93,6 +95,23 @@ public class BaseStatusEvent {
 
     public int getTimerLightNormalised() {
         return mTimerLightStatus == 0xff ? 0x00 : mTimerLightStatus;
+    }
+
+    public int getIntensityLightNormalised() {
+
+        // Status goes through the values 1, 3, 6.
+
+        int status = (mHeadMassageStatus+mFootMassageStatus)/2;
+
+        if ( status >= 1 && status < 3 ) {
+            return 1;
+        } else if ( status >= 3 && status < 6 ) {
+            return 2;
+        } else if ( status >=6 ) {
+            return 3;
+        } else {
+            return 0;
+        }
     }
 
     public boolean isHeadMotorRunning() {
