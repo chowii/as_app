@@ -10,6 +10,7 @@ import com.beddit.sensor.SensorSession;
 
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 
+import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 

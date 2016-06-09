@@ -93,6 +93,7 @@ public class PumpDevice extends Device {
                     // Store last mattress firmness?
                     if ( mStoreFirmnessOnDisconnect ) {
                         SleepService.instance().writeMattressFirmnessToDatabase(System.currentTimeMillis(),pumpEvent.getPressure(PreferenceService.instance().getSideOfBed()));
+                        mStoreFirmnessOnDisconnect = false;
                     }
                     disconnect();
                 }

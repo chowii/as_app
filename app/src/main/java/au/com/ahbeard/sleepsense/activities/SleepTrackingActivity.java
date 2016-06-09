@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -14,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
-import au.com.ahbeard.sleepsense.services.SleepService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -63,9 +61,6 @@ public class SleepTrackingActivity extends AppCompatActivity {
     @Bind(R.id.sleep_tracking_text_view_sample_count)
     TextView mSampleCountTextView;
 
-    @Bind(R.id.sleep_tracking_button_start_stop)
-    Button mStartStopButton;
-
     @Bind(R.id.sleep_tracking_layout_connecting)
     View mConnectingLayout;
 
@@ -80,7 +75,7 @@ public class SleepTrackingActivity extends AppCompatActivity {
 
         mCalendar = Calendar.getInstance();
 
-        if ( SleepSenseDeviceService.instance().getTrackerDevice().isTracking() ) {
+        if (SleepSenseDeviceService.instance().getTrackerDevice().isTracking()) {
             mConnectingLayout.setVisibility(View.GONE);
         } else {
             mConnectingLayout.setVisibility(View.VISIBLE);
@@ -92,7 +87,7 @@ public class SleepTrackingActivity extends AppCompatActivity {
                 .subscribe(new Action1<TrackerDevice.TrackerState>() {
                     @Override
                     public void call(TrackerDevice.TrackerState trackerState) {
-                        if (TrackerDevice.TrackerState.StartingTracking == trackerState ) {
+                        if (TrackerDevice.TrackerState.StartingTracking == trackerState) {
                             mConnectingLayout.animate().alpha(0.0f).setDuration(300).start();
                         }
                     }
@@ -110,6 +105,11 @@ public class SleepTrackingActivity extends AppCompatActivity {
                 });
 
         SleepSenseDeviceService.instance().getTrackerDevice().startSensorSession();
+
+        if ( SleepSenseDeviceService.instance().getPumpDevice() != null ) {
+            SleepSenseDeviceService.instance().getPumpDevice().connectToGetFirmness();
+        }
+
     }
 
     private void setButtonState() {

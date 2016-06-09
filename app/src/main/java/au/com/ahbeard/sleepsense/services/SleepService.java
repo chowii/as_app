@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -141,15 +142,15 @@ public class SleepService {
         List<SessionData> sessionDatas = readSessionData(periodStart / 1000D, periodEnd / 1000D);
 
 
-        Log.d("BatchAnalysisPrep",String.format("date: %s",calendar.getTime()));
-        Log.d("BatchAnalysisPrep",String.format("sessionDatas.size(): %d",sessionDatas.size()));
+        Log.d("BatchAnalysisPrep", String.format("date: %s", calendar.getTime()));
+        Log.d("BatchAnalysisPrep", String.format("sessionDatas.size(): %d", sessionDatas.size()));
 
         HashSet<Double> sessionDataStarts = new HashSet<>();
 
         // Fix any duplicates caused by re-running batch analysis and grabbing the same session again (really only a problem on the test device I'm using).
         for (Iterator<SessionData> i = sessionDatas.iterator(); i.hasNext(); ) {
             SessionData sessionData = i.next();
-            if ( sessionDataStarts.contains(sessionData.getStartTime())) {
+            if (sessionDataStarts.contains(sessionData.getStartTime())) {
                 i.remove();
             } else {
                 sessionDataStarts.add(sessionData.getStartTime());
@@ -178,9 +179,17 @@ public class SleepService {
 
                 Sleep sleep = Sleep.fromBatchAnalysisResult(batchAnalysisResult);
 
-                // Find the mattress firmness at the time the sleep was started.
+                // Find the first mattress pressure in the date range. We really need to figure out WTF to do here
+                LinkedHashMap<Double, Float> mattressPressures = readMattressPressures(batchAnalysisResult.getStartTime(),batchAnalysisResult.getEndTime());
 
-                sleep.setMattressFirmness(20.0f);
+                if ( mattressPressures.size() > 0 ) {
+                    for (Map.Entry<Double, Float> mattressPressure : mattressPressures.entrySet()) {
+                        sleep.setMattressFirmness(mattressPressure.getValue());
+                        break;
+                    }
+                } else {
+                    sleep.setMattressFirmness(20.0f);
+                }
 
                 writeSleepToDatabase(sleep);
 
@@ -556,7 +565,7 @@ public class SleepService {
             }
 
         } finally {
-            if ( sleepSessionCursor != null ) {
+            if (sleepSessionCursor != null) {
                 sleepSessionCursor.close();
             }
 
@@ -658,10 +667,10 @@ public class SleepService {
         return calendar;
     }
 
+
     public Observable<Integer> getChangeObservable() {
         return mDataChangePublishSubject;
     }
-
 
     public void notifySleepIdSelected(Integer id) {
         mSleepIdSelectedSubject.onNext(id);
@@ -673,8 +682,8 @@ public class SleepService {
 
     public Observable<AggregateStatistics> getAggregateStatisticsObservable() {
 
-        if ( ! mAggregateStatisticsCalculated ) {
-            mAggregateStatisticsCalculated =true;
+        if (!mAggregateStatisticsCalculated) {
+            mAggregateStatisticsCalculated = true;
             Schedulers.io().createWorker().schedule(new Action0() {
                 @Override
                 public void call() {
@@ -747,7 +756,7 @@ public class SleepService {
 
             }
 
-            if( countOfSleepScores > 0 ) {
+            if (countOfSleepScores > 0) {
                 mAggregateStatistics.setAverageSleepScore(sumOfSleepScores / countOfSleepScores);
             } else {
                 mAggregateStatistics.setAverageSleepScore(0.0f);
@@ -817,15 +826,63 @@ public class SleepService {
 
         database.beginTransaction();
 
-        ContentValues values = new ContentValues();
+        try {
+            ContentValues values = new ContentValues();
 
-        values.put(MattressFirmnessContract.MattressFirmness.TIME_READ, timeRead);
-        values.put(MattressFirmnessContract.MattressFirmness.PRESSURE, pressure);
+            values.put(MattressFirmnessContract.MattressFirmness.TIME_READ, timeRead / 1000d);
+            values.put(MattressFirmnessContract.MattressFirmness.PRESSURE, pressure);
 
-        long sessionId = database.insertOrThrow(MattressFirmnessContract.MattressFirmness.TABLE_NAME, null, values);
+            long sessionId = database.insertOrThrow(MattressFirmnessContract.MattressFirmness.TABLE_NAME, null, values);
 
-        database.setTransactionSuccessful();
-        database.endTransaction();
+            database.setTransactionSuccessful();
+        } finally {
+            database.endTransaction();
+        }
 
     }
+
+    /**
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public LinkedHashMap<Double, Float> readMattressPressures(double startDate, double endDate) {
+
+        Log.d("SleepService", String.format("startDate: %f endDate: %f", startDate, endDate));
+
+        SQLiteDatabase database = null;
+        Cursor mattressPressureCursor = null;
+
+        LinkedHashMap<Double,Float> mattressPressureReadings = new LinkedHashMap<>();
+
+        try {
+            database = mSleepSQLiteHelper.getReadableDatabase();
+
+            mattressPressureCursor = database.rawQuery(
+                    "select  * from mattress_firmness where time_read >= ? and time_read <= ? order by time_read asc",
+                    new String[]{Double.toString(startDate), Double.toString(endDate)});
+
+            mattressPressureCursor.moveToFirst();
+
+
+            while (!mattressPressureCursor.isAfterLast()) {
+                double timeRead = mattressPressureCursor.getDouble(mattressPressureCursor.getColumnIndex(MattressFirmnessContract.MattressFirmness.TIME_READ));
+                float pressure = mattressPressureCursor.getFloat(mattressPressureCursor.getColumnIndex(MattressFirmnessContract.MattressFirmness.PRESSURE));
+                mattressPressureReadings.put(timeRead,pressure);
+                Log.d("SleepService", String.format("time_read: %f mattress_firmness: %f", timeRead, pressure));
+                mattressPressureCursor.moveToNext();
+            }
+
+
+        } finally {
+            if (mattressPressureCursor != null) {
+                mattressPressureCursor.close();
+            }
+
+        }
+
+        return mattressPressureReadings;
+    }
+
+
 }

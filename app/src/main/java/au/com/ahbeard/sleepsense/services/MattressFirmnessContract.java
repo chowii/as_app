@@ -16,11 +16,6 @@ public class MattressFirmnessContract {
 
     private static final String COMMA_SEP = ",";
 
-    public static String JOIN_QUERY = "select sleep_session.session_id, start_time, end_time, time_zone, track_name, track_data, track_data_type " +
-            "from sleep_session, sleep_session_tracks " +
-            "where sleep_session.session_id = sleep_session_tracks.session_id " +
-                "and end_time >= ? and end_time < ? order by sleep_session.session_id, end_time";
-
     /*
      * Inner class that defines the table contents.
      */
