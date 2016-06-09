@@ -53,7 +53,7 @@
             android:layout_marginRight="32dp"
             android:lineSpacingExtra="5sp"
             app:typeface="OpenSansRegular"
-            android:text="Align with your heart so we can track your breathing and heart rate"/>
+            android:text="This will help me accurately pair to your sleep tracker"/>
 
         <View android:layout_width="wrap_content" android:layout_height="45dp"/>
 

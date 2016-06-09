@@ -167,7 +167,7 @@ public class WeeklyDashboardFragment extends Fragment {
 
         StatisticsUtils statisticsUtils = new StatisticsUtils(mStatisticsLayout);
 
-        mAverageSleepScore = statisticsUtils.addStatistic(Color.GREEN, "Average SleepScore", null);
+        mAverageSleepScore = statisticsUtils.addStatistic(Color.GREEN, "Average Sleep Score", null);
         mOptimalBedtime = statisticsUtils.addStatistic(Color.GREEN, "Optimal Bedtime", null);
         mOptimalMattressFirmness = statisticsUtils.addStatistic(Color.GREEN, "Optimal Mattress Firmness", null);
         mBestNight =statisticsUtils.addStatistic(Color.GREEN, "Best Night", null);

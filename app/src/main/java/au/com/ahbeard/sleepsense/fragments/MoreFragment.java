@@ -18,9 +18,11 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.DebugActivity;
 import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import au.com.ahbeard.sleepsense.activities.HomeActivity;
 import au.com.ahbeard.sleepsense.activities.PreferenceActivity;
+import au.com.ahbeard.sleepsense.activities.ProfileActivity;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,26 +39,6 @@ public class MoreFragment extends Fragment {
 
     @Bind(R.id.more_layout_items)
     ViewGroup mItemsLayout;
-
-    @OnClick(R.id.debug_button_new_onboarding)
-    void clear() {
-        ((HomeActivity)getActivity()).doOnboarding();
-    }
-
-    @OnClick(R.id.debug_button_generate_fake_data)
-    void generateFakeData() {
-        Schedulers.io().createWorker().schedule(new Action0() {
-            @Override
-            public void call() {
-                SleepService.instance().generateFakeData(Calendar.getInstance(),60);
-            }
-        });
-    }
-
-    @OnClick(R.id.debug_button_re_run_batch_analysis)
-    void runBatchAnalysis() {
-        SleepService.instance().runBatchAnalysis();
-    }
 
     public MoreFragment() {
         // Required empty public constructor
@@ -92,12 +74,12 @@ public class MoreFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         add(inflater,mItemsLayout,"FAQs",null,HelpActivity.getIntent(getContext(),"FAQs","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
-        add(inflater,mItemsLayout,"About AH Beard",null,HelpActivity.getIntent(getContext(),"About AH Beard","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+        add(inflater,mItemsLayout,"About A.H. Beard",null,HelpActivity.getIntent(getContext(),"About AH Beard","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
         add(inflater,mItemsLayout,"Contact us",null,HelpActivity.getIntent(getContext(),"Contact us","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
         add(inflater,mItemsLayout,"Improve your sleep",null,HelpActivity.getIntent(getContext(),"Improve your sleep","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
         add(inflater,mItemsLayout,"Preferences",null,new Intent(getActivity(), PreferenceActivity.class));
         addSpacer(mItemsLayout);
-        add(inflater,mItemsLayout,"My Profile",null,null);
+        add(inflater,mItemsLayout,"My Profile",null,new Intent(getActivity(), ProfileActivity.class));
         addSpacer(mItemsLayout);
         add(inflater,mItemsLayout,"Terms of Service",null,HelpActivity.getIntent(getContext(),"Terms of Service","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
         add(inflater,mItemsLayout,"Privacy Policy",null,HelpActivity.getIntent(getContext(),"Privacy Policy","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
@@ -110,6 +92,9 @@ public class MoreFragment extends Fragment {
         } catch (PackageManager.NameNotFoundException e) {
 
         }
+
+        add(inflater,mItemsLayout,"Debug",null,new Intent(getActivity(), DebugActivity.class));
+        addSpacer(mItemsLayout);
 
         return view;
     }

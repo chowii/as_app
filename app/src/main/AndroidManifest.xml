@@ -40,6 +40,14 @@
             android:screenOrientation="userPortrait">
         </activity>
         <activity
+            android:name=".activities.ProfileActivity"
+            android:screenOrientation="userPortrait">
+        </activity>
+        <activity
+            android:name=".activities.DebugActivity"
+            android:screenOrientation="userPortrait">
+        </activity>
+        <activity
             android:name=".activities.SplashActivity"
             android:screenOrientation="userPortrait"
             android:theme="@style/SplashTheme">

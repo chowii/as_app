@@ -18,7 +18,7 @@ public class OptimalBedtimeCalculator {
 
     public void add(double startTime, float sleepScore) {
 
-        Log.d("OptimalBeditimeCalc",String.format("startTime: %f sleepScore: %f",startTime,sleepScore));
+        // Log.d("OptimalBeditimeCalc",String.format("startTime: %f sleepScore: %f",startTime,sleepScore));
 
         if ( startTime > 0 ) {
 
@@ -30,7 +30,7 @@ public class OptimalBedtimeCalculator {
 
             int slot = hourOfDay * 2 + (minutes >= 30 ? 1 : 0);
 
-            Log.d("OptimalBeditimeCalc",String.format("slot: %d sleepScore: %f",slot,sleepScore));
+            // Log.d("OptimalBeditimeCalc",String.format("slot: %d sleepScore: %f",slot,sleepScore));
 
             mSleepScoreCounts[slot]++;
             mSleepScoreSums[slot]+=sleepScore;

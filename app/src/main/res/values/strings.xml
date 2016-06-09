@@ -30,7 +30,7 @@
     <string name="sleep_score_breakdown_snoring">Snoring</string>
     <string name="sleep_score_breakdown_snoring_txt">A measure of the total portion of time you spent snoring while you were asleep. </string>
     <string name="sleep_score_breakdown_resting_heart_rate">Resting heart rate</string>
-    <string name="sleep_score_breakdown_resting_heart_rate_txt">Your average heart rate while sleeping.</string>
+    <string name="sleep_score_breakdown_resting_heart_rate_txt">A measure of your average heart rate while sleeping.</string>
 
     <string name="button_continue">Continue</string>
 
@@ -48,6 +48,8 @@
     <string name="preference_dialog_yes">Yes, I\'m sure</string>
     <string name="preference_dialog_message">Are you sure you want to reset Sleepsense? You will not lose your sleep data</string>
     <string name="preferences_sleep_target_time">Sleep target %1$dh %2$dmin</string>
+    <string name="sleep_tracking_dialog_message">Are you sure you want to stop sleep tracking?</string>
+    <string name="sleep_tracking_dialog_yes">Yes, I\'m done</string>
 
 
 </resources>
