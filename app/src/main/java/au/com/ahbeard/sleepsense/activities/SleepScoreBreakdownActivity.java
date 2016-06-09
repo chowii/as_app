@@ -75,7 +75,7 @@ public class SleepScoreBreakdownActivity extends AppCompatActivity {
 
             if (mSleep.getRestingHeartRate() != null) {
                 mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_resting_heart_rate),
-                        StatisticsUtils.valueSuffix(textColor, altTextColor, "" + mSleep.getRestingHeartRate().intValue(), " bpm"));
+                        StatisticsUtils.valueSuffix(textColor, altTextColor, "" + mSleep.getRestingHeartRate().intValue(), " bpm"),getText(R.string.sleep_score_breakdown_resting_heart_rate_txt));
             }
 
             mStatisticsUtils.addStatistic(Color.WHITE, getString(R.string.sleep_score_breakdown_time_to_fall_asleep),

@@ -1,6 +1,8 @@
 package au.com.ahbeard.sleepsense.activities;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -31,14 +33,24 @@ public class SleepTrackingActivity extends AppCompatActivity {
 
     @OnClick(R.id.sleep_tracking_button_start_stop)
     void onStopTracking() {
+
         if (SleepSenseDeviceService.instance().getTrackerDevice().isTracking()) {
-            Schedulers.io().createWorker().schedule(new Action0() {
-                @Override
-                public void call() {
-                    SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
+            new AlertDialog.Builder(this).setPositiveButton(R.string.sleep_tracking_dialog_yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Schedulers.io().createWorker().schedule(new Action0() {
+                        @Override
+                        public void call() {
+                            SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
+                        }
+                    });
+                    finish();
                 }
-            });
-            finish();
+            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            }).setMessage(getString(R.string.sleep_tracking_dialog_message)).create().show();
+
         }
     }
 

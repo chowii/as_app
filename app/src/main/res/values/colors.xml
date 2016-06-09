@@ -47,4 +47,6 @@
 
     <color name="paddingBackgroundColor">#00000000</color>
 
+    <color name="sleepTrackingBackgroundColor">#042234</color>
+
 </resources>
