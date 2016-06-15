@@ -2,6 +2,9 @@ package au.com.ahbeard.sleepsense.bluetooth;
 
 import android.bluetooth.BluetoothDevice;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by neal on 16/12/2015.
  */
@@ -15,16 +18,19 @@ public class BluetoothScanEvent {
 
     }
 
-    public static class DeviceFoundEvent extends BluetoothScanEvent {
+    public static class ScanPacketEvent extends BluetoothScanEvent {
 
         private BluetoothDevice mDevice;
         private byte[] mAdvertisingData;
         private int mRssi;
+        private Set<Integer> mReceivedRssis;
 
-        public DeviceFoundEvent(BluetoothDevice device, byte[] advertisingData, int rssi) {
+        public ScanPacketEvent(BluetoothDevice device, byte[] advertisingData, int rssi) {
             mDevice = device;
             mAdvertisingData = advertisingData;
             mRssi = rssi;
+            mReceivedRssis = new HashSet<>();
+            mReceivedRssis.add(rssi);
         }
 
         public BluetoothDevice getDevice() {
@@ -37,6 +43,17 @@ public class BluetoothScanEvent {
 
         public int getRssi() {
             return mRssi;
+        }
+
+        public Set<Integer> getReceivedRssis() {
+            return mReceivedRssis;
+        }
+
+        public void addRssi(int rssi) {
+            if ( rssi > mRssi ) {
+                mRssi = rssi;
+            }
+            mReceivedRssis.add(rssi);
         }
     }
 

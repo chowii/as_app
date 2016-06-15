@@ -5,9 +5,12 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import au.com.ahbeard.sleepsense.services.LogService;
 import au.com.ahbeard.sleepsense.utils.ConversionUtils;
@@ -42,11 +45,15 @@ public class BluetoothService extends BluetoothGattCallback {
         mContext = context;
     }
 
+    private Map<String,Integer> mMaxRSSIs = Collections.synchronizedMap(new HashMap<String,Integer>());
+
     /**
      * Bluetooth LE scan callback for service discovery.
      */
     private BluetoothAdapter.LeScanCallback mScanCallback =
+
             new BluetoothAdapter.LeScanCallback() {
+
                 @Override
                 public void onLeScan(final BluetoothDevice device, int rssi,
                                      byte[] scanRecord) {
@@ -54,10 +61,9 @@ public class BluetoothService extends BluetoothGattCallback {
                     LogService.e(TAG, String.format("device: %s rssi: %d name: '%s' scanRecord: %s",
                             device.getAddress(), rssi, device.getName(), ConversionUtils.byteArrayToString(scanRecord," ")));
 
-                    // Check the address of the device.
                     if (StringUtils.isNotEmpty(device.getName())) {
                         mBluetoothScanningSubject.onNext(
-                                new BluetoothScanEvent.DeviceFoundEvent(device, scanRecord, rssi));
+                                new BluetoothScanEvent.ScanPacketEvent(device, scanRecord, rssi));
                     }
                 }
             };

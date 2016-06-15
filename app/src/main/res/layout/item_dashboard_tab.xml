@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:lineSpacingExtra="8dp"
         android:textColor="#ffffff"
-        android:textSize="16sp"
+        android:textSize="13sp"
         android:textAllCaps="true"
         app:typeface="OpenSansRegular"
         android:layout_gravity="center_horizontal|bottom"

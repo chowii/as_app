@@ -11,9 +11,14 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
 
+        <item name="android:buttonStyle">@style/SleepSenseButtons</item>
         <!--<item name="android:windowFullscreen">true</item>-->
         <!--<item name="android:windowContentOverlay">@null</item>-->
 
+    </style>
+
+    <style name="SleepSenseButtons" parent="Base.Widget.AppCompat.Button">
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="SplashTheme" parent="AppTheme">
@@ -43,5 +48,7 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+
 
 </resources>

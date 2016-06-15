@@ -19,12 +19,12 @@ public class SleepSenseDeviceFactory {
 
     private static final boolean FIND_TRACKER = true;
 
-    public static boolean isSleepSenseDevice(BluetoothScanEvent.DeviceFoundEvent deviceFoundEvent) {
+    public static boolean isSleepSenseDevice(BluetoothScanEvent.ScanPacketEvent scanPacketEvent) {
 
-        String name = deviceFoundEvent.getDevice().getName();
+        String name = scanPacketEvent.getDevice().getName();
 
         if (name != null && name.toLowerCase().contains("2618")) {
-            Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(deviceFoundEvent.getAdvertisingData());
+            Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(scanPacketEvent.getAdvertisingData());
             for (UUID advertisedUUID : advertisedUUIDs) {
                 Log.d("SleepSenseDeviceFactory", "pump: " + advertisedUUID);
             }
@@ -32,7 +32,7 @@ public class SleepSenseDeviceFactory {
         }
 
         if (name != null && name.toLowerCase().contains("base-i4")) {
-            Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(deviceFoundEvent.getAdvertisingData());
+            Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(scanPacketEvent.getAdvertisingData());
             for (UUID advertisedUUID : advertisedUUIDs) {
                 Log.d("SleepSenseDeviceFactory", "base: " + advertisedUUID);
             }
@@ -40,7 +40,7 @@ public class SleepSenseDeviceFactory {
         }
 
         if (FIND_TRACKER && name != null && name.toLowerCase().contains("beddit")) {
-            Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(deviceFoundEvent.getAdvertisingData());
+            Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(scanPacketEvent.getAdvertisingData());
             for (UUID advertisedUUID : advertisedUUIDs) {
                 Log.d("SleepSenseDeviceFactory", "beddit: " + advertisedUUID);
             }
@@ -50,27 +50,27 @@ public class SleepSenseDeviceFactory {
         return false;
     }
 
-    public static List<Device> factorySleepSenseDevice(Context context, BluetoothScanEvent.DeviceFoundEvent deviceFoundEvent) {
+    public static List<Device> factorySleepSenseDevice(Context context, BluetoothScanEvent.ScanPacketEvent scanPacketEvent) {
 
         List<Device> mDevices = new ArrayList<>();
 
-        String name = deviceFoundEvent.getDevice().getName();
+        String name = scanPacketEvent.getDevice().getName();
 
         if (name != null && name.toLowerCase().contains("2618")) {
             PumpDevice pumpDevice = new PumpDevice();
-            pumpDevice.link(context, deviceFoundEvent.getDevice());
+            pumpDevice.link(context, scanPacketEvent.getDevice());
             mDevices.add(pumpDevice);
         }
 
         if (name != null && name.contains("base-i4")) {
             BaseDevice baseDevice = new BaseDevice();
-            baseDevice.link(context, deviceFoundEvent.getDevice());
+            baseDevice.link(context, scanPacketEvent.getDevice());
             mDevices.add(baseDevice);
         }
 
         if (FIND_TRACKER && name != null && name.toLowerCase().contains("beddit")) {
             TrackerDevice trackerDevice = new TrackerDevice();
-            trackerDevice.link(context, deviceFoundEvent.getDevice());
+            trackerDevice.link(context, scanPacketEvent.getDevice());
             mDevices.add(trackerDevice);
         }
 

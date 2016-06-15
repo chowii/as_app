@@ -92,7 +92,7 @@
                     android:text="Set your sleep goal to receive\n an accurate Sleep Score"
                     android:textColor="#6E788D"
                     android:textSize="13sp"
-                    app:typeface="OpenSansSemiBold"/>
+                    app:typeface="OpenSansRegular"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -116,8 +116,8 @@
 
                 <SeekBar
                     android:id="@+id/preference_seek_bar_sleep_target"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="match_parent" android:progress="10"
+                    android:layout_height="wrap_content" android:progressTint="#6CB9F4" android:thumbTint="#6CB9F4"/>
 
             </LinearLayout>
 
@@ -192,7 +192,7 @@
                     android:text="Reset to pair a new device or track a different side of the bed"
                     android:textColor="#6E788D"
                     android:textSize="13sp"
-                    app:typeface="OpenSansSemiBold"/>
+                    app:typeface="OpenSansRegular"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -203,10 +203,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:background="@drawable/sleep_sense_button_white_blue_border"
+                    android:background="@drawable/sleep_sense_button_white_light_blue_border"
                     android:text="Reset Sleepsense"
                     android:stateListAnimator="@null"
-                    android:textColor="@color/whiteButtonTextColor"/>
+                    android:textColor="@color/white_light_blue_button_text_color"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -221,7 +221,7 @@
                     android:text="You will not lose any tracking data"
                     android:textColor="#6E788D"
                     android:textSize="13sp"
-                    app:typeface="OpenSansSemiBold"/>
+                    app:typeface="OpenSansRegular"/>
 
             </LinearLayout>
 

@@ -42,10 +42,10 @@ public class SleepScoreView extends View {
         fullPaint.setColor(Color.WHITE);
         fullPaint.setAlpha(63);
         fullPaint.setStyle(Paint.Style.STROKE);
-        fullPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,3,getResources().getDisplayMetrics()));
+        fullPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,2f,getResources().getDisplayMetrics()));
 
         arcPaint.setColor(Color.WHITE);
-        arcPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,4,getResources().getDisplayMetrics()));
+        arcPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,2.7f,getResources().getDisplayMetrics()));
         arcPaint.setStyle(Paint.Style.STROKE);
         arcPaint.setStrokeCap(Paint.Cap.ROUND);
 

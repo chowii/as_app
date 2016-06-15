@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.zip.Inflater;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import au.com.ahbeard.sleepsense.activities.SleepTrackingActivity;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import butterknife.Bind;
@@ -52,6 +53,13 @@ public class DashboardFragment extends Fragment {
 
     @Bind(R.id.dashboard_fab_start_sleep)
     FloatingActionButton mStartSleepFAB;
+
+    @OnClick(R.id.dashboard_image_view_help)
+    void onHelpClicked() {
+        startActivity(HelpActivity.getIntent(getActivity(),"Dashboard Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+    }
+
+
 
     private CompositeSubscription mCompositeSubscription= new CompositeSubscription();
 

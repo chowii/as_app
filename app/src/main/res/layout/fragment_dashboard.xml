@@ -14,25 +14,33 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             />
-        <LinearLayout
-            android:id="@+id/dashboard_layout_tab_container"
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:padding="5dp"
-            android:gravity="center"
-            android:background="#0074BF">
-
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+            android:layout_height="60dp">
+            <LinearLayout
+                android:id="@+id/dashboard_layout_tab_container"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:padding="5dp"
                 android:gravity="center"
-                android:visibility="visible"
-                android:divider="@android:color/transparent"
-                />
+                android:background="#0074BF">
 
-        </LinearLayout>
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:divider="@android:color/transparent"
+                    />
+
+            </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/dashboard_image_view_help" android:src="@drawable/help_button_blue" android:layout_gravity="end|center_vertical" android:layout_marginEnd="22dp"/>
+        </FrameLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/dashboard_fab_start_sleep"

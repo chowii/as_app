@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 
@@ -33,6 +33,8 @@ public class DailyGraphView extends ViewGroup {
     private Paint mAreaPaint;
     private Paint mLabelPaint;
     private Paint mSideLabelPaint;
+    private Paint mDashedLinePaint;
+    private Paint mLabelLinePaint;
 
     private float mGraphExtent;
     private float mGraphRegionHeight;
@@ -53,6 +55,8 @@ public class DailyGraphView extends ViewGroup {
 
     private boolean mGraphNeedsRelayout = true;
     private ArrayList<Legend> mLegends;
+    private Path mDashedLinePaths;
+    private float mSideLabelPadding;
 
 
     public DailyGraphView(Context context) {
@@ -82,8 +86,8 @@ public class DailyGraphView extends ViewGroup {
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.Graph, defStyleAttr, 0);
 
-        mXAxisLabelSpace = a.getDimension(R.styleable.Graph_xAxisLabelSpace,0);
-        mYAxisLabelSpace = a.getDimension(R.styleable.Graph_yAxisLabelSpace,0);
+        mXAxisLabelSpace = a.getDimension(R.styleable.Graph_xAxisLabelSpace, 0);
+        mYAxisLabelSpace = a.getDimension(R.styleable.Graph_yAxisLabelSpace, 0);
 
         mAreaPaint = new Paint();
         mAreaPaint.setShader(mAreaGradient);
@@ -100,6 +104,13 @@ public class DailyGraphView extends ViewGroup {
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
         mLinePaint.setStyle(Paint.Style.STROKE);
 
+        mLabelLinePaint = new Paint();
+        mLabelLinePaint.setAntiAlias(true);
+        mLabelLinePaint.setColor(Color.WHITE);
+        mLabelLinePaint.setStrokeWidth(
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
+        mLabelLinePaint.setStyle(Paint.Style.STROKE);
+
         mLabelPaint = new Paint();
         mLabelPaint.setColor(Color.parseColor("#778CA2"));
         mLabelPaint.setStyle(Paint.Style.FILL);
@@ -108,13 +119,30 @@ public class DailyGraphView extends ViewGroup {
         mLabelPaint.setTypeface(TypefaceService.instance().getTypeface("OpenSansRegular"));
 
         mSideLabelPaint = new Paint(mLabelPaint);
-        mSideLabelPaint.setColor(Color.parseColor("#FFFFFF"));
+        mSideLabelPaint.setColor(Color.parseColor("#626C83"));
         mSideLabelPaint.setStrokeWidth(
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
-        mSideLabelPaint.setAlpha(180);
+        mSideLabelPaint.setAlpha(255);
+        mSideLabelPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 9, getResources().getDisplayMetrics()));
+
+        mSideLabelPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12,
+                getResources().getDisplayMetrics());
+
+
+        float dashWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5,
+                getResources().getDisplayMetrics());
+
+        mDashedLinePaint = new Paint();
+        mDashedLinePaint.setColor(Color.WHITE);
+        mDashedLinePaint.setPathEffect(new DashPathEffect(new float[]{dashWidth, dashWidth * 2}, 0));
+        mDashedLinePaint.setAlpha(128);
+        mDashedLinePaint.setStrokeWidth(
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
+        mDashedLinePaint.setStyle(Paint.Style.STROKE);
 
         mPath = new Path();
         mAreaPath = new Path();
+        mDashedLinePaths = new Path();
 
     }
 
@@ -127,7 +155,7 @@ public class DailyGraphView extends ViewGroup {
 
         // Normalise the values
         for (TimestampAndFloat timestampAndFloat : mNormalisedValues) {
-            timestampAndFloat.setValue(((1.0f-timestampAndFloat.getValue()) - minimum) / range );
+            timestampAndFloat.setValue(((1.0f - timestampAndFloat.getValue()) - minimum) / range);
         }
 
         removeAllViews();
@@ -148,7 +176,7 @@ public class DailyGraphView extends ViewGroup {
         // Have to allocate here, since we don't know the size. Optimally we could do this when the graph canvas
         // changes size... actually if the values don't change, none of this changes, so we can set a "dirty" flag.
 
-        mGraphRegionHeight =height - mXAxisLabelSpace;
+        mGraphRegionHeight = height - mXAxisLabelSpace;
 
         mAreaPaint.setShader(new LinearGradient(
                 0, 0, 0, mGraphRegionHeight,
@@ -161,6 +189,13 @@ public class DailyGraphView extends ViewGroup {
 
         mPath.reset();
         mAreaPath.reset();
+
+        mDashedLinePaths.reset();
+
+        mDashedLinePaths.moveTo(0, mGraphRegionHeight - mGraphExtent * 0.0f);
+        mDashedLinePaths.lineTo(getWidth(), mGraphRegionHeight - mGraphExtent * 0.0f);
+        mDashedLinePaths.moveTo(0, mGraphRegionHeight - mGraphExtent * 0.25f);
+        mDashedLinePaths.lineTo(getWidth(), mGraphRegionHeight - mGraphExtent * 0.25f);
 
         if (mNormalisedValues == null || mNormalisedValues.isEmpty()) {
             mPoints = new PointF[0];
@@ -187,16 +222,13 @@ public class DailyGraphView extends ViewGroup {
         mAreaPath.moveTo(0, getHeight());
 
         for (int i = 0; i < mPoints.length; i++) {
+
             if (i == 0) {
                 mPath.moveTo(mPoints[i].x, mPoints[i].y);
             } else {
-                if ( mNormalisedValues.get(i).getTimestamp() - mNormalisedValues.get(i-1).getTimestamp() > 180f ) {
-                    mPath.moveTo(mPoints[i].x, mPoints[i].y);
-                } else {
-                    mPath.lineTo(mPoints[i].x, mPoints[i].y);
-                }
-
+                mPath.lineTo(mPoints[i].x, mPoints[i].y);
             }
+
             mAreaPath.lineTo(mPoints[i].x, mPoints[i].y);
         }
 
@@ -229,15 +261,16 @@ public class DailyGraphView extends ViewGroup {
                 hour = 12;
             }
 
-            mLegends.add(new Legend(new PointF((float) ((startCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - mXAxisLabelSpace/2),
-                    String.format("%02d",hour)));
+            mLegends.add(new Legend(new PointF((float) ((startCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - mXAxisLabelSpace / 2),
+                    String.format("%02d", hour)));
 
             startCalendar.add(Calendar.HOUR_OF_DAY, 1);
 
         }
 
-        mLegends.add(new Legend(new PointF((float) ((endCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - mXAxisLabelSpace/2),
-                String.format("%02d",endCalendar.get(Calendar.HOUR))));
+        mLegends.add(new Legend(new PointF((float) ((endCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - mXAxisLabelSpace / 2),
+                String.format("%02d", endCalendar.get(Calendar.HOUR))));
+
 
         mGraphNeedsRelayout = false;
 
@@ -255,6 +288,15 @@ public class DailyGraphView extends ViewGroup {
         canvas.drawPath(mAreaPath, mAreaPaint);
         canvas.drawPath(mPath, mLinePaint);
 
+        canvas.drawPath(mDashedLinePaths, mDashedLinePaint);
+
+        float deepSleepHeight = mGraphRegionHeight - mGraphExtent * 0.25f - mSideLabelPaint.getFontMetrics().ascent + mSideLabelPadding * 0.75f;
+        canvas.drawText("DEEP", mSideLabelPadding, deepSleepHeight, mSideLabelPaint);
+        canvas.drawText("SLEEP", mSideLabelPadding, deepSleepHeight + mSideLabelPaint.getTextSize() * 1.25f, mSideLabelPaint);
+
+        float awakeSleepHeight = mGraphRegionHeight - mGraphExtent * 0.0f + mSideLabelPaint.getFontMetrics().descent -mSideLabelPadding;
+        canvas.drawText("AWAKE", mSideLabelPadding, awakeSleepHeight, mSideLabelPaint);
+
         if (mLegends != null) {
 
             canvas.clipPath(mAreaPath);
@@ -263,13 +305,12 @@ public class DailyGraphView extends ViewGroup {
 
                 float legendWidth = mLabelPaint.measureText(legend.value);
 
-                canvas.drawText(legend.value, legend.center.x - legendWidth / 2f, legend.center.y - mLabelPaint.getFontMetrics().ascent/2, mLabelPaint);
-                canvas.drawLine(legend.center.x,0,legend.center.x,legend.center.y-mLabelPaint.getTextSize()/2,mSideLabelPaint);
-                //canvas.drawLine(legend.center.x,legend.center.y+mLabelPaint.getFontMetrics().descent+mLabelPaint.getTextSize()/2,legend.center.x,canvas.getHeight(),mSideLabelPaint);
-
-                Log.d("POINTS",String.format("%f,%f -> %f,%f",legend.center.x,legend.center.y,legend.center.x,(float)canvas.getHeight() ));
+                canvas.drawText(legend.value, legend.center.x - legendWidth / 2f, legend.center.y - mLabelPaint.getFontMetrics().ascent / 2, mLabelPaint);
+                // canvas.drawLine(legend.center.x, 0, legend.center.x, legend.center.y - mLabelPaint.getTextSize() / 2, mLabelLinePaint);
+                // canvas.drawLine(legend.center.x,legend.center.y+mLabelPaint.getFontMetrics().descent+mLabelPaint.getTextSize()/2,legend.center.x,canvas.getHeight(),mSideLabelPaint);
             }
         }
+
 
     }
 

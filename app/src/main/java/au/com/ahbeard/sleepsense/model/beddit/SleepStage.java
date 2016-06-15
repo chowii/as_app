@@ -8,13 +8,18 @@ import java.nio.ByteOrder;
  */
 public class SleepStage {
 
+    public boolean includeInGraph() {
+        return getStage()==Stage.Away||getStage()==Stage.Wake;//||getStage()==Stage.Sleep||getStage()==Stage.Restless;
+    }
+
     public enum Stage {
         Away,
         Restless,
         Sleep,
         Wake,
         NoSignal,
-        Gap
+        Gap,
+        Unknown
     }
 
 
@@ -35,6 +40,7 @@ public class SleepStage {
 
     private double mTimestamp;
     private int mStage;
+    private Stage mCalculateStage;
 
     public SleepStage(double timestamp, int stage) {
         mTimestamp = timestamp;
@@ -81,22 +87,34 @@ public class SleepStage {
     }
     public Stage getStage() {
 
-        switch (mStage) {
-            case 65:
-                return Stage.Away;
-            case 82:
-                return Stage.Restless;
-            case 87:
-                return Stage.Wake;
-            case 83:
-                return Stage.Sleep;
-            case 78:
-                return Stage.NoSignal;
-            case 71:
-                return Stage.Gap;
-            default:
-                return null;
+        if ( mCalculateStage == null ) {
+            switch (mStage) {
+                case 65:
+                    mCalculateStage = Stage.Away;
+                    break;
+                case 82:
+                    mCalculateStage =  Stage.Restless;
+                    break;
+                case 87:
+                    mCalculateStage =  Stage.Wake;
+                    break;
+                case 83:
+                    mCalculateStage =  Stage.Sleep;
+                    break;
+                case 78:
+                    mCalculateStage =  Stage.NoSignal;
+                    break;
+                case 71:
+                    mCalculateStage =  Stage.Gap;
+                    break;
+                default:
+                    mCalculateStage =  Stage.Unknown;
+                    break;
+            }
         }
+
+        return mCalculateStage;
+
 
     }
 }

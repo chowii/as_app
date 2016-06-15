@@ -383,7 +383,7 @@ public class Sleep {
 
                 trackCursor.moveToFirst();
 
-                if ( ! trackCursor.isAfterLast() )  {
+                while ( ! trackCursor.isAfterLast() )  {
 
                     long sleepId = trackCursor.getLong(trackCursor.getColumnIndex(SleepContract.Sleep.SLEEP_ID));
                     String name = trackCursor.getString(trackCursor.getColumnIndex(SleepContract.SleepTracks.TRACK_NAME));

@@ -39,6 +39,7 @@ import rx.subscriptions.CompositeSubscription;
 public class HomeActivity extends BaseActivity {
 
     public static final String EXTRA_SHOW_ON_BOARDING_COMPLETE_DIALOG = "showOnBoardingCompleteDialog";
+
     private HomeFragmentPagerAdapter mDashboardPagerAdapter;
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
@@ -105,7 +106,9 @@ public class HomeActivity extends BaseActivity {
         mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
             @Override
             public void call(Integer sleepId) {
-                if ( mHasRecordedASleep != PreferenceService.instance().getHasRecordedASleep());
+                if ( mHasRecordedASleep != PreferenceService.instance().getHasRecordedASleep()) {
+                    setupTabs();
+                }
             }
         }));
 
@@ -140,8 +143,6 @@ public class HomeActivity extends BaseActivity {
         }
 
         mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance());
-
-        // mDashboardPagerAdapter.addTab("Debug",R.drawable.debug_icon_normal,R.drawable.debug_icon_selected, mDebugFragment);
 
         mViewPager.setAdapter(mDashboardPagerAdapter);
 

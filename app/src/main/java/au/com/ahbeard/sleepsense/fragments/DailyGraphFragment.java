@@ -3,6 +3,7 @@ package au.com.ahbeard.sleepsense.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.SleepScoreBreakdownActivity;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
+import au.com.ahbeard.sleepsense.model.beddit.SleepCycle;
+import au.com.ahbeard.sleepsense.model.beddit.SleepStage;
 import au.com.ahbeard.sleepsense.model.beddit.TimestampAndFloat;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.widgets.DailyGraphView;
@@ -40,9 +45,9 @@ public class DailyGraphFragment extends Fragment {
 
     @OnClick(R.id.sleep_score_view)
     void openSleepScoreBreakdown() {
-        if ( mSleep != null ) {
-            Intent intent = new Intent(getActivity(),SleepScoreBreakdownActivity.class);
-            intent.putExtra("sleep_id",mSleepId);
+        if (mSleep != null) {
+            Intent intent = new Intent(getActivity(), SleepScoreBreakdownActivity.class);
+            intent.putExtra("sleep_id", mSleepId);
             getActivity().startActivity(intent);
         }
 //        SleepService.instance().generateFakeData(Calendar.getInstance(),7);
@@ -114,7 +119,39 @@ public class DailyGraphFragment extends Fragment {
             mSleepScoreTextView.setText(Integer.toString(Math.round(mSleep.getTotalSleepScore())));
 
             List<TimestampAndFloat> sleepCycles = new ArrayList<>();
+
+
+            if (mSleep.getSleepStages().size() > 1) {
+                for (int i = 0; i < mSleep.getSleepStages().size() - 1; i++) {
+                    double startTime = mSleep.getSleepStages().get(i).getTimestamp();
+                    double endTime = mSleep.getSleepStages().get(i+1).getTimestamp();
+                    Log.d("DAILY GRAPH",String.format("%s %f", mSleep.getSleepStages().get(i).getPresenceDescription(),endTime - startTime));
+                    if ( mSleep.getSleepStages().get(i).includeInGraph() ) {
+                        sleepCycles.add(new SleepCycle(startTime, 1.0f));
+                        sleepCycles.add(new SleepCycle(endTime, 1.0f));
+                    }
+                }
+
+                // sleepCycles.add(new SleepCycle(mSleep.getSleepStages().get(0).getTimestamp(),1.0f));
+                // sleepCycles.add(new SleepCycle(mSleep.getSleepStages().get(mSleep.getSleepStages().size()-1).getTimestamp(),1.0f));
+            }
+
             sleepCycles.addAll(mSleep.getSleepCycles());
+
+            Collections.sort(sleepCycles, new Comparator<TimestampAndFloat>() {
+                @Override
+                public int compare(TimestampAndFloat lhs, TimestampAndFloat rhs) {
+
+                    if (lhs.getTimestamp() == rhs.getTimestamp()) {
+                        return 0;
+                    } else if (lhs.getTimestamp() < rhs.getTimestamp()) {
+                        return -1;
+                    } else {
+                        return +1;
+                    }
+
+                }
+            });
 
             mGraphView.setValues(sleepCycles, 0.0f, 4.0f);
 

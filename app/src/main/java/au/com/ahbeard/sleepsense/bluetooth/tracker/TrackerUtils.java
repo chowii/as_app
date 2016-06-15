@@ -10,6 +10,7 @@ import com.beddit.analysis.TimeValueTrackFragment;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Calendar;
+import java.util.Date;
 
 import au.com.ahbeard.sleepsense.model.beddit.Actigram;
 import au.com.ahbeard.sleepsense.model.beddit.HeartRate;
@@ -65,7 +66,7 @@ public class TrackerUtils {
                         SleepStage sleepStage = SleepStage.create(position,bytes);
                         position+=SleepStage.getLength();
 
-                        Log.d("BatchAnalysisResult", String.format("sleep stage: %f - %s", sleepStage.getTimestamp(),sleepStage.getPresenceDescription() ));
+                        Log.d("BatchAnalysisResult", String.format("sleep stage: %s - %s", new Date((long)(sleepStage.getTimestamp()*1000d)),sleepStage.getPresenceDescription() ));
                     }
 
 

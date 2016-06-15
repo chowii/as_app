@@ -91,8 +91,6 @@ public class LabelThingy extends View implements ViewPager.OnPageChangeListener 
                     mLabelPaint.setAlpha(128);
                 }
 
-
-
                 int x = getWidth()/2*(i+1);
                 canvas.drawText( label, x -labelWidth / 2f - mPositionOffset/2f*getWidth(), getHeight()/2 - mLabelPaint.getFontMetrics().ascent, mLabelPaint);
 
@@ -112,18 +110,15 @@ public class LabelThingy extends View implements ViewPager.OnPageChangeListener 
         mPositionOffset = positionOffset;
 
         invalidate();
-
     }
 
     @Override
     public void onPageSelected(int position) {
         invalidate();
-
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
         invalidate();
-
     }
 }
