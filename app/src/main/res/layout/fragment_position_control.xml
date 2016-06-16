@@ -104,7 +104,7 @@
                             android:id="@+id/position_button_recline"
                             style="@style/styledButton"
                             android:drawableTop="@drawable/position_recline_icon"
-                            android:text="Unwind"
+                            android:text="Recline"
                             app:topBorder="false"
                             app:typeface="RobotoRegular"/>
 
@@ -122,7 +122,7 @@
                             android:id="@+id/position_button_relax"
                             style="@style/styledButton"
                             android:drawableTop="@drawable/position_relax_icon"
-                            android:text="Lounge"
+                            android:text="Relax"
                             app:topBorder="false"
                             app:typeface="RobotoRegular"/>
 

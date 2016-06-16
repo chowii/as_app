@@ -40,7 +40,7 @@ public class WeeklyGraphView extends ViewGroup {
         void onValueClicked(Object identifier);
     }
 
-    public static final float GRAPH_LEGEND_SPLIT = 0.65f;
+    public static final float GRAPH_LEGEND_SPLIT = 0.5f;
 
     private OnClickListener mOnClickListener;
 
@@ -123,15 +123,17 @@ public class WeeklyGraphView extends ViewGroup {
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
         mLinePaint.setStyle(Paint.Style.STROKE);
 
+
         mLineShadowPaint = new Paint(mLinePaint);
         mLineShadowPaint.setColor(Color.GRAY);
         mLineShadowPaint.setAlpha(64);
 
         mDividerPaint = new Paint();
         mDividerPaint.setStrokeWidth(
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
         mDividerPaint.setAntiAlias(true);
-        mDividerPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mDividerPaint.setColor(getResources().getColor(R.color.graphDividerColor));
+        mDividerPaint.setStyle(Paint.Style.STROKE);
 
         mDataPointRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3.5f, getResources().getDisplayMetrics());
 
@@ -204,14 +206,24 @@ public class WeeklyGraphView extends ViewGroup {
         }
 
         mAreaPaint.setShader(new LinearGradient(
-                0, 0, 0, getHeight() * GRAPH_LEGEND_SPLIT,
+                0, 0, 0, getHeight() * 0.6f,
                 new int[]{
                         getResources().getColor(R.color.graphAreaGradientStart),
                         getResources().getColor(R.color.graphAreaGradientEnd)},
                 new float[]{
                         0.0f,
                         1.0f},
-                Shader.TileMode.MIRROR));
+                Shader.TileMode.CLAMP));
+
+//        mDividerPaint.setShader(new LinearGradient(
+//                0, 0, 0, getHeight() * 0.6f,
+//                new int[]{
+//                        getResources().getColor(R.color.graphDividerStart),
+//                        getResources().getColor(R.color.graphAreaGradientEnd)},
+//                new float[]{
+//                        0.0f,
+//                        1.0f},
+//                Shader.TileMode.CLAMP));
 
         mColumnWidth = (float) width / (mRawPoints.length - 2);
 
@@ -379,12 +391,18 @@ public class WeeklyGraphView extends ViewGroup {
         canvas.drawPath(mPath, mLinePaint);
 
         if (mPoints.length <= 14) {
+            mLinePaint.setStyle(Paint.Style.FILL);
             for (int i = 0; i < mPoints.length; i++) {
                 if (mPoints[i] != null) {
                     canvas.drawCircle(mPoints[i].x, mPoints[i].y, mDataPointRadius, mLinePaint);
                 }
 
             }
+            mLinePaint.setStyle(Paint.Style.STROKE);
+        }
+
+        for (PointF dividerPoint : mDividerPoints ) {
+            canvas.drawLine(dividerPoint.x,dividerPoint.y,dividerPoint.x,getHeight(),mDividerPaint);
         }
 
     }

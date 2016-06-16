@@ -29,10 +29,12 @@
     <color name="massageBackground">#F4F4F4</color>
 
     <color name="graphAreaGradientStart">#EAF4FA</color>
-    <color name="graphAreaGradientMiddle">#C8E8F6</color>
-    <color name="graphAreaGradientEnd">#DDF4FD</color>
+    <color name="graphAreaGradientMiddle">#4FB2EA</color>
+    <color name="graphAreaGradientEnd">#B9D9EF</color>
+    <color name="graphDividerStart">#20ffffff</color>
+    <color name="graphDividerEnd">#a0ffffff</color>
+    <color name="graphDividerColor">#50FFFFFF</color>
 
-    <color name="graphDividerColor">#FFFFFF</color>
     <color name="graphLegendColor">#8016274A</color>
 
     <color name="detailedSleepScoreTextColor">#3C709C</color>

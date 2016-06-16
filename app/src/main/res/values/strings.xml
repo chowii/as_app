@@ -51,5 +51,6 @@
     <string name="sleep_tracking_dialog_message">Are you sure you want to stop sleep tracking?</string>
     <string name="sleep_tracking_dialog_yes">Yes, I\'m done</string>
 
+    <string name="on_boarding_choose_side_heading">Please select the side of the bed you sleep on</string>
 
 </resources>
