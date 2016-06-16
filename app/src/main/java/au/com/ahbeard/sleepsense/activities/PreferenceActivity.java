@@ -87,7 +87,7 @@ public class PreferenceActivity extends AppCompatActivity {
         });
 
         add(mDevicesLayout, "Mattress", SleepSenseDeviceService.instance().hasPumpDevice() ? "Connected" : "Not connected");
-        add(mDevicesLayout, "Sleep tracker", SleepSenseDeviceService.instance().hasTrackerDevice() ? "Connected" : "Not connected");
+        add(mDevicesLayout, "Sleep tracker", SleepSenseDeviceService.instance().hasTrackerDevice() ? PreferenceService.instance().getTrackerDeviceName() : "Not connected");
         add(mDevicesLayout, "Base", SleepSenseDeviceService.instance().hasBaseDevice() ? "Connected" : "Not connected");
 
         int hours = sleepTargetTimeMinutes/60;

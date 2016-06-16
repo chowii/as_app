@@ -72,6 +72,18 @@ public class PreferenceService {
         getSharedPreferences().edit().remove("trackerDeviceAddress").commit();
     }
 
+    public void setTrackerDeviceName(String address) {
+        getSharedPreferences().edit().putString("trackerDeviceName", address).commit();
+    }
+
+    public String getTrackerDeviceName() {
+        return getSharedPreferences().getString("trackerDeviceName",null);
+    }
+
+    public void clearTrackerDeviceName() {
+        getSharedPreferences().edit().remove("trackerDeviceName").commit();
+    }
+
     public float getSleepTargetTime() {
         return getSharedPreferences().getFloat("sleepTargetTime",8.0f);
     }

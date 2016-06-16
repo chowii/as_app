@@ -127,7 +127,7 @@ public class SleepSenseDeviceService {
                             @Override
                             public int compare(BluetoothScanEvent.ScanPacketEvent lhs,
                                                BluetoothScanEvent.ScanPacketEvent rhs) {
-                                return lhs.getRssi() - rhs.getRssi();
+                                return rhs.getRssi() - lhs.getRssi();
                             }
                         });
 
@@ -200,8 +200,10 @@ public class SleepSenseDeviceService {
 
         if (trackerDevice != null) {
             PreferenceService.instance().setTrackerDeviceAddress(trackerDevice.getAddress());
+            PreferenceService.instance().setTrackerDeviceName(trackerDevice.getName());
         } else {
             PreferenceService.instance().clearTrackerDeviceAddress();
+            PreferenceService.instance().clearTrackerDeviceName();
         }
 
     }
@@ -218,38 +220,8 @@ public class SleepSenseDeviceService {
         return mTrackerDevice != null || mTrackerDeviceAddress != null;
     }
 
-    public boolean hasAllDevices() {
-        return hasBaseDevice() && hasPumpDevice() && hasTrackerDevice();
-    }
-
-    public int countDevices() {
-        int numberOfConnections = 0;
-        if (hasBaseDevice()) {
-            numberOfConnections++;
-        }
-        if (hasPumpDevice()) {
-            numberOfConnections++;
-        }
-        if (hasTrackerDevice()) {
-            numberOfConnections++;
-        }
-        return numberOfConnections;
-    }
-
     public Observable<String> getLogObservable() {
         return mLogSubject;
-    }
-
-    public void clearDevices() {
-
-        PreferenceService.instance().clearBaseDeviceAddress();
-        mBaseDevice = null;
-        PreferenceService.instance().clearPumpDeviceAddress();
-        mPumpDevice = null;
-        PreferenceService.instance().clearTrackerDeviceAddress();
-        mTrackerDevice = null;
-
-        mChangeEventPublishSubject.onNext(SleepSenseDeviceServiceEvent.DeviceListChanged);
     }
 
     // The scanning filter.
