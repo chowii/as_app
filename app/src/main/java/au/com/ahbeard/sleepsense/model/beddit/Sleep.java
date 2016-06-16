@@ -588,12 +588,7 @@ public class Sleep {
 
         for ( int i=0; i < 6 * 120; i++ ) {
 
-            sleepCalendar.add(Calendar.MINUTE,1);
-
-            sleepCycles.add(new SleepCycle(sleepCalendar.getTimeInMillis()/1000.0f,(float)Math.sin(i/120f)/2f+0.5f));
-
         }
-
         TrackData trackData = new TrackData("sleep_cycles","float32",SleepCycle.listAsBytes(sleepCycles));
 
         sleep.mTrackDataByName = new HashMap<>();

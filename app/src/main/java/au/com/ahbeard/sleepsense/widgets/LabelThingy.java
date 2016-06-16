@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -63,6 +64,10 @@ public class LabelThingy extends View implements ViewPager.OnPageChangeListener 
         mLabelPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, getResources().getDisplayMetrics()));
         mLabelPaint.setTypeface(TypefaceService.instance().getTypeface("OpenSansRegular"));
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mLabelPaint.setLetterSpacing(0.08f);
+        }
+
         mSideLabelPaint = new Paint(mLabelPaint);
         mSideLabelPaint.setAlpha(140);
 
@@ -92,7 +97,8 @@ public class LabelThingy extends View implements ViewPager.OnPageChangeListener 
                 }
 
                 int x = getWidth()/2*(i+1);
-                canvas.drawText( label, x -labelWidth / 2f - mPositionOffset/2f*getWidth(), getHeight()/2 - mLabelPaint.getFontMetrics().ascent, mLabelPaint);
+                canvas.drawText( label, x -labelWidth / 2f - mPositionOffset/2f*getWidth(),
+                        getHeight()/2 - mLabelPaint.getFontMetrics().ascent, mLabelPaint);
 
             }
         }
