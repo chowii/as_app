@@ -33,7 +33,7 @@
     <color name="graphAreaGradientEnd">#DDF4FD</color>
 
     <color name="graphDividerColor">#FFFFFF</color>
-    <color name="graphLegendColor">#16274A</color>
+    <color name="graphLegendColor">#8016274A</color>
 
     <color name="detailedSleepScoreTextColor">#3C709C</color>
     <color name="detailedSleepScoreAltTextColor">#806E788D</color>

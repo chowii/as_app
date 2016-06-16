@@ -34,12 +34,13 @@ import butterknife.ButterKnife;
 public class WeeklyGraphView extends ViewGroup {
 
     private Object[] mIndexes;
+    private float mDataPointRadius;
 
     public interface OnClickListener {
         void onValueClicked(Object identifier);
     }
 
-    public static final float GRAPH_LEGEND_SPLIT = 0.5f;
+    public static final float GRAPH_LEGEND_SPLIT = 0.65f;
 
     private OnClickListener mOnClickListener;
 
@@ -109,7 +110,7 @@ public class WeeklyGraphView extends ViewGroup {
 
         mAreaPaint = new Paint();
         mAreaPaint.setShader(mAreaGradient);
-        mAreaPaint.setAlpha(190);
+        mAreaPaint.setAlpha(255);
         mAreaPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mAreaPaint.setStrokeWidth(
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics()));
@@ -119,7 +120,7 @@ public class WeeklyGraphView extends ViewGroup {
         mLinePaint.setAntiAlias(true);
         mLinePaint.setColor(Color.WHITE);
         mLinePaint.setStrokeWidth(
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, getResources().getDisplayMetrics()));
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
         mLinePaint.setStyle(Paint.Style.STROKE);
 
         mLineShadowPaint = new Paint(mLinePaint);
@@ -132,15 +133,19 @@ public class WeeklyGraphView extends ViewGroup {
         mDividerPaint.setAntiAlias(true);
         mDividerPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
+        mDataPointRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3.5f, getResources().getDisplayMetrics());
+
         mPath = new Path();
 
+
+        // eef5fa
     }
 
     // We actually need to think of this as a window on some data not
     public void setValues(Float[] values, String[] names, Object[] indexes, float minimum, float maximum) {
 
         mValues = values;
-        mIndexes= indexes;
+        mIndexes = indexes;
 
         float range = maximum - minimum;
 
@@ -194,14 +199,18 @@ public class WeeklyGraphView extends ViewGroup {
         mAreaPathStates.clear();
         mAreaPathIndexes.clear();
 
-        if ( mRawPoints == null ) {
+        if (mRawPoints == null) {
             return;
         }
 
         mAreaPaint.setShader(new LinearGradient(
                 0, 0, 0, getHeight() * GRAPH_LEGEND_SPLIT,
-                getResources().getColor(R.color.graphAreaGradientStart),
-                getResources().getColor(R.color.graphAreaGradientEnd),
+                new int[]{
+                        getResources().getColor(R.color.graphAreaGradientStart),
+                        getResources().getColor(R.color.graphAreaGradientEnd)},
+                new float[]{
+                        0.0f,
+                        1.0f},
                 Shader.TileMode.MIRROR));
 
         mColumnWidth = (float) width / (mRawPoints.length - 2);
@@ -354,7 +363,7 @@ public class WeeklyGraphView extends ViewGroup {
             layout(canvas.getWidth(), canvas.getHeight());
         }
 
-        if ( mRawPoints == null ) {
+        if (mRawPoints == null) {
             return;
         }
 
@@ -372,7 +381,7 @@ public class WeeklyGraphView extends ViewGroup {
         if (mPoints.length <= 14) {
             for (int i = 0; i < mPoints.length; i++) {
                 if (mPoints[i] != null) {
-                    canvas.drawCircle(mPoints[i].x, mPoints[i].y, 4, mLinePaint);
+                    canvas.drawCircle(mPoints[i].x, mPoints[i].y, mDataPointRadius, mLinePaint);
                 }
 
             }
@@ -397,7 +406,7 @@ public class WeeklyGraphView extends ViewGroup {
             for (int i = 0; i < mAreaPathBounds.size(); i++) {
                 if (mAreaPathStates.get(i)) {
                     mAreaPathStates.set(i, false);
-                    if ( mOnClickListener != null ) {
+                    if (mOnClickListener != null) {
                         mOnClickListener.onValueClicked(mAreaPathIndexes.get(i));
                     }
                     invalidate();
@@ -427,7 +436,6 @@ public class WeeklyGraphView extends ViewGroup {
 
         return super.onTouchEvent(event);
     }
-
 
 
     class LegendViewHolder {

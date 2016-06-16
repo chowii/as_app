@@ -79,10 +79,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#6E788D"
-                    android:lineSpacingExtra="8dp"
+                    android:lineSpacingExtra="6sp"
                     android:text="Practise a relaxing bedtime ritual - a calming routine activity right before bedtime can help."
                     app:typeface="OpenSansRegular"
-                    android:textSize="11sp"/>
+                    android:textSize="13sp"/>
 
             </LinearLayout>
 
