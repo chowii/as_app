@@ -48,7 +48,7 @@ public class FirmnessControlView extends View {
     private float mDotRadius;
 
     private PointF mKnobCenterPoint = new PointF(0.0f, -0.6f);
-    private PointF mDotCenterPoint = new PointF(0.0f, -0.8f);
+    private PointF mDotCenterPoint = new PointF(0.0f, -0.785f);
 
     private Paint mDotPaint = new Paint();
     private Paint mWedgePaint = new Paint();
@@ -212,6 +212,7 @@ public class FirmnessControlView extends View {
     @Override
     protected void onSizeChanged(int width, int height, int oldw, int oldh) {
         mValueRect = new RectF(0, 0, width, height);
+        mForegroundInset=width*0.065f;
         mForegroundRect = new RectF(mForegroundInset, mForegroundInset, width - mForegroundInset, height - mForegroundInset);
 
     }
@@ -237,7 +238,7 @@ public class FirmnessControlView extends View {
 
         for ( int i=0; i <= 10; i++) {
             float sweepPercentage = i/10.0f;
-            canvas.drawArc(mValueRect, START_ANGLE - 90 +sweepPercentage*SWEEP, 1f, true, mForegroundPaint);
+            canvas.drawArc(mValueRect, START_ANGLE - 90 +sweepPercentage*SWEEP, 0.5f, true, mForegroundPaint);
         }
 
         canvas.save();

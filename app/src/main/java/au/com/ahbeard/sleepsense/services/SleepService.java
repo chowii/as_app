@@ -806,7 +806,9 @@ public class SleepService {
             for (int sleepId : generateSleepIdRange(startSleepId, endSleepId)) {
                 if (random.nextFloat() > 0.2f) {
                     Sleep sleep = Sleep.generateRandom(sleepId, random);
+
                     writeSleepToDatabase(sleep);
+
                 }
             }
 

@@ -1,7 +1,11 @@
 package au.com.ahbeard.sleepsense.fragments;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -12,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -44,6 +49,9 @@ public class DashboardFragment extends Fragment {
 
     @Bind(R.id.dashboard_layout_tab_container)
     View tabContainerLayout;
+
+    @Bind(R.id.dashboard_layout_circular_reveal)
+    View mCircularRevealLayout;
 
     @OnClick(R.id.dashboard_fab_start_sleep)
     void onStartSleepClicked() {
@@ -131,4 +139,42 @@ public class DashboardFragment extends Fragment {
         tabContainerLayout.setTranslationY(-scrollY/2);
         mStartSleepFAB.setTranslationY(scrollY/2);
     }
+
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void circularReveal() {
+
+// get the center for the clipping circle
+        float cx = mStartSleepFAB.getX() + mStartSleepFAB.getWidth() / 2;
+        float cy = mStartSleepFAB.getY() +mStartSleepFAB.getHeight() / 2;
+
+// get the initial radius for the clipping circle
+        float finalRadius = (float) Math.hypot(mCircularRevealLayout.getWidth(), mCircularRevealLayout.getHeight());
+
+// create the animation (the final radius is zero)
+        Animator anim =
+                ViewAnimationUtils.createCircularReveal(mCircularRevealLayout, (int)cx, (int)cy, 0, finalRadius);
+
+// make the view invisible when the animation is done
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                mCircularRevealLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                Intent intent = new Intent(getActivity(), SleepTrackingActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+// start the animation
+        anim.start();
+
+    }
+
 }

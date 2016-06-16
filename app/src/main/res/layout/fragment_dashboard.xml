@@ -48,9 +48,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:src="@drawable/fab_icon_sleep"
-            app:elevation="6dp"
-            android:layout_margin="21dp"
-            app:pressedTranslationZ="12dp"/>
+            android:layout_margin="21dp"/>
+
+        <View android:id="@+id/dashboard_layout_circular_reveal" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/colorAccent" android:visibility="gone"/>
 
     </FrameLayout>
 

@@ -1,9 +1,11 @@
 package au.com.ahbeard.sleepsense.model.beddit;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.List;
 
 /**
  * The timestamp and value represents the sleep depth at that time. The value is a floating
@@ -36,6 +38,25 @@ public class SleepCycle implements TimestampAndFloat {
     public void write(OutputStream outputStream) throws IOException {
         outputStream.write(ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putDouble(mTimestamp).array());
         outputStream.write(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putFloat(mCycle).array());
+    }
+
+    public static byte[] listAsBytes(List<SleepCycle> sleepCycles) {
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        try {
+
+            for ( SleepCycle sleepCycle: sleepCycles) {
+                sleepCycle.write(byteArrayOutputStream);
+            }
+
+        } catch (IOException e) {
+
+        } finally {
+
+        }
+
+        return byteArrayOutputStream.toByteArray();
     }
 
     public double getTimestamp() {

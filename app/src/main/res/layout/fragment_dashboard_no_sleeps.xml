@@ -57,7 +57,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
 
-
     </LinearLayout>
 
     <LinearLayout
@@ -83,10 +82,7 @@
             android:id="@+id/dashboard_fab_start_sleep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/fab_icon_sleep"
-            app:elevation="6dp"
-
-            app:pressedTranslationZ="12dp"/>
+            android:src="@drawable/fab_icon_sleep" />
     </LinearLayout>
 
 </FrameLayout>

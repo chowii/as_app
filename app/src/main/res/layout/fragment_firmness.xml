@@ -10,7 +10,7 @@
     <FrameLayout
         android:id="@+id/controls_layout_header"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp" android:background="#fff">
 
         <ImageView
             android:id="@+id/image_view_progress_icon"
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_gravity="bottom"
-            android:background="#40DBE3E6"/>
+                android:background="#40000000"/>
 
     </FrameLayout>
 
@@ -59,7 +59,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Left Side"
+            android:text="Left side"
             app:typeface="RobotoRegular"/>
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
@@ -68,7 +68,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Right Side"
+            android:text="Right side"
             app:typeface="RobotoRegular"/>
 
 
@@ -107,7 +107,8 @@
                     android:textAllCaps="true"
                     android:textColor="#4A4A4A"
                     android:textSize="10sp"
-                    app:typeface="RobotoRegular"/>
+                    android:letterSpacing="0.1"
+                    app:typeface="OpenSansSemiBold"/>
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -120,8 +121,9 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="Adjusting"
+                        android:textAllCaps="true"
                         android:textColor="#4FB2EA"
-                        android:textSize="30sp"
+                        android:textSize="25sp"
                         app:typeface="OpenSansRegular"/>
 
                     <au.com.ahbeard.sleepsense.widgets.StyledTextView
@@ -131,8 +133,9 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="Adjusting"
+                        android:textAllCaps="true"
                         android:textColor="#4FB2EA"
-                        android:textSize="30sp"
+                        android:textSize="25sp"
                         android:visibility="gone"
                         app:typeface="OpenSansRegular"/>
                 </FrameLayout>

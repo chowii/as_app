@@ -18,6 +18,7 @@ import java.util.TimeZone;
 
 import au.com.ahbeard.sleepsense.services.SleepContract;
 import au.com.ahbeard.sleepsense.services.SleepSQLiteHelper;
+import au.com.ahbeard.sleepsense.services.SleepService;
 
 /**
  * This is the local version of the batch analysis result.
@@ -575,6 +576,29 @@ public class Sleep {
         sleep.mSleepId=sleepId;
         sleep.mTotalSleepScore = random.nextFloat() * 60f + 20f;
         sleep.mSleepScoreVersion=666.0f;
+
+
+        Calendar sleepCalendar = SleepService.getCalendar(sleepId);
+
+        sleepCalendar.set(Calendar.HOUR_OF_DAY,21);
+        sleepCalendar.set(Calendar.MINUTE,15);
+        sleepCalendar.add(Calendar.DAY_OF_YEAR,-1);
+
+        List<SleepCycle> sleepCycles = new ArrayList<>();
+
+        for ( int i=0; i < 6 * 120; i++ ) {
+
+            sleepCalendar.add(Calendar.MINUTE,1);
+
+            sleepCycles.add(new SleepCycle(sleepCalendar.getTimeInMillis()/1000.0f,(float)Math.sin(i/120f)/2f+0.5f));
+
+        }
+
+        TrackData trackData = new TrackData("sleep_cycles","float32",SleepCycle.listAsBytes(sleepCycles));
+
+        sleep.mTrackDataByName = new HashMap<>();
+        sleep.mTrackDataByName.put("sleep_cycles",trackData);
+
         return sleep;
     }
 
