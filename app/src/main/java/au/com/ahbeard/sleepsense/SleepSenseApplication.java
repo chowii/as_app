@@ -3,6 +3,10 @@ package au.com.ahbeard.sleepsense;
 import android.app.Application;
 import android.util.Log;
 
+import com.logentries.logger.AndroidLogger;
+
+import java.io.IOException;
+
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.services.LogService;
@@ -39,6 +43,12 @@ public class SleepSenseApplication extends Application {
         SleepSenseDeviceService.initialize(this);
         SleepService.initialize(this);
         RemoteSleepDataService.initialize(this);
+
+        try {
+            AndroidLogger.createInstance(getApplicationContext(),false,true,false,null,0,"fc1fc163-a9c8-4634-bff6-d4b4e577c881", true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
