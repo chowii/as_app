@@ -4,6 +4,7 @@ package au.com.ahbeard.sleepsense.fragments;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -17,7 +18,9 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import au.com.ahbeard.sleepsense.BuildConfig;
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.ContactUsActivity;
 import au.com.ahbeard.sleepsense.activities.DebugActivity;
 import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import au.com.ahbeard.sleepsense.activities.HomeActivity;
@@ -75,7 +78,7 @@ public class MoreFragment extends Fragment {
 
         add(inflater,mItemsLayout,"FAQs",null,HelpActivity.getIntent(getContext(),"FAQs","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
         add(inflater,mItemsLayout,"About A.H. Beard",null,HelpActivity.getIntent(getContext(),"About AH Beard","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
-        add(inflater,mItemsLayout,"Contact us",null,HelpActivity.getIntent(getContext(),"Contact us","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+        add(inflater,mItemsLayout,"Contact us",null,new Intent(getActivity(), ContactUsActivity.class));
         add(inflater,mItemsLayout,"Improve your sleep",null,HelpActivity.getIntent(getContext(),"Improve your sleep","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
         add(inflater,mItemsLayout,"Preferences",null,new Intent(getActivity(), PreferenceActivity.class));
         addSpacer(mItemsLayout);
@@ -93,8 +96,11 @@ public class MoreFragment extends Fragment {
 
         }
 
-        add(inflater,mItemsLayout,"Debug",null,new Intent(getActivity(), DebugActivity.class));
-        addSpacer(mItemsLayout);
+        if (BuildConfig.DEBUG ) {
+            add(inflater,mItemsLayout,"Debug",null,new Intent(getActivity(), DebugActivity.class));
+            addSpacer(mItemsLayout);
+            addSpacer(mItemsLayout);
+        }
 
         return view;
     }
