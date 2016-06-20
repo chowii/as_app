@@ -1,6 +1,8 @@
 <resources>
 
     <string name="app_name">Sleepsense</string>
+    <string name="instore_app_name">Sleepsense Instore</string>
+    <string name="instore_config_app_name">Sleepsense Config</string>
 
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.

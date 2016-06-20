@@ -1,16 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "au.com.ahbeard.sleepsense"
         minSdkVersion 18
         targetSdkVersion 23
-        versionCode 8
-        versionName "0.7.1"
+        versionCode 9
+        versionName "0.8"
     }
     buildTypes {
         release {
@@ -18,13 +16,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
         }
     }
-
+    productFlavors {
+        playstore {
+        }
+        instore {
+            applicationId 'au.com.ahbeard.sleepsense.instore'
+        }
+    }
 }
 
 dependencies {

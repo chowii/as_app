@@ -100,8 +100,33 @@ public class PreferenceService {
         getSharedPreferences().edit().putString("sideOfBed",sideOfBed).commit();
     }
 
+    public void setProfile(String sex, String age, String emailAddress) {
+        SharedPreferences.Editor edit = getSharedPreferences().edit();
+
+        edit.putString("profile_sex", sex);
+        edit.putString("profile_age", age);
+        edit.putString("profile_emailAddress", emailAddress);
+
+        edit.commit();
+    }
+
+    public String getProfileSex() {
+        return getSharedPreferences().getString("profile_sex",null);
+    }
+
+    public String getProfileAge() {
+        return getSharedPreferences().getString("profile_age",null);
+    }
+
+    public String getProfileEmailAddress() {
+        return getSharedPreferences().getString("profile_emailAddress",null);
+    }
+
+
     private SharedPreferences getSharedPreferences() {
         return mContext.getSharedPreferences("preferences.dat", Context.MODE_PRIVATE);
     }
+
+
 
 }

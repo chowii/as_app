@@ -61,6 +61,150 @@
             android:paddingBottom="40dp"
             android:paddingTop="40dp">
 
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="This will help understand how peoples' sleep patterns vary, helping us to tailor your sleep program down the track!"
+                android:textColor="#6E788D"
+                android:textSize="13sp"
+                app:typeface="OpenSansRegular"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="13dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:padding="10dp">
+
+                <au.com.ahbeard.sleepsense.widgets.StyledButton
+                    android:id="@+id/profile_button_male"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/sleep_sense_button_white"
+                    android:text="Male"
+                    android:textAllCaps="false"
+                    app:typeface="OpenSansRegular"
+                    android:textSize="10.95sp"
+                    android:elevation="2dp"
+                    android:layout_margin="10dp"
+                    android:textColor="#6E788D"/>
+                <au.com.ahbeard.sleepsense.widgets.StyledButton
+                    android:id="@+id/profile_button_female"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/sleep_sense_button_white"
+                    android:text="Female"
+                    android:textAllCaps="false"
+                    app:typeface="OpenSansRegular"
+                    android:textSize="10.95sp"
+                    android:elevation="2dp"
+                    android:layout_margin="10dp"
+                    android:textColor="#6E788D"/>
+                <au.com.ahbeard.sleepsense.widgets.StyledButton
+                    android:id="@+id/profile_button_unspecified"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/sleep_sense_button_white"
+                    android:text="Not specified"
+                    android:textAllCaps="false"
+                    app:typeface="OpenSansRegular"
+                    android:textSize="10.95sp"
+                    android:elevation="2dp"
+                    android:layout_margin="10dp"
+                    android:textColor="#6E788D"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="13dp"/>
+
+            <EditText
+                android:id="@+id/profile_edit_text_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:backgroundTint="#C6D4D9"
+                android:inputType="number"
+                android:hint="Age"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="36dp"/>
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="Six week sleep challenge"
+                android:textColor="#3C709C"
+                android:textSize="17sp"
+
+                app:typeface="OpenSansSemiBold"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="13dp"/>
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:lineSpacingExtra="5sp"
+                android:text="Better sleep starts with better habits. Sign up to our 6 Week Sleep Challenge"
+                android:textColor="#6E788D"
+                android:textSize="13sp"
+                app:typeface="OpenSansRegular"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="13dp"/>
+
+            <EditText
+                android:id="@+id/profile_edit_text_email_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:inputType="textEmailAddress"
+                android:backgroundTint="#C6D4D9"
+                android:hint="Email"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="36dp"/>
+
+
+            <au.com.ahbeard.sleepsense.widgets.StyledButton
+                android:id="@+id/profile_button_save_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/sleep_sense_button_blue"
+                android:text="Save profile"
+                android:textAllCaps="true"
+                app:typeface="OpenSansRegular"
+                android:textSize="13.5sp"
+                android:elevation="2dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:textColor="#ffffff"/>
+
 
         </LinearLayout>
 

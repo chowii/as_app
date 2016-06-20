@@ -12,6 +12,18 @@
             </item>
         </layer-list>
     </item>
+    <item android:state_selected="true">
+        <layer-list>
+            <item >
+                <inset>
+                    <shape android:shape="rectangle">
+                        <corners android:radius="5dp" />
+                        <solid android:color="#d0d0d0"/>
+                    </shape>
+                </inset>
+            </item>
+        </layer-list>
+    </item>
     <item>
         <layer-list>
             <item >
