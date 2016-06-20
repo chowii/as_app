@@ -37,8 +37,8 @@
     <string name="button_continue">Continue</string>
 
     <string name="mattress_firmness_screen_title">Mattress Firmness</string>
-    <string name="massage_settings_screen_title">Massage Settings</string>
-    <string name="base_position_screen_title">Base Position</string>
+    <string name="massage_settings_screen_title">Massage</string>
+    <string name="base_position_screen_title">Base Positioning</string>
 
     <string name="on_boarding_bluetooth_title">Welcome!</string>
     <string name="on_boarding_bluetooth_description">Let\'s find your sleeping devices and get your Sleepsense bed set up</string>

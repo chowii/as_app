@@ -119,6 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_centerInParent="true">
             <ImageView
+                android:id="@+id/sleep_tracking_image_view_connecting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"

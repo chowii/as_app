@@ -3,14 +3,14 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/firmnessBackground"
+              android:background="@drawable/noisy_background"
               android:gravity="top"
               android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/controls_layout_header"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp" android:background="#fff">
 
         <ImageView
             android:id="@+id/image_view_progress_icon"
@@ -28,7 +28,7 @@
             android:text="@string/massage_settings_screen_title"
             android:textColor="#4A4A4A"
             android:textSize="15sp"
-            app:typeface="RobotoRegular"/>
+            app:typeface="OpenSansLight"/>
 
         <ImageView
             android:id="@+id/image_view_help_icon"
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_gravity="bottom"
-            android:background="#DBE3E6"/>
+            android:background="#40000000"/>
 
     </FrameLayout>
 
@@ -95,10 +95,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:drawablePadding="0dp"
-                            android:text="Whole body massage"
+                            android:text="Body Massage"
                             android:textColor="@color/control_color"
                             android:textSize="15sp"
-                            app:typeface="RobotoRegular"/>
+                            app:typeface="RobotoRegular" android:textAllCaps="true"/>
 
                     </au.com.ahbeard.sleepsense.widgets.StyledLinearLayout>
 
@@ -116,7 +116,7 @@
                             android:lineSpacingExtra="5sp"
                             android:text="Off"
                             android:textAllCaps="true"
-                            android:textColor="@color/control_color"
+                            android:textColor="@color/indicator_color"
                             android:textSize="15sp"
                             app:selectedTypeface="OpenSansRegular"
                             app:typeface="RobotoRegular"/>
@@ -130,7 +130,7 @@
                             android:lineSpacingExtra="5sp"
                             android:text="Low"
                             android:textAllCaps="true"
-                            android:textColor="@color/control_color"
+                            android:textColor="@color/indicator_color"
                             android:textSize="15sp"
                             app:selectedTypeface="OpenSansRegular"
                             app:typeface="RobotoRegular"/>
@@ -144,7 +144,7 @@
                             android:lineSpacingExtra="5sp"
                             android:text="Med"
                             android:textAllCaps="true"
-                            android:textColor="@color/control_color"
+                            android:textColor="@color/indicator_color"
                             android:textSize="15sp"
                             app:selectedTypeface="OpenSansRegular"
                             app:typeface="RobotoRegular"/>
@@ -158,7 +158,7 @@
                             android:lineSpacingExtra="5sp"
                             android:text="High"
                             android:textAllCaps="true"
-                            android:textColor="@color/control_color"
+                            android:textColor="@color/indicator_color"
                             android:textSize="15sp"
                             app:selectedTypeface="OpenSansRegular"
                             app:typeface="RobotoRegular"/>
@@ -184,9 +184,9 @@
                             android:lineSpacingExtra="5sp"
                             android:text="Head"
                             android:textAllCaps="true"
-                            android:textColor="#4A4A4A"
+                            android:textColor="#424242"
                             android:textSize="15sp"
-                            app:typeface="RobotoRegular"/>
+                            app:typeface="RobotoLight"/>
 
                         <au.com.ahbeard.sleepsense.widgets.StyledTextView
                             android:layout_width="0dp"
@@ -196,9 +196,9 @@
                             android:lineSpacingExtra="5sp"
                             android:text="Foot"
                             android:textAllCaps="true"
-                            android:textColor="#4A4A4A"
+                            android:textColor="#424242"
                             android:textSize="15sp"
-                            app:typeface="RobotoRegular"/>
+                            app:typeface="RobotoLight"/>
 
                     </LinearLayout>
 
@@ -212,15 +212,6 @@
                         android:layout_height="wrap_content">
 
                         <au.com.ahbeard.sleepsense.widgets.StyledImageButton
-                            android:id="@+id/massage_button_head_plus"
-                            style="@style/styledButton"
-                            android:src="@drawable/massage_plus_icon"/>
-
-                        <View
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"/>
-
-                        <au.com.ahbeard.sleepsense.widgets.StyledImageButton
                             android:id="@+id/massage_button_head_minus"
                             style="@style/styledButton"
                             android:src="@drawable/massage_minus_icon"/>
@@ -230,7 +221,7 @@
                             android:layout_height="20dp"/>
 
                         <au.com.ahbeard.sleepsense.widgets.StyledImageButton
-                            android:id="@+id/massage_button_foot_plus"
+                            android:id="@+id/massage_button_head_plus"
                             style="@style/styledButton"
                             android:src="@drawable/massage_plus_icon"/>
 
@@ -242,6 +233,15 @@
                             android:id="@+id/massage_button_foot_minus"
                             style="@style/styledButton"
                             android:src="@drawable/massage_minus_icon"/>
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"/>
+
+                        <au.com.ahbeard.sleepsense.widgets.StyledImageButton
+                            android:id="@+id/massage_button_foot_plus"
+                            style="@style/styledButton"
+                            android:src="@drawable/massage_plus_icon"/>
 
                     </LinearLayout>
 
@@ -272,9 +272,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:drawablePadding="0dp"
-                            android:text="Timer / all off"
+                            android:text="Timer / off"
                             android:textColor="@color/control_color"
                             android:textSize="15sp"
+                            android:textAllCaps="true"
                             app:typeface="RobotoRegular"/>
 
                     </au.com.ahbeard.sleepsense.widgets.StyledLinearLayout>
@@ -294,7 +295,7 @@
                             android:lineSpacingExtra="5sp"
                             android:text="OFF"
                             android:textAllCaps="true"
-                            android:textColor="@color/control_color"
+                            android:textColor="@color/indicator_color"
                             android:textSize="15sp"
                             app:selectedTypeface="OpenSansRegular"
                             app:typeface="RobotoRegular"/>
@@ -308,7 +309,7 @@
                             android:lineSpacingExtra="5sp"
                             android:text="10 Min"
                             android:textAllCaps="true"
-                            android:textColor="@color/control_color"
+                            android:textColor="@color/indicator_color"
                             android:textSize="15sp"
                             app:selectedTypeface="OpenSansRegular"
                             app:typeface="RobotoRegular"/>
@@ -322,7 +323,7 @@
                             android:lineSpacingExtra="5sp"
                             android:text="20 Min"
                             android:textAllCaps="true"
-                            android:textColor="@color/control_color"
+                            android:textColor="@color/indicator_color"
                             android:textSize="15sp"
                             app:selectedTypeface="OpenSansRegular"
                             app:typeface="RobotoRegular"/>
@@ -336,7 +337,7 @@
                             android:lineSpacingExtra="5sp"
                             android:text="30 Min"
                             android:textAllCaps="true"
-                            android:textColor="@color/control_color"
+                            android:textColor="@color/indicator_color"
                             android:textSize="15sp"
                             app:selectedTypeface="OpenSansRegular"
                             app:typeface="RobotoRegular"/>
