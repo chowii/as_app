@@ -15,6 +15,7 @@ public class Firmness {
     private String mLabel;
 
     public static int MAX_PRESSURE = 40;
+    public static int SEGMENTS = 10;
 
     public static final Map<Integer,Firmness> PRESSURE_TO_FIRMNESS;
 
@@ -73,16 +74,7 @@ public class Firmness {
      * @return
      */
     public static float snapControlValue(float controlValue) {
-        return Math.round(controlValue*10f)/10f;
-    }
-
-    /**
-     *
-     * @param controlValue
-     * @return
-     */
-    public static int getDrawableLevelForControlValue(float controlValue) {
-        return Math.round(controlValue*10f);
+        return Math.round(controlValue*(float)SEGMENTS)/(float)SEGMENTS;
     }
 
     /**

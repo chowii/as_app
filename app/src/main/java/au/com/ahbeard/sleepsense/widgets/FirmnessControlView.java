@@ -236,8 +236,8 @@ public class FirmnessControlView extends View {
         canvas.drawArc(mValueRect, START_ANGLE - 90, SWEEP * mActualValue, true, mWedgePaint);
 
 
-        for ( int i=0; i <= 10; i++) {
-            float sweepPercentage = i/10.0f;
+        for ( int i=0; i <= Firmness.SEGMENTS; i++) {
+            float sweepPercentage = i/(float)Firmness.SEGMENTS;
             canvas.drawArc(mValueRect, START_ANGLE - 90 +sweepPercentage*SWEEP, 0.5f, true, mForegroundPaint);
         }
 

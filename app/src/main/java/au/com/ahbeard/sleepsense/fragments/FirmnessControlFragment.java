@@ -17,6 +17,7 @@ import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
 import au.com.ahbeard.sleepsense.model.Firmness;
+import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.widgets.FirmnessControlView;
 import au.com.ahbeard.sleepsense.widgets.StyledTextView;
 import butterknife.Bind;
@@ -87,7 +88,7 @@ public class FirmnessControlFragment extends Fragment {
     }
 
     public static FirmnessControlFragment newInstance() {
-        return newInstance("LEFT",false);
+        return newInstance(PreferenceService.instance().getSideOfBed(),false);
     }
 
     public static FirmnessControlFragment newInstance(String side, boolean controlOnly) {
