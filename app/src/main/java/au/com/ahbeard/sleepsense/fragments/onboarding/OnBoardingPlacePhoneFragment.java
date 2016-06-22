@@ -3,6 +3,7 @@ package au.com.ahbeard.sleepsense.fragments.onboarding;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -31,9 +33,14 @@ public class OnBoardingPlacePhoneFragment  extends OnBoardingFragment{
     @Bind(R.id.onboarding_image_view_phone)
     ImageView mPhoneImageView;
 
+    private long mStartTime;
+
     @OnClick(R.id.on_board_button_continue)
     void continueClicked() {
         if ( mListener != null ) {
+            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_SETUP_SETUP_TIME_TO_SKIP_LAY_ON_BED,
+                    AnalyticsService.PROPERTY_TIME_TO_SKIP_SECONDS,(float)(SystemClock.currentThreadTimeMillis()-mStartTime)/1000f);
+
             mListener.onPlacePhoneContinueClicked();
         }
     }
@@ -77,6 +84,12 @@ public class OnBoardingPlacePhoneFragment  extends OnBoardingFragment{
         }
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mStartTime = System.currentTimeMillis();
     }
 
     @Override

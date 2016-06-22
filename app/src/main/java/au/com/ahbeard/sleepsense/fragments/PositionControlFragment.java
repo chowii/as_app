@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseCommand;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseStatusEvent;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.widgets.StyledButton;
 import au.com.ahbeard.sleepsense.widgets.StyledImageButton;
 import butterknife.Bind;
@@ -53,12 +53,20 @@ public class PositionControlFragment extends Fragment {
     void onClick(View clickedButton) {
 
         if (clickedButton.getId() == R.id.position_button_rest) {
+            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
+                    AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_PRESET_REST);
             SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetFlat());
         } else if (clickedButton.getId() == R.id.position_button_recline) {
+            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
+                    AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_PRESET_RECLINE);
             SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetLounge());
         } else if (clickedButton.getId() == R.id.position_button_relax) {
+            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
+                    AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_PRESET_RELAX);
             SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetTV());
         } else if (clickedButton.getId() == R.id.position_button_recover) {
+            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
+                    AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_PRESET_RECOVER);
             SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetZeroG());
         }
 
@@ -84,7 +92,7 @@ public class PositionControlFragment extends Fragment {
     public static PositionControlFragment newInstance(boolean controlOnly) {
         PositionControlFragment fragment = new PositionControlFragment();
         Bundle args = new Bundle();
-        args.putBoolean("controlOnly",controlOnly);
+        args.putBoolean("controlOnly", controlOnly);
         fragment.setArguments(args);
         return fragment;
     }
@@ -93,7 +101,7 @@ public class PositionControlFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mControlOnly=getArguments().getBoolean("controlOnly");
+            mControlOnly = getArguments().getBoolean("controlOnly");
         }
     }
 
@@ -106,9 +114,9 @@ public class PositionControlFragment extends Fragment {
         ButterKnife.bind(this, view);
         bind(view);
 
-        mHeaderLayout.setVisibility(mControlOnly?View.GONE:View.VISIBLE);
+        mHeaderLayout.setVisibility(mControlOnly ? View.GONE : View.VISIBLE);
 
-        if ( SleepSenseDeviceService.instance().getBaseDevice() !=null) {
+        if (SleepSenseDeviceService.instance().getBaseDevice() != null) {
             mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseStatusEvent>() {
                 @Override
                 public void call(BaseStatusEvent pumpEvent) {
@@ -121,9 +129,9 @@ public class PositionControlFragment extends Fragment {
                 public void call(Device device) {
                     if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
                         startProgress();
-                    } else if ( device.getConnectionState() == Device.CONNECTION_STATE_DISCONNECTED && device.getLastConnectionStatus() > 0 ){
+                    } else if (device.getConnectionState() == Device.CONNECTION_STATE_DISCONNECTED && device.getLastConnectionStatus() > 0) {
                         stopProgress();
-                        showToast("Connection timeout","Try again",new Action1<Void>(){
+                        showToast("Connection timeout", "Try again", new Action1<Void>() {
                             @Override
                             public void call(Void aVoid) {
                                 SleepSenseDeviceService.instance().getBaseDevice().connect();
@@ -140,12 +148,24 @@ public class PositionControlFragment extends Fragment {
 
             mHeadPositionUpButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
                 @Override
+                public void onDown(StyledImageButton view) {
+                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
+                            AnalyticsService.PROPERTY_COMMAND, AnalyticsService.VALUE_COMMAND_ADJUST_HEAD_UP);
+                }
+
+                @Override
                 public void onPressPulse(StyledImageButton view) {
                     SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.headPositionUp());
                 }
             });
 
             mHeadPositionDownButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
+                @Override
+                public void onDown(StyledImageButton view) {
+                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
+                            AnalyticsService.PROPERTY_COMMAND, AnalyticsService.VALUE_COMMAND_ADJUST_HEAD_DOWN);
+                }
+
                 @Override
                 public void onPressPulse(StyledImageButton view) {
                     SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.headPositionDown());
@@ -154,12 +174,24 @@ public class PositionControlFragment extends Fragment {
 
             mFootPositionUpButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
                 @Override
+                public void onDown(StyledImageButton view) {
+                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
+                            AnalyticsService.PROPERTY_COMMAND, AnalyticsService.VALUE_COMMAND_ADJUST_FOOT_UP);
+                }
+
+                @Override
                 public void onPressPulse(StyledImageButton view) {
                     SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.footPositionUp());
                 }
             });
 
             mFootPositionDownButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
+                @Override
+                public void onDown(StyledImageButton view) {
+                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
+                            AnalyticsService.PROPERTY_COMMAND, AnalyticsService.VALUE_COMMAND_ADJUST_FOOT_DOWN);
+                }
+
                 @Override
                 public void onPressPulse(StyledImageButton view) {
                     SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.footPositionDown());
@@ -190,7 +222,6 @@ public class PositionControlFragment extends Fragment {
     }
 
 
-
     // Everything from here down should be in a superclass, but thanks to
     // ButterKnife not dealing properly with incremental builds, it's not.
 
@@ -199,7 +230,7 @@ public class PositionControlFragment extends Fragment {
 
     @OnClick(R.id.image_view_help_icon)
     void onHelpClicked() {
-        startActivity(HelpActivity.getIntent(getActivity(),"Position Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+        startActivity(HelpActivity.getIntent(getActivity(), "Position Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
     }
 
     @Bind(R.id.controls_layout_header)
@@ -245,7 +276,7 @@ public class PositionControlFragment extends Fragment {
     }
 
     protected void bind(View view) {
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
     }
 
     protected void unbind() {
@@ -262,7 +293,6 @@ public class PositionControlFragment extends Fragment {
         mLayout.setVisibility(View.VISIBLE);
 
     }
-
 
 
 }

@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -26,7 +27,6 @@ import rx.schedulers.Schedulers;
 
 public class SleepTrackingActivity extends AppCompatActivity {
 
-
     private Subscription mClockSubscription;
 
     @OnClick(R.id.sleep_tracking_button_start_stop)
@@ -35,6 +35,7 @@ public class SleepTrackingActivity extends AppCompatActivity {
         if (SleepSenseDeviceService.instance().getTrackerDevice().isTracking()) {
             new AlertDialog.Builder(this).setPositiveButton(R.string.sleep_tracking_dialog_yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_SLEEP_SCREEN_STOP_TRACKING);
                     Schedulers.io().createWorker().schedule(new Action0() {
                         @Override
                         public void call() {

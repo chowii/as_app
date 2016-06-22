@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,6 +32,8 @@ public class PreferenceActivity extends AppCompatActivity {
 
     @OnClick(R.id.preference_button_reset_sleepsense)
     void clear() {
+
+        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_PREFERENCES_RESET_APP);
 
         new AlertDialog.Builder(this).setPositiveButton(getString(R.string.preference_dialog_yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -72,6 +75,7 @@ public class PreferenceActivity extends AppCompatActivity {
                     int minutes = sleepTargetTimeMinutes % 60;
 
                     mSleepGoalTextView.setText(String.format(getString(R.string.preferences_sleep_target_time), hours, minutes));
+
                 }
             }
 

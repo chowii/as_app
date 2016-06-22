@@ -21,6 +21,7 @@ import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepCycle;
 import au.com.ahbeard.sleepsense.model.beddit.SleepStage;
 import au.com.ahbeard.sleepsense.model.beddit.TimestampAndFloat;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.widgets.DailyGraphView;
 import au.com.ahbeard.sleepsense.widgets.SleepScoreView;
@@ -45,12 +46,15 @@ public class DailyGraphFragment extends Fragment {
 
     @OnClick(R.id.sleep_score_view)
     void openSleepScoreBreakdown() {
+
+        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_SLEEP_SCORE_CLICKED);
+
         if (mSleep != null) {
             Intent intent = new Intent(getActivity(), SleepScoreBreakdownActivity.class);
             intent.putExtra("sleep_id", mSleepId);
             getActivity().startActivity(intent);
         }
-//        SleepService.instance().generateFakeData(Calendar.getInstance(),7);
+
     }
 
     @Bind(R.id.daily_graph_text_view_sleep_score)

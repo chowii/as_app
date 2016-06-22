@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,9 +25,18 @@ public class OnBoardingMassageControlsFragment  extends OnBoardingFragment {
     @OnClick(R.id.on_board_button_continue)
     void continueClicked() {
         if ( mOnActionListener!=null) {
+            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_ONBOARDING_TOUCH_POSITION, AnalyticsService.PROPERTY_DID_TOUCH_CONTROL,mControlsTouched);
             mOnActionListener.onMassageControlsAction();
         }
     }
+    boolean mControlsTouched = false;
+
+    @OnTouch(R.id.on_boarding_layout_controls)
+    boolean onTouch() {
+        mControlsTouched = true;
+        return false;
+    }
+
 
     public static OnBoardingMassageControlsFragment newInstance() {
         OnBoardingMassageControlsFragment fragment = new OnBoardingMassageControlsFragment();

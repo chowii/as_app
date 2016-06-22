@@ -19,6 +19,7 @@ public class StyledImageButton extends ImageButton {
     private boolean mMakeSquareBasedOnWidth = true;
 
     public interface OnPressPulseListener {
+        void onDown(StyledImageButton view);
         void onPressPulse(StyledImageButton view);
     }
 
@@ -51,6 +52,9 @@ public class StyledImageButton extends ImageButton {
     public boolean onTouchEvent(MotionEvent event) {
 
         if ( event.getAction() == MotionEvent.ACTION_DOWN ) {
+            if (mOnPressPulseListener!=null) {
+                mOnPressPulseListener.onDown(StyledImageButton.this);
+            }
             mPulseTimerSubscription = AndroidSchedulers.mainThread().createWorker().schedulePeriodically(new Action0() {
                 @Override
                 public void call() {

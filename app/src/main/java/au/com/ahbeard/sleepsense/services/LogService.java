@@ -15,7 +15,6 @@ public class LogService {
 
     private static LogService sInstance;
 
-    private Context mContext;
     private int mMaximumLogBufferSize;
 
     private final List<LogMessage> mLogMessages = new ArrayList<>();
@@ -35,16 +34,15 @@ public class LogService {
         return mLogMessagePublishSubject.onBackpressureBuffer();
     }
 
-    public static void initialize(Context context, int maximumLogBufferSize) {
-        sInstance = new LogService(context, maximumLogBufferSize);
+    public static void initialize(int maximumLogBufferSize) {
+        sInstance = new LogService(maximumLogBufferSize);
     }
 
     public static LogService instance() {
         return sInstance;
     }
 
-    public LogService(Context context, int maximumLogBufferSize) {
-        mContext = context;
+    public LogService(int maximumLogBufferSize) {
         mMaximumLogBufferSize = maximumLogBufferSize;
     }
 

@@ -19,6 +19,7 @@ import java.util.TimeZone;
 import au.com.ahbeard.sleepsense.services.SleepContract;
 import au.com.ahbeard.sleepsense.services.SleepSQLiteHelper;
 import au.com.ahbeard.sleepsense.services.SleepService;
+import au.com.ahbeard.sleepsense.utils.StatisticsUtils;
 
 /**
  * This is the local version of the batch analysis result.
@@ -471,6 +472,10 @@ public class Sleep {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public List<SleepStage> getSleepStages() {
 
         List<SleepStage> sleepStages = new ArrayList<>();
@@ -492,6 +497,10 @@ public class Sleep {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public List<SnoringEpisode> getSnoringEpisodes() {
 
         List<SnoringEpisode> snoringEpisodes = new ArrayList<>();
@@ -512,6 +521,10 @@ public class Sleep {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public List<SleepCycle> getSleepCycles() {
 
         List<SleepCycle> sleepCycles = new ArrayList<>();
@@ -531,7 +544,10 @@ public class Sleep {
         return sleepCycles;
     }
 
-
+    /**
+     *
+     * @return
+     */
     public List<HeartRate> getHeartRates() {
 
         List<HeartRate> heartRates = new ArrayList<>();
@@ -552,7 +568,12 @@ public class Sleep {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Actigram> getActigrams() {
+
         List<Actigram> actigrams = new ArrayList<>();
 
         if (mTrackDataByName.containsKey("actigram_epochwise")) {
@@ -571,12 +592,19 @@ public class Sleep {
 
     }
 
+    /**
+     *
+     * @param sleepId
+     * @param random
+     * @return
+     */
     public static Sleep generateRandom(int sleepId, Random random) {
+
         Sleep sleep = new Sleep();
+
         sleep.mSleepId=sleepId;
         sleep.mTotalSleepScore = random.nextFloat() * 60f + 20f;
         sleep.mSleepScoreVersion=666.0f;
-
 
         Calendar sleepCalendar = SleepService.getCalendar(sleepId);
 
@@ -587,8 +615,10 @@ public class Sleep {
         List<SleepCycle> sleepCycles = new ArrayList<>();
 
         for ( int i=0; i < 6 * 120; i++ ) {
-
+            sleepCalendar.add(Calendar.MINUTE,1);
+            sleepCycles.add(new SleepCycle(sleepCalendar.getTimeInMillis()/1000.0f,(float)Math.sin(i/120f)/2f+0.5f));
         }
+
         TrackData trackData = new TrackData("sleep_cycles","float32",SleepCycle.listAsBytes(sleepCycles));
 
         sleep.mTrackDataByName = new HashMap<>();
@@ -599,5 +629,23 @@ public class Sleep {
 
     public void setMattressFirmness(float mattressFirmness) {
         mMattressFirmness = mattressFirmness;
+    }
+
+
+    public int getTimesOutOfBed() {
+
+        if (getSleepStages() != null) {
+            int numberOfTimesOutOfBed = 0;
+            for (SleepStage sleepStage : getSleepStages()) {
+                if (sleepStage.getStage() == SleepStage.Stage.Away) {
+                    numberOfTimesOutOfBed += 1;
+                }
+            }
+
+            return numberOfTimesOutOfBed;
+        } else {
+            return 0;
+        }
+
     }
 }

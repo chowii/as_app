@@ -21,7 +21,7 @@ public class PreferenceService {
     private Context mContext;
 
     public PreferenceService(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
     }
 
     public boolean requiresOnBoarding() {
@@ -89,6 +89,7 @@ public class PreferenceService {
     }
 
     public void setSleepTargetTime(float sleepTargetTime) {
+        AnalyticsService.instance().setSleepGoal(sleepTargetTime);
         getSharedPreferences().edit().putFloat("sleepTargetTime",sleepTargetTime).commit();
     }
 
@@ -101,6 +102,9 @@ public class PreferenceService {
     }
 
     public void setProfile(String sex, String age, String emailAddress) {
+
+        AnalyticsService.instance().setProfile(sex,age,emailAddress);
+
         SharedPreferences.Editor edit = getSharedPreferences().edit();
 
         edit.putString("profile_sex", sex);

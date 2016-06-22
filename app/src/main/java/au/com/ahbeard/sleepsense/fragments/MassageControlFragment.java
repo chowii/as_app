@@ -19,6 +19,7 @@ import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseCommand;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseStatusEvent;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.widgets.StyledLinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,31 +45,44 @@ public class MassageControlFragment extends Fragment {
 
     @OnClick(R.id.massage_button_whole_body)
     void wholeBodyMassageClicked() {
+        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_MASSAGE_CONTROL_TOUCH,
+                AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_INTENSITY);
+
         mBaseDevice.sendCommand(BaseCommand.wholeBody());
     }
 
     @OnClick(R.id.massage_button_timer)
     void timerClicked() {
+        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_MASSAGE_CONTROL_TOUCH,
+                AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_TIMER);
         mBaseDevice.sendCommand(BaseCommand.timer());
     }
 
     @OnClick(R.id.massage_button_head_plus)
     void headPlusClicked() {
+        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_MASSAGE_CONTROL_TOUCH,
+                AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_ADJUST_HEAD_UP);
         mBaseDevice.sendCommand(BaseCommand.headMassageIncrease());
     }
 
     @OnClick(R.id.massage_button_head_minus)
     void headMinusClicked() {
+        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_MASSAGE_CONTROL_TOUCH,
+                AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_ADJUST_HEAD_DOWN);
         mBaseDevice.sendCommand(BaseCommand.headMassageDecrease());
     }
 
     @OnClick(R.id.massage_button_foot_plus)
     void footPlusClicked() {
+        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_MASSAGE_CONTROL_TOUCH,
+                AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_ADJUST_FOOT_UP);
         mBaseDevice.sendCommand(BaseCommand.footMassageIncrease());
     }
 
     @OnClick(R.id.massage_button_foot_minus)
     void footMinusClicked() {
+        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_MASSAGE_CONTROL_TOUCH,
+                AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_ADJUST_FOOT_DOWN);
         mBaseDevice.sendCommand(BaseCommand.footMassageDecrease());
     }
 

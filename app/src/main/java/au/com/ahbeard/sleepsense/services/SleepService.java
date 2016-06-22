@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerUtils;
 import au.com.ahbeard.sleepsense.model.AggregateStatistics;
+import au.com.ahbeard.sleepsense.model.Firmness;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepProperty;
 import au.com.ahbeard.sleepsense.model.beddit.TrackData;
@@ -87,7 +88,7 @@ public class SleepService {
     }
 
     /**
-     * Run a batch analysis for the previous 7 days.
+     * Run a batch analysis for today.
      */
     public void runBatchAnalysis() {
 
@@ -101,13 +102,13 @@ public class SleepService {
             @Override
             public void call() {
 
-                Calendar calendar = Calendar.getInstance();
+                Sleep sleep = runBatchAnalysis(Calendar.getInstance());
 
-                calendar.add(Calendar.DAY_OF_YEAR, -7);
+                if ( sleep != null ) {
 
-                for (int i = 0; i < 7; i++) {
-                    calendar.add(Calendar.DAY_OF_YEAR, 1);
-                    runBatchAnalysis(calendar);
+                    AnalyticsService.instance().logSleep(
+                            AnalyticsService.EVENT_SLEEP_SESSION_END,sleep);
+
                 }
 
                 PreferenceService.instance().setHasRecordedASleep(true);
@@ -122,11 +123,47 @@ public class SleepService {
     }
 
     /**
+     * Run a batch analysis for a set number of days.
+     *
+     * @param numberOfDays
+     */
+    public void runBatchAnalysis(final int numberOfDays) {
+
+        try {
+            checkSessionData();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Schedulers.computation().createWorker().schedule(new Action0() {
+            @Override
+            public void call() {
+
+                Calendar calendar = Calendar.getInstance();
+
+                calendar.add(Calendar.DAY_OF_YEAR, -numberOfDays);
+
+                for (int i = 0; i < numberOfDays; i++) {
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+                    runBatchAnalysis(calendar);
+                }
+
+                PreferenceService.instance().setHasRecordedASleep(true);
+
+                mDataChangePublishSubject.onNext(-1);
+
+                updateAggregateStatistics();
+
+            }
+        });
+    }
+
+    /**
      * Run a batch analysis for a given calendar date.
      *
      * @param calendar
      */
-    public void runBatchAnalysis(final Calendar calendar) {
+    public Sleep runBatchAnalysis(final Calendar calendar) {
 
         final long MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
 
@@ -140,10 +177,6 @@ public class SleepService {
 
         CalendarDate calendarDate = new CalendarDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
         List<SessionData> sessionDatas = readSessionData(periodStart / 1000D, periodEnd / 1000D);
-
-
-        Log.d("BatchAnalysisPrep", String.format("date: %s", calendar.getTime()));
-        Log.d("BatchAnalysisPrep", String.format("sessionDatas.size(): %d", sessionDatas.size()));
 
         HashSet<Double> sessionDataStarts = new HashSet<>();
 
@@ -193,12 +226,16 @@ public class SleepService {
 
                 writeSleepToDatabase(sleep);
 
+                return sleep;
+
             } catch (AnalysisException e) {
-                e.printStackTrace();
+                Log.e("SleepService","Exception performing batch analysis...",e);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("SleepService","Exception performing batch analysis...",e);
             }
         }
+
+        return null;
 
     }
 
@@ -651,6 +688,14 @@ public class SleepService {
      */
     public static int getSleepId(Calendar calendar) {
         return calendar.get(Calendar.YEAR) * 10000 + (calendar.get(Calendar.MONTH) + 1) * 100 + calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
+     * @param calendar
+     * @return
+     */
+    public static String getYYYYMMDDD(Calendar calendar) {
+        return String.format("%04d-%02d-%02d",calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
     }
 
     /**

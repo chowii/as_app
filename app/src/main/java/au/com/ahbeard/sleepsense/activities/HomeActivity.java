@@ -23,6 +23,7 @@ import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MoreFragment;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.widgets.SimpleTabStrip;
@@ -84,6 +85,7 @@ public class HomeActivity extends BaseActivity {
 
         setupTabs();
 
+        // So we keep all the tabs intact.
         mViewPager.setOffscreenPageLimit(5);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -127,22 +129,52 @@ public class HomeActivity extends BaseActivity {
         if (SleepSenseDeviceService.instance().hasTrackerDevice() ) {
             mHasRecordedASleep = PreferenceService.instance().getHasRecordedASleep();
             if (mHasRecordedASleep) {
-                mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, DashboardFragment.newInstance());
+                mDashboardPagerAdapter.addTab("Dashboard", R.drawable.tab_dashboard_unselected, R.drawable.tab_dashboard_selected, DashboardFragment.newInstance(), new Runnable() {
+                    @Override
+                    public void run() {
+                        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_TRACKING);
+                    }
+                });
             } else {
-                mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, DashboardNoSleepsFragment.newInstance());
+                mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, DashboardNoSleepsFragment.newInstance(), new Runnable() {
+                    @Override
+                    public void run() {
+                        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_TRACKING);
+                    }
+                });
             }
         }
 
         if (SleepSenseDeviceService.instance().hasPumpDevice() ) {
-            mDashboardPagerAdapter.addTab("Firmness",R.drawable.tab_firmness_unselected,R.drawable.tab_firmness_selected, FirmnessControlFragment.newInstance());
+            mDashboardPagerAdapter.addTab("Firmness",R.drawable.tab_firmness_unselected,R.drawable.tab_firmness_selected, FirmnessControlFragment.newInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_MATTRESS);
+                }
+            });
         }
 
         if (SleepSenseDeviceService.instance().hasBaseDevice() ) {
-            mDashboardPagerAdapter.addTab("Position",R.drawable.tab_position_unselected,R.drawable.tab_position_selected, PositionControlFragment.newInstance());
-            mDashboardPagerAdapter.addTab("Massage",R.drawable.tab_massage_unselected,R.drawable.tab_massage_selected, MassageControlFragment.newInstance());
+            mDashboardPagerAdapter.addTab("Position",R.drawable.tab_position_unselected,R.drawable.tab_position_selected, PositionControlFragment.newInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_POSITION);
+                }
+            });
+            mDashboardPagerAdapter.addTab("Massage",R.drawable.tab_massage_unselected,R.drawable.tab_massage_selected, MassageControlFragment.newInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_MASSAGE);
+                }
+            });
         }
 
-        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance());
+        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance(), new Runnable() {
+            @Override
+            public void run() {
+                AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_SETTINGS);
+            }
+        });
 
         mViewPager.setAdapter(mDashboardPagerAdapter);
 
@@ -157,16 +189,18 @@ public class HomeActivity extends BaseActivity {
         private List<Integer> mTabIconResourceIds = new ArrayList<>();
         private List<Integer> mSelectedTabIconResourceIds = new ArrayList<>();
         private List<Fragment> mFragments = new ArrayList<>();
+        private List<Runnable> mOnClickActions = new ArrayList<>();
 
         public HomeFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
-        public void addTab(String name, int iconResource, int selectedIconResource, Fragment fragment ) {
+        public void addTab(String name, int iconResource, int selectedIconResource, Fragment fragment, Runnable onClickAction ) {
             mTabNames.add(name);
             mTabIconResourceIds.add(iconResource);
             mSelectedTabIconResourceIds.add(selectedIconResource);
             mFragments.add(fragment);
+            mOnClickActions.add(onClickAction);
             notifyDataSetChanged();
         }
 
@@ -188,6 +222,10 @@ public class HomeActivity extends BaseActivity {
         @Override
         public int getIconResourceId(int position) {
             return mTabIconResourceIds.get(position);
+        }
+
+        public Runnable getOnClickAction(int position) {
+            return mOnClickActions.get(position);
         }
 
         @Override

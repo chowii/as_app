@@ -26,6 +26,7 @@ import java.util.Random;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.model.AggregateStatistics;
 import au.com.ahbeard.sleepsense.model.Firmness;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.utils.StatisticsUtils;
 import au.com.ahbeard.sleepsense.widgets.LabelThingy;
@@ -199,17 +200,45 @@ public class WeeklyDashboardFragment extends Fragment {
 
         mCompositeSubscription.add(SleepService.instance().getAggregateStatisticsObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AggregateStatistics>() {
             @Override
-            public void call(AggregateStatistics aggregateStatistics) {
+            public void call(final AggregateStatistics aggregateStatistics) {
+
+                // Average sleep score
                 mAverageSleepScore.valueTextView.setText(Integer.toString(aggregateStatistics.getAverageSleepScore().intValue()));
+
+                // Best night
                 if ( aggregateStatistics.getBestNight()!=null) {
                     mBestNight.valueTextView.setText(format(fancyDate.get(),aggregateStatistics.getBestNight()));
+                    mBestNight.layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_DAILY_STATS,
+                                    AnalyticsService.PROPERTY_ORIGIN, AnalyticsService.VALUE_ORIGIN_BEST_NIGHT);
+                            SleepService.instance().notifySleepIdSelected(SleepService.getSleepId(aggregateStatistics.getBestNight()));
+
+                        }
+                    });
                 }
+
+                // Worst night
                 if ( aggregateStatistics.getWorstNight()!=null) {
                     mWorstNight.valueTextView.setText(format(fancyDate.get(),aggregateStatistics.getWorstNight()));
+                    mWorstNight.layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_DAILY_STATS,
+                                    AnalyticsService.PROPERTY_ORIGIN, AnalyticsService.VALUE_ORIGIN_WORST_NIGHT);
+                            SleepService.instance().notifySleepIdSelected(SleepService.getSleepId(aggregateStatistics.getWorstNight()));
+
+                        }
+                    });
                 }
+
+                // Optimal bedtime.
                 if ( aggregateStatistics.getOptimalBedtime() != null ) {
                     mOptimalBedtime.valueTextView.setText(format(optimalBeditme.get(),aggregateStatistics.getOptimalBedtime()));
                 }
+
+                // Mattress firmness.
                 if ( aggregateStatistics.getOptimalMattressFirmness() !=null ) {
                     mOptimalMattressFirmness.valueTextView.setText(Firmness.getFirmnessForPressure(aggregateStatistics.getOptimalMattressFirmness()).getLabel());
                 }

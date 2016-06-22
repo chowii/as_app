@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.LogService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.services.RemoteSleepDataService;
@@ -21,12 +22,15 @@ import rx.functions.Action1;
  */
 public class SleepSenseApplication extends Application {
 
+    /**
+     *
+     */
     @Override
     public void onCreate() {
+
         super.onCreate();
 
-        LogService.initialize(this,1024);
-
+        LogService.initialize(1024);
         LogService.instance().getLogObservable().subscribe(new Action1<LogService.LogMessage>() {
             @Override
             public void call(LogService.LogMessage logMessage) {
@@ -43,6 +47,7 @@ public class SleepSenseApplication extends Application {
         SleepSenseDeviceService.initialize(this);
         SleepService.initialize(this);
         RemoteSleepDataService.initialize(this);
+        AnalyticsService.initialize(this);
 
         try {
             AndroidLogger.createInstance(getApplicationContext(),false,true,false,null,0,"fc1fc163-a9c8-4634-bff6-d4b4e577c881", true);
@@ -52,6 +57,10 @@ public class SleepSenseApplication extends Application {
 
     }
 
+    /**
+     *
+     * @param logMessage
+     */
     private void log(LogService.LogMessage logMessage) {
 
         switch (logMessage.getLevel()) {

@@ -13,6 +13,7 @@ import java.util.Map;
 public class Firmness {
 
     private String mLabel;
+    private String mAnalyticsValue;
 
     public static int MAX_PRESSURE = 40;
     public static int SEGMENTS = 10;
@@ -47,10 +48,15 @@ public class Firmness {
 
     private Firmness( String mLabel) {
         this.mLabel = mLabel;
+        this.mAnalyticsValue = mLabel.replace(" ","");
     }
 
     public String getLabel() {
         return mLabel;
+    }
+
+    public String getAnalyticsValue() {
+        return mAnalyticsValue;
     }
 
     public static Firmness getFirmnessForPressure(int value) {
@@ -84,5 +90,22 @@ public class Firmness {
      */
     public static int getPressureForControlValue(float targetValue) {
         return (int)(targetValue*MAX_PRESSURE);
+    }
+
+    /**
+     *
+     * @param targetValue
+     * @return
+     */
+    public static String getAnalyticsValueForControlValue(float targetValue) {
+
+        Firmness firmness = PRESSURE_TO_FIRMNESS.get((int)(targetValue*MAX_PRESSURE));
+
+        if ( firmness != null ) {
+            return firmness.getAnalyticsValue();
+        } else {
+            return "Unknown";
+        }
+
     }
 }

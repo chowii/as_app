@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.widgets.WeeklyGraphView;
 import butterknife.Bind;
@@ -73,6 +74,8 @@ public class WeeklyGraphFragment extends Fragment {
                 mGraphView.setOnClickListener(new WeeklyGraphView.OnClickListener() {
                     @Override
                     public void onValueClicked(Object identifier) {
+                        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_DAILY_STATS,
+                                AnalyticsService.PROPERTY_ORIGIN, AnalyticsService.VALUE_ORIGIN_GRAPH);
                         SleepService.instance().notifySleepIdSelected((Integer)identifier);
                     }
                 });

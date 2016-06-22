@@ -272,7 +272,7 @@ public class DailyDashboardFragment extends Fragment {
         Calendar selectedCalendar = SleepService.getCalendar(sleepId);
 
         int numberOfDays = (int) (calendar.getTimeInMillis() - selectedCalendar.getTimeInMillis()) / (1000 * 60 * 60 * 24);
-        Log.d("GSLKJGS", "numberOfDays: " + numberOfDays);
+        Log.d("DAILYDASHBOARDFRAGMENT", "numberOfDays: " + numberOfDays);
         if (mGraphViewPager != null) {
             mGraphViewPager.setCurrentItem(1023 - numberOfDays);
         } else {

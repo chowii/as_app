@@ -17,6 +17,7 @@ import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
 import au.com.ahbeard.sleepsense.model.Firmness;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.widgets.FirmnessControlView;
 import au.com.ahbeard.sleepsense.widgets.StyledTextView;
@@ -131,6 +132,9 @@ public class FirmnessControlFragment extends Fragment {
             @Override
             public void onTargetValueSet(float targetValue) {
                 if ( SleepSenseDeviceService.instance().hasPumpDevice() ) {
+                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_FIRMNESS_CONTROL_TOUCH,
+                            AnalyticsService.PROPERTY_SIDE,"Left",
+                            AnalyticsService.PROPERTY_PREFERENCE,Firmness.getAnalyticsValueForControlValue(targetValue));
                     SleepSenseDeviceService.instance().getPumpDevice().inflateToTarget(PumpDevice.Side.Left, Firmness.getPressureForControlValue(targetValue) );
                 }
             }
@@ -140,6 +144,9 @@ public class FirmnessControlFragment extends Fragment {
             @Override
             public void onTargetValueSet(float targetValue) {
                 if ( SleepSenseDeviceService.instance().hasPumpDevice() ) {
+                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_FIRMNESS_CONTROL_TOUCH,
+                            AnalyticsService.PROPERTY_SIDE,"Right",
+                            AnalyticsService.PROPERTY_PREFERENCE,Firmness.getAnalyticsValueForControlValue(targetValue));
                     SleepSenseDeviceService.instance().getPumpDevice().inflateToTarget(PumpDevice.Side.Right, Firmness.getPressureForControlValue(targetValue) );
                 }
             }

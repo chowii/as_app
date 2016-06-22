@@ -3,16 +3,21 @@ package au.com.ahbeard.sleepsense.fragments.onboarding;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.BinderThread;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,8 +27,17 @@ public class OnBoardingFirmnessControlsFragment  extends OnBoardingFragment {
     @OnClick(R.id.on_board_button_continue)
     void continueClicked() {
         if ( mOnActionListener != null ) {
+            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_ONBOARDING_TOUCH_FIRMNESS, AnalyticsService.PROPERTY_DID_TOUCH_CONTROL,mControlsTouched);
             mOnActionListener.onFirmnessControlsAction();
         }
+    }
+
+    boolean mControlsTouched = false;
+
+    @OnTouch(R.id.on_boarding_layout_controls)
+    boolean onTouch() {
+        mControlsTouched = true;
+        return false;
     }
 
     public static OnBoardingFirmnessControlsFragment newInstance() {
