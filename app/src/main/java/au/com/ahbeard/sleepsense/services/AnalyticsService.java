@@ -82,7 +82,7 @@ public class AnalyticsService {
         Bundle bundle = new Bundle();
 
         if (hasBase) {
-            bundle.putBoolean(PROPERTY_SELECTED_ADJUSTABLE_MATTRESS, hasPump);
+            bundle.putBoolean(PROPERTY_SELECTED_MATTRESS, hasPump);
             bundle.putBoolean(PROPERTY_SELECTED_BASE, hasBase);
             bundle.putBoolean(PROPERTY_SELECTED_SLEEP_TRACKER, hasTracker);
         }
@@ -95,7 +95,7 @@ public class AnalyticsService {
     public static final String EVENT_SETUP_ERROR_RESOLVING = "setup_error_resolving";
     public static final String EVENT_SETUP_SETUP_TIME_TO_SKIP_LAY_ON_BED = "setup_time_to_skip_lay_on_bed";
 
-    public static final String PROPERTY_SELECTED_ADJUSTABLE_MATTRESS = "selected_adjustable_mattress";
+    public static final String PROPERTY_SELECTED_MATTRESS = "selected_mattress";
     public static final String PROPERTY_SELECTED_BASE = "selected_base";
     public static final String PROPERTY_SELECTED_SLEEP_TRACKER = "selected_sleep_tracker";
     public static final String PROPERTY_TIME_TO_SKIP_SECONDS = "time_to_skip_seconds";
