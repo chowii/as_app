@@ -159,6 +159,29 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         if (mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound) {
 
+            BaseDevice baseDevice = null;
+            PumpDevice pumpDevice = null;
+            TrackerDevice trackerDevice = null;
+            TrackerDevice altTrackerDevice = null;
+
+            if ( mOnBoardingState.requiredPump && mOnBoardingState.foundPump ) {
+                pumpDevice = mAquiredDevices.getPumpDevices().get(0);
+            }
+
+            if ( mOnBoardingState.requiredBase && mOnBoardingState.foundBase  ) {
+                baseDevice = mAquiredDevices.getBaseDevices().get(0);
+            }
+
+            if ( mOnBoardingState.requiredTracker && mOnBoardingState.foundTracker  ) {
+                trackerDevice = mAquiredDevices.getTrackerDevices().get(0);
+
+                if ( mAquiredDevices.getTrackerDevices().size() > 1 ) {
+                    altTrackerDevice = mAquiredDevices.getTrackerDevices().get(1);
+                }
+            }
+
+            SleepSenseDeviceService.instance().setDevices(baseDevice, pumpDevice, trackerDevice, altTrackerDevice);
+
             if (mOnBoardingState.foundPump) {
                 transitionTo(OnBoardingInflateMattressFragment.newInstance());
 
@@ -304,16 +327,11 @@ public class NewOnBoardActivity extends BaseActivity implements
 
                     boolean failed = false;
 
-                    BaseDevice baseDevice = null;
-                    PumpDevice pumpDevice = null;
-                    TrackerDevice trackerDevice = null;
-
                     if (mOnBoardingState.requiredBase) {
                         if (mAquiredDevices.getBaseDevices().isEmpty()) {
                             failed = true;
                             mOnBoardingState.foundBase = false;
                         } else {
-                            baseDevice = mAquiredDevices.getBaseDevices().get(0);
                             mOnBoardingState.foundBase = true;
                         }
 
@@ -326,7 +344,6 @@ public class NewOnBoardActivity extends BaseActivity implements
                             failed = true;
                             mOnBoardingState.foundPump = false;
                         } else {
-                            pumpDevice = mAquiredDevices.getPumpDevices().get(0);
                             mOnBoardingState.foundPump = true;
                         }
                     }
@@ -339,7 +356,7 @@ public class NewOnBoardActivity extends BaseActivity implements
                             mOnBoardingState.foundTracker = false;
                         } else {
                             // Get the closest tracker.
-                            trackerDevice = mAquiredDevices.getTrackerDevices().get(0);
+
                             mOnBoardingState.foundTracker = true;
                         }
                     }
@@ -357,7 +374,6 @@ public class NewOnBoardActivity extends BaseActivity implements
 
                     } else {
                         mOnBoardingState.state = OnBoardingState.State.RequiredDevicesFound;
-                        SleepSenseDeviceService.instance().setDevices(baseDevice, pumpDevice, trackerDevice);
                     }
 
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);

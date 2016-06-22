@@ -84,6 +84,30 @@ public class PreferenceService {
         getSharedPreferences().edit().remove("trackerDeviceName").commit();
     }
 
+    public void setAltTrackerDeviceAddress(String address) {
+        getSharedPreferences().edit().putString("altTrackerDeviceAddress", address).commit();
+    }
+
+    public String getAltTrackerDeviceAddress() {
+        return getSharedPreferences().getString("altTrackerDeviceAddress",null);
+    }
+
+    public void clearAltTrackerDeviceAddress() {
+        getSharedPreferences().edit().remove("altTrackerDeviceAddress").commit();
+    }
+
+    public void setAltTrackerDeviceName(String address) {
+        getSharedPreferences().edit().putString("altTrackerDeviceName", address).commit();
+    }
+
+    public String getAltTrackerDeviceName() {
+        return getSharedPreferences().getString("altTrackerDeviceName",null);
+    }
+
+    public void clearAltTrackerDeviceName() {
+        getSharedPreferences().edit().remove("altTrackerDeviceName").commit();
+    }
+
     public float getSleepTargetTime() {
         return getSharedPreferences().getFloat("sleepTargetTime",8.0f);
     }

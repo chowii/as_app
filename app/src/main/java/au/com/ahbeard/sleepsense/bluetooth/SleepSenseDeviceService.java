@@ -54,10 +54,12 @@ public class SleepSenseDeviceService {
     private String mPumpDeviceAddress;
     private String mBaseDeviceAddress;
     private String mTrackerDeviceAddress;
+    private String mAltTrackerDeviceAddress;
 
     private PumpDevice mPumpDevice;
     private BaseDevice mBaseDevice;
     private TrackerDevice mTrackerDevice;
+    private TrackerDevice mAltTrackerDevice;
 
     private SleepSenseDeviceService(Context context) {
 
@@ -68,6 +70,7 @@ public class SleepSenseDeviceService {
         mPumpDeviceAddress = PreferenceService.instance().getPumpDeviceAddress();
         mBaseDeviceAddress = PreferenceService.instance().getBaseDeviceAddress();
         mTrackerDeviceAddress = PreferenceService.instance().getTrackerDeviceAddress();
+        mAltTrackerDeviceAddress = PreferenceService.instance().getTrackerDeviceAddress();
 
         if (mPumpDeviceAddress != null) {
             mPumpDevice = new PumpDevice();
@@ -80,6 +83,10 @@ public class SleepSenseDeviceService {
         if (mTrackerDeviceAddress != null) {
             mTrackerDevice = new TrackerDevice();
             mTrackerDevice.link(context, BluetoothService.instance().createDeviceFromAddress(mTrackerDeviceAddress));
+        }
+        if (mAltTrackerDeviceAddress != null) {
+            mAltTrackerDevice = new TrackerDevice();
+            mAltTrackerDevice.link(context, BluetoothService.instance().createDeviceFromAddress(mAltTrackerDeviceAddress));
         }
     }
 
@@ -178,34 +185,51 @@ public class SleepSenseDeviceService {
         return mObservable;
     }
 
-    public void setDevices(BaseDevice baseDevice, PumpDevice pumpDevice, TrackerDevice trackerDevice) {
+    public void setDevices(BaseDevice baseDevice, PumpDevice pumpDevice, TrackerDevice trackerDevice, TrackerDevice altTrackerDevice) {
 
         mBaseDevice = baseDevice;
 
         if (baseDevice != null) {
+            mBaseDeviceAddress = mBaseDevice.getAddress();
             PreferenceService.instance().setBaseDeviceAddress(baseDevice.getAddress());
         } else {
+            mBaseDeviceAddress = null;
             PreferenceService.instance().clearBaseDeviceAddress();
         }
 
         mPumpDevice = pumpDevice;
 
         if (pumpDevice != null) {
+            mPumpDeviceAddress = mBaseDevice.getAddress();
             PreferenceService.instance().setPumpDeviceAddress(pumpDevice.getAddress());
         } else {
+            mPumpDeviceAddress = null;
             PreferenceService.instance().clearPumpDeviceAddress();
         }
 
         mTrackerDevice = trackerDevice;
 
         if (trackerDevice != null) {
+            mTrackerDeviceAddress = mTrackerDevice.getAddress();
             PreferenceService.instance().setTrackerDeviceAddress(trackerDevice.getAddress());
             PreferenceService.instance().setTrackerDeviceName(trackerDevice.getName());
         } else {
+            mTrackerDeviceAddress = null;
             PreferenceService.instance().clearTrackerDeviceAddress();
             PreferenceService.instance().clearTrackerDeviceName();
         }
 
+        mAltTrackerDevice = altTrackerDevice;
+
+        if (altTrackerDevice != null ) {
+            mAltTrackerDeviceAddress = mAltTrackerDevice.getAddress();
+            PreferenceService.instance().setAltTrackerDeviceAddress(altTrackerDevice.getAddress());
+            PreferenceService.instance().setAltTrackerDeviceName(altTrackerDevice.getName());
+        } else {
+            mAltTrackerDeviceAddress = null;
+            PreferenceService.instance().clearAltTrackerDeviceAddress();
+            PreferenceService.instance().clearAltTrackerDeviceName();
+        }
     }
 
     public boolean hasBaseDevice() {
@@ -218,6 +242,10 @@ public class SleepSenseDeviceService {
 
     public boolean hasTrackerDevice() {
         return mTrackerDevice != null || mTrackerDeviceAddress != null;
+    }
+
+    public boolean hasAltTrackerDevice() {
+        return mAltTrackerDevice != null || mAltTrackerDeviceAddress != null;
     }
 
     public Observable<String> getLogObservable() {
