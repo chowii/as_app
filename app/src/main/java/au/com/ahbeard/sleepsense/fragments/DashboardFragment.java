@@ -20,6 +20,11 @@ import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.HelpActivity;
+import au.com.ahbeard.sleepsense.activities.HomeActivity;
+import au.com.ahbeard.sleepsense.activities.InStoreHomeActivity;
+import au.com.ahbeard.sleepsense.activities.InStoreOnBoardActivity;
+import au.com.ahbeard.sleepsense.activities.NewOnBoardActivity;
+import au.com.ahbeard.sleepsense.activities.PreferenceActivity;
 import au.com.ahbeard.sleepsense.activities.SleepTrackingActivity;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.SleepService;
@@ -60,7 +65,12 @@ public class DashboardFragment extends Fragment {
 
     @OnClick(R.id.dashboard_image_view_help)
     void onHelpClicked() {
-        startActivity(HelpActivity.getIntent(getActivity(), "Dashboard Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+        if ( getActivity() instanceof HomeActivity) {
+            startActivity(HelpActivity.getIntent(getActivity(), "Dashboard Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+        } else {
+            startActivity(InStoreOnBoardActivity.getOnBoardActivity(getActivity()));
+            getActivity().finish();
+        }
     }
 
 
@@ -95,6 +105,10 @@ public class DashboardFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         ButterKnife.bind(this, view);
+
+        if ( getActivity() instanceof InStoreHomeActivity ) {
+            mStartSleepFAB.setVisibility(View.INVISIBLE);
+        }
 
         mTabHost.setup(getContext(), getChildFragmentManager(), android.R.id.tabcontent);
 

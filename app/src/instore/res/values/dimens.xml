@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="header_size">75dp</dimen>
+    <dimen name="header_top_padding">25dp</dimen>
+    <dimen name="header_bottom_padding">12dp</dimen>
+</resources>

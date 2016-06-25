@@ -1,5 +1,6 @@
 package au.com.ahbeard.sleepsense.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -51,11 +52,11 @@ public class NewOnBoardActivity extends BaseActivity implements
         OnBoardingHelpFragment.OnActionListener,
         OnBoardingLieOnBedFragment.OnActionListener {
 
-    private OnBoardingState mOnBoardingState = new OnBoardingState();
+    protected OnBoardingState mOnBoardingState = new OnBoardingState();
 
     private OnBoardingFragment mCurrentFragment;
 
-    private SleepSenseDeviceAquisition mAquiredDevices;
+    protected SleepSenseDeviceAquisition mAquiredDevices;
 
     public void successContinue() {
         Intent intent = new Intent(this, HomeActivity.class);
@@ -67,6 +68,12 @@ public class NewOnBoardActivity extends BaseActivity implements
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     private PublishSubject<OnBoardingState> mOnBoardingEventPublishSubject = PublishSubject.create();
+
+    public static Intent getOnBoardActivity(Context context) {
+        Intent intent = new Intent(context, NewOnBoardActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

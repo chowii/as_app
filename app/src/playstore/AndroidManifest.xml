@@ -21,10 +21,6 @@
             android:screenOrientation="userPortrait">
         </activity>
         <activity
-            android:name=".activities.SleepScoreBreakdownActivity"
-            android:screenOrientation="userPortrait">
-        </activity>
-        <activity
             android:name=".activities.HelpActivity"
             android:screenOrientation="userPortrait">
         </activity>

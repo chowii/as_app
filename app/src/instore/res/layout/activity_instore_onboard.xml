@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" android:gravity="center" android:textAllCaps="true" android:text="In Store Device Setup Here"/>
-</LinearLayout>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:id="@+id/new_onboard_layout_container"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="480dp"
+        android:layout_height="860dp"
+        android:layout_gravity="center">
+
+    </FrameLayout>
+
+</FrameLayout>

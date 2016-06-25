@@ -857,6 +857,8 @@ public class SleepService {
                 }
             }
 
+            PreferenceService.instance().setHasRecordedASleep(true);
+
             mDataChangePublishSubject.onNext(-1);
 
 

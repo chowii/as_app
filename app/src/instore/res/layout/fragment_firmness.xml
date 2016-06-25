@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/noisy_background"
+              android:gravity="top"
+              android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/controls_layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_size"
+        android:background="#fff">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/header_top_padding"/>
+
+        <ImageView
+            android:id="@+id/image_view_progress_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/progress_animated"/>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:lineSpacingExtra="5sp"
+            android:text="@string/mattress_firmness_screen_title"
+            android:textColor="#4A4A4A"
+            android:textSize="19sp"
+            app:typeface="OpenSansRegular"/>
+
+        <ImageView
+            android:id="@+id/image_view_help_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/settings_icon"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/header_bottom_padding"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="#40000000"/>
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/firmness_control_layout_choose_side"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/firmness_side_selection_background">
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:id="@+id/firmness_control_text_view_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Left side"
+            app:typeface="RobotoRegular"/>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:id="@+id/firmness_control_text_view_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Right side"
+            app:typeface="RobotoRegular"/>
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:id="@+id/firmness_control_layout_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+                <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:letterSpacing="0.1"
+                    android:lineSpacingExtra="10sp"
+                    android:text="Your Firmness"
+                    android:textAllCaps="true"
+                    android:textColor="#4A4A4A"
+                    android:textSize="10sp"
+                    app:typeface="OpenSansSemiBold"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                        android:id="@+id/firmness_control_text_view_firmness_left"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Adjusting"
+                        android:textAllCaps="true"
+                        android:textColor="#4FB2EA"
+                        android:textSize="25sp"
+                        app:typeface="OpenSansRegular"/>
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                        android:id="@+id/firmness_control_text_view_firmness_right"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Adjusting"
+                        android:textAllCaps="true"
+                        android:textColor="#4FB2EA"
+                        android:textSize="25sp"
+                        android:visibility="gone"
+                        app:typeface="OpenSansRegular"/>
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <au.com.ahbeard.sleepsense.widgets.FirmnessControlView
+                        android:id="@+id/firmness_control_firmness_control_left"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_margin="30dp"
+                        app:dotRadius="2dp"
+                        app:knobDrawable="@drawable/knob"
+                        app:targetMetDotColor="@color/firmnessDotGood"
+                        app:targetNotMetDotColor="@color/firmnessDotBad"/>
+
+                    <au.com.ahbeard.sleepsense.widgets.FirmnessControlView
+                        android:id="@+id/firmness_control_firmness_control_right"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_margin="30dp"
+                        android:visibility="gone"
+                        app:dotRadius="2dp"
+                        app:knobDrawable="@drawable/knob"
+                        app:targetMetDotColor="@color/firmnessDotGood"
+                        app:targetNotMetDotColor="@color/firmnessDotBad"/>
+                </FrameLayout>
+
+                <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                    style="@style/firmnessLabel"
+                    android:layout_gravity="bottom|left"
+                    android:layout_marginBottom="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:text="PLUSH"
+                    app:typeface="RobotoRegular"/>
+
+                <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                    style="@style/firmnessLabel"
+                    android:layout_gravity="top|left"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="60dp"
+                    android:text="MEDIUM\nPLUSH"
+                    app:typeface="RobotoRegular"/>
+
+                <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                    style="@style/firmnessLabel"
+                    android:layout_gravity="top|center_horizontal"
+                    android:text="MEDIUM"
+                    app:typeface="RobotoRegular"/>
+
+                <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                    style="@style/firmnessLabel"
+                    android:layout_gravity="top|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="60dp"
+                    android:text="MEDIUM\nFIRM"
+                    app:typeface="RobotoRegular"/>
+
+                <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                    style="@style/firmnessLabel"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginBottom="40dp"
+                    android:layout_marginRight="20dp"
+                    android:text="FIRM"
+                    app:typeface="RobotoRegular"/>
+
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <include layout="@layout/include_progress"/>
+
+
+    </FrameLayout>
+
+</LinearLayout>

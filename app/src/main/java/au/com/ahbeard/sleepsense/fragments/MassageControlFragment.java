@@ -14,6 +14,10 @@ import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.HelpActivity;
+import au.com.ahbeard.sleepsense.activities.HomeActivity;
+import au.com.ahbeard.sleepsense.activities.InStoreOnBoardActivity;
+import au.com.ahbeard.sleepsense.activities.NewOnBoardActivity;
+import au.com.ahbeard.sleepsense.activities.PreferenceActivity;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseCommand;
@@ -214,7 +218,12 @@ public class MassageControlFragment extends Fragment {
 
     @OnClick(R.id.image_view_help_icon)
     void onHelpClicked() {
-        startActivity(HelpActivity.getIntent(getActivity(),"Massage Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+        if ( getActivity() instanceof HomeActivity) {
+            startActivity(HelpActivity.getIntent(getActivity(), "Dashboard Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+        } else {
+            startActivity(InStoreOnBoardActivity.getOnBoardActivity(getActivity()));
+            getActivity().finish();
+        }
     }
 
     @Bind(R.id.controls_layout_header)

@@ -139,7 +139,7 @@ public class Device extends BluetoothGattCallback {
         return mBluetoothDevice != null;
     }
 
-    public void sendCommand(CharacteristicWriteOperation command) {
+    public void sendCommand(BluetoothOperation command) {
         LogService.d("SleepSenseDeviceService",String.format("sending command... %s", command.toString()));
         if (mBluetoothOperationQueue.addOperation(command) && mConnectionState == CONNECTION_STATE_DISCONNECTED) {
             connect();
@@ -318,8 +318,8 @@ public class Device extends BluetoothGattCallback {
     @Override
     public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         byte[] value = characteristic.getValue();
-        LogService.d("Device",String.format("onCharacteristicChanged: %s",
-                CharacteristicWriteOperation.getReadableStringFromByteArray(value)));
+//        LogService.d("Device",String.format("onCharacteristicChanged: %s",
+//                CharacteristicWriteOperation.getReadableStringFromByteArray(value)));
         mNotifyEventSubject.onNext(new ValueChangeEvent(characteristic.getUuid(), value));
     }
 

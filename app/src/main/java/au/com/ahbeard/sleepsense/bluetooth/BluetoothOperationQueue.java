@@ -53,7 +53,7 @@ public class BluetoothOperationQueue {
 
         synchronized (mBluetoothOperations) {
 
-            if (operation instanceof EnableNotificationOperation ) {
+            if (false && operation instanceof EnableNotificationOperation ) {
                 mBluetoothOperations.add(0,operation);
                 processQueue();
                 return true;

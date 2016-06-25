@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:padding="24dp"
+              android:background="@drawable/instore_onboarding_bluetooth_background"
+              tools:context=".fragments.onboarding.OnBoardingBluetoothFragment">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"/>
+
+    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:gravity="center"
+        android:text="Place the tablet on the left side of the bed"
+        android:textColor="#4A4A4A"
+        android:textSize="25sp"
+        app:typeface="OpenSansSemibold"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"/>
+
+    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:id="@+id/on_board_text_view_find_out_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:alpha="0.6"
+        android:gravity="center"
+        android:lineSpacingExtra="10dp"
+        android:text="Place the tablet just below the pillow on the left side.\nThis will allow the device to pair with the sensor"
+        android:textColor="#4A4A4A"
+        android:textSize="13.5sp"
+        app:typeface="OpenSansRegular"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"/>
+
+    <au.com.ahbeard.sleepsense.widgets.StyledButton
+        android:id="@+id/on_board_button_continue"
+        android:layout_width="285dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:background="@drawable/sleep_sense_button_blue"
+        android:stateListAnimator="@null"
+        android:text="Continue"
+        android:textColor="@color/blue_button_text_color"/>
+
+
+</LinearLayout>

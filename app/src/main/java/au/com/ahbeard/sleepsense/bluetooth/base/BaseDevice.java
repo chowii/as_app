@@ -2,6 +2,7 @@ package au.com.ahbeard.sleepsense.bluetooth.base;
 
 import java.util.UUID;
 
+import au.com.ahbeard.sleepsense.bluetooth.BluetoothOperation;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
 import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
@@ -111,7 +112,7 @@ public class BaseDevice extends Device {
     }
 
     @Override
-    public void sendCommand(CharacteristicWriteOperation command) {
+    public void sendCommand(BluetoothOperation command) {
         super.sendCommand(command);
         mLastActiveTime = System.currentTimeMillis();
     }

@@ -1,0 +1,71 @@
+<android.support.v4.app.FragmentTabHost xmlns:android="http://schemas.android.com/apk/res/android"
+                                        android:id="@+id/dashboard_tab_host"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0074BF"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+
+            >
+
+            <LinearLayout
+                android:id="@+id/dashboard_layout_tab_container"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#0074BF"
+                android:gravity="center"
+                android:padding="5dp">
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:divider="@android:color/transparent"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/dashboard_image_view_help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="22dp"
+                android:src="@drawable/settings_icon"/>
+
+        </FrameLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/dashboard_fab_start_sleep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="21dp"
+            android:src="@drawable/fab_icon_sleep"/>
+
+        <View
+            android:id="@+id/dashboard_layout_circular_reveal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+</android.support.v4.app.FragmentTabHost>

@@ -43,11 +43,13 @@ public class SleepScoreView extends View {
         fullPaint.setAlpha(63);
         fullPaint.setStyle(Paint.Style.STROKE);
         fullPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,2f,getResources().getDisplayMetrics()));
+        fullPaint.setAntiAlias(true);
 
         arcPaint.setColor(Color.WHITE);
         arcPaint.setStrokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,2.7f,getResources().getDisplayMetrics()));
         arcPaint.setStyle(Paint.Style.STROKE);
         arcPaint.setStrokeCap(Paint.Cap.ROUND);
+        arcPaint.setAntiAlias(true);
 
 
     }

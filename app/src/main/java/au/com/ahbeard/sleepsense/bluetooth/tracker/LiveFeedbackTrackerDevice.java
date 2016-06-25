@@ -6,17 +6,17 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.util.SparseArray;
 
-import com.beddit.sensor.SessionAccounting;
-
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
+import au.com.ahbeard.sleepsense.bluetooth.EnableNotificationOperation;
 import au.com.ahbeard.sleepsense.bluetooth.ValueChangeEvent;
 import au.com.ahbeard.sleepsense.utils.ConversionUtils;
 import rx.Observable;
+import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -24,7 +24,7 @@ import rx.subjects.PublishSubject;
 /**
  * Created by neal on 4/03/2016.
  */
-public class OurTrackerDevice extends Device {
+public class LiveFeedbackTrackerDevice extends Device {
 
     private PublishSubject<TrackerState> mTrackerStateSubject = PublishSubject.create();
     private PublishSubject<Integer> mPacketCountSubject = PublishSubject.create();
@@ -35,7 +35,15 @@ public class OurTrackerDevice extends Device {
     private TrackerState mTrackerState;
 
     private static final UUID BEDDIT_SERVICE_UUID = UUID.fromString("f82fd8a8-329d-4c44-a178-e82f91ec9fe6");
+    private static final UUID SAMPLE_RATE_CHARACTERISTIC_UUID = UUID.fromString("f82fd8aa-329d-4c44-a178-e82f91ec9fe6");
     private static final UUID SIGNAL_DATA_CHARACTERISTIC_UUID = UUID.fromString("f82fd8a9-329d-4c44-a178-e82f91ec9fe6");
+
+    private static final UUID DEVICE_INFORMATION_SERVICE_UUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
+    private static final UUID DEVICE_INFORMATION_SERIAL_NUMBER_UUID = UUID.fromString("00002A25-0000-1000-8000-00805f9b34fb");
+    private static final UUID DEVICE_INFORMATION_HARDWARE_REVISION_UUID = UUID.fromString("00002A27-0000-1000-8000-00805f9b34fb");
+    private static final UUID DEVICE_INFORMATION_FIRMWARE_REVISION_UUID = UUID.fromString("00002A26-0000-1000-8000-00805f9b34fb");
+    private static final UUID DEVICE_INFORMATION_SOFTWARE_REVISION_UUID = UUID.fromString("00002A28-0000-1000-8000-00805f9b34fb");
+
 
     private static final byte CONTROL_POINT_COMMAND_START = 0x01;
 
@@ -43,6 +51,9 @@ public class OurTrackerDevice extends Device {
     private static final int PACKET_TYPE_NO_MOVEMENT = 0x90;
 
     private static final String TRACK_NAME = "force";
+
+    private PublishSubject<byte[]> mSessionPublishSubject = null;
+    private Subscription mNotifySubscription;
 
     @Override
     public UUID getServiceUUID() {
@@ -82,11 +93,13 @@ public class OurTrackerDevice extends Device {
         return true;
     }
 
-    public void startSensorSession() {
+    public Observable<byte[]> startSession() {
 
-//        if (mTrackerState != TrackerState.Disconnected) {
-//            return;
-//        }
+        if (mSessionPublishSubject != null ) {
+            return mSessionPublishSubject;
+        }
+
+        mSessionPublishSubject = PublishSubject.create();
 
         // Acquire a wake lock.
         PowerManager powerManager = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
@@ -105,7 +118,26 @@ public class OurTrackerDevice extends Device {
             e.printStackTrace();
         }
 
-        getNotifyEventObservable().observeOn(Schedulers.io()).subscribe(new Action1<ValueChangeEvent>() {
+        getDeviceEventObservable().observeOn(Schedulers.io()).subscribe(new Action1<DeviceEvent>() {
+            @Override
+            public void call(DeviceEvent deviceEvent) {
+                if ( deviceEvent instanceof DeviceDisconnectedEvent ) {
+                    if (mNotifySubscription != null ) {
+                        mNotifySubscription.unsubscribe();
+                        mNotifySubscription = null;
+                    }
+                    mSessionPublishSubject.onCompleted();
+                    mSessionPublishSubject = null;
+                }
+            }
+        });
+
+        if ( mNotifySubscription != null) {
+            mNotifySubscription.unsubscribe();
+            mNotifySubscription = null;
+        }
+
+        mNotifySubscription = getNotifyEventObservable().observeOn(Schedulers.io()).subscribe(new Action1<ValueChangeEvent>() {
 
             int currentPacketNumber = 0;
             int currentSampleNumber = 0;
@@ -114,8 +146,6 @@ public class OurTrackerDevice extends Device {
             public void call(ValueChangeEvent valueChangeEvent) {
 
                 byte[] data = valueChangeEvent.getValue();
-
-                Log.d("DATA", ConversionUtils.byteArrayToString(data," "));
 
                 if (data.length < 4 || data.length % 2 != 0) {
                     // closeWithError(new SensorProtocolViolationException("Invalid packet length"));
@@ -158,25 +188,33 @@ public class OurTrackerDevice extends Device {
 //                            sampleData, TRACK_NAME, this.currentSampleNumber);
 //                }
 
+                mSessionPublishSubject.onNext(sampleData);
+
                 int numberOfSamples = sampleData.length / 2;
 
                 this.currentSampleNumber += numberOfSamples;
                 this.currentPacketNumber += 1;
                 this.currentPacketNumber &= 0xFF;
             }
-
-
         });
 
+        EnableNotificationOperation enableNotificationCommand = new EnableNotificationOperation(BEDDIT_SERVICE_UUID, SIGNAL_DATA_CHARACTERISTIC_UUID);
+        sendCommand(enableNotificationCommand);
+
         // new TrackingSessionAnalyser(this)
-
-
+//        sendCommand(new CharacteristicReadOperation(DEVICE_INFORMATION_SERVICE_UUID,DEVICE_INFORMATION_SERIAL_NUMBER_UUID));
+//        sendCommand(new CharacteristicReadOperation(DEVICE_INFORMATION_SERVICE_UUID,DEVICE_INFORMATION_HARDWARE_REVISION_UUID));
+//        sendCommand(new CharacteristicReadOperation(DEVICE_INFORMATION_SERVICE_UUID,DEVICE_INFORMATION_FIRMWARE_REVISION_UUID));
+//        sendCommand(new CharacteristicReadOperation(DEVICE_INFORMATION_SERVICE_UUID,DEVICE_INFORMATION_SOFTWARE_REVISION_UUID));
+//
+//        sendCommand(new CharacteristicReadOperation(BEDDIT_SERVICE_UUID,SAMPLE_RATE_CHARACTERISTIC_UUID));
 
         // This will connect and start streaming shit.
         CharacteristicWriteOperation startCommand = new CharacteristicWriteOperation(BEDDIT_SERVICE_UUID, SIGNAL_DATA_CHARACTERISTIC_UUID);
         startCommand.writeByte(CONTROL_POINT_COMMAND_START);
         sendCommand(startCommand);
 
+        return mSessionPublishSubject;
     }
 
     public void stopSensorSession() {
@@ -255,6 +293,8 @@ public class OurTrackerDevice extends Device {
         GATT_ERROR_MAP.put(BluetoothGatt.GATT_INVALID_OFFSET, "GATT_INVALID_OFFSET");
         GATT_ERROR_MAP.put(BluetoothGatt.GATT_INVALID_ATTRIBUTE_LENGTH, "GATT_INVALID_ATTRIBUTE_LENGTH");
     }
+
+
 
 
 

@@ -2,25 +2,22 @@ package au.com.ahbeard.sleepsense.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.DashboardNoSleepsFragment;
-import au.com.ahbeard.sleepsense.fragments.LiveFeedbackFragment;
-import au.com.ahbeard.sleepsense.fragments.WeeklyDashboardFragment;
-import au.com.ahbeard.sleepsense.fragments.DebugFragment;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
+import au.com.ahbeard.sleepsense.fragments.LiveFeedbackFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MoreFragment;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
@@ -38,7 +35,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by neal on 3/03/2016.
  */
-public class HomeActivity extends BaseActivity {
+public class InStoreHomeActivity extends BaseActivity {
 
     public static final String EXTRA_SHOW_ON_BOARDING_COMPLETE_DIALOG = "showOnBoardingCompleteDialog";
 
@@ -61,20 +58,25 @@ public class HomeActivity extends BaseActivity {
     @Bind(R.id.dashboard_simple_tab_strip)
     SimpleTabStrip mSimpleTabStrip;
 
+    @OnClick(R.id.instore_home_button_back)
+    void onClickBack() {
+        finish();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
         if (PreferenceService.instance().requiresOnBoarding()) {
-            Intent intent = new Intent(this, NewOnBoardActivity.class);
+            Intent intent = new Intent(this, InStoreOnBoardActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
             return;
         }
 
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_instore_home);
 
         ButterKnife.bind(this);
 
@@ -127,6 +129,8 @@ public class HomeActivity extends BaseActivity {
 
         mDashboardPagerAdapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
 
+        SleepService.instance().generateFakeData(Calendar.getInstance(),48);
+
         if (SleepSenseDeviceService.instance().hasTrackerDevice() ) {
             mHasRecordedASleep = PreferenceService.instance().getHasRecordedASleep();
             if (mHasRecordedASleep) {
@@ -170,14 +174,14 @@ public class HomeActivity extends BaseActivity {
             });
         }
 
-        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance(), new Runnable() {
-            @Override
-            public void run() {
-                AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_SETTINGS);
-            }
-        });
+//        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance(), new Runnable() {
+//            @Override
+//            public void run() {
+//                AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_SETTINGS);
+//            }
+//        });
 
-        mDashboardPagerAdapter.addTab("Feedback",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, LiveFeedbackFragment.newInstance(), new Runnable() {
+        mDashboardPagerAdapter.addTab("Movement",R.drawable.tab_movement_unselected,R.drawable.tab_movement_selected, LiveFeedbackFragment.newInstance(), new Runnable() {
             @Override
             public void run() {
             }
@@ -186,7 +190,6 @@ public class HomeActivity extends BaseActivity {
         mViewPager.setAdapter(mDashboardPagerAdapter);
 
         mSimpleTabStrip.setViewPager(mViewPager);
-
 
     }
 

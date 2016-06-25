@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.services.LogService;
 import au.com.ahbeard.sleepsense.utils.ByteUtils;
+import au.com.ahbeard.sleepsense.utils.ConversionUtils;
 
 /**
  * Created by neal on 14/01/2014.
@@ -165,9 +166,13 @@ public class CharacteristicWriteOperation extends BluetoothOperation {
             if (characteristic != null) {
                 characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
                 characteristic.setValue(getValue());
+                LogService.d("SleepSenseDeviceService","Really performing write to device..." + ConversionUtils.byteArrayToString(getValue()," "));
+
                 bluetoothGatt.writeCharacteristic(characteristic);
             }
         }
         return false;
     }
+
+
 }

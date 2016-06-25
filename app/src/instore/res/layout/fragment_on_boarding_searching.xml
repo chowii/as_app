@@ -1,0 +1,174 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:gravity="center"
+              tools:context=".fragments.onboarding.OnBoardingChooseSideFragment">
+
+    <LinearLayout
+        android:background="#fff"
+        android:orientation="vertical"
+        android:layout_width="386dp"
+        android:layout_height="685dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/on_board_image_view_phone"
+                android:layout_width="330dp"
+                android:layout_height="330dp"
+                android:layout_gravity="center"
+                android:alpha="1.0"
+                android:scaleType="centerInside"
+                android:src="@drawable/onboarding_phone_searching"/>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:id="@+id/on_board_searching_text_view_heading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Pairing to the bed"
+                android:textColor="@color/onBoardHeaderTextColor"
+                android:textSize="20sp"
+                app:typeface="OpenSansSemibold"/>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"/>
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:id="@+id/on_board_searching_text_view_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:gravity="center"
+                android:lineSpacingExtra="10dp"
+                android:text="Please wait a moment"
+                android:textColor="@color/onBoardBodyTextColor"
+                android:textSize="15sp"
+                app:typeface="OpenSansRegular"/>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"/>
+
+            <LinearLayout
+                android:id="@+id/on_board_searching_layout_devices"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/on_board_searching_layout_mattress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/on_board_searching_image_view_mattress_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:src="@drawable/success_tick"/>
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="MATTRESS"
+                        android:textColor="@color/onBoardHeaderTextColor"
+                        android:textSize="10dp"
+                        app:typeface="OpenSansSemibold"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/on_board_searching_layout_base"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/on_board_searching_image_view_base_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:src="@drawable/success_tick"/>
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="BASE"
+                        android:textColor="@color/onBoardHeaderTextColor"
+                        android:textSize="10dp"
+                        app:typeface="OpenSansSemibold"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/on_board_searching_layout_tracker"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/on_board_searching_image_view_tracker_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:src="@drawable/success_tick"/>
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="SLEEP TRACKER"
+                        android:textColor="@color/onBoardHeaderTextColor"
+                        android:textSize="10dp"
+                        app:typeface="OpenSansSemibold"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <au.com.ahbeard.sleepsense.widgets.StyledButton
+                android:id="@+id/on_board_button_continue"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="25dp"
+                android:background="@drawable/sleep_sense_button_blue"
+                android:text="Continue"
+                android:textColor="#fff"
+                android:layout_gravity="center_horizontal"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+    
+
+</LinearLayout>

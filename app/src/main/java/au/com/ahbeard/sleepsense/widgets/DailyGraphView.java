@@ -104,6 +104,7 @@ public class DailyGraphView extends ViewGroup {
         mLinePaint.setStrokeWidth(
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
         mLinePaint.setStyle(Paint.Style.STROKE);
+        mLinePaint.setAntiAlias(true);
 
         mLabelLinePaint = new Paint();
         mLabelLinePaint.setAntiAlias(true);

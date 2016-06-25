@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import au.com.ahbeard.sleepsense.bluetooth.BluetoothOperation;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
 import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
@@ -103,7 +104,7 @@ public class PumpDevice extends Device {
     }
 
     @Override
-    public void sendCommand(CharacteristicWriteOperation command) {
+    public void sendCommand(BluetoothOperation command) {
         mLastActiveTime = System.currentTimeMillis();
         super.sendCommand(command);
     }

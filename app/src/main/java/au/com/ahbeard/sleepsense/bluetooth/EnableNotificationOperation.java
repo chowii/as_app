@@ -39,7 +39,7 @@ public class EnableNotificationOperation extends BluetoothOperation {
 
             if (characteristic != null) {
                 BluetoothGattDescriptor descriptor = characteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
-                descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
+                descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
 
                 bluetoothGatt.writeDescriptor(descriptor);
             }

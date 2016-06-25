@@ -37,9 +37,7 @@ public class PreferenceActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(this).setPositiveButton(getString(R.string.preference_dialog_yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Intent intent = new Intent(PreferenceActivity.this, NewOnBoardActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                startActivity(NewOnBoardActivity.getOnBoardActivity(PreferenceActivity.this));
                 finish();
             }
         }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
