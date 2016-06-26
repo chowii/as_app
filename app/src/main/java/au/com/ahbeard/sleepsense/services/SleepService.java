@@ -196,10 +196,10 @@ public class SleepService {
 
                 BatchAnalysis batchAnalysis = new BatchAnalysis();
 
-                Log.d("BatchAnalysis", String.format("ANALYZING DATE: %d/%d/%d", calendarDate.getDay(), calendarDate.getMonth(), calendarDate.getYear()));
+                // Log.d("BatchAnalysis", String.format("ANALYZING DATE: %d/%d/%d", calendarDate.getDay(), calendarDate.getMonth(), calendarDate.getYear()));
 
                 for (SessionData sessionData1 : sessionDatas) {
-                    Log.d("BatchAnalysis", String.format("SESSSION DATA: %s to %s", new Date((long) sessionData1.getStartTime() * 1000), new Date((long) sessionData1.getEndTime() * 1000)));
+                    // Log.d("BatchAnalysis", String.format("SESSSION DATA: %s to %s", new Date((long) sessionData1.getStartTime() * 1000), new Date((long) sessionData1.getEndTime() * 1000)));
                 }
 
                 BatchAnalysisResult batchAnalysisResult = batchAnalysis.analyzeSessions(
@@ -539,7 +539,7 @@ public class SleepService {
 
             if (matcher.matches()) {
 
-                Log.d("SleepService", "reading track file: " + trackFile);
+                // Log.d("SleepService", "reading track file: " + trackFile);
 
                 String trackName = matcher.group(1);
                 String valueType = matcher.group(2);
@@ -575,7 +575,7 @@ public class SleepService {
      */
     public Float[] readSleepScores(int startSleepId, int endSleepId) {
 
-        Log.d("SleepService", String.format("startSleepId: %d endSleepId: %d", startSleepId, endSleepId));
+        // Log.d("SleepService", String.format("startSleepId: %d endSleepId: %d", startSleepId, endSleepId));
 
         SQLiteDatabase database = null;
         Cursor sleepSessionCursor = null;
@@ -597,7 +597,7 @@ public class SleepService {
             while (!sleepSessionCursor.isAfterLast()) {
                 int sleepId = sleepSessionCursor.getInt(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.SLEEP_ID));
                 float sleepScore = sleepSessionCursor.getFloat(sleepSessionCursor.getColumnIndex(SleepContract.Sleep.TOTAL_SLEEP_SCORE));
-                Log.d("Dashboard", String.format("sleep_id: %d sleep_score: %f", sleepId, sleepScore));
+                // Log.d("Dashboard", String.format("sleep_id: %d sleep_score: %f", sleepId, sleepScore));
                 sleepScoreBySleepId.put(sleepId, new SleepProperty(sleepId, sleepScore));
                 sleepSessionCursor.moveToNext();
             }
@@ -752,8 +752,6 @@ public class SleepService {
 
     public void updateAggregateStatistics() {
 
-        Log.d("SleepService", "updateAggregateStatistics called..");
-
         mAggregateStatisticsCalculated = true;
 
         SQLiteDatabase database = null;
@@ -862,11 +860,10 @@ public class SleepService {
             clearSleepDatabase();
 
             for (int sleepId : generateSleepIdRange(startSleepId, endSleepId)) {
-                if (random.nextFloat() > 0.2f) {
+                if (random.nextFloat() > 0.2f||sleepId == endSleepId) {
+
                     Sleep sleep = Sleep.generateRandom(sleepId, random);
-
                     writeSleepToDatabase(sleep);
-
                 }
             }
 
@@ -910,7 +907,7 @@ public class SleepService {
      */
     public LinkedHashMap<Double, Float> readMattressPressures(double startDate, double endDate) {
 
-        Log.d("SleepService", String.format("startDate: %f endDate: %f", startDate, endDate));
+        // Log.d("SleepService", String.format("startDate: %f endDate: %f", startDate, endDate));
 
         SQLiteDatabase database = null;
         Cursor mattressPressureCursor = null;
@@ -931,7 +928,7 @@ public class SleepService {
                 double timeRead = mattressPressureCursor.getDouble(mattressPressureCursor.getColumnIndex(MattressFirmnessContract.MattressFirmness.TIME_READ));
                 float pressure = mattressPressureCursor.getFloat(mattressPressureCursor.getColumnIndex(MattressFirmnessContract.MattressFirmness.PRESSURE));
                 mattressPressureReadings.put(timeRead,pressure);
-                Log.d("SleepService", String.format("time_read: %f mattress_firmness: %f", timeRead, pressure));
+                // Log.d("SleepService", String.format("time_read: %f mattress_firmness: %f", timeRead, pressure));
                 mattressPressureCursor.moveToNext();
             }
 

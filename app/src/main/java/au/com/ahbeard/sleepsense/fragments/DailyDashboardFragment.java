@@ -103,8 +103,6 @@ public class DailyDashboardFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
 
-        Log.d("DAILYDASHBOARDFRAGMENT", "onCreate called...");
-
         if (getArguments() != null) {
 
         }
@@ -123,8 +121,6 @@ public class DailyDashboardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        Log.d("DAILYDASHBOARDFRAGMENT", "onCreateView called...");
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_daily_dashboard, container, false);
@@ -272,7 +268,7 @@ public class DailyDashboardFragment extends Fragment {
         Calendar selectedCalendar = SleepService.getCalendar(sleepId);
 
         int numberOfDays = (int) (calendar.getTimeInMillis() - selectedCalendar.getTimeInMillis()) / (1000 * 60 * 60 * 24);
-        Log.d("DAILYDASHBOARDFRAGMENT", "numberOfDays: " + numberOfDays);
+
         if (mGraphViewPager != null) {
             mGraphViewPager.setCurrentItem(1023 - numberOfDays);
         } else {

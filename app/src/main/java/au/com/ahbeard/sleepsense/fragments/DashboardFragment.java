@@ -131,8 +131,6 @@ public class DashboardFragment extends Fragment {
                 .subscribe(new Action1<Integer>() {
                     @Override
                     public void call(Integer sleepId) {
-                        Log.d("DASHBOARDFRAGMENT", "sleepId selected called..." + sleepId);
-
                         mTabHost.setCurrentTab(0);
                     }
                 }));

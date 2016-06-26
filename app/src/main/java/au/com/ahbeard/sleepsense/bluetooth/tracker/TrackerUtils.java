@@ -42,6 +42,8 @@ public class TrackerUtils {
 
     public static void logBatchAnalysisResult(BatchAnalysisResult batchAnalysisResult) {
 
+        if ( true ) return;
+
         for (String name : batchAnalysisResult.getPropertyNames()) {
             float value = batchAnalysisResult.getProperty(name);
             LogService.d("BatchAnalysisResult", String.format("%s=%f", name, value));

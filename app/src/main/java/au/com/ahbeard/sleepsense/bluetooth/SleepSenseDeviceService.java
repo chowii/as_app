@@ -158,7 +158,7 @@ public class SleepSenseDeviceService {
 
                         // Assign the closest of each device if we don't have one.
                         for (Device device : devices) {
-                            Log.d("SleepSenseDeviceService", String.format("device found: %s", device.getName()));
+                            // Log.d("SleepSenseDeviceService", String.format("device found: %s", device.getName()));
                             if (device instanceof BaseDevice) {
                                 sleepSenseDeviceAquisition.getBaseDevices().add((BaseDevice) device);
                                 continue;
@@ -268,7 +268,7 @@ public class SleepSenseDeviceService {
 
                 String deviceAddress = scanPacketEvent.getDevice().getAddress();
 
-                Log.d("SleepSenseDeviceService", String.format("received device with address: %s name: %s", scanPacketEvent.getDevice().getAddress(), scanPacketEvent.getDevice().getName()));
+                // Log.d("SleepSenseDeviceService", String.format("received device with address: %s name: %s", scanPacketEvent.getDevice().getAddress(), scanPacketEvent.getDevice().getName()));
 
                 if (scannedDevices.containsKey(deviceAddress)) {
                     scannedDevices.get(deviceAddress).addRssi(scanPacketEvent.getRssi());

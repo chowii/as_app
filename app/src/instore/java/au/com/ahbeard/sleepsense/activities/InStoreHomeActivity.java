@@ -70,7 +70,7 @@ public class InStoreHomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         if (PreferenceService.instance().requiresOnBoarding()) {
-            Intent intent = new Intent(this, InStoreOnBoardActivity.class);
+            Intent intent = new Intent(this, InStoreNewOnBoardActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
@@ -130,7 +130,7 @@ public class InStoreHomeActivity extends BaseActivity {
 
         mDashboardPagerAdapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
 
-        SleepService.instance().generateFakeData(Calendar.getInstance(),48);
+        SleepService.instance().generateFakeData(Calendar.getInstance(),60);
 
         if (SleepSenseDeviceService.instance().hasTrackerDevice() ) {
             mHasRecordedASleep = PreferenceService.instance().getHasRecordedASleep();
@@ -257,7 +257,7 @@ public class InStoreHomeActivity extends BaseActivity {
     }
 
     public void startOnBoardActivity() {
-        startActivity(InStoreOnBoardActivity.getOnBoardActivity(getActivity()));
-        getActivity().finish();
+        startActivity(InStoreNewOnBoardActivity.getOnBoardActivity(this));
+        finish();
     }
 }

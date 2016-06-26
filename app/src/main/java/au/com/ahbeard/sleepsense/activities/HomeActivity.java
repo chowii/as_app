@@ -177,12 +177,6 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        mDashboardPagerAdapter.addTab("Feedback",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, LiveFeedbackFragment.newInstance(), new Runnable() {
-            @Override
-            public void run() {
-            }
-        });
-
         mViewPager.setAdapter(mDashboardPagerAdapter);
 
         mSimpleTabStrip.setViewPager(mViewPager);

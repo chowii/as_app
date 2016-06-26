@@ -8,6 +8,9 @@ import android.util.Log;
 import com.beddit.analysis.BatchAnalysisResult;
 import com.beddit.analysis.TimeValueTrackFragment;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -270,8 +273,6 @@ public class Sleep {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(sleep.mYear, sleep.mMonth - 1, sleep.mDay, 0, 0, 0);
-
-        Log.d("Sleep", "calendar: " + calendar + " " + calendar.getTime());
 
         sleep.mDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
@@ -616,22 +617,34 @@ public class Sleep {
 
         List<SleepCycle> sleepCycles = new ArrayList<>();
 
-        sleep.mSleepTotalTime = sleep.mTotalSleepScore * 8f * 60f * 60f / 100f - random.nextFloat() * 90f + 120f;
+        sleep.mSleepTotalTime = sleep.mTotalSleepScore * 8f * 60f * 60f / 100f - random.nextFloat() * 90f + 90f * 60f;
 
-        int divisions = sleep.mSleepTotalTime.intValue()/120;
+        String json = "[1.0,1.0,1.0,1.0,0.9980401,0.9909772,0.97641844,0.9523347,0.91696644,0.8689531,0.80767626,0.7337945,0.64986527,0.55971295,0.46757582,0.3780664,0.29540995,0.22315189,0.16375896,0.118329406,0.08645043,0.066226676,0.05448427,0.047133055,0.041993164,0.039155275,0.038677163,0.040568557,0.04405373,0.04775346,0.05102138,0.053790964,0.05600583,0.05762089,0.058603268,0.058932967,0.058603268,0.05762089,0.05600583,0.053790964,0.05102138,0.048083156,0.045365807,0.042924643,0.04080936,0.039063025,0.037721183,0.036811154,0.036351457,0.036351457,0.036811154,0.037721183,0.039063025,0.04080936,0.042924643,0.045365807,0.048083156,0.05102138,0.053790964,0.056335527,0.058932967,0.06199667,0.06639678,0.072510004,\n" +
+                "0.080211885,0.08934563,0.099725306,0.11113961,0.12335619,0.13612634,0.1495198,0.16359362,0.17806128,0.19262826,0.20699805,0.2208781,0.23398583,0.24605444,0.25683823,0.2661177,0.2737039,0.27944243,0.28321648,0.28494918,0.2846053,0.2818621,0.27644578,0.26846653,0.25808686,0.24551803,0.23101592,0.21487573,0.19775574,0.18033417,0.1635367,0.14893572,0.13748789,0.12942624,0.12491487,0.124045625,0.12683621,0.13369606,0.1449518,0.16004461,0.17833753,0.19899191,0.22065477,0.24315608,0.26677498,0.2910307,0.31542945,0.3398042,0.3639885,0.38748997,0.40950054,0.4292424,0.44631374,0.46069664,0.47242805,0.48126915,0.48703995,0.489623,0.4892954,0.48639348,0.48097634,0.47315428,0.46355277,0.45364112,\n" +
+                "0.4444287,0.43643275,0.43061197,0.4280174,0.42963442,0.436226,0.44855875,0.4675237,0.49297613,0.5240682,0.5595959,0.59817666,0.63893664,0.6810462,0.723648,0.7658749,0.8068672,0.84532416,0.8799967,0.91017896,0.93599373,0.958119,0.97657055,0.9902356,0.9980988,1.0,0.9959105,0.98572737,0.96985763,0.94972295,0.9274323,0.90560293,0.8870245,0.87401664,0.8683397,0.87100387,0.88178295,0.8992182,0.92079633,0.94353575,0.9645185,0.9813503,0.9926539,0.9984093,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,\n" +
+                "1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0]";
 
-        for ( int i=0; i < divisions; i++ ) {
-            sleepCalendar.add(Calendar.MINUTE,2);
-            float percentAlong = (float)i / (float)divisions;
-            float value = 1.0f - (float)Math.sin(Math.PI * percentAlong * 2);
+        try {
 
-            sleepCycles.add(new SleepCycle(sleepCalendar.getTimeInMillis()/1000.0f,value));
+            JSONArray samples = new JSONArray(json);
+
+            float timePerSample = sleep.mSleepTotalTime/samples.length();
+
+            for ( int i=0; i < samples.length(); i++ ) {
+                sleepCalendar.add(Calendar.SECOND,(int)timePerSample);
+                float value = (float) samples.getDouble(i);
+                sleepCycles.add(new SleepCycle(sleepCalendar.getTimeInMillis()/1000.0f,value));
+            }
+
+            TrackData trackData = new TrackData("sleep_cycles","float32",SleepCycle.listAsBytes(sleepCycles));
+
+            sleep.mTrackDataByName = new HashMap<>();
+            sleep.mTrackDataByName.put("sleep_cycles",trackData);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-        TrackData trackData = new TrackData("sleep_cycles","float32",SleepCycle.listAsBytes(sleepCycles));
-
-        sleep.mTrackDataByName = new HashMap<>();
-        sleep.mTrackDataByName.put("sleep_cycles",trackData);
 
         sleep.mRestingHeartRate = 70f + random.nextFloat() * 10;
         sleep.mSleepLatency = 5 + random.nextFloat() * 15;
@@ -663,4 +676,6 @@ public class Sleep {
         }
 
     }
+
+
 }

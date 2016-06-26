@@ -17,12 +17,10 @@ import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.BaseActivity;
-import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import au.com.ahbeard.sleepsense.activities.HomeActivity;
 import au.com.ahbeard.sleepsense.activities.SleepScoreBreakdownActivity;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepCycle;
-import au.com.ahbeard.sleepsense.model.beddit.SleepStage;
 import au.com.ahbeard.sleepsense.model.beddit.TimestampAndFloat;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.SleepService;
@@ -56,12 +54,12 @@ public class DailyGraphFragment extends Fragment {
 
             // Switching like this is clunky, but probably better than otherwise.  Maybe a shared method
             // in BaseActivity would be better.
-            if ( getActivity() instanceof HomeActivity) {
+            if (getActivity() instanceof HomeActivity) {
                 Intent intent = new Intent(getActivity(), SleepScoreBreakdownActivity.class);
                 intent.putExtra("sleep_id", mSleepId);
                 getActivity().startActivity(intent);
-            } else if ( getActivity() instanceof BaseActivity) {
-                ((BaseActivity)getActivity()).openSleepScoreBreakdown(mSleepId);
+            } else if (getActivity() instanceof BaseActivity) {
+                ((BaseActivity) getActivity()).openSleepScoreBreakdown(mSleepId);
             }
 
 
@@ -140,9 +138,9 @@ public class DailyGraphFragment extends Fragment {
             if (mSleep.getSleepStages().size() > 1) {
                 for (int i = 0; i < mSleep.getSleepStages().size() - 1; i++) {
                     double startTime = mSleep.getSleepStages().get(i).getTimestamp();
-                    double endTime = mSleep.getSleepStages().get(i+1).getTimestamp();
-                    Log.d("DAILY GRAPH",String.format("%s %f", mSleep.getSleepStages().get(i).getPresenceDescription(),endTime - startTime));
-                    if ( mSleep.getSleepStages().get(i).includeInGraph() ) {
+                    double endTime = mSleep.getSleepStages().get(i + 1).getTimestamp();
+                    // Log.d("DAILY GRAPH",String.format("%s %f", mSleep.getSleepStages().get(i).getPresenceDescription(),endTime - startTime));
+                    if (mSleep.getSleepStages().get(i).includeInGraph()) {
                         sleepCycles.add(new SleepCycle(startTime, 1.0f));
                         sleepCycles.add(new SleepCycle(endTime, 1.0f));
                     }
@@ -168,6 +166,19 @@ public class DailyGraphFragment extends Fragment {
 
                 }
             });
+
+
+            // Log.d("DATA", "[");
+            for (int i = 0; i < sleepCycles.size(); i += 64) {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int j = i; j < sleepCycles.size() && j < i+64; j++) {
+                    stringBuilder.append(sleepCycles.get(j).getValue());
+                    stringBuilder.append(",");
+                }
+                // Log.d("DATA", stringBuilder.toString() );
+            }
+            // Log.d("DATA", "]" );
+
 
             mGraphView.setValues(sleepCycles, 0.0f, 4.0f);
 

@@ -81,7 +81,7 @@ public class PumpDevice extends Device {
             @Override
             public void call(PumpEvent pumpEvent) {
 
-                Log.d("PumpEvent",pumpEvent.toString());
+                // Log.d("PumpEvent",pumpEvent.toString());
 
                 mLeftChamberState.currentPressure = pumpEvent.getLeftPressure();
                 mRightChamberState.currentPressure = pumpEvent.getRightPressure();

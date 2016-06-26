@@ -24,7 +24,7 @@ public class CharacteristicReadOperation extends BluetoothOperation {
 
     @Override
     public boolean perform(BluetoothGatt bluetoothGatt) {
-        Log.d("CharacteristicRead","reading characteristic: " + mCharacteristicUUID);
+        // Log.d("CharacteristicRead","reading characteristic: " + mCharacteristicUUID);
         BluetoothGattService service = bluetoothGatt.getService(mServiceUUID);
         if (service != null) {
             BluetoothGattCharacteristic characteristic = service.getCharacteristic(mCharacteristicUUID);

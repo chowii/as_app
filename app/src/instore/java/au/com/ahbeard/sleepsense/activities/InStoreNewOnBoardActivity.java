@@ -28,7 +28,7 @@ import rx.subjects.PublishSubject;
 /**
  * Created by neal on 20/06/2016.
  */
-public class InStoreOnBoardActivity extends NewOnBoardActivity implements OnBoardingBluetoothFragment.OnActionListener, OnBoardingSearchingFragment.OnActionListener
+public class InStoreNewOnBoardActivity extends NewOnBoardActivity implements OnBoardingBluetoothFragment.OnActionListener, OnBoardingSearchingFragment.OnActionListener
 {
 
     @Override
@@ -41,7 +41,7 @@ public class InStoreOnBoardActivity extends NewOnBoardActivity implements OnBoar
     }
 
     public static Intent getOnBoardActivity(Context context) {
-        Intent intent = new Intent(context, InStoreOnBoardActivity.class);
+        Intent intent = new Intent(context, InStoreNewOnBoardActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
