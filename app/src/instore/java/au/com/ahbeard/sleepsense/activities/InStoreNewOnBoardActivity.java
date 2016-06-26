@@ -46,7 +46,7 @@ public class InStoreOnBoardActivity extends NewOnBoardActivity implements OnBoar
         return intent;
     }
 
-
+    // Comment to cause a commit.
     @Override
     public void onBluetoothContinueClicked() {
 
