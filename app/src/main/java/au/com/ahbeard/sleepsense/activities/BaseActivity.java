@@ -24,6 +24,10 @@ public class BaseActivity extends AppCompatActivity {
 
     private boolean mCallOnScanningPermissionGranted;
 
+    public void openSleepScoreBreakdown(int sleepId) {
+
+    }
+
     public void requestBackgroundScanningPermissions() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -96,6 +100,11 @@ public class BaseActivity extends AppCompatActivity {
             mCallOnScanningPermissionGranted = false;
             onScanningPermissionGranted();
         }
+
+    }
+
+    public void startOnBoardActivity() {
+
 
     }
 }

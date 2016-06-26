@@ -16,10 +16,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.BaseActivity;
 import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import au.com.ahbeard.sleepsense.activities.HomeActivity;
-import au.com.ahbeard.sleepsense.activities.InStoreHomeActivity;
-import au.com.ahbeard.sleepsense.activities.InStoreOnBoardActivity;
 import au.com.ahbeard.sleepsense.activities.SleepScoreBreakdownActivity;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepCycle;
@@ -61,8 +60,8 @@ public class DailyGraphFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), SleepScoreBreakdownActivity.class);
                 intent.putExtra("sleep_id", mSleepId);
                 getActivity().startActivity(intent);
-            } else if ( getActivity() instanceof InStoreHomeActivity ) {
-                ((InStoreHomeActivity)getActivity()).openSleepScoreBreakdown(mSleepId);
+            } else if ( getActivity() instanceof BaseActivity) {
+                ((BaseActivity)getActivity()).openSleepScoreBreakdown(mSleepId);
             }
 
 

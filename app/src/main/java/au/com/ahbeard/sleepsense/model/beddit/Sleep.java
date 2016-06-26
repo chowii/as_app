@@ -603,7 +603,7 @@ public class Sleep {
         Sleep sleep = new Sleep();
 
         sleep.mSleepId=sleepId;
-        sleep.mTotalSleepScore = random.nextFloat() * 60f + 20f;
+        sleep.mTotalSleepScore = random.nextFloat() * 30f + 60f;
         sleep.mSleepScoreVersion=666.0f;
 
         Calendar sleepCalendar = SleepService.getCalendar(sleepId);
@@ -612,17 +612,32 @@ public class Sleep {
         sleepCalendar.set(Calendar.MINUTE,15);
         sleepCalendar.add(Calendar.DAY_OF_YEAR,-1);
 
+        sleepCalendar.add(Calendar.MINUTE,random.nextInt(60)-30);
+
         List<SleepCycle> sleepCycles = new ArrayList<>();
 
-        for ( int i=0; i < 6 * 120; i++ ) {
-            sleepCalendar.add(Calendar.MINUTE,1);
-            sleepCycles.add(new SleepCycle(sleepCalendar.getTimeInMillis()/1000.0f,(float)Math.sin(i/120f)/2f+0.5f));
+        sleep.mSleepTotalTime = sleep.mTotalSleepScore * 8f * 60f * 60f / 100f - random.nextFloat() * 90f + 120f;
+
+        int divisions = sleep.mSleepTotalTime.intValue()/120;
+
+        for ( int i=0; i < divisions; i++ ) {
+            sleepCalendar.add(Calendar.MINUTE,2);
+            float percentAlong = (float)i / (float)divisions;
+            float value = 1.0f - (float)Math.sin(Math.PI * percentAlong * 2);
+
+            sleepCycles.add(new SleepCycle(sleepCalendar.getTimeInMillis()/1000.0f,value));
         }
 
         TrackData trackData = new TrackData("sleep_cycles","float32",SleepCycle.listAsBytes(sleepCycles));
 
         sleep.mTrackDataByName = new HashMap<>();
         sleep.mTrackDataByName.put("sleep_cycles",trackData);
+
+        sleep.mRestingHeartRate = 70f + random.nextFloat() * 10;
+        sleep.mSleepLatency = 5 + random.nextFloat() * 15;
+        sleep.mSleepEfficiency = 0.75f * random.nextFloat() * 0.15f;
+        sleep.mWakeTotalTime = 5 + random.nextFloat() * 15;
+        sleep.mAwayTotalTime = 5 + random.nextFloat() * 15;
 
         return sleep;
     }

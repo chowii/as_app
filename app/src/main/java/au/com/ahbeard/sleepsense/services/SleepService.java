@@ -406,6 +406,16 @@ public class SleepService {
 
     }
 
+    public void clearSleepDatabase() throws IOException {
+
+        SQLiteDatabase database = mSleepSQLiteHelper.getWritableDatabase();
+
+        database.execSQL("delete from " + SleepContract.Sleep.TABLE_NAME );
+        database.execSQL("delete from " + SleepContract.SleepTracks.TABLE_NAME );
+
+
+    }
+
     public void writeSleepToDatabase(Sleep sleep) throws IOException {
 
         SQLiteDatabase database = mSleepSQLiteHelper.getWritableDatabase();
@@ -848,6 +858,9 @@ public class SleepService {
         Random random = new Random();
 
         try {
+
+            clearSleepDatabase();
+
             for (int sleepId : generateSleepIdRange(startSleepId, endSleepId)) {
                 if (random.nextFloat() > 0.2f) {
                     Sleep sleep = Sleep.generateRandom(sleepId, random);

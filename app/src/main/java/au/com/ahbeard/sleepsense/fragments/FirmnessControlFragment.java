@@ -11,11 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.BaseActivity;
 import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import au.com.ahbeard.sleepsense.activities.HomeActivity;
-import au.com.ahbeard.sleepsense.activities.InStoreOnBoardActivity;
-import au.com.ahbeard.sleepsense.activities.NewOnBoardActivity;
-import au.com.ahbeard.sleepsense.activities.PreferenceActivity;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
@@ -93,14 +91,14 @@ public class FirmnessControlFragment extends Fragment {
     }
 
     public static FirmnessControlFragment newInstance() {
-        return newInstance(PreferenceService.instance().getSideOfBed(),false);
+        return newInstance(PreferenceService.instance().getSideOfBed(), false);
     }
 
     public static FirmnessControlFragment newInstance(String side, boolean controlOnly) {
         FirmnessControlFragment firmnessControlFragment = new FirmnessControlFragment();
         Bundle arguments = new Bundle();
-        arguments.putString("side",side);
-        arguments.putBoolean("controlOnly",controlOnly);
+        arguments.putString("side", side);
+        arguments.putBoolean("controlOnly", controlOnly);
         firmnessControlFragment.setArguments(arguments);
         return firmnessControlFragment;
     }
@@ -108,9 +106,9 @@ public class FirmnessControlFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments()!=null) {
-            mSide = getArguments().getString("side","LEFT");
-            mControlOnly = getArguments().getBoolean("controlOnly",false);
+        if (getArguments() != null) {
+            mSide = getArguments().getString("side", "LEFT");
+            mControlOnly = getArguments().getBoolean("controlOnly", false);
         }
     }
 
@@ -123,23 +121,23 @@ public class FirmnessControlFragment extends Fragment {
         ButterKnife.bind(this, view);
         bind(view);
 
-        if ( "left".equalsIgnoreCase(mSide)) {
+        if ("left".equalsIgnoreCase(mSide)) {
             setLeftSideActive();
         } else {
             setRightSideActive();
         }
 
-        mHeaderLayout.setVisibility(mControlOnly?View.GONE:View.VISIBLE);
-        mChooseSideLayout.setVisibility(mControlOnly?View.GONE:View.VISIBLE);
+        mHeaderLayout.setVisibility(mControlOnly ? View.GONE : View.VISIBLE);
+        mChooseSideLayout.setVisibility(mControlOnly ? View.GONE : View.VISIBLE);
 
         mFirmnessControlLeftView.setOnTargetValueSetListener(new FirmnessControlView.OnTargetValueSetListener() {
             @Override
             public void onTargetValueSet(float targetValue) {
-                if ( SleepSenseDeviceService.instance().hasPumpDevice() ) {
+                if (SleepSenseDeviceService.instance().hasPumpDevice()) {
                     AnalyticsService.instance().logEvent(AnalyticsService.EVENT_FIRMNESS_CONTROL_TOUCH,
-                            AnalyticsService.PROPERTY_SIDE,"Left",
-                            AnalyticsService.PROPERTY_PREFERENCE,Firmness.getAnalyticsValueForControlValue(targetValue));
-                    SleepSenseDeviceService.instance().getPumpDevice().inflateToTarget(PumpDevice.Side.Left, Firmness.getPressureForControlValue(targetValue) );
+                            AnalyticsService.PROPERTY_SIDE, "Left",
+                            AnalyticsService.PROPERTY_PREFERENCE, Firmness.getAnalyticsValueForControlValue(targetValue));
+                    SleepSenseDeviceService.instance().getPumpDevice().inflateToTarget(PumpDevice.Side.Left, Firmness.getPressureForControlValue(targetValue));
                 }
             }
         });
@@ -147,11 +145,11 @@ public class FirmnessControlFragment extends Fragment {
         mFirmnessControlRightView.setOnTargetValueSetListener(new FirmnessControlView.OnTargetValueSetListener() {
             @Override
             public void onTargetValueSet(float targetValue) {
-                if ( SleepSenseDeviceService.instance().hasPumpDevice() ) {
+                if (SleepSenseDeviceService.instance().hasPumpDevice()) {
                     AnalyticsService.instance().logEvent(AnalyticsService.EVENT_FIRMNESS_CONTROL_TOUCH,
-                            AnalyticsService.PROPERTY_SIDE,"Right",
-                            AnalyticsService.PROPERTY_PREFERENCE,Firmness.getAnalyticsValueForControlValue(targetValue));
-                    SleepSenseDeviceService.instance().getPumpDevice().inflateToTarget(PumpDevice.Side.Right, Firmness.getPressureForControlValue(targetValue) );
+                            AnalyticsService.PROPERTY_SIDE, "Right",
+                            AnalyticsService.PROPERTY_PREFERENCE, Firmness.getAnalyticsValueForControlValue(targetValue));
+                    SleepSenseDeviceService.instance().getPumpDevice().inflateToTarget(PumpDevice.Side.Right, Firmness.getPressureForControlValue(targetValue));
                 }
             }
         });
@@ -177,7 +175,7 @@ public class FirmnessControlFragment extends Fragment {
 
     public void connectPump() {
 
-        if ( SleepSenseDeviceService.instance().hasPumpDevice() ) {
+        if (SleepSenseDeviceService.instance().hasPumpDevice()) {
 
             mSubscriptions.add(SleepSenseDeviceService.instance().getPumpDevice().getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
                 @Override
@@ -186,13 +184,13 @@ public class FirmnessControlFragment extends Fragment {
                     mFirmnessControlLeftView.setActualValue(Firmness.getControlValueForPressure(pumpEvent.getLeftPressure()));
                     mFirmnessControlRightView.setActualValue(Firmness.getControlValueForPressure(pumpEvent.getRightPressure()));
 
-                    if (pumpEvent.getStatuses().contains(PumpEvent.PumpStatus.LeftChamberActive)&&pumpEvent.isAdjusting()) {
+                    if (pumpEvent.getStatuses().contains(PumpEvent.PumpStatus.LeftChamberActive) && pumpEvent.isAdjusting()) {
                         mFirmnessLeftTextView.setText("Adjusting");
                     } else {
                         mFirmnessLeftTextView.setText(Firmness.getFirmnessForPressure(pumpEvent.getLeftPressure()).getLabel());
                     }
 
-                    if (pumpEvent.getStatuses().contains(PumpEvent.PumpStatus.RightChamberActive)&&pumpEvent.isAdjusting()) {
+                    if (pumpEvent.getStatuses().contains(PumpEvent.PumpStatus.RightChamberActive) && pumpEvent.isAdjusting()) {
                         mFirmnessRightTextView.setText("Adjusting");
                     } else {
                         mFirmnessRightTextView.setText(Firmness.getFirmnessForPressure(pumpEvent.getRightPressure()).getLabel());
@@ -207,9 +205,9 @@ public class FirmnessControlFragment extends Fragment {
                     if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
                         startProgress();
                         mFirmnessRightTextView.setText("Connecting");
-                    } else if ( device.getConnectionState() == Device.CONNECTION_STATE_DISCONNECTED && device.getLastConnectionStatus() > 0 ){
+                    } else if (device.getConnectionState() == Device.CONNECTION_STATE_DISCONNECTED && device.getLastConnectionStatus() > 0) {
                         stopProgress();
-                        showToast("Connection timeout","Try again",new Action1<Void>(){
+                        showToast("Connection timeout", "Try again", new Action1<Void>() {
                             @Override
                             public void call(Void aVoid) {
                                 connectPump();
@@ -235,11 +233,10 @@ public class FirmnessControlFragment extends Fragment {
 
     @OnClick(R.id.image_view_help_icon)
     void onHelpClicked() {
-        if ( getActivity() instanceof HomeActivity) {
+        if (getActivity() instanceof HomeActivity) {
             startActivity(HelpActivity.getIntent(getActivity(), "Dashboard Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
-        } else {
-            startActivity(InStoreOnBoardActivity.getOnBoardActivity(getActivity()));
-            getActivity().finish();
+        } else if (getActivity() instanceof BaseActivity ){
+            ((BaseActivity)getActivity()).startOnBoardActivity();
         }
     }
 
@@ -286,7 +283,7 @@ public class FirmnessControlFragment extends Fragment {
     }
 
     protected void bind(View view) {
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
     }
 
     protected void unbind() {

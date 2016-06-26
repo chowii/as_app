@@ -13,11 +13,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.BaseActivity;
 import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import au.com.ahbeard.sleepsense.activities.HomeActivity;
-import au.com.ahbeard.sleepsense.activities.InStoreOnBoardActivity;
-import au.com.ahbeard.sleepsense.activities.NewOnBoardActivity;
-import au.com.ahbeard.sleepsense.activities.PreferenceActivity;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseCommand;
@@ -236,9 +234,8 @@ public class PositionControlFragment extends Fragment {
     void onHelpClicked() {
         if ( getActivity() instanceof HomeActivity) {
             startActivity(HelpActivity.getIntent(getActivity(), "Dashboard Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
-        } else {
-            startActivity(InStoreOnBoardActivity.getOnBoardActivity(getActivity()));
-            getActivity().finish();
+        } else if (getActivity() instanceof BaseActivity){
+            ((BaseActivity)getActivity()).startOnBoardActivity();
         }
     }
 

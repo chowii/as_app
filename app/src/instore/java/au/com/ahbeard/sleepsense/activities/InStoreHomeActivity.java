@@ -256,4 +256,8 @@ public class InStoreHomeActivity extends BaseActivity {
         finish();
     }
 
+    public void startOnBoardActivity() {
+        startActivity(InStoreOnBoardActivity.getOnBoardActivity(getActivity()));
+        getActivity().finish();
+    }
 }
