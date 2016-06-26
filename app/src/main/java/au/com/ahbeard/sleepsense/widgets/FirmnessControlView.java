@@ -90,9 +90,13 @@ public class FirmnessControlView extends View {
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, context.getResources().getDisplayMetrics()));
 
         mWedgePaint.setColor(getResources().getColor(R.color.firmnessControllerColor));
+        mWedgePaint.setAntiAlias(true);
         mBackgroundPaint.setColor(getResources().getColor(R.color.firmnessControllerBackgroundColor));
+        mBackgroundPaint.setAntiAlias(true);
         mForegroundPaint.setColor(getResources().getColor(R.color.firmnessControllerForegroundColor));
+        mForegroundPaint.setAntiAlias(true);
         mForegroundShadowPaint.setColor(getResources().getColor(R.color.firmnessControllerForegroundShadowColor));
+        mForegroundShadowPaint.setAntiAlias(true);
 
         mForegroundInset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, context.getResources().getDisplayMetrics());
         mForegroundShadowOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, context.getResources().getDisplayMetrics());

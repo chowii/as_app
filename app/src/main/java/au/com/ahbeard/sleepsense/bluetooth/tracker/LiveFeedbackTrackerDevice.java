@@ -126,8 +126,10 @@ public class LiveFeedbackTrackerDevice extends Device {
                         mNotifySubscription.unsubscribe();
                         mNotifySubscription = null;
                     }
-                    mSessionPublishSubject.onCompleted();
-                    mSessionPublishSubject = null;
+                    if ( mSessionPublishSubject != null ) {
+                        mSessionPublishSubject.onCompleted();
+                        mSessionPublishSubject = null;
+                    }
                 }
             }
         });
@@ -217,14 +219,14 @@ public class LiveFeedbackTrackerDevice extends Device {
         return mSessionPublishSubject;
     }
 
-    public void stopSensorSession() {
+    public void stopSession() {
 
         disconnect();
 
     }
 
     public boolean isTracking() {
-        return false;
+        return mSessionPublishSubject != null;
     }
 
     public Observable<TrackerState> getTrackingStateObservable() {

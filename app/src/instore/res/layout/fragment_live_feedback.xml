@@ -48,6 +48,31 @@
 
     </FrameLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginTop="20dp" android:layout_marginBottom="20dp">
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:lineSpacingExtra="5sp"
+            android:text="LEFT SIDE"
+            android:textColor="#fff"
+            android:textSize="16.8sp"
+            app:typeface="OpenSansRegular"/>
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:lineSpacingExtra="5sp"
+            android:text="RIGHT SIDE"
+            android:textColor="#fff"
+            android:textSize="16.8sp"
+            app:typeface="OpenSansRegular"/>
+    </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp" android:layout_weight="1" android:padding="20dp">
@@ -61,13 +86,15 @@
 
     <Button
         android:id="@+id/live_feedback_button_start_stop"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_gravity="center_horizontal"
         android:layout_margin="8dp"
         android:background="@drawable/sleep_sense_button_blue"
         android:textColor="@color/blue_button_text_color"
         android:stateListAnimator="@null"
-        android:text="Start Live Feedback"/>
+        android:text="Start/Stop Movement Feedback" />
+
+    <View android:layout_width="match_parent" android:layout_height="20dp"/>
 
 </LinearLayout>

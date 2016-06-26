@@ -16,6 +16,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.HelpActivity;
+import au.com.ahbeard.sleepsense.activities.HomeActivity;
+import au.com.ahbeard.sleepsense.activities.InStoreHomeActivity;
+import au.com.ahbeard.sleepsense.activities.InStoreOnBoardActivity;
 import au.com.ahbeard.sleepsense.activities.SleepScoreBreakdownActivity;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepCycle;
@@ -50,9 +54,18 @@ public class DailyGraphFragment extends Fragment {
         AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_SLEEP_SCORE_CLICKED);
 
         if (mSleep != null) {
-            Intent intent = new Intent(getActivity(), SleepScoreBreakdownActivity.class);
-            intent.putExtra("sleep_id", mSleepId);
-            getActivity().startActivity(intent);
+
+            // Switching like this is clunky, but probably better than otherwise.  Maybe a shared method
+            // in BaseActivity would be better.
+            if ( getActivity() instanceof HomeActivity) {
+                Intent intent = new Intent(getActivity(), SleepScoreBreakdownActivity.class);
+                intent.putExtra("sleep_id", mSleepId);
+                getActivity().startActivity(intent);
+            } else if ( getActivity() instanceof InStoreHomeActivity ) {
+                ((InStoreHomeActivity)getActivity()).openSleepScoreBreakdown(mSleepId);
+            }
+
+
         }
 
     }

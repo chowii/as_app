@@ -21,6 +21,7 @@ import au.com.ahbeard.sleepsense.fragments.LiveFeedbackFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MoreFragment;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
+import au.com.ahbeard.sleepsense.fragments.SleepScoreBreakdownFragment;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.services.SleepService;
@@ -191,6 +192,11 @@ public class InStoreHomeActivity extends BaseActivity {
 
         mSimpleTabStrip.setViewPager(mViewPager);
 
+    }
+
+    public void openSleepScoreBreakdown(int sleepId) {
+        getSupportFragmentManager().beginTransaction().addToBackStack("SLEEP_SCORE_BREAKDOWN")
+                .add(R.id.instore_home_layout_sleep_score_breakdown,SleepScoreBreakdownFragment.newInstance(sleepId)).commit();
     }
 
     class HomeFragmentPagerAdapter extends FragmentStatePagerAdapter implements SimpleTabStrip.TabProvider {

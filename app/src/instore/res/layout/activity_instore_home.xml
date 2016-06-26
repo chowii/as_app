@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" android:background="#fff">
 
 
     <FrameLayout
@@ -134,6 +134,13 @@
 
             </LinearLayout>
 
+            <FrameLayout
+                android:id="@+id/instore_home_layout_sleep_score_breakdown"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </FrameLayout>
+
         </FrameLayout>
 
     </FrameLayout>
@@ -173,5 +180,6 @@
         android:textSize="15sp"
         android:layout_marginBottom="15dp"
         app:typeface="OpenSansRegular"/>
+
 
 </FrameLayout>

@@ -27,7 +27,7 @@ public class LiveFeedbackGraph extends View {
 
     private Paint mLinePaint;
 
-    private int mMaximumPoints = 4096;
+    private int mMaximumPoints = 1024;
 
 
     public LiveFeedbackGraph(Context context) {
@@ -50,6 +50,7 @@ public class LiveFeedbackGraph extends View {
         mLinePaint = new Paint();
         mLinePaint.setAntiAlias(true);
         mLinePaint.setColor(Color.WHITE);
+        mLinePaint.setAntiAlias(true);
         mLinePaint.setStrokeWidth(
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
         mLinePaint.setStyle(Paint.Style.STROKE);
@@ -67,7 +68,7 @@ public class LiveFeedbackGraph extends View {
             mLeftChannel.removeFirst();
         }
 
-        createPath(mLeftPath,mLeftChannel,0.25f,0.25f,getWidth());
+        createPath(mLeftPath,mLeftChannel,0.25f,0.20f,getWidth(),getHeight());
 
         invalidate();
     }
@@ -83,7 +84,7 @@ public class LiveFeedbackGraph extends View {
             mRightChannel.removeFirst();
         }
 
-        createPath(mRightPath,mRightChannel,0.75f,0.25f,getWidth());
+        createPath(mRightPath,mRightChannel,0.75f,0.20f,getWidth(),getHeight());
 
         invalidate();
     }
@@ -92,39 +93,41 @@ public class LiveFeedbackGraph extends View {
         mMaximumPoints = maximumPoints;
     }
 
-    private void createPath(Path path, List<Integer> data, float center, float extent, float width) {
+    private void createPath(Path path, List<Integer> data, float center, float extent, float width, float height) {
 
         path.reset();
 
-        float yPerPoint = (float)getHeight() / (float)mMaximumPoints;
+        float yPerPoint = height / (float)mMaximumPoints;
 
-        float yOffset = getHeight() - data.size() * yPerPoint;
-        float xOffset = center * getWidth();
+        float yOffset = height - data.size() * yPerPoint;
+        float xOffset = center * width;
 
-
-        float maximum = 0;
+        float maximum = 512;
 
         for (int i=0; i < data.size(); i++ ) {
             maximum = Math.max(maximum,Math.abs(data.get(i)));
         }
 
-        float multiplier = maximum == 0 ? 0: extent * getWidth() / maximum;
+        float multiplier = maximum == 0 ? 0: extent * width / maximum;
 
         for (int i=0; i < data.size(); i++ ) {
             if ( i==0 ) {
-                path.moveTo(xOffset,yOffset);
+                path.moveTo(xOffset+data.get(i)*multiplier,yOffset+yPerPoint*i);
             } else {
                 path.lineTo(xOffset+data.get(i)*multiplier,yOffset+yPerPoint*i);
             }
         }
+
+//        path.moveTo(center*width,0);
+//        path.lineTo(center*width,height);
 
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        createPath(mLeftPath,mLeftChannel,0.25f,0.25f,w);
-        createPath(mRightPath,mRightChannel,0.75f,0.25f,w);
+        createPath(mLeftPath,mLeftChannel,0.25f,0.20f,w,h);
+        createPath(mRightPath,mRightChannel,0.75f,0.20f,w,h);
 
     }
 
