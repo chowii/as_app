@@ -208,7 +208,7 @@ public class SleepService {
                         calendarDate,
                         new BatchAnalysisContext(PreferenceService.instance().getSleepTargetTime() * 3600f));
 
-                TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
+                // TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
 
                 Sleep sleep = Sleep.fromBatchAnalysisResult(batchAnalysisResult);
 

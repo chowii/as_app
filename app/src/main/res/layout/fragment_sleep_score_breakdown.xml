@@ -5,173 +5,184 @@
             android:layout_height="match_parent"
             tools:context=".fragments.WeeklyDashboardFragment" android:background="#fff">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@drawable/dashboard_background"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:id="@+id/daily_graph_layout_sleep_score"
-                android:layout_width="192dp"
-                android:layout_height="192dp"
-                android:layout_centerInParent="true">
-
-                <au.com.ahbeard.sleepsense.widgets.SleepScoreView
-                    android:id="@+id/sleep_score_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"/>
-
-                <LinearLayout
-                    android:id="@+id/daily_graph_layout_sleep_recorded"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    tools:visibility="visible">
-
-                    <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                        android:id="@+id/daily_graph_text_view_sleep_score"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:includeFontPadding="false"
-                        android:textColor="#fff"
-                        android:textSize="90sp"
-                        app:typeface="RobotoThin"
-                        tools:text="77"/>
-
-                    <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="-10dp"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:text="Sleep\nScore"
-                        android:textAllCaps="true"
-                        android:textColor="#fff"
-                        android:textSize="13sp"
-                        app:typeface="RobotoThin"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/daily_graph_layout_no_sleep_recorded"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    tools:visibility="gone">
-
-                    <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:text="No Sleep\nRecorded"
-                        android:textAllCaps="true"
-                        android:textColor="#fff"
-                        android:textSize="20sp"
-                        app:typeface="RobotoThin"/>
-                </LinearLayout>
-
-            </FrameLayout>
-
-
-        </RelativeLayout>
-
-        <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:background="#FD807B"/>-->
-
-        <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:background="#CCDFEF"/>-->
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="20dp"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/sleepsense_logo"/>
-
-            <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:gravity="center"
-                android:lineSpacingExtra="8dp"
-                android:text="@string/sleep_score_breakdown_description"
-                android:textColor="#6E788D"
-                android:textSize="13sp"
-                app:typeface="OpenSansRegular"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/powered_by_beddit_logo"/>
-
-
-        </LinearLayout>
-
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@drawable/dashboard_background"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/daily_graph_layout_sleep_score"
+                    android:layout_width="192dp"
+                    android:layout_height="192dp"
+                    android:layout_centerInParent="true">
+
+                    <au.com.ahbeard.sleepsense.widgets.SleepScoreView
+                        android:id="@+id/sleep_score_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"/>
+
+                    <LinearLayout
+                        android:id="@+id/daily_graph_layout_sleep_recorded"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        tools:visibility="visible">
+
+                        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                            android:id="@+id/daily_graph_text_view_sleep_score"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:textColor="#fff"
+                            android:textSize="90sp"
+                            app:typeface="RobotoThin"
+                            tools:text="77"/>
+
+                        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-10dp"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:text="Sleep\nScore"
+                            android:textAllCaps="true"
+                            android:textColor="#fff"
+                            android:textSize="13sp"
+                            app:typeface="RobotoThin"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/daily_graph_layout_no_sleep_recorded"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        tools:visibility="gone">
+
+                        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:includeFontPadding="false"
+                            android:text="No Sleep\nRecorded"
+                            android:textAllCaps="true"
+                            android:textColor="#fff"
+                            android:textSize="20sp"
+                            app:typeface="RobotoThin"/>
+                    </LinearLayout>
+
+                </FrameLayout>
+
+
+            </RelativeLayout>
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="#FD807B"/>-->
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="#CCDFEF"/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="20dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:paddingTop="20dp"
                 >
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/sleepsense_logo"/>
+
                 <au.com.ahbeard.sleepsense.widgets.StyledTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:gravity="center"
                     android:lineSpacingExtra="8dp"
-                    android:text="Daily Breakdown"
+                    android:text="@string/sleep_score_breakdown_description"
                     android:textColor="#6E788D"
-                    android:textSize="18sp"
+                    android:textSize="13sp"
                     app:typeface="OpenSansRegular"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/powered_by_beddit_logo"/>
+
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/daily_dashboard_layout_statistics"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="20dp"
+                    >
+
+                    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="8dp"
+                        android:text="Daily Breakdown"
+                        android:textColor="#6E788D"
+                        android:textSize="18sp"
+                        app:typeface="OpenSansRegular"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/daily_dashboard_layout_statistics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                </LinearLayout>
+
+
             </LinearLayout>
 
 
         </LinearLayout>
-
-
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/sleep_score_breakdown_image_view_close"
+            android:src="@drawable/close_button_white_normal"
+            android:paddingStart="25dp" android:paddingTop="25dp"
+            android:layout_gravity="top|start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
 
 
 </ScrollView>

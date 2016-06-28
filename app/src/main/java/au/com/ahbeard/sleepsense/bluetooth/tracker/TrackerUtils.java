@@ -42,7 +42,7 @@ public class TrackerUtils {
 
     public static void logBatchAnalysisResult(BatchAnalysisResult batchAnalysisResult) {
 
-        if ( true ) return;
+        // if ( true ) return;
 
         for (String name : batchAnalysisResult.getPropertyNames()) {
             float value = batchAnalysisResult.getProperty(name);

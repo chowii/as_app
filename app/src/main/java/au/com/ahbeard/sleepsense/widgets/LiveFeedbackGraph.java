@@ -27,7 +27,7 @@ public class LiveFeedbackGraph extends View {
 
     private Paint mLinePaint;
 
-    private int mMaximumPoints = 1024;
+    private int mMaximumPoints = 512;
 
 
     public LiveFeedbackGraph(Context context) {

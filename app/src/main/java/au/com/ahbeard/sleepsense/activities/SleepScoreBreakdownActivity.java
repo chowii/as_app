@@ -3,13 +3,19 @@ package au.com.ahbeard.sleepsense.activities;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.Conversion;
+
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerUtils;
+import au.com.ahbeard.sleepsense.model.beddit.Actigram;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.services.SleepService;
+import au.com.ahbeard.sleepsense.utils.ConversionUtils;
 import au.com.ahbeard.sleepsense.utils.StatisticsUtils;
 import au.com.ahbeard.sleepsense.utils.StringUtils;
 import au.com.ahbeard.sleepsense.widgets.SleepScoreView;
@@ -52,6 +58,12 @@ public class SleepScoreBreakdownActivity extends AppCompatActivity {
         mStatisticsUtils = new StatisticsUtils(mStatisticsLayout);
 
         mSleep = SleepService.instance().getSleepFromDatabase(mSleepId);
+
+        for (Actigram actigram:mSleep.getActigrams()) {
+            Log.d("ACTIGRAM",String.format("time: %f actigrams: %f",actigram.getTimestamp(),actigram.getActigram()));
+        }
+
+
 
         if (mSleep == null) {
 

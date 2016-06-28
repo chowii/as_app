@@ -17,6 +17,7 @@ import au.com.ahbeard.sleepsense.utils.StatisticsUtils;
 import au.com.ahbeard.sleepsense.widgets.SleepScoreView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,6 +47,11 @@ public class SleepScoreBreakdownFragment extends Fragment {
 
     @Bind(R.id.daily_dashboard_layout_statistics)
     LinearLayout mStatisticsLayout;
+
+    @OnClick(R.id.sleep_score_breakdown_image_view_close)
+    void onClickClose() {
+        getActivity().onBackPressed();
+    }
 
     private long mSleepId;
     private Sleep mSleep;
