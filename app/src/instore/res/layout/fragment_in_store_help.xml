@@ -12,12 +12,36 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <WebView
-            android:id="@+id/on_boarding_help_web_view"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/in_store_help_layout_faqs"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:padding="80dp">
 
-        </WebView>
+                <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                    android:id="@+id/on_board_searching_text_view_heading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Having trouble?"
+                    android:textColor="#3C709C"
+                    android:textSize="25sp"
+                    app:typeface="OpenSansSemibold" android:layout_marginBottom="25dp"/>
+
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/in_store_help_image_view_close"
+                android:src="@drawable/close_button_black_normal"
+                android:paddingStart="25dp" android:paddingTop="25dp"
+                android:layout_gravity="top|start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </FrameLayout>
 
     </ScrollView>
 
@@ -30,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:orientation="vertical" android:background="#fff">
+        android:orientation="vertical" android:background="#fff" android:gravity="center_horizontal">
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:layout_width="match_parent"
@@ -44,23 +68,34 @@
 
         <au.com.ahbeard.sleepsense.widgets.StyledButton
             android:id="@+id/on_board_button_try_again"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@drawable/sleep_sense_button_white"
+            android:stateListAnimator="@null"
+            android:background="@drawable/sleep_sense_button_white_blue_border"
             android:text="Let's try again"
-            android:textColor="@color/whiteButtonTextColor"/>
+            android:textColor="@color/white_light_blue_button_text_color"/>
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="13sp"
+
             android:textColor="@color/onBoardBodyTextColor"
             android:lineSpacingExtra="10dp"
             app:typeface="OpenSansRegular"
             android:text="Still having trouble?" android:layout_margin="5dp"/>
 
+
+        <au.com.ahbeard.sleepsense.widgets.StyledTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/instore_phone_number"
+            android:textColor="#3C709C"
+            android:textSize="25sp"
+            app:typeface="OpenSansSemibold"/>
 
         <au.com.ahbeard.sleepsense.widgets.StyledButton
             android:id="@+id/on_board_button_call_for_help"
@@ -69,7 +104,7 @@
             android:layout_margin="5dp"
             android:background="@drawable/sleep_sense_button_blue"
             android:text="Call for help"
-            android:textColor="#fff"/>
+            android:textColor="#fff" android:visibility="gone"/>
 
     </LinearLayout>
 

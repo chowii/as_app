@@ -5,30 +5,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceAquisition;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
+import au.com.ahbeard.sleepsense.fragments.InStoreHelpFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingBluetoothFragment;
-import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingHelpFragment;
-import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingInflateMattressFragment;
-import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingPlacePhoneFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingSearchingFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingState;
-import au.com.ahbeard.sleepsense.services.AnalyticsService;
-import butterknife.ButterKnife;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subjects.PublishSubject;
 
 
 /**
  * Created by neal on 20/06/2016.
  */
-public class InStoreNewOnBoardActivity extends NewOnBoardActivity implements OnBoardingBluetoothFragment.OnActionListener, OnBoardingSearchingFragment.OnActionListener
+public class InStoreNewOnBoardActivity extends NewOnBoardActivity implements
+        OnBoardingBluetoothFragment.OnActionListener,
+        OnBoardingSearchingFragment.OnActionListener,
+        InStoreHelpFragment.OnActionListener
 {
 
     @Override
@@ -113,7 +107,7 @@ public class InStoreNewOnBoardActivity extends NewOnBoardActivity implements OnB
 
         } else if (mOnBoardingState.state == OnBoardingState.State.DevicesMissingShowHelp) {
 
-            transitionTo(OnBoardingHelpFragment.newInstance());
+            transitionTo(InStoreHelpFragment.newInstance());
 
         }
 

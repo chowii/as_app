@@ -219,7 +219,7 @@ public class MassageControlFragment extends Fragment {
         if ( getActivity() instanceof HomeActivity) {
             startActivity(HelpActivity.getIntent(getActivity(), "Dashboard Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
         } else if (getActivity() instanceof BaseActivity){
-            ((BaseActivity)getActivity()).startOnBoardActivity();
+            ((BaseActivity)getActivity()).settingsIconClicked();
         }
     }
 

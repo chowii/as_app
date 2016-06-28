@@ -17,9 +17,10 @@ import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.DashboardNoSleepsFragment;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
+import au.com.ahbeard.sleepsense.fragments.InStoreHelpFragment;
+import au.com.ahbeard.sleepsense.fragments.InStoreMoreFragment;
 import au.com.ahbeard.sleepsense.fragments.LiveFeedbackFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
-import au.com.ahbeard.sleepsense.fragments.MoreFragment;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
 import au.com.ahbeard.sleepsense.fragments.SleepScoreBreakdownFragment;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
@@ -196,7 +197,12 @@ public class InStoreHomeActivity extends BaseActivity {
 
     public void openSleepScoreBreakdown(int sleepId) {
         getSupportFragmentManager().beginTransaction().addToBackStack("SLEEP_SCORE_BREAKDOWN")
-                .add(R.id.instore_home_layout_sleep_score_breakdown,SleepScoreBreakdownFragment.newInstance(sleepId)).commit();
+                .add(R.id.in_store_home_layout_extra_fragments,SleepScoreBreakdownFragment.newInstance(sleepId)).commit();
+    }
+
+    public void openMorePage() {
+        getSupportFragmentManager().beginTransaction().addToBackStack("SETTINGS")
+                .add(R.id.in_store_home_layout_extra_fragments, InStoreMoreFragment.newInstance()).commit();
     }
 
     class HomeFragmentPagerAdapter extends FragmentStatePagerAdapter implements SimpleTabStrip.TabProvider {
@@ -250,14 +256,14 @@ public class InStoreHomeActivity extends BaseActivity {
         }
     }
 
-    public void doOnboarding() {
-        Intent intent= new Intent(this,NewOnBoardActivity.class);
-        startActivity(intent);
-        finish();
+
+
+    public void settingsIconClicked() {
+        openMorePage();
+
     }
 
-    public void startOnBoardActivity() {
-        startActivity(InStoreNewOnBoardActivity.getOnBoardActivity(this));
-        finish();
+    public void startHelpActivity() {
+        startActivity(new Intent(this,InStoreHelpActivity.class));
     }
 }

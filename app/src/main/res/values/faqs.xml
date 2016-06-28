@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="questions">
+        <item>Tip one heading goes here</item>
+        <item>Tip two heading goes here</item>
+        <item>Tip three heading goes here</item>
+        <item>Tip four heading goes here</item>
+        <item>Tip five heading goes here</item>
+        <item>Tip six heading goes here</item>
+        <item>Tip seven heading goes here</item>
+    </string-array>
+    <string-array name="answers">
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
+    </string-array>
+    <string name="instore_phone_number">02 XXXX XXXX</string>
+</resources>

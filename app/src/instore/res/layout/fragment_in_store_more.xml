@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:background="@drawable/noisy_background"
+              android:gravity="top"
               android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/controls_layout_header"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp" android:background="#fff">
 
         <ImageView
-            android:id="@+id/image_view_progress_icon"
+            android:id="@+id/in_store_more_image_view_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/progress_animated" android:visibility="gone"/>
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="10dp"
+            android:padding="10dp"
+            android:alpha="0.5"
+            android:src="@drawable/close_button_black_normal"/>
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
-            android:id="@+id/help_text_view_heading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:lineSpacingExtra="5sp"
-            android:text=""
-            android:textColor="#6E788D"
-            android:textSize="17sp"
-            app:typeface="OpenSansRegular"/>
+            android:text="More"
+            android:textColor="#4A4A4A"
+            android:textSize="15sp"
+            app:typeface="OpenSansLight"/>
 
         <ImageView
             android:id="@+id/image_view_help_icon"
@@ -37,31 +38,37 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:layout_marginRight="20dp"
-            android:src="@drawable/help_icon_normal" android:visibility="gone"/>
+            android:layout_marginTop="10dp"
+            android:src="@drawable/help_icon_normal"
+            android:visibility="gone"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_gravity="bottom"
-            android:background="#E4E4E4"/>
+            android:background="#40000000"/>
 
     </FrameLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
         android:layout_weight="1"
+        android:gravity="top"
         android:orientation="vertical">
 
-        <WebView
-            android:id="@+id/help_web_view"
+        <LinearLayout
+            android:id="@+id/more_layout_items"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:divider="@drawable/more_divider"
+            android:orientation="vertical"
+            android:showDividers="middle|beginning|end">
 
-        </WebView>
+        </LinearLayout>
 
     </ScrollView>
-
-
 
 </LinearLayout>

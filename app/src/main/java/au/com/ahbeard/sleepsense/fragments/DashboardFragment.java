@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -22,8 +21,6 @@ import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.BaseActivity;
 import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import au.com.ahbeard.sleepsense.activities.HomeActivity;
-import au.com.ahbeard.sleepsense.activities.NewOnBoardActivity;
-import au.com.ahbeard.sleepsense.activities.PreferenceActivity;
 import au.com.ahbeard.sleepsense.activities.SleepTrackingActivity;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.SleepService;
@@ -67,7 +64,7 @@ public class DashboardFragment extends Fragment {
         if ( getActivity() instanceof HomeActivity) {
             startActivity(HelpActivity.getIntent(getActivity(), "Dashboard Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
         } else if (getActivity() instanceof BaseActivity) {
-            ((BaseActivity)getActivity()).startOnBoardActivity();
+            ((BaseActivity)getActivity()).settingsIconClicked();
         }
     }
 

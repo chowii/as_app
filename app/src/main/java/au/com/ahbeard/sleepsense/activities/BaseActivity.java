@@ -103,7 +103,7 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-    public void startOnBoardActivity() {
+    public void settingsIconClicked() {
 
 
     }

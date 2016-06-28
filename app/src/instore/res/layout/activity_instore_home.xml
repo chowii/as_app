@@ -135,7 +135,7 @@
             </LinearLayout>
 
             <FrameLayout
-                android:id="@+id/instore_home_layout_sleep_score_breakdown"
+                android:id="@+id/in_store_home_layout_extra_fragments"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 

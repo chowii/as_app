@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:layout_marginBottom="20dp">
+
+    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:id="@+id/item_instore_help_faq_text_view_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="Pairing to the bed"
+        android:textColor="#6E788D"
+        android:textSize="15sp"
+        app:typeface="OpenSansSemibold" android:layout_marginBottom="10dp"/>
+
+    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+        android:id="@+id/item_instore_help_faq_text_view_answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="Pairing to the bed"
+        android:textColor="#6E788D"
+        android:textSize="13sp"
+        app:typeface="OpenSansRegular" />
+
+
+</LinearLayout>
