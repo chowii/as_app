@@ -280,8 +280,8 @@ public class Device extends BluetoothGattCallback {
                         ));
 
                 if (getSetupNotifications()) {
-                    EnableNotificationOperation enableNotificationOperation =
-                            new EnableNotificationOperation(getServiceUUID(), getNotifyCharacteristicUUID());
+                    EnableIndicationOperation enableNotificationOperation =
+                            new EnableIndicationOperation(getServiceUUID(), getNotifyCharacteristicUUID());
                     mBluetoothOperationQueue.addOperation(enableNotificationOperation);
                 }
 

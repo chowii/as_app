@@ -90,7 +90,7 @@ public class LiveFeedbackTrackerDevice extends Device {
 
     @Override
     protected boolean getSetupNotifications() {
-        return true;
+        return false;
     }
 
     public Observable<byte[]> startSession() {
