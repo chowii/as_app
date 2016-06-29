@@ -17,6 +17,7 @@
             android:src="@drawable/onboarding_background_choose_side" android:adjustViewBounds="true"/>
 
         <ImageView
+            android:paddingStart="4dp"
             android:id="@+id/onboarding_image_view_choose_left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,10 +25,11 @@
             android:src="@drawable/onboarding_background_choose_side_left" android:adjustViewBounds="true"/>
 
         <ImageView
+            android:paddingEnd="4dp"
             android:id="@+id/onboarding_image_view_choose_right"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:alpha="1.0"
+            android:alpha="0.5"
             android:src="@drawable/onboarding_background_choose_side_right" android:adjustViewBounds="true"/>
 
         <LinearLayout
@@ -41,7 +43,6 @@
                 android:id="@+id/onboarding_view_choose_left"
                 android:layout_width="0dp"
                 android:layout_height="300dp" android:layout_weight="1" />
-
         </LinearLayout>
 
     </FrameLayout>
@@ -71,7 +72,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="15sp"
-            android:textColor="@color/onBoardHeaderTextColor"
+            android:textColor="@color/onBoardBodyTextColor"
             android:lineSpacingExtra="5dp"
             app:typeface="OpenSansRegular"
             android:text="@string/on_boarding_choose_side_description"/>

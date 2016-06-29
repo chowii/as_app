@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,9 @@ public class OnBoardingChooseSideFragment extends OnBoardingFragment {
     @OnClick(R.id.onboarding_view_choose_left)
     public void leftSideClicked() {
         mChooseLeftImageView.setAlpha(1.0f);
-        mChooseRightImageView.setAlpha(0.0f);
+        mChooseLeftImageView.setTranslationY(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -4, getResources().getDisplayMetrics()));
+        mChooseRightImageView.setAlpha(0.5f);
+        mChooseRightImageView.setTranslationY(0.0f);
         mChosenSide="LEFT";
 
         if ( mContinueButton.getAlpha() < 1.0f) {
@@ -52,8 +55,10 @@ public class OnBoardingChooseSideFragment extends OnBoardingFragment {
 
     @OnClick(R.id.onboarding_view_choose_right)
     public void rightSideClicked() {
-        mChooseLeftImageView.setAlpha(0.0f);
+        mChooseLeftImageView.setAlpha(0.5f);
+        mChooseLeftImageView.setTranslationY(0.0f);
         mChooseRightImageView.setAlpha(1.0f);
+        mChooseRightImageView.setTranslationY(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -4, getResources().getDisplayMetrics()));
         mChosenSide="RIGHT";
 
         if ( mContinueButton.getAlpha() < 1.0f) {
@@ -93,11 +98,8 @@ public class OnBoardingChooseSideFragment extends OnBoardingFragment {
         ButterKnife.bind(this,view);
 
         mContinueButton.setAlpha(0.0f);
-        mChooseLeftImageView.setAlpha(0.0f);
-        mChooseRightImageView.setAlpha(0.0f);
-
-        ObjectAnimator.ofFloat(mChooseLeftImageView, "alpha", 0f, 1f, 0f, 1f, 0f).setDuration(3000).start();
-        ObjectAnimator.ofFloat(mChooseRightImageView, "alpha", 0f, 1f, 0f, 1f, 0f).setDuration(3000).start();
+        mChooseLeftImageView.setAlpha(0.5f);
+        mChooseRightImageView.setAlpha(0.5f);
 
         return view;
     }

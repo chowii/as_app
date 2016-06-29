@@ -105,11 +105,14 @@ public class OnBoardingSearchingFragment  extends OnBoardingFragment {
             public void call(OnBoardingState onBoardingState) {
                 if (onBoardingState.state == OnBoardingState.State.Acquiring) {
                     mDevicesLayout.setVisibility(View.INVISIBLE);
-                    return;
+
                 } else {
 
                     mDevicesLayout.setVisibility(View.VISIBLE);
-                    ((AnimationDrawable) mPhoneImageView.getDrawable()).stop();
+
+                    if (mPhoneImageView.getDrawable() instanceof AnimationDrawable) {
+                        ((AnimationDrawable) mPhoneImageView.getDrawable()).stop();
+                    }
 
                     mBaseLayout.setVisibility(onBoardingState.requiredBase ? View.VISIBLE : View.GONE);
                     mMattressLayout.setVisibility(onBoardingState.requiredPump ? View.VISIBLE : View.GONE);
