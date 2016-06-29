@@ -207,14 +207,19 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         } else if (mOnBoardingState.state == OnBoardingState.State.DevicesMissingShowHelp) {
 
-            transitionTo(OnBoardingHelpFragment.newInstance());
+            transitionTo(OnBoardingHelpFragment.newInstance("http://sleepsense.com.au/app-faq#cant-connect-to-devices"));
 
         }
     }
 
     @Override
     public void onInflateContinueClicked() {
-        transitionTo(OnBoardingLieOnBedFragment.newInstance(PreferenceService.instance().getSideOfBed()));
+        if ( mOnBoardingState.state == OnBoardingState.State.InflationError ) {
+            transitionTo(OnBoardingHelpFragment.newInstance("http://sleepsense.com.au/app-faq#sleepsense-mattress-setup"));
+        } else {
+            transitionTo(OnBoardingLieOnBedFragment.newInstance(PreferenceService.instance().getSideOfBed()));
+        }
+
     }
 
     @Override
@@ -250,10 +255,16 @@ public class NewOnBoardActivity extends BaseActivity implements
     // HELP FLOW
     @Override
     public void onRetryButtonClicked() {
+
         AnalyticsService.instance().logEvent(AnalyticsService.EVENT_SETUP_ERROR_RESOLVING,
                 AnalyticsService.PROPERTY_TRY_AGAIN_BUTTON,true);
 
-        onPlacePhoneContinueClicked();
+        if ( mOnBoardingState.state == OnBoardingState.State.InflationError ) {
+            transitionTo(OnBoardingInflateMattressFragment.newInstance());
+            inflateMattress();
+        } else {
+            onPlacePhoneContinueClicked();
+        }
     }
 
     @Override

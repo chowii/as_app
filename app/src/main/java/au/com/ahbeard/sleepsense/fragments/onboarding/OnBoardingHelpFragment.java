@@ -25,6 +25,8 @@ public class OnBoardingHelpFragment extends OnBoardingFragment {
 
     private OnActionListener mOnActionListener;
 
+    private String mUrl;
+
     @Bind(R.id.on_board_button_try_again)
     Button mContinueButton;
 
@@ -32,6 +34,13 @@ public class OnBoardingHelpFragment extends OnBoardingFragment {
     public void onContinueClicked() {
         if (mOnActionListener != null) {
             mOnActionListener.onRetryButtonClicked();
+        }
+    }
+
+    @OnClick(R.id.on_board_button_call_for_help)
+    public void onCallForHelpClicked() {
+        if (mOnActionListener != null) {
+            mOnActionListener.onCallButtonClicked();
         }
     }
 
@@ -55,10 +64,19 @@ public class OnBoardingHelpFragment extends OnBoardingFragment {
         return fragment;
     }
 
+    public static OnBoardingHelpFragment newInstance(String url) {
+        OnBoardingHelpFragment fragment = new OnBoardingHelpFragment();
+        Bundle args = new Bundle();
+        args.putString("url",url);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            mUrl=getArguments().getString("url","http://sleepsense.com.au/app-faq");
         }
     }
 
@@ -116,7 +134,7 @@ public class OnBoardingHelpFragment extends OnBoardingFragment {
             }
         });
 
-        mWebView.loadUrl("http://share.mentallyfriendly.com/sleepsense/#!/faq");
+        mWebView.loadUrl(mUrl);
 
         return view;
     }
