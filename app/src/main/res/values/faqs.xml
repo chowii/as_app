@@ -1,36 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="questions">
-        <item>Tip one heading goes here</item>
-        <item>Tip two heading goes here</item>
-        <item>Tip three heading goes here</item>
-        <item>Tip four heading goes here</item>
-        <item>Tip five heading goes here</item>
-        <item>Tip six heading goes here</item>
-        <item>Tip seven heading goes here</item>
+        <item>I can’t pair with the base</item>
+        <item>I can’t pair with the sleep tracker</item>
+        <item>I can’t pair with the mattress pump</item>
+        <item>Can’t detect movement feedback on one or both sides</item>
     </string-array>
     <string-array name="answers">
-        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
-        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
-        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
-        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
-        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
-        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
-        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</item>
+        <item>Turn bluetooth on your smartphone and ensure the base is connected to a power outlet.
+            Reset the base by unplugging the power cord from the power outlet for 1 minute.
+            Plug it back in and re-pair the base using the Sleepsense app.</item>
+        <item>Turn bluetooth on your smartphone and ensure that the two Beddit cords are connected to a power outlet.
+            To reset the Beddit tracker, unplug the USB end of both the cords from Beddit\'s power adapter for 1 minute.
+            Plug it back in and place your phone on the side of the bed you sleep on most frequently. Re-pair the two devices using the Sleepsense app.
+            Follow the setup procedure one person at a time to ensure that your Sleepsense bed and smart device are paired correctly.</item>
+        <item>Connect the air hose marked ‘L’ for left side to the outlet on the pump marked ‘L’,
+            and do the same for the ‘R’ right side hose, ensuring there are no kinks or pinch points.
+            Connect the pump to the power outlet and turn the power on.</item>
+        <item>Stop movement feedback, leave movement off for 30 seconds before starting movement feedback again.
+            If this doesn’t work, go to the settings section and select ‘reset app’
+            to go through onboarding again and re-pair with all devices.</item>
     </string-array>
-    <string name="instore_phone_number">02 XXXX XXXX</string>
+    <string name="in_store_phone_number">Contact your A.H. Beard representative</string>
 </resources>

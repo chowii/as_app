@@ -325,9 +325,9 @@ public class Sleep {
      * @return
      */
     public static Sleep fromDatabase(SleepSQLiteHelper sleepSQLiteHelper, long sleepId) {
-        Map<Long,Sleep> sleepBySleepId = fromDatabase(sleepSQLiteHelper,sleepId,sleepId);
+        Map<Long, Sleep> sleepBySleepId = fromDatabase(sleepSQLiteHelper, sleepId, sleepId);
 
-        if ( sleepBySleepId.isEmpty() ) {
+        if (sleepBySleepId.isEmpty()) {
             return null;
         } else {
             return new ArrayList<>(sleepBySleepId.values()).get(0);
@@ -341,9 +341,9 @@ public class Sleep {
      * @param sleepSQLiteHelper
      * @return
      */
-    public static Map<Long,Sleep> fromDatabase(SleepSQLiteHelper sleepSQLiteHelper, long startSleepId, long endSleepId) {
+    public static Map<Long, Sleep> fromDatabase(SleepSQLiteHelper sleepSQLiteHelper, long startSleepId, long endSleepId) {
 
-        Map<Long,Sleep> sleepBySleepId = new HashMap<>();
+        Map<Long, Sleep> sleepBySleepId = new HashMap<>();
 
         SQLiteDatabase database = null;
 
@@ -356,21 +356,21 @@ public class Sleep {
             try {
 
                 cursor = database.rawQuery("select * from " + SleepContract.Sleep.TABLE_NAME +
-                        " where " + SleepContract.Sleep.SLEEP_ID + " >= ? AND " + SleepContract.Sleep.SLEEP_ID + " <= ?" +
-                        " ORDER BY " + SleepContract.Sleep.SLEEP_ID + " ASC",
-                        new String[]{Long.toString(startSleepId),Long.toString(endSleepId)});
+                                " where " + SleepContract.Sleep.SLEEP_ID + " >= ? AND " + SleepContract.Sleep.SLEEP_ID + " <= ?" +
+                                " ORDER BY " + SleepContract.Sleep.SLEEP_ID + " ASC",
+                        new String[]{Long.toString(startSleepId), Long.toString(endSleepId)});
                 cursor.moveToFirst();
 
-                if ( ! cursor.isAfterLast() ) {
+                if (!cursor.isAfterLast()) {
 
                     Sleep sleep = getSleepFromCursor(cursor);
 
-                    sleepBySleepId.put(sleep.getSleepId(),sleep);
+                    sleepBySleepId.put(sleep.getSleepId(), sleep);
                 }
 
 
             } finally {
-                if ( cursor != null) {
+                if (cursor != null) {
                     cursor.close();
                 }
             }
@@ -382,11 +382,11 @@ public class Sleep {
                 trackCursor = database.rawQuery("select * from " + SleepContract.SleepTracks.TABLE_NAME +
                                 " where " + SleepContract.Sleep.SLEEP_ID + " >= ? AND " + SleepContract.Sleep.SLEEP_ID + " <= ?" +
                                 " ORDER BY " + SleepContract.Sleep.SLEEP_ID + " ASC",
-                        new String[]{Long.toString(startSleepId),Long.toString(endSleepId)});
+                        new String[]{Long.toString(startSleepId), Long.toString(endSleepId)});
 
                 trackCursor.moveToFirst();
 
-                while ( ! trackCursor.isAfterLast() )  {
+                while (!trackCursor.isAfterLast()) {
 
                     long sleepId = trackCursor.getLong(trackCursor.getColumnIndex(SleepContract.Sleep.SLEEP_ID));
                     String name = trackCursor.getString(trackCursor.getColumnIndex(SleepContract.SleepTracks.TRACK_NAME));
@@ -395,13 +395,13 @@ public class Sleep {
 
                     Sleep sleep = sleepBySleepId.get(sleepId);
 
-                    sleep.mTrackDataByName.put(name, new TrackData(name,dataType,data));
+                    sleep.mTrackDataByName.put(name, new TrackData(name, dataType, data));
 
                     trackCursor.moveToNext();
                 }
 
             } finally {
-                if ( trackCursor!=null) {
+                if (trackCursor != null) {
                     trackCursor.close();
                 }
             }
@@ -474,7 +474,6 @@ public class Sleep {
     }
 
     /**
-     *
      * @return
      */
     public List<SleepStage> getSleepStages() {
@@ -499,7 +498,6 @@ public class Sleep {
     }
 
     /**
-     *
      * @return
      */
     public List<SnoringEpisode> getSnoringEpisodes() {
@@ -523,7 +521,6 @@ public class Sleep {
     }
 
     /**
-     *
      * @return
      */
     public List<SleepCycle> getSleepCycles() {
@@ -546,7 +543,6 @@ public class Sleep {
     }
 
     /**
-     *
      * @return
      */
     public List<HeartRate> getHeartRates() {
@@ -570,7 +566,6 @@ public class Sleep {
     }
 
     /**
-     *
      * @return
      */
     public List<Actigram> getActigrams() {
@@ -594,7 +589,6 @@ public class Sleep {
     }
 
     /**
-     *
      * @param sleepId
      * @param random
      * @return
@@ -603,17 +597,17 @@ public class Sleep {
 
         Sleep sleep = new Sleep();
 
-        sleep.mSleepId=sleepId;
+        sleep.mSleepId = sleepId;
         sleep.mTotalSleepScore = random.nextFloat() * 30f + 60f;
-        sleep.mSleepScoreVersion=666.0f;
+        sleep.mSleepScoreVersion = 666.0f;
 
         Calendar sleepCalendar = SleepService.getCalendar(sleepId);
 
-        sleepCalendar.set(Calendar.HOUR_OF_DAY,21);
-        sleepCalendar.set(Calendar.MINUTE,15);
-        sleepCalendar.add(Calendar.DAY_OF_YEAR,-1);
+        sleepCalendar.set(Calendar.HOUR_OF_DAY, 21);
+        sleepCalendar.set(Calendar.MINUTE, 15);
+        sleepCalendar.add(Calendar.DAY_OF_YEAR, -1);
 
-        sleepCalendar.add(Calendar.MINUTE,random.nextInt(60)-30);
+        sleepCalendar.add(Calendar.MINUTE, random.nextInt(60) - 30);
 
         List<SleepCycle> sleepCycles = new ArrayList<>();
 
@@ -628,18 +622,18 @@ public class Sleep {
 
             JSONArray samples = new JSONArray(json);
 
-            float timePerSample = sleep.mSleepTotalTime/samples.length();
+            float timePerSample = sleep.mSleepTotalTime / samples.length();
 
-            for ( int i=0; i < samples.length(); i++ ) {
-                sleepCalendar.add(Calendar.SECOND,(int)timePerSample);
+            for (int i = 0; i < samples.length(); i++) {
+                sleepCalendar.add(Calendar.SECOND, (int) timePerSample);
                 float value = (float) samples.getDouble(i);
-                sleepCycles.add(new SleepCycle(sleepCalendar.getTimeInMillis()/1000.0f,value));
+                sleepCycles.add(new SleepCycle(sleepCalendar.getTimeInMillis() / 1000.0f, value));
             }
 
-            TrackData trackData = new TrackData("sleep_cycles","float32",SleepCycle.listAsBytes(sleepCycles));
+            TrackData trackData = new TrackData("sleep_cycles", "float32", SleepCycle.listAsBytes(sleepCycles));
 
             sleep.mTrackDataByName = new HashMap<>();
-            sleep.mTrackDataByName.put("sleep_cycles",trackData);
+            sleep.mTrackDataByName.put("sleep_cycles", trackData);
 
 
         } catch (JSONException e) {
@@ -647,10 +641,11 @@ public class Sleep {
         }
 
         sleep.mRestingHeartRate = 70f + random.nextFloat() * 10;
-        sleep.mSleepLatency = 5 + random.nextFloat() * 15;
-        sleep.mSleepEfficiency = 0.75f * random.nextFloat() * 0.15f;
-        sleep.mWakeTotalTime = 5 + random.nextFloat() * 15;
-        sleep.mAwayTotalTime = 5 + random.nextFloat() * 15;
+        sleep.mSleepLatency = (5 + random.nextFloat() * 15f) * 60f;
+        sleep.mSleepEfficiency = 0.75f + random.nextFloat() * 0.15f;
+        sleep.mWakeTotalTime = (5 + random.nextFloat() * 15f) * 60f;
+        sleep.mAwayTotalTime = (5 + random.nextFloat() * 15f) * 60f;
+        sleep.mRestlessTotalTime = (random.nextFloat() * 15f) * 60f;
 
         return sleep;
     }

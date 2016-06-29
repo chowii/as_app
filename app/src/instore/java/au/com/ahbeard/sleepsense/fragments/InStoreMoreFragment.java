@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.Settings;
 import au.com.ahbeard.sleepsense.activities.InStoreHelpActivity;
 import au.com.ahbeard.sleepsense.activities.InStoreNewOnBoardActivity;
 import butterknife.Bind;
@@ -71,6 +72,20 @@ public class InStoreMoreFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
+        final Intent launchIntent = getContext().getPackageManager().getLaunchIntentForPackage(Settings.INTERACTIVE_EXPERIENCE_APP_ID);
+
+        if ( launchIntent != null ) {
+            add(inflater, mItemsLayout, "Back to Interactive Experience", null, new Runnable() {
+                @Override
+                public void run() {
+                    launchIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivity(launchIntent);
+                }
+            });
+
+            addSpacer(mItemsLayout);
+        }
+
         add(inflater, mItemsLayout, "FAQs", null, new Runnable() {
             @Override
             public void run() {
@@ -78,6 +93,7 @@ public class InStoreMoreFragment extends Fragment {
             }
         });
         addSpacer(mItemsLayout);
+
         add(inflater, mItemsLayout, "Reset Sleepsense", null, new Runnable() {
             @Override
             public void run() {
