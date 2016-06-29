@@ -2,14 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <layer-list>
-            <item >
-                <inset android:insetLeft="1dp">
-                    <shape android:shape="rectangle">
-                        <corners android:radius="4dp" />
-                        <solid android:color="#20DDDDDD"/>
-                    </shape>
-                </inset>
-            </item>
             <item>
                 <inset android:insetTop="1dp">
                     <shape android:shape="rectangle">
@@ -19,11 +11,10 @@
                 </inset>
             </item>
             <item>
-                <inset android:insetRight="1dp" android:insetBottom="1dp">
+                <inset android:insetBottom="1dp">
                     <shape android:shape="rectangle">
                         <corners android:radius="4dp" />
                         <solid android:color="@color/controlHighlight"/>
-                        <stroke android:color="@color/controlHighlight" android:width="0.5dp"/>
                     </shape>
                 </inset>
             </item>
@@ -31,16 +22,8 @@
     </item>
     <item android:state_selected="true">
         <layer-list>
-            <item >
-                <inset android:insetLeft="1dp">
-                    <shape android:shape="rectangle">
-                        <corners android:radius="4dp" />
-                        <solid android:color="#20DDDDDD"/>
-                    </shape>
-                </inset>
-            </item>
             <item>
-                <inset android:insetTop="1dp">
+                <inset android:insetTop="2dp">
                     <shape android:shape="rectangle">
                         <corners android:radius="4dp" />
                         <solid android:color="#BECED4"/>
@@ -48,7 +31,7 @@
                 </inset>
             </item>
             <item>
-                <inset android:insetRight="1dp" android:insetBottom="1dp">
+                <inset android:insetBottom="2dp">
                     <shape android:shape="rectangle">
                         <corners android:radius="4dp" />
                         <solid android:color="#fff" />
@@ -60,16 +43,8 @@
     </item>
     <item>
         <layer-list>
-            <item >
-                <inset android:insetLeft="1dp">
-                    <shape android:shape="rectangle">
-                        <corners android:radius="4dp" />
-                        <solid android:color="#20DDDDDD"/>
-                    </shape>
-                </inset>
-            </item>
             <item>
-                <inset android:insetTop="1dp">
+                <inset android:insetTop="2dp">
                     <shape android:shape="rectangle">
                         <corners android:radius="4dp" />
                         <solid android:color="#BECED4"/>
@@ -77,11 +52,10 @@
                 </inset>
             </item>
             <item>
-                <inset android:insetRight="1dp" android:insetBottom="1dp">
+                <inset android:insetBottom="2dp">
                     <shape android:shape="rectangle">
                         <corners android:radius="4dp" />
                         <solid android:color="#ffffff"/>
-                        <stroke android:color="@color/controlShadowColor" android:width="0.5dp"/>
                     </shape>
                 </inset>
             </item>
