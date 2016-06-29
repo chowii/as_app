@@ -10,7 +10,10 @@
     android:layout_gravity="bottom"
     android:gravity="center"
     android:background="#68B9F3"
-    android:padding="10dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
     android:visibility="gone"
     tools:visibility="gone"
     tools:showIn="@layout/fragment_position_control">
