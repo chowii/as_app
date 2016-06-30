@@ -134,6 +134,9 @@ public class OnBoardingPlacePhoneFragment  extends OnBoardingFragment{
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    if (getContext() == null) { //no longer in view
+                        return;
+                    }
                     Animation pulse = AnimationUtils.loadAnimation(getContext(), R.anim.pulse);
                     pulse.setAnimationListener(new Animation.AnimationListener() {
                         @Override
