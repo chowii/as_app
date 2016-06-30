@@ -144,7 +144,6 @@ public class TrackerUtils {
             TimeValueTrackFragment timeValueTrackFragment = timeValueFragment.getTrackFragment(trackName);
             LogService.d("TimeValueFragment", "->" + trackName + ":" + ConversionUtils.byteArrayToString(timeValueTrackFragment.getData(), " "));
 
-
         }
 
     }
