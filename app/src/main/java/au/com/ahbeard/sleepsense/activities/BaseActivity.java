@@ -107,4 +107,8 @@ public class BaseActivity extends AppCompatActivity {
 
 
     }
+
+    public void startHelpActivity() {
+
+    }
 }

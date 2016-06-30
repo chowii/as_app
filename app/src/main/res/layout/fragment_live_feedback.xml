@@ -40,6 +40,14 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/header_bottom_padding"/>
 
+        <ImageView
+            android:id="@+id/live_feedback_image_view_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="22dp"
+            android:src="@drawable/help_button_blue"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

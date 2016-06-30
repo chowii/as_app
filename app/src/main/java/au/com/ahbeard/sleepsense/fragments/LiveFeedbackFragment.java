@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.activities.InStoreHomeActivity;
+import au.com.ahbeard.sleepsense.activities.BaseActivity;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.LiveFeedbackTrackerDevice;
@@ -44,9 +44,7 @@ public class LiveFeedbackFragment extends Fragment {
     @Nullable
     @OnClick(R.id.live_feedback_image_view_help)
     void onClickHelp() {
-        if ( getActivity() instanceof InStoreHomeActivity ) {
-            ((InStoreHomeActivity)getActivity()).startHelpActivity();
-        }
+        ((BaseActivity)getActivity()).startHelpActivity();
     }
 
     @OnClick(R.id.live_feedback_button_start)
