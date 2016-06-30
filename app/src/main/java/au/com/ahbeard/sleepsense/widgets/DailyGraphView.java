@@ -12,6 +12,7 @@ import android.graphics.PointF;
 import android.graphics.Shader;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 
@@ -194,12 +195,6 @@ public class DailyGraphView extends ViewGroup {
         mGraphRegionStart = labelWidth;
         mGraphRegionEnd = width;
 
-        mAreaPaint.setShader(new LinearGradient(
-                0, 0, 0, mGraphRegionHeight,
-                getResources().getColor(R.color.graphAreaGradientStart),
-                getResources().getColor(R.color.graphAreaGradientEnd),
-                Shader.TileMode.MIRROR));
-
         mGraphExtent = height - mXAxisLabelSpace - TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4,
                 getResources().getDisplayMetrics());
 
@@ -226,18 +221,27 @@ public class DailyGraphView extends ViewGroup {
         double totalTimeUnits = endTime - startTime;
         double widthPerTimeUnit = mGraphRegionWidth / totalTimeUnits;
 
+        float minY = Float.MAX_VALUE;
+
         // Lay out the raw points.
         for (int i = 0; i < mNormalisedValues.size(); i++) {
             if (mNormalisedValues.get(i) != null) {
                 mPoints[i] = new PointF();
                 mPoints[i].x = (float) ((mNormalisedValues.get(i).getTimestamp() - startTime) * widthPerTimeUnit) + mGraphRegionStart;
                 mPoints[i].y = mGraphRegionHeight - mGraphExtent * mNormalisedValues.get(i).getValue();
+                minY = Math.min(mPoints[i].y, minY);
             }
         }
 
         mPath.moveTo(0,mPoints[0].y);
         mAreaPath.moveTo(0, getHeight());
         mAreaPath.lineTo(0, mPoints[0].y);
+
+        mAreaPaint.setShader(new LinearGradient(
+                0, minY, 0, mGraphRegionHeight,
+                getResources().getColor(R.color.graphAreaGradientStart),
+                getResources().getColor(R.color.graphAreaGradientEnd),
+                Shader.TileMode.CLAMP));
 
 
         for (int i = 0; i < mPoints.length; i++) {
