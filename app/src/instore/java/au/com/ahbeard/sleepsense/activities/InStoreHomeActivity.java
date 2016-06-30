@@ -131,8 +131,8 @@ public class InStoreHomeActivity extends BaseActivity {
             }
         }));
 
-        mBackButtonView.setVisibility(getPackageManager().getLaunchIntentForPackage(Settings.INTERACTIVE_EXPERIENCE_APP_ID)==null?View.GONE:View.VISIBLE);
-
+        // mBackButtonView.setVisibility(getPackageManager().getLaunchIntentForPackage(Settings.INTERACTIVE_EXPERIENCE_APP_ID)==null?View.GONE:View.VISIBLE);
+        mBackButtonView.setVisibility(View.GONE);
     }
 
     @Override
