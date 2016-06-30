@@ -71,7 +71,7 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     public static Intent getOnBoardActivity(Context context) {
         Intent intent = new Intent(context, NewOnBoardActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
 
@@ -112,13 +112,13 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     protected void transitionTo(OnBoardingFragment onBoardingFragment) {
         mCurrentFragment = onBoardingFragment;
-        getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container,onBoardingFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.new_onboard_layout_container, onBoardingFragment).commit();
     }
 
     @Override
     public void onItemsContinueClicked(boolean hasPump, boolean hasTracker, boolean hasBase) {
 
-        AnalyticsService.instance().logItemsSelected(hasPump,hasTracker,hasBase);
+        AnalyticsService.instance().logItemsSelected(hasPump, hasTracker, hasBase);
 
         mOnBoardingState.requiredPump = hasPump;
         mOnBoardingState.requiredTracker = hasTracker;
@@ -138,7 +138,7 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         PreferenceService.instance().setSideOfBed(sideOfBed);
 
-        AnalyticsService.instance().setUserProperty(AnalyticsService.USER_PROPERTY_SIDE_OF_BED,sideOfBed.toLowerCase());
+        AnalyticsService.instance().setUserProperty(AnalyticsService.USER_PROPERTY_SIDE_OF_BED, sideOfBed.toLowerCase());
 
         mOnBoardingState.sideOfBed = sideOfBed;
 
@@ -171,25 +171,25 @@ public class NewOnBoardActivity extends BaseActivity implements
             TrackerDevice trackerDevice = null;
             TrackerDevice altTrackerDevice = null;
 
-            if ( mOnBoardingState.requiredPump && mOnBoardingState.foundPump ) {
+            if (mOnBoardingState.requiredPump && mOnBoardingState.foundPump) {
                 pumpDevice = mAquiredDevices.getPumpDevices().get(0);
             }
 
-            if ( mOnBoardingState.requiredBase && mOnBoardingState.foundBase  ) {
+            if (mOnBoardingState.requiredBase && mOnBoardingState.foundBase) {
                 baseDevice = mAquiredDevices.getBaseDevices().get(0);
             }
 
-            if ( mOnBoardingState.requiredTracker && mOnBoardingState.foundTracker  ) {
+            if (mOnBoardingState.requiredTracker && mOnBoardingState.foundTracker) {
                 trackerDevice = mAquiredDevices.getTrackerDevices().get(0);
 
-                if ( mAquiredDevices.getTrackerDevices().size() > 1 ) {
+                if (mAquiredDevices.getTrackerDevices().size() > 1) {
                     altTrackerDevice = mAquiredDevices.getTrackerDevices().get(1);
                 }
             }
 
             SleepSenseDeviceService.instance().setDevices(baseDevice, pumpDevice, trackerDevice, altTrackerDevice);
 
-            if (mOnBoardingState.foundPump) {
+            if (mOnBoardingState.requiredPump && mOnBoardingState.foundPump) {
                 transitionTo(OnBoardingInflateMattressFragment.newInstance());
 
                 inflateMattress();
@@ -214,7 +214,7 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     @Override
     public void onInflateContinueClicked() {
-        if ( mOnBoardingState.state == OnBoardingState.State.InflationError ) {
+        if (mOnBoardingState.state == OnBoardingState.State.InflationError) {
             transitionTo(OnBoardingHelpFragment.newInstance("http://sleepsense.com.au/app-faq#sleepsense-mattress-setup"));
         } else {
             transitionTo(OnBoardingLieOnBedFragment.newInstance(PreferenceService.instance().getSideOfBed()));
@@ -257,9 +257,9 @@ public class NewOnBoardActivity extends BaseActivity implements
     public void onRetryButtonClicked() {
 
         AnalyticsService.instance().logEvent(AnalyticsService.EVENT_SETUP_ERROR_RESOLVING,
-                AnalyticsService.PROPERTY_TRY_AGAIN_BUTTON,true);
+                AnalyticsService.PROPERTY_TRY_AGAIN_BUTTON, true);
 
-        if ( mOnBoardingState.state == OnBoardingState.State.InflationError ) {
+        if (mOnBoardingState.state == OnBoardingState.State.InflationError) {
             transitionTo(OnBoardingInflateMattressFragment.newInstance());
             inflateMattress();
         } else {
@@ -270,7 +270,7 @@ public class NewOnBoardActivity extends BaseActivity implements
     @Override
     public void onCallButtonClicked() {
         AnalyticsService.instance().logEvent(AnalyticsService.EVENT_SETUP_ERROR_RESOLVING,
-                AnalyticsService.PROPERTY_CALL_US_BUTTON,true);
+                AnalyticsService.PROPERTY_CALL_US_BUTTON, true);
 
         Uri numberUri = Uri.parse("tel:1300001150");
         Intent callIntent = new Intent(Intent.ACTION_DIAL, numberUri);
@@ -317,7 +317,7 @@ public class NewOnBoardActivity extends BaseActivity implements
     @Override
     public void onBackPressed() {
 
-        if ( mCurrentFragment != null &&! mCurrentFragment.onBackPressed()) {
+        if (mCurrentFragment != null && !mCurrentFragment.onBackPressed()) {
             new AlertDialog.Builder(this).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     AnalyticsService.instance().logEvent(AnalyticsService.EVENT_CLOSE_SETUP);
@@ -355,7 +355,7 @@ public class NewOnBoardActivity extends BaseActivity implements
 
                     }
 
-                    AnalyticsService.instance().setUserProperty(AnalyticsService.USER_PROPERTY_OWNS_BASE,Boolean.toString(mOnBoardingState.requiredBase && mOnBoardingState.foundBase));
+                    AnalyticsService.instance().setUserProperty(AnalyticsService.USER_PROPERTY_OWNS_BASE, Boolean.toString(mOnBoardingState.requiredBase && mOnBoardingState.foundBase));
 
                     if (mOnBoardingState.requiredPump) {
                         if (mAquiredDevices.getPumpDevices().isEmpty()) {
@@ -366,7 +366,7 @@ public class NewOnBoardActivity extends BaseActivity implements
                         }
                     }
 
-                    AnalyticsService.instance().setUserProperty(AnalyticsService.USER_PROPERTY_OWNS_ADJUSTABLE_MATTRESS,Boolean.toString(mOnBoardingState.requiredPump && mOnBoardingState.foundPump));
+                    AnalyticsService.instance().setUserProperty(AnalyticsService.USER_PROPERTY_OWNS_ADJUSTABLE_MATTRESS, Boolean.toString(mOnBoardingState.requiredPump && mOnBoardingState.foundPump));
 
                     if (mOnBoardingState.requiredTracker) {
                         if (mAquiredDevices.getTrackerDevices().size() < mOnBoardingState.numberOfTrackersRequired) {
@@ -379,7 +379,7 @@ public class NewOnBoardActivity extends BaseActivity implements
                         }
                     }
 
-                    AnalyticsService.instance().setUserProperty(AnalyticsService.USER_PROPERTY_OWNS_SLEEP_TRACKER,Boolean.toString(mOnBoardingState.requiredTracker && mOnBoardingState.foundTracker));
+                    AnalyticsService.instance().setUserProperty(AnalyticsService.USER_PROPERTY_OWNS_SLEEP_TRACKER, Boolean.toString(mOnBoardingState.requiredTracker && mOnBoardingState.foundTracker));
 
                     if (failed) {
                         mOnBoardingState.failedAttempts += 1;

@@ -8,24 +8,24 @@ import java.util.Set;
 /**
  * Created by neal on 16/12/2015.
  */
-public class BluetoothScanEvent {
+public class BluetoothEvent {
 
-    public static class ScanningStartedEvent extends BluetoothScanEvent {
-
-    }
-
-    public static class ScanningStoppedEvent extends BluetoothScanEvent {
+    public static class ScanningStartedEvent extends BluetoothEvent {
 
     }
 
-    public static class ScanPacketEvent extends BluetoothScanEvent {
+    public static class ScanningStoppedEvent extends BluetoothEvent {
+
+    }
+
+    public static class PacketEvent extends BluetoothEvent {
 
         private BluetoothDevice mDevice;
         private byte[] mAdvertisingData;
         private int mRssi;
         private Set<Integer> mReceivedRssis;
 
-        public ScanPacketEvent(BluetoothDevice device, byte[] advertisingData, int rssi) {
+        public PacketEvent(BluetoothDevice device, byte[] advertisingData, int rssi) {
             mDevice = device;
             mAdvertisingData = advertisingData;
             mRssi = rssi;
@@ -57,7 +57,15 @@ public class BluetoothScanEvent {
         }
     }
 
-    public static class BluetoothDisabledEvent extends BluetoothScanEvent {
+    public static class BluetoothUseWhileDisabledEvent extends BluetoothEvent {
+
+    }
+
+    public static class BluetoothDisabledEvent extends BluetoothEvent {
+
+    }
+
+    public static class BluetoothEnabledEvent extends BluetoothEvent {
 
     }
 

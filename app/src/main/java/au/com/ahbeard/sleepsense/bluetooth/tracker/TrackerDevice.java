@@ -9,9 +9,9 @@ import com.beddit.sensor.SensorManager;
 import com.beddit.sensor.SensorSession;
 import com.logentries.logger.AndroidLogger;
 
+import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 
-import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -36,6 +36,7 @@ public class TrackerDevice extends Device {
     }
 
     public enum TrackerState {
+        Error,
         Disconnected,
         Connecting,
         Connected,
@@ -57,6 +58,10 @@ public class TrackerDevice extends Device {
     public void startSensorSession() {
 
         if ( mSensorSession != null ) {
+            return;
+        }
+
+        if (BluetoothService.instance().isBluetoothDisabled()) {
             return;
         }
 

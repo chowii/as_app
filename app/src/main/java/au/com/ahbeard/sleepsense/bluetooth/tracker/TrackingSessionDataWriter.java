@@ -1,5 +1,7 @@
 package au.com.ahbeard.sleepsense.bluetooth.tracker;
 
+import android.util.Log;
+
 import com.beddit.analysis.TimeValueFragment;
 import com.beddit.analysis.TimeValueTrackFragment;
 import com.google.firebase.crash.FirebaseCrash;
@@ -15,6 +17,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import au.com.ahbeard.sleepsense.services.LogService;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import rx.Observer;
 
@@ -76,10 +79,11 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
 
         try {
             writeError(e);
-            FirebaseCrash.log("Error thrown during sleep session capture...");
-            FirebaseCrash.report(e);
+//            FirebaseCrash.log("Error thrown during sleep session capture...");
+//            FirebaseCrash.report(e);
+            LogService.e("TrackingSessionDataWriter","Error thrown during sleep session capture...",e);
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            LogService.e("TrackingSessionDataWriter","Error thrown writing error...",ioe);
         }
 
         try {
@@ -101,7 +105,7 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
             }
 
         } catch (java.io.IOException ioe) {
-            ioe.printStackTrace();
+            LogService.e("TrackingSessionDataWriter","Error thrown closing session...",ioe);
         }
 
     }

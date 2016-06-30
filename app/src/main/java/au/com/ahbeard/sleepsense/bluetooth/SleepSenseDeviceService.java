@@ -1,7 +1,6 @@
 package au.com.ahbeard.sleepsense.bluetooth;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.beddit.sensor.SensorManager;
 
@@ -120,27 +119,27 @@ public class SleepSenseDeviceService {
                 .startScanning()
                 .observeOn(Schedulers.io())
                 .filter(new ScanningFilter())
-                .cast(BluetoothScanEvent.ScanPacketEvent.class)
+                .cast(BluetoothEvent.PacketEvent.class)
                 .take(milliseconds, TimeUnit.MILLISECONDS)
                 .toList()
-                .map(new Func1<List<BluetoothScanEvent.ScanPacketEvent>, List<Device>>() {
+                .map(new Func1<List<BluetoothEvent.PacketEvent>, List<Device>>() {
                     @Override
-                    public List<Device> call(List<BluetoothScanEvent.ScanPacketEvent> scanPacketEvents) {
+                    public List<Device> call(List<BluetoothEvent.PacketEvent> scanPacketEvents) {
 
                         BluetoothService.instance().stopScanning();
 
                         // Sort by RSSI.
-                        Collections.sort(scanPacketEvents, new Comparator<BluetoothScanEvent.ScanPacketEvent>() {
+                        Collections.sort(scanPacketEvents, new Comparator<BluetoothEvent.PacketEvent>() {
                             @Override
-                            public int compare(BluetoothScanEvent.ScanPacketEvent lhs,
-                                               BluetoothScanEvent.ScanPacketEvent rhs) {
+                            public int compare(BluetoothEvent.PacketEvent lhs,
+                                               BluetoothEvent.PacketEvent rhs) {
                                 return rhs.getRssi() - lhs.getRssi();
                             }
                         });
 
                         ArrayList<Device> devices = new ArrayList<>();
 
-                        for (BluetoothScanEvent.ScanPacketEvent scanPacketEvent : scanPacketEvents) {
+                        for (BluetoothEvent.PacketEvent scanPacketEvent : scanPacketEvents) {
                             devices.addAll(SleepSenseDeviceFactory.factorySleepSenseDevice(mContext, scanPacketEvent));
                         }
 
@@ -253,18 +252,18 @@ public class SleepSenseDeviceService {
     }
 
     // The scanning filter.
-    class ScanningFilter implements Func1<BluetoothScanEvent, Boolean> {
+    class ScanningFilter implements Func1<BluetoothEvent, Boolean> {
 
         // Check the address of the device.
-        Map<String, BluetoothScanEvent.ScanPacketEvent> scannedDevices = Collections.synchronizedMap(new HashMap<String, BluetoothScanEvent.ScanPacketEvent>());
+        Map<String, BluetoothEvent.PacketEvent> scannedDevices = Collections.synchronizedMap(new HashMap<String, BluetoothEvent.PacketEvent>());
 
         @Override
-        public Boolean call(BluetoothScanEvent bluetoothScanEvent) {
+        public Boolean call(BluetoothEvent bluetoothEvent) {
 
-            if (bluetoothScanEvent instanceof BluetoothScanEvent.ScanPacketEvent) {
+            if (bluetoothEvent instanceof BluetoothEvent.PacketEvent) {
 
-                BluetoothScanEvent.ScanPacketEvent scanPacketEvent =
-                        (BluetoothScanEvent.ScanPacketEvent) bluetoothScanEvent;
+                BluetoothEvent.PacketEvent scanPacketEvent =
+                        (BluetoothEvent.PacketEvent) bluetoothEvent;
 
                 String deviceAddress = scanPacketEvent.getDevice().getAddress();
 
