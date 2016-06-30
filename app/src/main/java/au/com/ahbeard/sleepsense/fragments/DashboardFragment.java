@@ -62,7 +62,7 @@ public class DashboardFragment extends Fragment {
     @OnClick(R.id.dashboard_image_view_help)
     void onHelpClicked() {
         if ( getActivity() instanceof HomeActivity) {
-            startActivity(HelpActivity.getIntent(getActivity(), "Dashboard Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+            startActivity(HelpActivity.getIntent(getActivity(), "Dashboard Help", "http://sleepsense.com.au/app-faq"));
         } else if (getActivity() instanceof BaseActivity) {
             ((BaseActivity)getActivity()).settingsIconClicked();
         }

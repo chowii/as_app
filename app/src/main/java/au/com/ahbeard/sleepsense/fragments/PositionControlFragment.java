@@ -233,7 +233,7 @@ public class PositionControlFragment extends Fragment {
     @OnClick(R.id.image_view_help_icon)
     void onHelpClicked() {
         if ( getActivity() instanceof HomeActivity) {
-            startActivity(HelpActivity.getIntent(getActivity(), "Dashboard Help", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+            startActivity(HelpActivity.getIntent(getActivity(), "Dashboard Help", "http://sleepsense.com.au/app-faq"));
         } else if (getActivity() instanceof BaseActivity){
             ((BaseActivity)getActivity()).settingsIconClicked();
         }
