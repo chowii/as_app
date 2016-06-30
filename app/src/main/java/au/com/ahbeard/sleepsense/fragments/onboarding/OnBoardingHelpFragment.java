@@ -13,6 +13,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.Toast;
 
 import au.com.ahbeard.sleepsense.R;
 import butterknife.Bind;
@@ -37,11 +38,12 @@ public class OnBoardingHelpFragment extends OnBoardingFragment {
         }
     }
 
+    @Bind(R.id.on_board_button_call_for_help)
+    Button mCallForHelpButton;
+
     @OnClick(R.id.on_board_button_call_for_help)
-    public void onCallForHelpClicked() {
-        if (mOnActionListener != null) {
-            mOnActionListener.onCallButtonClicked();
-        }
+    public void onCallForHelpButtonClicked() {
+        callNumber("tel:1300001150");
     }
 
     @Bind(R.id.on_boarding_help_web_view)
@@ -109,13 +111,7 @@ public class OnBoardingHelpFragment extends OnBoardingFragment {
                     }
                     return false;
                 } else if (url.startsWith("tel:")) {
-                    Intent telephoneIntent = new Intent(url);
-                    PackageManager packageManager = getActivity().getPackageManager();
-                    if (telephoneIntent.resolveActivity(packageManager) != null) {
-                        startActivity(telephoneIntent);
-                    } else {
-                        Log.d("Help", "No facility available to handle tel: url");
-                    }
+                    callNumber(url);
                     return true;
                 } else {
                     view.loadUrl(url);
@@ -169,5 +165,16 @@ public class OnBoardingHelpFragment extends OnBoardingFragment {
             return super.onBackPressed();
         }
 
+    }
+
+    private void callNumber(String url) {
+        Intent telephoneIntent = new Intent(url);
+        PackageManager packageManager = getActivity().getPackageManager();
+        if (telephoneIntent.resolveActivity(packageManager) != null) {
+            startActivity(telephoneIntent);
+        } else {
+            Log.d("Help", "No facility available to handle tel: url");
+            Toast.makeText(getContext(), "No sim card to make a phone call.", Toast.LENGTH_LONG).show();
+        }
     }
 }

@@ -54,4 +54,8 @@
 
     <color name="sleepTrackingBackgroundColor">#042234</color>
 
+    <color name="debug1">#7000FF00</color>
+    <color name="debug2">#70FF0000</color>
+    <color name="debug3">#700000FF</color>
+
 </resources>
