@@ -44,7 +44,7 @@ public class LiveFeedbackFragment extends Fragment {
     @Nullable
     @OnClick(R.id.live_feedback_image_view_help)
     void onClickHelp() {
-        ((BaseActivity)getActivity()).startHelpActivity();
+        ((BaseActivity)getActivity()).settingsIconClicked();
     }
 
     @OnClick(R.id.live_feedback_button_start)
