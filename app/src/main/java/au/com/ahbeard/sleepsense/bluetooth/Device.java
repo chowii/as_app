@@ -284,9 +284,9 @@ public class Device extends BluetoothGattCallback {
                         ));
 
                 if (getSetupNotifications()) {
-                    EnableIndicationOperation enableNotificationOperation =
+                    EnableIndicationOperation enableIndicationOperation =
                             new EnableIndicationOperation(getServiceUUID(), getNotifyCharacteristicUUID());
-                    mBluetoothOperationQueue.addOperation(enableNotificationOperation);
+                    mBluetoothOperationQueue.addOperation(enableIndicationOperation);
                 }
 
                 mConnectionState = CONNECTION_STATE_CONNECTED;
@@ -322,8 +322,6 @@ public class Device extends BluetoothGattCallback {
     @Override
     public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         byte[] value = characteristic.getValue();
-//        LogService.d("Device",String.format("onCharacteristicChanged: %s",
-//                CharacteristicWriteOperation.getReadableStringFromByteArray(value)));
         mNotifyEventSubject.onNext(new ValueChangeEvent(characteristic.getUuid(), value));
     }
 
