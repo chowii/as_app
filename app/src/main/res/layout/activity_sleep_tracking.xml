@@ -54,13 +54,14 @@
                     android:includeFontPadding="false"
                     android:textColor="#fff"
                     android:textSize="90sp"
+                    android:layout_marginStart="34dp"
                     app:typeface="RobotoThin"
                     tools:text="88:88"/>
 
                 <au.com.ahbeard.sleepsense.widgets.StyledTextView
                     android:id="@+id/sleep_tracking_text_view_clock_am_pm"
                     android:layout_toEndOf="@id/sleep_tracking_text_view_clock_time"
-                    android:layout_width="wrap_content"
+                    android:layout_width="34dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
                     android:includeFontPadding="false"
