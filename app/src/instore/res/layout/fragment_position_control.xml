@@ -201,16 +201,6 @@
                         android:layout_height="wrap_content">
 
                         <au.com.ahbeard.sleepsense.widgets.StyledImageButton
-                            android:id="@+id/position_button_head_position_up"
-                            style="@style/styledButton"
-                            android:src="@drawable/position_up_icon"
-                            app:typeface="RobotoLight"/>
-
-                        <View
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"/>
-
-                        <au.com.ahbeard.sleepsense.widgets.StyledImageButton
                             android:id="@+id/position_button_head_position_down"
                             style="@style/styledButton"
                             android:src="@drawable/position_down_icon"
@@ -221,7 +211,7 @@
                             android:layout_height="20dp"/>
 
                         <au.com.ahbeard.sleepsense.widgets.StyledImageButton
-                            android:id="@+id/position_button_foot_position_up"
+                            android:id="@+id/position_button_head_position_up"
                             style="@style/styledButton"
                             android:src="@drawable/position_up_icon"
                             app:typeface="RobotoLight"/>
@@ -234,6 +224,16 @@
                             android:id="@+id/position_button_foot_position_down"
                             style="@style/styledButton"
                             android:src="@drawable/position_down_icon"
+                            app:typeface="RobotoLight"/>
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"/>
+
+                        <au.com.ahbeard.sleepsense.widgets.StyledImageButton
+                            android:id="@+id/position_button_foot_position_up"
+                            style="@style/styledButton"
+                            android:src="@drawable/position_up_icon"
                             app:typeface="RobotoLight"/>
 
                     </LinearLayout>

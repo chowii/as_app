@@ -8,9 +8,7 @@
                     Mauris el tristique neque. Nulla facilisi. Aenean bibendum at mi ac pretium.
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel tristique neque.</string>
 
-    <string name="sleep_score_breakdown_description">Improving your sleep starts with knowing what actually
-        happened while you were asleep! Your Sleep Score delivers a snapshot of your sleep quality and a full
-        report of your sleep patterns and quantity of your sleep.</string>
+    <string name="sleep_score_breakdown_description">Your Sleep Score delivers a snapshot of your sleep quality and a full report of your sleep patterns and quantity of your sleep.\n\nSet your sleep goal to receive an accurate Sleep Score.</string>
     <string name="sleep_score_breakdown_time_sleeping">Time sleeping</string>
     <string name="sleep_score_breakdown_time_sleeping_txt">A measure of the total number of hours you slept during
         the night. The average adult requires between 7–9 hours sleep. </string>

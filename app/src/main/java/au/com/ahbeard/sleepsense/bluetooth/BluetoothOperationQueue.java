@@ -53,7 +53,7 @@ public class BluetoothOperationQueue {
 
         synchronized (mBluetoothOperations) {
 
-            if (false && operation instanceof EnableNotificationOperation ) {
+            if (operation instanceof EnableIndicationOperation ) {
                 mBluetoothOperations.add(0,operation);
                 processQueue();
                 return true;
@@ -94,7 +94,7 @@ public class BluetoothOperationQueue {
 
     public void completeDescriptorWriteOperation() {
 
-        if (mBluetoothOperations.get(0) instanceof EnableNotificationOperation) {
+        if (mBluetoothOperations.get(0) instanceof EnableNotificationOperation||mBluetoothOperations.get(0) instanceof EnableIndicationOperation) {
             completeOperation(mBluetoothOperations.get(0));
         }
 

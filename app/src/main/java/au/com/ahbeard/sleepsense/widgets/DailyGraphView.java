@@ -12,6 +12,7 @@ import android.graphics.PointF;
 import android.graphics.Shader;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 
@@ -39,6 +40,9 @@ public class DailyGraphView extends ViewGroup {
 
     private float mGraphExtent;
     private float mGraphRegionHeight;
+    private float mGraphRegionEnd;
+    private float mGraphRegionStart;
+    private float mGraphRegionWidth;
 
     private float mXAxisLabelSpace;
     private float mYAxisLabelSpace;
@@ -184,11 +188,12 @@ public class DailyGraphView extends ViewGroup {
 
         mGraphRegionHeight = height - mXAxisLabelSpace;
 
-        mAreaPaint.setShader(new LinearGradient(
-                0, 0, 0, mGraphRegionHeight,
-                getResources().getColor(R.color.graphAreaGradientStart),
-                getResources().getColor(R.color.graphAreaGradientEnd),
-                Shader.TileMode.MIRROR));
+        float labelWidth = mLabelPaint.measureText("AWAKE") + TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4,
+                getResources().getDisplayMetrics());
+
+        mGraphRegionWidth = width - labelWidth;
+        mGraphRegionStart = labelWidth;
+        mGraphRegionEnd = width;
 
         mGraphExtent = height - mXAxisLabelSpace - TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4,
                 getResources().getDisplayMetrics());
@@ -199,9 +204,9 @@ public class DailyGraphView extends ViewGroup {
         mDashedLinePaths.reset();
 
         mDashedLinePaths.moveTo(0, mGraphRegionHeight - mGraphExtent * 0.0f);
-        mDashedLinePaths.lineTo(getWidth(), mGraphRegionHeight - mGraphExtent * 0.0f);
+        mDashedLinePaths.lineTo(mGraphRegionEnd, mGraphRegionHeight - mGraphExtent * 0.0f);
         mDashedLinePaths.moveTo(0, mGraphRegionHeight - mGraphExtent * 0.25f);
-        mDashedLinePaths.lineTo(getWidth(), mGraphRegionHeight - mGraphExtent * 0.25f);
+        mDashedLinePaths.lineTo(mGraphRegionEnd, mGraphRegionHeight - mGraphExtent * 0.25f);
 
         if (mNormalisedValues == null || mNormalisedValues.isEmpty()) {
             mPoints = new PointF[0];
@@ -214,31 +219,38 @@ public class DailyGraphView extends ViewGroup {
         double startTime = mNormalisedValues.get(0).getTimestamp();
         double endTime = mNormalisedValues.get(mNormalisedValues.size() - 1).getTimestamp();
         double totalTimeUnits = endTime - startTime;
-        double widthPerTimeUnit = getWidth() / totalTimeUnits;
+        double widthPerTimeUnit = mGraphRegionWidth / totalTimeUnits;
+
+        float minY = Float.MAX_VALUE;
 
         // Lay out the raw points.
         for (int i = 0; i < mNormalisedValues.size(); i++) {
             if (mNormalisedValues.get(i) != null) {
                 mPoints[i] = new PointF();
-                mPoints[i].x = (float) ((mNormalisedValues.get(i).getTimestamp() - startTime) * widthPerTimeUnit);
+                mPoints[i].x = (float) ((mNormalisedValues.get(i).getTimestamp() - startTime) * widthPerTimeUnit) + mGraphRegionStart;
                 mPoints[i].y = mGraphRegionHeight - mGraphExtent * mNormalisedValues.get(i).getValue();
+                minY = Math.min(mPoints[i].y, minY);
             }
         }
 
+        mPath.moveTo(0,mPoints[0].y);
         mAreaPath.moveTo(0, getHeight());
+        mAreaPath.lineTo(0, mPoints[0].y);
+
+        mAreaPaint.setShader(new LinearGradient(
+                0, minY, 0, mGraphRegionHeight,
+                getResources().getColor(R.color.graphAreaGradientStart),
+                getResources().getColor(R.color.graphAreaGradientEnd),
+                Shader.TileMode.CLAMP));
+
 
         for (int i = 0; i < mPoints.length; i++) {
 
-            if (i == 0) {
-                mPath.moveTo(mPoints[i].x, mPoints[i].y);
-            } else {
-                mPath.lineTo(mPoints[i].x, mPoints[i].y);
-            }
-
+            mPath.lineTo(mPoints[i].x, mPoints[i].y);
             mAreaPath.lineTo(mPoints[i].x, mPoints[i].y);
         }
 
-        mAreaPath.lineTo(getWidth(), getHeight());
+        mAreaPath.lineTo(mGraphRegionEnd, getHeight());
         mAreaPath.close();
 
         mLegends = new ArrayList<>();
@@ -267,14 +279,14 @@ public class DailyGraphView extends ViewGroup {
                 hour = 12;
             }
 
-            mLegends.add(new Legend(new PointF((float) ((startCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - mXAxisLabelSpace / 2),
+            mLegends.add(new Legend(new PointF((float) ((startCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit) + mGraphRegionStart, getHeight() - mXAxisLabelSpace / 2),
                     String.format("%02d", hour)));
 
             startCalendar.add(Calendar.HOUR_OF_DAY, 1);
 
         }
 
-        mLegends.add(new Legend(new PointF((float) ((endCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit), getHeight() - mXAxisLabelSpace / 2),
+        mLegends.add(new Legend(new PointF((float) ((endCalendar.getTimeInMillis() / 1000f - startTime) * widthPerTimeUnit) + mGraphRegionStart, getHeight() - mXAxisLabelSpace / 2),
                 String.format("%02d", endCalendar.get(Calendar.HOUR))));
 
 

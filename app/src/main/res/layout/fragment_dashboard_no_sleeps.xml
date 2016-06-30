@@ -1,9 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".fragments.onboarding.OnBoardingChooseSideFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.onboarding.OnBoardingChooseSideFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,47 +15,47 @@
             android:id="@+id/on_board_searching_text_view_heading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:gravity="center"
             android:text="Welcome to your dashboard"
             android:textColor="@color/onBoardHeaderTextColor"
             android:textSize="20sp"
-            app:typeface="OpenSansSemibold"/>
+            app:typeface="OpenSansSemibold" />
 
         <View
             android:layout_width="wrap_content"
-            android:layout_height="25dp"/>
+            android:layout_height="25dp" />
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:id="@+id/on_board_searching_text_view_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:gravity="center"
             android:lineSpacingExtra="10dp"
             android:text="This is where I track your sleep patterns and show you how well you slept"
             android:textColor="@color/onBoardBodyTextColor"
             android:textSize="15dp"
-            app:typeface="OpenSansRegular"/>
+            app:typeface="OpenSansRegular" />
 
         <View
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/on_board_image_view_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:alpha="1.0"
-            android:src="@drawable/dashboard_phone_no_sleeps"/>
+            android:src="@drawable/dashboard_phone_no_sleeps" />
 
         <View
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -63,20 +63,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="15dp"
+        android:layout_margin="10dp"
+        android:clipToPadding="false"
         android:gravity="right|center"
         android:orientation="horizontal"
-        android:padding="6dp" android:clipToPadding="false" >
+        android:padding="11dp">
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:gravity="right"
-            android:text="Simply tap the moon when\nyou're ready to sleep"
-            android:textColor="@color/onBoardBodyTextColor"
+            android:text="Going to sleep?"
+            android:textAllCaps="true"
+            android:textColor="#3C709C"
             android:textSize="13sp"
-            app:typeface="OpenSansSemibold"/>
+            app:typeface="OpenSansSemibold" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/dashboard_no_sleeps_arrow" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/dashboard_fab_start_sleep"

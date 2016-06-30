@@ -5,7 +5,9 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +16,11 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.bluetooth.BluetoothEvent;
+import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by neal on 3/03/2016.
@@ -88,6 +95,41 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mCompositeSubscription.add(BluetoothService.instance().getBluetoothEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BluetoothEvent>() {
+            @Override
+            public void call(BluetoothEvent bluetoothEvent) {
+                if ( bluetoothEvent instanceof BluetoothEvent.BluetoothUseWhileDisabledEvent ) {
+                    new AlertDialog.Builder(BaseActivity.this).setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    }).setMessage("Bluetooth is disabled.").create().show();
+
+                }
+            }
+        }));
+    }
+
+    @Override
+    protected void onStop() {
+        mCompositeSubscription.clear();
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     public void onScanningPermissionGranted() {
 
     }
@@ -105,6 +147,10 @@ public class BaseActivity extends AppCompatActivity {
 
     public void settingsIconClicked() {
 
+
+    }
+
+    public void startHelpActivity() {
 
     }
 }

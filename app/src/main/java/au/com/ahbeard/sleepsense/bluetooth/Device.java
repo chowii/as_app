@@ -151,26 +151,30 @@ public class Device extends BluetoothGattCallback {
     private long mConnectIssuedAt;
 
     public void connect() {
-        LogService.d("Device","connecting...");
-        if (mBluetoothDevice != null && mBluetoothGatt == null) {
 
-            mConnectIssuedAt = System.currentTimeMillis();
+        if ( BluetoothService.instance().isBluetoothEnabled() ) {
+            LogService.d("Device","connecting...");
+            if (mBluetoothDevice != null && mBluetoothGatt == null) {
 
-            // Set up a timer to
-            mConnectionTimer = new Timer();
-            mConnectionTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if ( mConnectionState == CONNECTION_STATE_CONNECTING ) {
-                        mChangeSubject.onNext(Device.this);
+                mConnectIssuedAt = System.currentTimeMillis();
+
+                // Set up a timer to
+                mConnectionTimer = new Timer();
+                mConnectionTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if ( mConnectionState == CONNECTION_STATE_CONNECTING ) {
+                            mChangeSubject.onNext(Device.this);
+                        }
                     }
-                }
-            }, 100, 100);
+                }, 100, 100);
 
-            mConnectionState = CONNECTION_STATE_CONNECTING;
-            mBluetoothGatt = mBluetoothDevice.connectGatt(mContext, false, this);
-            mChangeSubject.onNext(this);
+                mConnectionState = CONNECTION_STATE_CONNECTING;
+                mBluetoothGatt = mBluetoothDevice.connectGatt(mContext, false, this);
+                mChangeSubject.onNext(this);
+            }
         }
+
     }
 
     public void disconnect() {
@@ -280,9 +284,9 @@ public class Device extends BluetoothGattCallback {
                         ));
 
                 if (getSetupNotifications()) {
-                    EnableIndicationOperation enableNotificationOperation =
+                    EnableIndicationOperation enableIndicationOperation =
                             new EnableIndicationOperation(getServiceUUID(), getNotifyCharacteristicUUID());
-                    mBluetoothOperationQueue.addOperation(enableNotificationOperation);
+                    mBluetoothOperationQueue.addOperation(enableIndicationOperation);
                 }
 
                 mConnectionState = CONNECTION_STATE_CONNECTED;
@@ -318,8 +322,6 @@ public class Device extends BluetoothGattCallback {
     @Override
     public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         byte[] value = characteristic.getValue();
-//        LogService.d("Device",String.format("onCharacteristicChanged: %s",
-//                CharacteristicWriteOperation.getReadableStringFromByteArray(value)));
         mNotifyEventSubject.onNext(new ValueChangeEvent(characteristic.getUuid(), value));
     }
 

@@ -4,7 +4,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,7 +42,7 @@ public class BluetoothService extends BluetoothGattCallback {
 
     private BluetoothAdapter mBluetoothAdapter;
 
-    private PublishSubject<BluetoothScanEvent> mBluetoothScanningSubject = PublishSubject.create();
+    private PublishSubject<BluetoothEvent> mBluetoothEventSubject = PublishSubject.create();
 
     protected BluetoothService(Context context) {
         mContext = context;
@@ -62,8 +65,8 @@ public class BluetoothService extends BluetoothGattCallback {
                             device.getAddress(), rssi, device.getName(), ConversionUtils.byteArrayToString(scanRecord," ")));
 
                     if (StringUtils.isNotEmpty(device.getName())) {
-                        mBluetoothScanningSubject.onNext(
-                                new BluetoothScanEvent.ScanPacketEvent(device, scanRecord, rssi));
+                        mBluetoothEventSubject.onNext(
+                                new BluetoothEvent.PacketEvent(device, scanRecord, rssi));
                     }
                 }
             };
@@ -74,9 +77,8 @@ public class BluetoothService extends BluetoothGattCallback {
         return mScanning;
     }
 
-    // TODO: There is a chance this could start scanning before the subscription takes effect.
-    public Observable<BluetoothScanEvent> startScanning() {
-        return mBluetoothScanningSubject.doOnSubscribe(new Action0() {
+    public Observable<BluetoothEvent> startScanning() {
+        return mBluetoothEventSubject.doOnSubscribe(new Action0() {
             @Override
             public void call() {
                 _scan(true);
@@ -84,34 +86,76 @@ public class BluetoothService extends BluetoothGattCallback {
         });
     }
 
+    public Observable<BluetoothEvent> getBluetoothEventObservable() {
+        return mBluetoothEventSubject;
+    }
+
     public void stopScanning() {
         _scan(false);
     }
+
+    public boolean isBluetoothEnabled() {
+        if( mBluetoothAdapter.isEnabled() ) {
+            return true;
+        } else {
+            mBluetoothEventSubject.onNext(new BluetoothEvent.BluetoothUseWhileDisabledEvent());
+            return false;
+        }
+    }
+
+    public boolean isBluetoothDisabled() {
+        return ! isBluetoothEnabled();
+    }
+
+
 
     private void _scan(final boolean enable) {
 
         initializeBluetoothAdapter();
 
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-            mBluetoothScanningSubject.onNext(new BluetoothScanEvent.BluetoothDisabledEvent());
+            mBluetoothEventSubject.onNext(new BluetoothEvent.BluetoothUseWhileDisabledEvent());
         } else {
             if (enable) {
 
                 mScanning = true;
                 mScanning = mBluetoothAdapter.startLeScan(mScanCallback);
-                mBluetoothScanningSubject.onNext(new BluetoothScanEvent.ScanningStartedEvent());
+                mBluetoothEventSubject.onNext(new BluetoothEvent.ScanningStartedEvent());
 
             } else {
 
                 mScanning = false;
                 mBluetoothAdapter.stopLeScan(mScanCallback);
-                mBluetoothScanningSubject.onNext(new BluetoothScanEvent.ScanningStoppedEvent());
+                mBluetoothEventSubject.onNext(new BluetoothEvent.ScanningStoppedEvent());
 
             }
         }
 
-
     }
+
+    private final BroadcastReceiver mAdapterStateChangeReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+
+            // It means the user has changed his bluetooth state.
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+
+                if (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
+                    // The user bluetooth is turning off yet, but it is not disabled yet.
+                    mBluetoothEventSubject.onNext(new BluetoothEvent.BluetoothEnabledEvent());
+                }
+
+                if (mBluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
+                    // The user bluetooth is already disabled.
+                    mBluetoothEventSubject.onNext(new BluetoothEvent.BluetoothDisabledEvent());
+                }
+
+            }
+        }
+    };
 
     private void initializeBluetoothAdapter() {
         // Get the Bluetooth adapter.
@@ -121,7 +165,11 @@ public class BluetoothService extends BluetoothGattCallback {
                     (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
 
             mBluetoothAdapter = bluetoothManager.getAdapter();
+
+            mContext.registerReceiver(mAdapterStateChangeReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+
         }
+
     }
 
 

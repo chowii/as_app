@@ -51,6 +51,7 @@ public class WeeklyGraphView extends ViewGroup {
 
     private List<PointF> mDividerPoints;
     private List<Path> mAreaPaths;
+    private List<Path> mDividerPaths;
     private List<RectF> mAreaPathBounds;
     private List<Boolean> mAreaPathStates;
     private List<Object> mAreaPathIndexes;
@@ -104,6 +105,7 @@ public class WeeklyGraphView extends ViewGroup {
         mDividerPoints = new ArrayList<>();
 
         mAreaPaths = new ArrayList<>();
+        mDividerPaths = new ArrayList<>();
         mAreaPathBounds = new ArrayList<>();
         mAreaPathStates = new ArrayList<>();
         mAreaPathIndexes = new ArrayList<>();
@@ -133,7 +135,7 @@ public class WeeklyGraphView extends ViewGroup {
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()));
         mDividerPaint.setAntiAlias(true);
         mDividerPaint.setColor(getResources().getColor(R.color.graphDividerColor));
-        mDividerPaint.setStyle(Paint.Style.STROKE);
+        mDividerPaint.setStyle(Paint.Style.FILL);
 
         mDataPointRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3.5f, getResources().getDisplayMetrics());
 
@@ -196,6 +198,7 @@ public class WeeklyGraphView extends ViewGroup {
         // Have to allocate here, since we don't know the size. Optimally we could do this when the graph canvas
         // changes size... actually if the values don't change, none of this changes, so we can set a "dirty" flag.
         mAreaPaths.clear();
+        mDividerPaths.clear();
         mDividerPoints.clear();
         mAreaPathBounds.clear();
         mAreaPathStates.clear();
@@ -215,15 +218,15 @@ public class WeeklyGraphView extends ViewGroup {
                         1.0f},
                 Shader.TileMode.CLAMP));
 
-//        mDividerPaint.setShader(new LinearGradient(
-//                0, 0, 0, getHeight() * 0.6f,
-//                new int[]{
-//                        getResources().getColor(R.color.graphDividerStart),
-//                        getResources().getColor(R.color.graphAreaGradientEnd)},
-//                new float[]{
-//                        0.0f,
-//                        1.0f},
-//                Shader.TileMode.CLAMP));
+        mDividerPaint.setShader(new LinearGradient(
+                0, 0, 0, getHeight() * 0.6f,
+                new int[]{
+                        getResources().getColor(R.color.graphDividerStart),
+                        getResources().getColor(R.color.graphDividerEnd)},
+                new float[]{
+                        0.0f,
+                        1.0f},
+                Shader.TileMode.CLAMP));
 
         mColumnWidth = (float) width / (mRawPoints.length - 2);
 
@@ -357,6 +360,18 @@ public class WeeklyGraphView extends ViewGroup {
 
         }
 
+        float dividerOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
+
+        for (PointF dividerPoint : mDividerPoints ) {
+
+            Path path = new Path();
+
+            path.addRect(dividerPoint.x-dividerOffset,dividerPoint.y,dividerPoint.x+dividerOffset,getHeight(), Path.Direction.CW);
+
+            mDividerPaths.add(path);
+
+        }
+
         mGraphNeedsRelayout = false;
 
     }
@@ -382,7 +397,7 @@ public class WeeklyGraphView extends ViewGroup {
         for (int i = 0; i < mAreaPaths.size(); i++) {
             canvas.drawPath(mAreaPaths.get(i), mAreaPaint);
             if (mAreaPathStates.get(i)) {
-                canvas.drawPath(mAreaPaths.get(i), mAreaPaint);
+                canvas.drawPath(mAreaPaths.get(i), mDividerPaint);
             }
         }
 
@@ -401,9 +416,13 @@ public class WeeklyGraphView extends ViewGroup {
             mLinePaint.setStyle(Paint.Style.STROKE);
         }
 
-        for (PointF dividerPoint : mDividerPoints ) {
-            canvas.drawLine(dividerPoint.x,dividerPoint.y,dividerPoint.x,getHeight(),mDividerPaint);
+        for (Path path : mDividerPaths) {
+            canvas.drawPath(path,mDividerPaint);
         }
+
+//        for (PointF dividerPoint : mDividerPoints ) {
+//            canvas.drawLine(dividerPoint.x,dividerPoint.y,dividerPoint.x,getHeight(),mDividerPaint);
+//        }
 
     }
 

@@ -12,14 +12,11 @@
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent"/>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-
-            >
+            android:layout_height="60dp">
 
             <LinearLayout
                 android:id="@+id/dashboard_layout_tab_container"

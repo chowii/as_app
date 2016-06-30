@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.Settings;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.DashboardNoSleepsFragment;
@@ -62,8 +63,19 @@ public class InStoreHomeActivity extends BaseActivity {
 
     @OnClick(R.id.instore_home_button_back)
     void onClickBack() {
-        finish();
+
+        final Intent launchIntent = getPackageManager().getLaunchIntentForPackage(Settings.INTERACTIVE_EXPERIENCE_APP_ID);
+
+        if (launchIntent != null) {
+            launchIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(launchIntent);
+            finish();
+        }
+
     }
+
+    @Bind(R.id.instore_home_button_back)
+    View mBackButtonView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +94,7 @@ public class InStoreHomeActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        if ( getIntent().getBooleanExtra(EXTRA_SHOW_ON_BOARDING_COMPLETE_DIALOG, false)) {
+        if (getIntent().getBooleanExtra(EXTRA_SHOW_ON_BOARDING_COMPLETE_DIALOG, false)) {
             mOnBoardingCompleteDialogLayout.setAlpha(0.0f);
             mOnBoardingCompleteDialogLayout.setVisibility(View.VISIBLE);
             mOnBoardingCompleteDialogLayout.animate().setStartDelay(1000).alpha(1.0f).start();
@@ -113,11 +125,13 @@ public class InStoreHomeActivity extends BaseActivity {
         mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
             @Override
             public void call(Integer sleepId) {
-                if ( mHasRecordedASleep != PreferenceService.instance().getHasRecordedASleep()) {
+                if (mHasRecordedASleep != PreferenceService.instance().getHasRecordedASleep()) {
                     setupTabs();
                 }
             }
         }));
+
+        mBackButtonView.setVisibility(getPackageManager().getLaunchIntentForPackage(Settings.INTERACTIVE_EXPERIENCE_APP_ID)==null?View.GONE:View.VISIBLE);
 
     }
 
@@ -131,9 +145,9 @@ public class InStoreHomeActivity extends BaseActivity {
 
         mDashboardPagerAdapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
 
-        SleepService.instance().generateFakeData(Calendar.getInstance(),60);
+        SleepService.instance().generateFakeData(Calendar.getInstance(), 60);
 
-        if (SleepSenseDeviceService.instance().hasTrackerDevice() ) {
+        if (SleepSenseDeviceService.instance().hasTrackerDevice()) {
             mHasRecordedASleep = PreferenceService.instance().getHasRecordedASleep();
             if (mHasRecordedASleep) {
                 mDashboardPagerAdapter.addTab("Dashboard", R.drawable.tab_dashboard_unselected, R.drawable.tab_dashboard_selected, DashboardFragment.newInstance(), new Runnable() {
@@ -143,7 +157,7 @@ public class InStoreHomeActivity extends BaseActivity {
                     }
                 });
             } else {
-                mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, DashboardNoSleepsFragment.newInstance(), new Runnable() {
+                mDashboardPagerAdapter.addTab("Dashboard", R.drawable.tab_dashboard_unselected, R.drawable.tab_dashboard_selected, DashboardNoSleepsFragment.newInstance(), new Runnable() {
                     @Override
                     public void run() {
                         AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_TRACKING);
@@ -152,8 +166,8 @@ public class InStoreHomeActivity extends BaseActivity {
             }
         }
 
-        if (SleepSenseDeviceService.instance().hasPumpDevice() ) {
-            mDashboardPagerAdapter.addTab("Firmness",R.drawable.tab_firmness_unselected,R.drawable.tab_firmness_selected, FirmnessControlFragment.newInstance(), new Runnable() {
+        if (SleepSenseDeviceService.instance().hasPumpDevice()) {
+            mDashboardPagerAdapter.addTab("Firmness", R.drawable.tab_firmness_unselected, R.drawable.tab_firmness_selected, FirmnessControlFragment.newInstance(), new Runnable() {
                 @Override
                 public void run() {
                     AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_MATTRESS);
@@ -161,14 +175,14 @@ public class InStoreHomeActivity extends BaseActivity {
             });
         }
 
-        if (SleepSenseDeviceService.instance().hasBaseDevice() ) {
-            mDashboardPagerAdapter.addTab("Position",R.drawable.tab_position_unselected,R.drawable.tab_position_selected, PositionControlFragment.newInstance(), new Runnable() {
+        if (SleepSenseDeviceService.instance().hasBaseDevice()) {
+            mDashboardPagerAdapter.addTab("Position", R.drawable.tab_position_unselected, R.drawable.tab_position_selected, PositionControlFragment.newInstance(), new Runnable() {
                 @Override
                 public void run() {
                     AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_POSITION);
                 }
             });
-            mDashboardPagerAdapter.addTab("Massage",R.drawable.tab_massage_unselected,R.drawable.tab_massage_selected, MassageControlFragment.newInstance(), new Runnable() {
+            mDashboardPagerAdapter.addTab("Massage", R.drawable.tab_massage_unselected, R.drawable.tab_massage_selected, MassageControlFragment.newInstance(), new Runnable() {
                 @Override
                 public void run() {
                     AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_MASSAGE);
@@ -176,14 +190,7 @@ public class InStoreHomeActivity extends BaseActivity {
             });
         }
 
-//        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance(), new Runnable() {
-//            @Override
-//            public void run() {
-//                AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_SETTINGS);
-//            }
-//        });
-
-        mDashboardPagerAdapter.addTab("Movement",R.drawable.tab_movement_unselected,R.drawable.tab_movement_selected, LiveFeedbackFragment.newInstance(), new Runnable() {
+        mDashboardPagerAdapter.addTab("Movement", R.drawable.tab_movement_unselected, R.drawable.tab_movement_selected, LiveFeedbackFragment.newInstance(), new Runnable() {
             @Override
             public void run() {
             }
@@ -197,7 +204,7 @@ public class InStoreHomeActivity extends BaseActivity {
 
     public void openSleepScoreBreakdown(int sleepId) {
         getSupportFragmentManager().beginTransaction().addToBackStack("SLEEP_SCORE_BREAKDOWN")
-                .add(R.id.in_store_home_layout_extra_fragments,SleepScoreBreakdownFragment.newInstance(sleepId)).commit();
+                .add(R.id.in_store_home_layout_extra_fragments, SleepScoreBreakdownFragment.newInstance(sleepId)).commit();
     }
 
     public void openMorePage() {
@@ -217,7 +224,7 @@ public class InStoreHomeActivity extends BaseActivity {
             super(fm);
         }
 
-        public void addTab(String name, int iconResource, int selectedIconResource, Fragment fragment, Runnable onClickAction ) {
+        public void addTab(String name, int iconResource, int selectedIconResource, Fragment fragment, Runnable onClickAction) {
             mTabNames.add(name);
             mTabIconResourceIds.add(iconResource);
             mSelectedTabIconResourceIds.add(selectedIconResource);
@@ -257,13 +264,12 @@ public class InStoreHomeActivity extends BaseActivity {
     }
 
 
-
     public void settingsIconClicked() {
         openMorePage();
 
     }
 
     public void startHelpActivity() {
-        startActivity(new Intent(this,InStoreHelpActivity.class));
+        startActivity(new Intent(this, InStoreHelpActivity.class));
     }
 }

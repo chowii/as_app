@@ -1,6 +1,7 @@
 package au.com.ahbeard.sleepsense.activities;
 
 import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,9 +13,11 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.CycleInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
@@ -45,7 +48,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class SleepTrackingActivity extends AppCompatActivity {
+public class SleepTrackingActivity extends BaseActivity {
 
     private Subscription mClockSubscription;
 
@@ -85,6 +88,12 @@ public class SleepTrackingActivity extends AppCompatActivity {
     @Bind(R.id.sleep_tracking_layout_connecting)
     View mConnectingLayout;
 
+    @Bind(R.id.sleep_tracking_layout_error)
+    View mErrorLayout;
+
+    @Bind(R.id.sleep_tracking_image_view_connecting)
+    ImageView mConnectingImageView;
+
     int spawnerCounter = 0;
 
     @Override
@@ -98,11 +107,18 @@ public class SleepTrackingActivity extends AppCompatActivity {
 
         mCalendar = Calendar.getInstance();
 
-        if (SleepSenseDeviceService.instance().getTrackerDevice().isTracking()) {
+        if (SleepSenseDeviceService.instance().getTrackerDevice().getTrackerState()== TrackerDevice.TrackerState.Tracking) {
             mConnectingLayout.setVisibility(View.GONE);
         } else {
             mConnectingLayout.setVisibility(View.VISIBLE);
+
         }
+
+        RotateAnimation rotateAnimation = new RotateAnimation(0f,360f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        rotateAnimation.setRepeatCount(Animation.INFINITE);
+        rotateAnimation.setDuration(1000);
+        rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        mConnectingImageView.startAnimation(rotateAnimation);
 
         SleepSenseDeviceService.instance().getTrackerDevice()
                 .getTrackingStateObservable()
@@ -110,8 +126,10 @@ public class SleepTrackingActivity extends AppCompatActivity {
                 .subscribe(new Action1<TrackerDevice.TrackerState>() {
                     @Override
                     public void call(TrackerDevice.TrackerState trackerState) {
-                        if (TrackerDevice.TrackerState.StartingTracking == trackerState) {
+                        if (TrackerDevice.TrackerState.Tracking == trackerState) {
                             mConnectingLayout.animate().alpha(0.0f).setDuration(300).start();
+                        } else if ( TrackerDevice.TrackerState.Error == trackerState ) {
+                            mErrorLayout.animate().alpha(0.0f).setDuration(300).start();
                         }
                     }
                 });

@@ -40,6 +40,14 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/header_bottom_padding"/>
 
+        <ImageView
+            android:id="@+id/live_feedback_image_view_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="22dp"
+            android:src="@drawable/help_button_blue"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -67,15 +75,34 @@
 
     </FrameLayout>
 
-    <Button
-        android:id="@+id/live_feedback_button_start_stop"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_margin="8dp"
-        android:background="@drawable/sleep_sense_button_blue"
-        android:textColor="@color/blue_button_text_color"
-        android:stateListAnimator="@null"
-        android:text="Start Live Feedback"/>
+        android:layout_height="wrap_content" android:layout_marginStart="20dp" android:layout_marginEnd="20dp">
+
+        <Button
+            android:id="@+id/live_feedback_button_start"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/sleep_sense_button_blue"
+            android:textColor="@color/blue_button_text_color"
+            android:stateListAnimator="@null"
+            android:text="Start" />
+
+        <Button
+            android:id="@+id/live_feedback_button_stop"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/sleep_sense_button_blue"
+            android:textColor="@color/blue_button_text_color"
+            android:stateListAnimator="@null"
+            android:text="Stop" android:enabled="false" android:visibility="gone"/>
+    </LinearLayout>
+
 
 </LinearLayout>

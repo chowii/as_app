@@ -165,7 +165,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="AR APP"
+            android:text="Interactive Experience"
             android:textColor="#1D5487"
             android:textSize="20sp"
             app:typeface="OpenSansRegular"/>

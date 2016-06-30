@@ -1,7 +1,6 @@
 package au.com.ahbeard.sleepsense.bluetooth;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ public class SleepSenseDeviceFactory {
 
     private static final boolean FIND_TRACKER = true;
 
-    public static boolean isSleepSenseDevice(BluetoothScanEvent.ScanPacketEvent scanPacketEvent) {
+    public static boolean isSleepSenseDevice(BluetoothEvent.PacketEvent scanPacketEvent) {
 
         String name = scanPacketEvent.getDevice().getName();
 
@@ -50,7 +49,7 @@ public class SleepSenseDeviceFactory {
         return false;
     }
 
-    public static List<Device> factorySleepSenseDevice(Context context, BluetoothScanEvent.ScanPacketEvent scanPacketEvent) {
+    public static List<Device> factorySleepSenseDevice(Context context, BluetoothEvent.PacketEvent scanPacketEvent) {
 
         List<Device> mDevices = new ArrayList<>();
 

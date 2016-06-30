@@ -2,6 +2,7 @@ package au.com.ahbeard.sleepsense.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.BaseActivity;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
+import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.LiveFeedbackTrackerDevice;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.widgets.LiveFeedbackGraph;
@@ -18,6 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -27,77 +31,86 @@ import rx.subscriptions.CompositeSubscription;
 public class LiveFeedbackFragment extends Fragment {
 
     private LiveFeedbackTrackerDevice mLeftTrackingDevice;
-    private LiveFeedbackTrackerDevice mRightTrackerDevice;
+    private LiveFeedbackTrackerDevice mRightTrackingDevice;
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     @Bind(R.id.live_feedback_graph)
     LiveFeedbackGraph mLiveFeedbackGraph;
 
-    @Bind(R.id.live_feedback_button_start_stop)
-    Button mStartStopButton;
+    @Bind(R.id.live_feedback_button_start)
+    Button mStartButton;
 
-    @OnClick(R.id.live_feedback_button_start_stop)
-    void onClickStartStop() {
+    @Nullable
+    @OnClick(R.id.live_feedback_image_view_help)
+    void onClickHelp() {
+        ((BaseActivity)getActivity()).startHelpActivity();
+    }
 
-        boolean stopping = mLeftTrackingDevice.isTracking() && mRightTrackerDevice.isTracking();
+    @OnClick(R.id.live_feedback_button_start)
+    void onClickStart() {
 
-        if ( stopping ) {
-            mCompositeSubscription.clear();
+        // Yes this is a hack.
+        if ( "Stop".equalsIgnoreCase(mStartButton.getText().toString())) {
+            onClickStop();
+            return;
         }
 
-        if (mLeftTrackingDevice != null) {
-            if ( stopping && mLeftTrackingDevice.isTracking() ) {
-                mLeftTrackingDevice.stopSession();
-            } else if ( ! mLeftTrackingDevice.isTracking() ){
-                mCompositeSubscription.add(mLeftTrackingDevice.startSession()
-                        .observeOn(AndroidSchedulers.mainThread()).onBackpressureBuffer().subscribe(new Observer<byte[]>() {
-                            @Override
-                            public void onCompleted() {
+        if (mLeftTrackingDevice != null && !mLeftTrackingDevice.isTracking()) {
+            mCompositeSubscription.add(mLeftTrackingDevice.startSession()
+                    .observeOn(AndroidSchedulers.mainThread()).onBackpressureDrop().subscribe(new Observer<byte[]>() {
+                        @Override
+                        public void onCompleted() {
 
-                            }
+                        }
 
-                            @Override
-                            public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
 
-                            }
+                        }
 
-                            @Override
-                            public void onNext(byte[] bytes) {
-                                mLiveFeedbackGraph.addToLeftChannel(bytesToInts(bytes));
-                            }
-                        }));
-            }
+                        @Override
+                        public void onNext(byte[] bytes) {
+                            mLiveFeedbackGraph.addToLeftChannel(bytesToAverage(bytes));
+                        }
+                    }));
         }
 
-        if (mRightTrackerDevice != null) {
-            if ( stopping && mRightTrackerDevice.isTracking() ) {
-                mRightTrackerDevice.stopSession();
-            } else if ( ! mRightTrackerDevice.isTracking() ){
-                mCompositeSubscription.add(mRightTrackerDevice.startSession()
-                        .observeOn(AndroidSchedulers.mainThread()).onBackpressureBuffer().subscribe(new Observer<byte[]>() {
-                            @Override
-                            public void onCompleted() {
+        if (mRightTrackingDevice != null && !mRightTrackingDevice.isTracking()) {
+            mCompositeSubscription.add(mRightTrackingDevice.startSession()
+                    .observeOn(AndroidSchedulers.mainThread()).onBackpressureDrop().subscribe(new Observer<byte[]>() {
+                        @Override
+                        public void onCompleted() {
 
-                            }
+                        }
 
-                            @Override
-                            public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
 
-                            }
+                        }
 
-                            @Override
-                            public void onNext(byte[] bytes) {
-                                mLiveFeedbackGraph.addToRightChannel(bytesToInts(bytes));
-                            }
-                        }));
-            }
+                        @Override
+                        public void onNext(byte[] bytes) {
+                            mLiveFeedbackGraph.addToRightChannel(bytesToAverage(bytes));
+                        }
+                    }));
         }
 
     }
 
-    public LiveFeedbackFragment() {
-        // Required empty public constructor
+    @Bind(R.id.live_feedback_button_stop)
+    Button mStopButton;
+
+    @OnClick(R.id.live_feedback_button_stop)
+    void onClickStop() {
+
+        if (mLeftTrackingDevice != null && mLeftTrackingDevice.isTracking()) {
+            mLeftTrackingDevice.stopSession();
+        }
+
+        if (mRightTrackingDevice != null && mRightTrackingDevice.isTracking()) {
+            mRightTrackingDevice.stopSession();
+        }
     }
 
     public static LiveFeedbackFragment newInstance() {
@@ -124,8 +137,8 @@ public class LiveFeedbackFragment extends Fragment {
         super.onAttach(context);
 
         if (PreferenceService.instance().getTrackerDeviceAddress() != null) {
-            mRightTrackerDevice = new LiveFeedbackTrackerDevice();
-            mRightTrackerDevice.link(context, BluetoothService.instance().createDeviceFromAddress(PreferenceService.instance().getTrackerDeviceAddress()));
+            mRightTrackingDevice = new LiveFeedbackTrackerDevice();
+            mRightTrackingDevice.link(context, BluetoothService.instance().createDeviceFromAddress(PreferenceService.instance().getTrackerDeviceAddress()));
         }
 
         if (PreferenceService.instance().getAltTrackerDeviceAddress() != null) {
@@ -135,24 +148,16 @@ public class LiveFeedbackFragment extends Fragment {
 
     }
 
-    private static int[] bytesToInts(byte[] bytes) {
-
-        // int[] ints = new int[bytes.length / 2-1];
-        int[] ints = new int[1];
+    private static int bytesToAverage(byte[] bytes) {
 
         int total = 0;
 
         for (int i = 2; i < bytes.length; i += 2) {
             total += (bytes[i] & 0xff) + ((bytes[i + 1] & 0xff) << 8);
-//            ints[i/2-1] = ( bytes[i] & 0xff ) + ( ( bytes[i+1] & 0xff ) << 8 );
-//            ints[i/2-1] -= 32768;
         }
 
-        // Log.d("DEBUG",""+StringUtils.join(ints,' '));
+        return total / (bytes.length - 2) * 2 - 32768;
 
-        ints[0] = total/(bytes.length-2)*2 - 32768;
-
-        return ints;
     }
 
 
@@ -164,7 +169,40 @@ public class LiveFeedbackFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
+        if ( mLeftTrackingDevice != null ) {
+            mCompositeSubscription.add(mLeftTrackingDevice.getDeviceEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device.DeviceEvent>() {
+                @Override
+                public void call(Device.DeviceEvent deviceEvent) {
+                    setButtons();
+                }
+            }));
+        }
+
+        if ( mRightTrackingDevice != null ) {
+            mCompositeSubscription.add(mRightTrackingDevice.getDeviceEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device.DeviceEvent>() {
+                @Override
+                public void call(Device.DeviceEvent deviceEvent) {
+                    setButtons();
+                }
+            }));
+        }
+
+        setButtons();
+
         return view;
+    }
+
+    private void setButtons() {
+
+        boolean startEnabled = mLeftTrackingDevice!=null && mLeftTrackingDevice.getConnectionState() == Device.CONNECTION_STATE_DISCONNECTED ||
+                mRightTrackingDevice!=null && mRightTrackingDevice.getConnectionState() ==  Device.CONNECTION_STATE_DISCONNECTED;
+
+        boolean stopEnabled = mLeftTrackingDevice!=null && mLeftTrackingDevice.getConnectionState() == Device.CONNECTION_STATE_CONNECTED ||
+                mRightTrackingDevice!=null && mRightTrackingDevice.getConnectionState() == Device.CONNECTION_STATE_CONNECTED;
+
+        mStartButton.setEnabled(startEnabled||stopEnabled);
+        mStartButton.setText(stopEnabled?"Stop":"Start");
+
     }
 
     @Override
@@ -177,9 +215,9 @@ public class LiveFeedbackFragment extends Fragment {
     @Override
     public void onDetach() {
 
-        if (mRightTrackerDevice != null) {
-            mRightTrackerDevice.disconnect();
-            mRightTrackerDevice = null;
+        if (mRightTrackingDevice != null) {
+            mRightTrackingDevice.disconnect();
+            mRightTrackingDevice = null;
         }
 
         if (mLeftTrackingDevice != null) {

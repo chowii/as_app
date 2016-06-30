@@ -76,16 +76,16 @@ public class MoreFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        add(inflater,mItemsLayout,"FAQs",null,HelpActivity.getIntent(getContext(),"FAQs","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
-        add(inflater,mItemsLayout,"About A.H. Beard",null,HelpActivity.getIntent(getContext(),"About AH Beard","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+        add(inflater,mItemsLayout,"FAQs",null,HelpActivity.getIntent(getContext(),"FAQs","https://www.sleepsense.com.au/faq"));
+        add(inflater,mItemsLayout,"About A.H. Beard",null,HelpActivity.getIntent(getContext(),"About AH Beard","http://www.ahbeard.com.au/ourcompany"));
         add(inflater,mItemsLayout,"Contact us",null,new Intent(getActivity(), ContactUsActivity.class));
-        add(inflater,mItemsLayout,"Improve your sleep",null,HelpActivity.getIntent(getContext(),"Improve your sleep","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+        add(inflater,mItemsLayout,"Improve your sleep",null,HelpActivity.getIntent(getContext(),"Improve your sleep","http://www.ahbeard.com.au/sleepchallenge"));
         add(inflater,mItemsLayout,"Preferences",null,new Intent(getActivity(), PreferenceActivity.class));
         addSpacer(mItemsLayout);
         add(inflater,mItemsLayout,"My Profile",null,new Intent(getActivity(), ProfileActivity.class));
         addSpacer(mItemsLayout);
-        add(inflater,mItemsLayout,"Terms of Service",null,HelpActivity.getIntent(getContext(),"Terms of Service","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
-        add(inflater,mItemsLayout,"Privacy Policy",null,HelpActivity.getIntent(getContext(),"Privacy Policy","http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+        add(inflater,mItemsLayout,"Terms of Service",null,HelpActivity.getIntent(getContext(),"Terms of Service","https://sleepsense.com.au/terms-of-service"));
+        add(inflater,mItemsLayout,"Privacy Policy",null,HelpActivity.getIntent(getContext(),"Privacy Policy","http://www.ahbeard.com.au/privacypolicy"));
         addSpacer(mItemsLayout);
 
         try {

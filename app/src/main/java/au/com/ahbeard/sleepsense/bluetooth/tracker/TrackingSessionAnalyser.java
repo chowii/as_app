@@ -148,6 +148,8 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
             // Once again, shift this over to a computation thread.
             mSensorDataObservable.onCompleted();
         } else {
+            mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Error);
+
             AndroidLogger.getInstance().log("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
             AndroidLogger.getInstance().log("error: " + error.getMessage());
             LogService.e(TAG, "onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
@@ -217,7 +219,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
                     sensorSession.startStreaming();
                     mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.StartingTracking);
                 }
-            },5, TimeUnit.SECONDS);
+            },2500, TimeUnit.MILLISECONDS);
 
 
         } catch (AnalysisException e) {
