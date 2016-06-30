@@ -2,14 +2,15 @@ package au.com.ahbeard.sleepsense.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.InStoreHomeActivity;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.LiveFeedbackTrackerDevice;
@@ -40,12 +41,26 @@ public class LiveFeedbackFragment extends Fragment {
     @Bind(R.id.live_feedback_button_start)
     Button mStartButton;
 
+    @Nullable
+    @OnClick(R.id.live_feedback_image_view_help)
+    void onClickHelp() {
+        if ( getActivity() instanceof InStoreHomeActivity ) {
+            ((InStoreHomeActivity)getActivity()).startHelpActivity();
+        }
+    }
+
     @OnClick(R.id.live_feedback_button_start)
     void onClickStart() {
 
+        // Yes this is a hack.
+        if ( "Stop".equalsIgnoreCase(mStartButton.getText().toString())) {
+            onClickStop();
+            return;
+        }
+
         if (mLeftTrackingDevice != null && !mLeftTrackingDevice.isTracking()) {
             mCompositeSubscription.add(mLeftTrackingDevice.startSession()
-                    .observeOn(AndroidSchedulers.mainThread()).onBackpressureBuffer().subscribe(new Observer<byte[]>() {
+                    .observeOn(AndroidSchedulers.mainThread()).onBackpressureDrop().subscribe(new Observer<byte[]>() {
                         @Override
                         public void onCompleted() {
 
@@ -58,14 +73,14 @@ public class LiveFeedbackFragment extends Fragment {
 
                         @Override
                         public void onNext(byte[] bytes) {
-                            mLiveFeedbackGraph.addToLeftChannel(bytesToInts(bytes));
+                            mLiveFeedbackGraph.addToLeftChannel(bytesToAverage(bytes));
                         }
                     }));
         }
 
         if (mRightTrackingDevice != null && !mRightTrackingDevice.isTracking()) {
             mCompositeSubscription.add(mRightTrackingDevice.startSession()
-                    .observeOn(AndroidSchedulers.mainThread()).onBackpressureBuffer().subscribe(new Observer<byte[]>() {
+                    .observeOn(AndroidSchedulers.mainThread()).onBackpressureDrop().subscribe(new Observer<byte[]>() {
                         @Override
                         public void onCompleted() {
 
@@ -78,7 +93,7 @@ public class LiveFeedbackFragment extends Fragment {
 
                         @Override
                         public void onNext(byte[] bytes) {
-                            mLiveFeedbackGraph.addToRightChannel(bytesToInts(bytes));
+                            mLiveFeedbackGraph.addToRightChannel(bytesToAverage(bytes));
                         }
                     }));
         }
@@ -135,24 +150,16 @@ public class LiveFeedbackFragment extends Fragment {
 
     }
 
-    private static int[] bytesToInts(byte[] bytes) {
-
-        // int[] ints = new int[bytes.length / 2-1];
-        int[] ints = new int[1];
+    private static int bytesToAverage(byte[] bytes) {
 
         int total = 0;
 
         for (int i = 2; i < bytes.length; i += 2) {
             total += (bytes[i] & 0xff) + ((bytes[i + 1] & 0xff) << 8);
-//            ints[i/2-1] = ( bytes[i] & 0xff ) + ( ( bytes[i+1] & 0xff ) << 8 );
-//            ints[i/2-1] -= 32768;
         }
 
-        // Log.d("DEBUG",""+StringUtils.join(ints,' '));
+        return total / (bytes.length - 2) * 2 - 32768;
 
-        ints[0] = total / (bytes.length - 2) * 2 - 32768;
-
-        return ints;
     }
 
 
@@ -195,8 +202,8 @@ public class LiveFeedbackFragment extends Fragment {
         boolean stopEnabled = mLeftTrackingDevice!=null && mLeftTrackingDevice.getConnectionState() == Device.CONNECTION_STATE_CONNECTED ||
                 mRightTrackingDevice!=null && mRightTrackingDevice.getConnectionState() == Device.CONNECTION_STATE_CONNECTED;
 
-        mStartButton.setEnabled(startEnabled);
-        mStopButton.setEnabled(stopEnabled);
+        mStartButton.setEnabled(startEnabled||stopEnabled);
+        mStartButton.setText(stopEnabled?"Stop":"Start");
 
     }
 

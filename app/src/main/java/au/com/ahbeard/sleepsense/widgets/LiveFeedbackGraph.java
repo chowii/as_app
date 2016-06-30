@@ -57,11 +57,9 @@ public class LiveFeedbackGraph extends View {
 
     }
 
-    public void addToLeftChannel(int[] points) {
+    public void addToLeftChannel(int point) {
 
-        for ( int i=0; i<points.length;i++) {
-            mLeftChannel.add(points[i]);
-        }
+        mLeftChannel.add(point);
 
         // Trim the channel.
         while ( mLeftChannel.size() > mMaximumPoints ) {
@@ -73,11 +71,9 @@ public class LiveFeedbackGraph extends View {
         invalidate();
     }
 
-    public void addToRightChannel(int[] points) {
+    public void addToRightChannel(int point) {
 
-        for ( int i=0; i<points.length;i++) {
-            mRightChannel.add(points[i]);
-        }
+        mRightChannel.add(point);
 
         // Trim the channel.
         while ( mRightChannel.size() > mMaximumPoints ) {
