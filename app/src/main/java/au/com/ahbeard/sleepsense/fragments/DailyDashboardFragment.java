@@ -304,9 +304,15 @@ public class DailyDashboardFragment extends Fragment {
 
         StatisticsUtils statisticsUtils = new StatisticsUtils(mStatisticsLayout);
 
-        mTotalTimeSlept = statisticsUtils.addStatistic(Color.GREEN, "Total Time Slept", "");
-        mTimesOutOfBed = statisticsUtils.addStatistic(Color.GREEN, "Times out of Bed", "");
-        mMattressFirmness = statisticsUtils.addStatistic(Color.GREEN, "Mattress Firmness", "");
+        mTotalTimeSlept = statisticsUtils.addStatistic(
+                StatisticsUtils.getCircleDrawable(getContext(), StatisticsUtils.StatisticCircleColor.GREEN),
+                "Total Time Slept", "");
+        mTimesOutOfBed = statisticsUtils.addStatistic(
+                StatisticsUtils.getCircleDrawable(getContext(), StatisticsUtils.StatisticCircleColor.DARK_BLUE),
+                "Times out of Bed", "");
+        mMattressFirmness = statisticsUtils.addStatistic(
+                StatisticsUtils.getCircleDrawable(getContext(), StatisticsUtils.StatisticCircleColor.LIGHT_BLUE),
+                "Mattress Firmness", "");
 
     }
 

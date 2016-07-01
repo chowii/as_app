@@ -1,5 +1,8 @@
 package au.com.ahbeard.sleepsense.utils;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -32,7 +35,7 @@ public class StatisticsUtils {
      *
      * @return
      */
-    public StatisticViewHolder addStatistic(int color, CharSequence name, CharSequence value) {
+    public StatisticViewHolder addStatistic(Drawable color, CharSequence name, CharSequence value) {
         return addStatistic(color, name, value, null);
     }
 
@@ -44,7 +47,7 @@ public class StatisticsUtils {
      *
      * @return
      */
-    public StatisticViewHolder addStatistic(int color, CharSequence name, CharSequence value, CharSequence expandedText) {
+    public StatisticViewHolder addStatistic(Drawable color, CharSequence name, CharSequence value, CharSequence expandedText) {
 
         View view = LayoutInflater.from(mStatisticsLayout.getContext()).inflate(R.layout.item_statistic, mStatisticsLayout, false);
 
@@ -73,6 +76,12 @@ public class StatisticsUtils {
 
         }
 
+        if (color != null) {
+            viewHolder.imageView.setVisibility(View.VISIBLE);
+            viewHolder.imageView.setImageDrawable(color);
+        } else {
+            viewHolder.imageView.setVisibility(View.GONE);
+        }
 
         mStatisticsLayout.addView(view);
 
@@ -144,6 +153,21 @@ public class StatisticsUtils {
         @Bind(R.id.statistic_text_view_expanded_text)
         public TextView expandedTextView;
 
+    }
+
+    public static Drawable getCircleDrawable(Context context, StatisticCircleColor color) {
+        int id = R.drawable.circle_statistics_green;
+        switch (color) {
+            case GREEN: id = R.drawable.circle_statistics_green; break;
+            case DARK_BLUE: id = R.drawable.circle_statistics_dark_blue; break;
+            case LIGHT_BLUE: id = R.drawable.circle_statistics_light_blue; break;
+            case RED: id = R.drawable.circle_statistics_red; break;
+        }
+        return ResourcesCompat.getDrawable(context.getResources(), id, null);
+    }
+
+    public enum StatisticCircleColor {
+        GREEN, DARK_BLUE, LIGHT_BLUE, RED
     }
 
 }
