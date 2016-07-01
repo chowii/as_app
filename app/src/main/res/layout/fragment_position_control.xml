@@ -93,6 +93,7 @@
                             style="@style/styledButton"
                             android:drawableTop="@drawable/position_rest_icon"
                             android:text="Rest"
+                            android:textAllCaps="true"
                             app:topBorder="false"
                             app:typeface="RobotoRegular"/>
 
@@ -105,6 +106,7 @@
                             style="@style/styledButton"
                             android:drawableTop="@drawable/position_recline_icon"
                             android:text="Recline"
+                            android:textAllCaps="true"
                             app:topBorder="false"
                             app:typeface="RobotoRegular"/>
 
@@ -123,6 +125,7 @@
                             style="@style/styledButton"
                             android:drawableTop="@drawable/position_relax_icon"
                             android:text="Relax"
+                            android:textAllCaps="true"
                             app:topBorder="false"
                             app:typeface="RobotoRegular"/>
 
@@ -135,6 +138,7 @@
                             style="@style/styledButton"
                             android:drawableTop="@drawable/position_recover_icon"
                             android:text="Recover"
+                            android:textAllCaps="true"
                             app:topBorder="false"
                             app:typeface="RobotoRegular"/>
 

@@ -54,6 +54,13 @@
 
     <color name="sleepTrackingBackgroundColor">#042234</color>
 
+    <color name="statisticsItemExpandedTextColor">#6E788D</color>
+    <color name="statisticsItemCircleLightBlue">#52B8F2</color>
+    <color name="statisticsItemCircleDarkBlue">#0060AF</color>
+    <color name="statisticsItemCircleGreen">#34DABA</color>
+    <color name="statisticsItemCircleRed">#FD807B</color>
+
+
     <color name="debug1">#7000FF00</color>
     <color name="debug2">#70FF0000</color>
     <color name="debug3">#700000FF</color>

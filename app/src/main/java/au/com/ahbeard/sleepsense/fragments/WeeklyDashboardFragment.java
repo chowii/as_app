@@ -168,11 +168,21 @@ public class WeeklyDashboardFragment extends Fragment {
 
         StatisticsUtils statisticsUtils = new StatisticsUtils(mStatisticsLayout);
 
-        mAverageSleepScore = statisticsUtils.addStatistic(Color.GREEN, "Average Sleep Score", null);
-        mOptimalBedtime = statisticsUtils.addStatistic(Color.GREEN, "Optimal Bedtime", null);
-        mOptimalMattressFirmness = statisticsUtils.addStatistic(Color.GREEN, "Optimal Mattress Firmness", null);
-        mBestNight =statisticsUtils.addStatistic(Color.GREEN, "Best Night", null);
-        mWorstNight = statisticsUtils.addStatistic(Color.GREEN, "Worst Night", null);
+        mAverageSleepScore = statisticsUtils.addStatistic(
+                StatisticsUtils.getCircleDrawable(getContext(), StatisticsUtils.StatisticCircleColor.GREEN),
+                "Average Sleep Score", null);
+        mOptimalBedtime = statisticsUtils.addStatistic(
+                StatisticsUtils.getCircleDrawable(getContext(), StatisticsUtils.StatisticCircleColor.DARK_BLUE),
+                "Optimal Bedtime", null);
+        mOptimalMattressFirmness = statisticsUtils.addStatistic(
+                StatisticsUtils.getCircleDrawable(getContext(), StatisticsUtils.StatisticCircleColor.LIGHT_BLUE),
+                "Optimal Mattress Firmness", null);
+        mBestNight =statisticsUtils.addStatistic(
+                StatisticsUtils.getCircleDrawable(getContext(), StatisticsUtils.StatisticCircleColor.GREEN),
+                "Best Night", null);
+        mWorstNight = statisticsUtils.addStatistic(
+                StatisticsUtils.getCircleDrawable(getContext(), StatisticsUtils.StatisticCircleColor.RED),
+                "Worst Night", null);
 
         mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
             @Override

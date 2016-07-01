@@ -33,19 +33,25 @@
             <FrameLayout
                 android:id="@+id/zeds_container"
                 android:layout_width="match_parent"
-
                 android:layout_height="180dp">
 
             </FrameLayout>
 
-            <!-- Negative margin so the Zeds spawns closer to the textView -->
-            <RelativeLayout
+            <!-- Negative marginTop so the Zeds spawns closer to the textView -->
+            <LinearLayout
                 android:id="@+id/sleep_tracking_layout_clock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="-30dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    />
 
                 <au.com.ahbeard.sleepsense.widgets.StyledTextView
                     android:id="@+id/sleep_tracking_text_view_clock_time"
@@ -57,21 +63,28 @@
                     app:typeface="RobotoThin"
                     tools:text="88:88"/>
 
-                <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                    android:id="@+id/sleep_tracking_text_view_clock_am_pm"
-                    android:layout_toEndOf="@id/sleep_tracking_text_view_clock_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:includeFontPadding="false"
-                    android:textColor="#fff"
-                    android:textSize="20sp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="17dp"
-                    app:typeface="OpenSansRegular"
-                    tools:text="PM"/>
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
-            </RelativeLayout>
+                    <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                        android:id="@+id/sleep_tracking_text_view_clock_am_pm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:includeFontPadding="false"
+                        android:textColor="#fff"
+                        android:textSize="20sp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="17dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        app:typeface="OpenSansRegular"
+                        tools:text="PM"/>
+
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
 
 

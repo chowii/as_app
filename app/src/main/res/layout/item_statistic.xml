@@ -18,12 +18,11 @@
         >
 
         <ImageView
-
             android:id="@+id/statistic_image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             android:layout_marginRight="15dp"
-            android:src="@drawable/daily_view_circle"/>
+            android:src="@drawable/circle_statistics_light_blue"/>
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:id="@+id/statistic_text_view_name"
@@ -79,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="8dp"
-            android:textColor="#007FC3"
+            android:textColor="@color/statisticsItemExpandedTextColor"
             android:textSize="13sp"
             app:typeface="OpenSansRegular"
             tools:text="85"/>
