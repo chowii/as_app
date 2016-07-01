@@ -10,4 +10,6 @@ public class Settings {
     // public static final String INTERACTIVE_EXPERIENCE_APP_ID = "com.google.android.gm";
 
     public static final String INTERACTIVE_EXPERIENCE_APP_ID = "com.ahbeard.ar";
+
+
 }

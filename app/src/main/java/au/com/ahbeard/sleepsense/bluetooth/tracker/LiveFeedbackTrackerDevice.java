@@ -142,7 +142,7 @@ public class LiveFeedbackTrackerDevice extends Device {
         mNotifySubscription = getNotifyEventObservable().observeOn(Schedulers.io()).subscribe(new Action1<ValueChangeEvent>() {
 
             int currentPacketNumber = 0;
-            int currentSampleNumber = 0;
+//            int currentSampleNumber = 0;
 
             @Override
             public void call(ValueChangeEvent valueChangeEvent) {
@@ -161,7 +161,6 @@ public class LiveFeedbackTrackerDevice extends Device {
                 int samplesInCurrentPacket = sampleData.length / 2;
 
                 if (!(packetTypeCode == PACKET_TYPE_DEFAULT || packetTypeCode == PACKET_TYPE_NO_MOVEMENT)) {
-
                     // closeWithError(new SensorProtocolViolationException("Invalid packet type code", String.valueOf(packetTypeCode)));
                     return;
                 }
@@ -192,11 +191,11 @@ public class LiveFeedbackTrackerDevice extends Device {
 
                 mSessionPublishSubject.onNext(sampleData);
 
-                int numberOfSamples = sampleData.length / 2;
-
-                this.currentSampleNumber += numberOfSamples;
-                this.currentPacketNumber += 1;
-                this.currentPacketNumber &= 0xFF;
+//                int numberOfSamples = sampleData.length / 2;
+//
+//                this.currentSampleNumber += numberOfSamples;
+//                this.currentPacketNumber += 1;
+//                this.currentPacketNumber &= 0xFF;
             }
         });
 

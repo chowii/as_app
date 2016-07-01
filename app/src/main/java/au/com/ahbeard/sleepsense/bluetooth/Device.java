@@ -259,7 +259,7 @@ public class Device extends BluetoothGattCallback {
             if (service != null) {
 
                 mBluetoothOperationQueueSubscription.add(
-                        mBluetoothOperationQueue.observe().observeOn(Schedulers.io()).subscribe(
+                        mBluetoothOperationQueue.observe().observeOn(Schedulers.computation()).subscribe(
                                 new Observer<BluetoothOperation>() {
                                     @Override
                                     public void onCompleted() {

@@ -38,7 +38,7 @@ public class OnBoardingBluetoothFragment extends OnBoardingFragment {
 
     @OnClick(R.id.on_board_text_view_find_out_more)
     void findOutMoreClicked() {
-        startActivity(HelpActivity.getIntent(getActivity(),"More About Sleepsense", "http://share.mentallyfriendly.com/sleepsense/#!/faq"));
+        startActivity(HelpActivity.getIntent(getActivity(),"More About Sleepsense", "http://sleepsense.com.au/app-faq"));
     }
 
     @Bind(R.id.on_board_button_continue)

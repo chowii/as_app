@@ -78,7 +78,7 @@ public class InStoreMoreFragment extends Fragment {
             add(inflater, mItemsLayout, "Back to Interactive Experience", null, new Runnable() {
                 @Override
                 public void run() {
-                    launchIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(launchIntent);
                 }
             });
