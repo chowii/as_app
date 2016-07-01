@@ -67,7 +67,7 @@ public class InStoreHomeActivity extends BaseActivity {
         final Intent launchIntent = getPackageManager().getLaunchIntentForPackage(Settings.INTERACTIVE_EXPERIENCE_APP_ID);
 
         if (launchIntent != null) {
-            launchIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(launchIntent);
             finish();
         }
