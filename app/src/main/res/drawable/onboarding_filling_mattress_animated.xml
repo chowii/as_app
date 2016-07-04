@@ -2,6 +2,22 @@
 <animation-list android:id="@+id/selected"
                 android:oneshot="false"
                 xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/onboarding_filling_mattress_in" android:duration="500" />
-    <item android:drawable="@drawable/onboarding_filling_mattress_out" android:duration="500" />
+    <!--<item android:drawable="@drawable/onboarding_filling_mattress_in" android:duration="500" />-->
+    <!--<item android:drawable="@drawable/onboarding_filling_mattress_out" android:duration="500" />-->
+    <item android:drawable="@drawable/mattress_breathing_anim_1"  android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_2"  android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_3"  android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_4"  android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_5"  android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_6"  android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_7"  android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_8"  android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_9"  android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_10" android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_11" android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_12" android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_13" android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_14" android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_15" android:duration="100" />
+    <item android:drawable="@drawable/mattress_breathing_anim_16" android:duration="100" />
 </animation-list>
