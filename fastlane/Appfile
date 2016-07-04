@@ -1,0 +1,2 @@
+json_key_file "fastlane/google-play-android-dev-079d049b6d4a.json" # Path to the json secret file - Follow https://github.com/fastlane/supply#setup to get one
+package_name "au.com.ahbeard.sleepsense" # e.g. com.krausefx.app
