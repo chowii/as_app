@@ -28,6 +28,9 @@ public class OnBoardingBluetoothFragment extends OnBoardingFragment {
         void onBluetoothContinueClicked();
     }
 
+    @Bind(R.id.on_board_button_continue)
+    Button mContinueButton;
+
     @OnClick(R.id.on_board_button_continue)
     void continueClicked() {
         if (mOnActionListener != null) {
@@ -38,12 +41,9 @@ public class OnBoardingBluetoothFragment extends OnBoardingFragment {
 
     @OnClick(R.id.on_board_text_view_find_out_more)
     void findOutMoreClicked() {
-        startActivity(HelpActivity.getIntent(getActivity(),"More About Sleepsense", "http://sleepsense.com.au/app-faq"));
+        startActivity(HelpActivity.getIntent(getActivity(),"More About Sleepsense", "http://sleepsense.com.au"));
     }
-
-    @Bind(R.id.on_board_button_continue)
-    Button mContinueButton;
-
+    
     public static OnBoardingBluetoothFragment newInstance() {
         OnBoardingBluetoothFragment fragment = new OnBoardingBluetoothFragment();
         Bundle args = new Bundle();
