@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.HomeActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,30 +23,31 @@
 
     </FrameLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical">
+        android:layout_height="60dp"
+        android:background="@drawable/tabbar_background"
+        android:layout_gravity="bottom">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/tabTopColor"/>
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@color/tabTopColor"/>-->
 
 
         <au.com.ahbeard.sleepsense.widgets.SimpleTabStrip
             android:id="@+id/dashboard_simple_tab_strip"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@color/tabBackgroundColor"
+            android:background="@null"
+            android:layout_alignParentBottom="true"
             android:orientation="horizontal"
             app:selectedTabColor="@color/tabSelectedColor"
             app:tabColor="@color/tabUnselectedColor"
             app:tabLayout="@layout/tab_dashboard">
 
         </au.com.ahbeard.sleepsense.widgets.SimpleTabStrip>
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/on_board_complete_dialog_layout"
