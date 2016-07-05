@@ -59,38 +59,34 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="10dp"
         android:clipToPadding="false"
-        android:gravity="right|center"
-        android:orientation="horizontal"
-        android:padding="11dp">
+        android:layout_marginEnd="11dp"
+        android:orientation="horizontal">
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:gravity="right"
-            android:text="Going to sleep?"
-            android:textAllCaps="true"
-            android:textColor="#3C709C"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/dashboard_fab_start_sleep"
+            android:gravity="end"
+            android:text="@string/dashboard_empty_sleep_now_description"
+            android:textColor="#994a4a4a"
             android:textSize="13sp"
             app:typeface="OpenSansSemibold" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/dashboard_no_sleeps_arrow" />
-
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/dashboard_fab_start_sleep"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:src="@drawable/fab_icon_sleep" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </FrameLayout>

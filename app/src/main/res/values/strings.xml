@@ -74,5 +74,6 @@
     <string name="onboarding_searching_error_description">I can\'t seem to pair with everything</string>
     <string name="try_again_text">Try Again</string>
     <string name="help_me_text">Help Me</string>
+    <string name="dashboard_empty_sleep_now_description">Simply tap the moon when you are ready to sleep</string>
 
 </resources>
