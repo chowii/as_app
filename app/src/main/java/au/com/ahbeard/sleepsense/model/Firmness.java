@@ -16,7 +16,7 @@ public class Firmness {
     private String mAnalyticsValue;
 
     public static int MAX_PRESSURE = 40;
-    public static int SEGMENTS = 10;
+    public static int SEGMENTS = 20;
 
     public static final Map<Integer,Firmness> PRESSURE_TO_FIRMNESS;
 

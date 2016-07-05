@@ -20,6 +20,7 @@ import au.com.ahbeard.sleepsense.bluetooth.BluetoothEvent;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -105,7 +106,21 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mCompositeSubscription.add(BluetoothService.instance().getBluetoothEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BluetoothEvent>() {
+        mCompositeSubscription.add(BluetoothService.instance().getBluetoothEventObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorReturn(new Func1<Throwable, BluetoothEvent>() {
+                    @Override
+                    public BluetoothEvent call(Throwable throwable) {
+                        return null;
+                    }
+                })
+                .filter(new Func1<BluetoothEvent, Boolean>() {
+                    @Override
+                    public Boolean call(BluetoothEvent bluetoothEvent) {
+                        return bluetoothEvent != null;
+                    }
+                })
+                .subscribe(new Action1<BluetoothEvent>() {
             @Override
             public void call(BluetoothEvent bluetoothEvent) {
                 if ( bluetoothEvent instanceof BluetoothEvent.BluetoothUseWhileDisabledEvent ) {

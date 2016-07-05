@@ -43,7 +43,7 @@ public class OnBoardingBluetoothFragment extends OnBoardingFragment {
     void findOutMoreClicked() {
         startActivity(HelpActivity.getIntent(getActivity(),"More About Sleepsense", "http://sleepsense.com.au"));
     }
-    
+
     public static OnBoardingBluetoothFragment newInstance() {
         OnBoardingBluetoothFragment fragment = new OnBoardingBluetoothFragment();
         Bundle args = new Bundle();
