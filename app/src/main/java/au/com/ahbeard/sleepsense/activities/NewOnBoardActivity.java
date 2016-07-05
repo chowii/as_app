@@ -85,7 +85,6 @@ public class NewOnBoardActivity extends BaseActivity implements
         ButterKnife.bind(this);
 
         transitionTo(OnBoardingBluetoothFragment.newInstance());
-
     }
 
     @Override

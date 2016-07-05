@@ -68,5 +68,11 @@
     <string name="onboarding_fill_mattress_error_title">Hmmm</string>
     <string name="onboarding_fill_mattress_error_description">We seem to have difficulties filling your mattress</string>
     <string name="get_help_text">Get help</string>
+    <string name="onboarding_searching_success_title">Success</string>
+    <string name="onboarding_searching_success_description">This is what I paired with</string>
+    <string name="onboarding_searching_error_title">That\'s strange</string>
+    <string name="onboarding_searching_error_description">I can\'t seem to pair with everything</string>
+    <string name="try_again_text">Try Again</string>
+    <string name="help_me_text">Help Me</string>
 
 </resources>

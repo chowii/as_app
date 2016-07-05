@@ -3,13 +3,14 @@ package au.com.ahbeard.sleepsense.fragments.onboarding;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.NewOnBoardActivity;
@@ -66,6 +67,11 @@ public class OnBoardingSearchingFragment  extends OnBoardingFragment {
         }
     }
 
+    @Bind({R.id.pulse_1, R.id.pulse_2, R.id.pulse_3})
+    List<ImageView> pulses;
+
+    OnBoardingState currentState;
+
     public OnBoardingSearchingFragment() {
         // Required empty public constructor
     }
@@ -92,27 +98,33 @@ public class OnBoardingSearchingFragment  extends OnBoardingFragment {
 
         ButterKnife.bind(this, view);
 
-        if (mPhoneImageView.getDrawable() instanceof AnimationDrawable) {
-            ((AnimationDrawable) mPhoneImageView.getDrawable()).start();
-        }
+//        if (mPhoneImageView.getDrawable() instanceof AnimationDrawable) {
+//            ((AnimationDrawable) mPhoneImageView.getDrawable()).start();
+//        }
+        final PulseAnimator.ShouldStopCallback callback = new PulseAnimator.ShouldStopCallback() {
+            @Override
+            public boolean shouldStop() {
+                return getContext() == null || (currentState != null && currentState.state != OnBoardingState.State.Acquiring);
+            }
+        };
 
+        PulseAnimator.startAnimation(pulses, getContext(), callback);
         mDevicesLayout.setVisibility(View.INVISIBLE);
-
         mContinueButton.setAlpha(0.0f);
 
         mCompositeSubscription.add(((NewOnBoardActivity) getActivity()).getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<OnBoardingState>() {
             @Override
             public void call(OnBoardingState onBoardingState) {
+                currentState = onBoardingState;
                 if (onBoardingState.state == OnBoardingState.State.Acquiring) {
+                    PulseAnimator.startAnimation(pulses, getContext(), callback);
                     mDevicesLayout.setVisibility(View.INVISIBLE);
-
+                    mContinueButton.setAlpha(0.0f);
                 } else {
 
                     mDevicesLayout.setVisibility(View.VISIBLE);
 
-                    if (mPhoneImageView.getDrawable() instanceof AnimationDrawable) {
-                        ((AnimationDrawable) mPhoneImageView.getDrawable()).stop();
-                    }
+                    PulseAnimator.stopAnimation(pulses);
 
                     mBaseLayout.setVisibility(onBoardingState.requiredBase ? View.VISIBLE : View.GONE);
                     mMattressLayout.setVisibility(onBoardingState.requiredPump ? View.VISIBLE : View.GONE);
@@ -125,21 +137,21 @@ public class OnBoardingSearchingFragment  extends OnBoardingFragment {
                     if (onBoardingState.state == OnBoardingState.State.RequiredDevicesFound) {
                         mContinueButton.animate().alpha(1.0f).start();
                         mPhoneImageView.setImageResource(R.drawable.onboarding_phone_searching_success);
-                        mHeadingTextView.setText("Success");
-                        mTextTextView.setText("This is what I paired with");
-                        mContinueButton.setText("Continue");
+                        mHeadingTextView.setText(R.string.onboarding_searching_success_title);
+                        mTextTextView.setText(R.string.onboarding_searching_success_description);
+                        mContinueButton.setText(R.string.continue_text);
                     } else if (onBoardingState.state == OnBoardingState.State.DevicesMissingAllowRetry) {
                         mPhoneImageView.setImageResource(R.drawable.onboarding_phone_worried);
                         mContinueButton.animate().alpha(1.0f).start();
-                        mHeadingTextView.setText("That's strange");
-                        mTextTextView.setText("I can't seem to pair with everything");
-                        mContinueButton.setText("Try Again");
+                        mHeadingTextView.setText(R.string.onboarding_searching_error_title);
+                        mTextTextView.setText(R.string.onboarding_searching_error_description);
+                        mContinueButton.setText(R.string.try_again_text);
                     } else if (onBoardingState.state == OnBoardingState.State.DevicesMissingShowHelp) {
                         mPhoneImageView.setImageResource(R.drawable.onboarding_phone_worried);
                         mContinueButton.animate().alpha(1.0f).start();
-                        mHeadingTextView.setText("That's strange");
-                        mTextTextView.setText("I can't seem to pair with everything");
-                        mContinueButton.setText("Help Me");
+                        mHeadingTextView.setText(R.string.onboarding_searching_error_title);
+                        mTextTextView.setText(R.string.onboarding_searching_error_description);
+                        mContinueButton.setText(R.string.help_me_text);
                     }
                 }
             }
