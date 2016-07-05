@@ -55,5 +55,18 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="not_specified">Not specified</string>
+    <string name="age">Age</string>
+    <string name="six_week_sleep_challenge">Six week sleep challenge</string>
+    <string name="filling_up">I\'m filling up</string>
+    <string name="please_wait_a_few_moments">Please wait a few moments longer</string>
+    <string name="all_done">All done!</string>
+    <string name="onboarding_fill_mattress_success_description">Now you\'re ready to adjust your comfort levels</string>
+    <string name="continue_text">Continue</string>
+    <string name="onboarding_fill_mattress_error_title">Hmmm</string>
+    <string name="onboarding_fill_mattress_error_description">We seem to have difficulties filling your mattress</string>
+    <string name="get_help_text">Get help</string>
 
 </resources>

@@ -199,7 +199,7 @@ public class SleepSenseDeviceService {
         mPumpDevice = pumpDevice;
 
         if (pumpDevice != null) {
-            mPumpDeviceAddress = mBaseDevice.getAddress();
+            mPumpDeviceAddress = mPumpDevice.getAddress();
             PreferenceService.instance().setPumpDeviceAddress(pumpDevice.getAddress());
         } else {
             mPumpDeviceAddress = null;

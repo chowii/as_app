@@ -87,40 +87,40 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/sleep_sense_button_white"
-                    android:text="Male"
+                    android:background="@drawable/sleep_sense_button_white_selected_blue"
+                    android:text="@string/male"
                     android:textAllCaps="false"
                     app:typeface="OpenSansRegular"
                     android:textSize="10.95sp"
                     android:elevation="2dp"
                     android:layout_margin="10dp"
-                    android:textColor="#6E788D"/>
+                    android:textColor="@color/button_white_selected_blue"/>
                 <au.com.ahbeard.sleepsense.widgets.StyledButton
                     android:id="@+id/profile_button_female"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/sleep_sense_button_white"
-                    android:text="Female"
+                    android:background="@drawable/sleep_sense_button_white_selected_blue"
+                    android:text="@string/female"
                     android:textAllCaps="false"
                     app:typeface="OpenSansRegular"
                     android:textSize="10.95sp"
                     android:elevation="2dp"
                     android:layout_margin="10dp"
-                    android:textColor="#6E788D"/>
+                    android:textColor="@color/button_white_selected_blue"/>
                 <au.com.ahbeard.sleepsense.widgets.StyledButton
                     android:id="@+id/profile_button_unspecified"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/sleep_sense_button_white"
-                    android:text="Not specified"
+                    android:background="@drawable/sleep_sense_button_white_selected_blue"
+                    android:text="@string/not_specified"
                     android:textAllCaps="false"
                     app:typeface="OpenSansRegular"
                     android:textSize="10.95sp"
                     android:elevation="2dp"
                     android:layout_margin="10dp"
-                    android:textColor="#6E788D"/>
+                    android:textColor="@color/button_white_selected_blue"/>
 
             </LinearLayout>
 
@@ -137,7 +137,7 @@
                 android:backgroundTint="#C6D4D9"
                 android:inputType="number"
                 android:maxLength="3"
-                android:hint="Age"/>
+                android:hint="@string/age"/>
 
             <View
                 android:layout_width="match_parent"
@@ -149,7 +149,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:lineSpacingExtra="5sp"
-                android:text="Six week sleep challenge"
+                android:text="@string/six_week_sleep_challenge"
                 android:textColor="#3C709C"
                 android:textSize="17sp"
 
