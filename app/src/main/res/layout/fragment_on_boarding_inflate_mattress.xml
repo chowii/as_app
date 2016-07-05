@@ -15,36 +15,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:alpha="1.0"
-            android:src="@drawable/onboarding_filling_mattress_background" android:adjustViewBounds="true"/>
+            android:src="@drawable/onboarding_filling_mattress_background"
+            android:adjustViewBounds="true"/>
 
         <ImageView
             android:id="@+id/onboarding_image_filling_mattress_happy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="200dp"
+            android:layout_gravity="top"
             android:alpha="1.0"
-            android:src="@drawable/onboarding_filling_mattress_happy" android:adjustViewBounds="true"/>
+            android:src="@drawable/onboarding_filling_mattress_happy"
+            android:adjustViewBounds="true"/>
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/onboarding_image_filling_mattress_animated"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="invisible"
-                android:src="@drawable/onboarding_filling_mattress_happy"
-                android:adjustViewBounds="true"/>
-
-            <ImageView
-                android:id="@+id/onboarding_image_filling_mattress_animated"
-                android:layout_width="252dp"
-                android:layout_height="124dp"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="50dp"
-                android:alpha="0.0"
-                android:src="@drawable/onboarding_filling_mattress_animated" android:adjustViewBounds="true" />
-
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginTop="200dp"
+            android:alpha="0.0"
+            android:src="@drawable/onboarding_filling_mattress_animated" android:adjustViewBounds="true" />
 
 
     </FrameLayout>

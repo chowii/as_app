@@ -90,23 +90,23 @@ public class OnBoardingInflateMattressFragment  extends OnBoardingFragment {
                     mMattressHappyImageView.setAlpha(0.0f);
                     mMattressAnimatedImageView.setAlpha(1.0f);
                     ((AnimationDrawable)mMattressAnimatedImageView.getDrawable()).start();
-                    mHeadingTextView.setText("I'm filling up");
-                    mDescriptionTextView.setText("Please wait a few moments longer");
+                    mHeadingTextView.setText(R.string.filling_up);
+                    mDescriptionTextView.setText(R.string.please_wait_a_few_moments);
                 } else if ( onBoardingState.state == OnBoardingState.State.InflationComplete ) {
                     mMattressHappyImageView.setAlpha(1.0f);
                     ((AnimationDrawable)mMattressAnimatedImageView.getDrawable()).stop();
                     mMattressAnimatedImageView.setAlpha(0.0f);
-                    mHeadingTextView.setText("All done!");
-                    mDescriptionTextView.setText("Now you're ready to adjust your comfort levels");
-                    mContinueButton.setText("Continue");
+                    mHeadingTextView.setText(R.string.all_done);
+                    mDescriptionTextView.setText(R.string.onboarding_fill_mattress_success_description);
+                    mContinueButton.setText(R.string.continue_text);
                     mContinueButton.setAlpha(1.0f);
                 } else if ( onBoardingState.state == OnBoardingState.State.InflationError ) {
                     mMattressHappyImageView.setAlpha(1.0f);
                     ((AnimationDrawable)mMattressAnimatedImageView.getDrawable()).stop();
                     mMattressAnimatedImageView.setAlpha(0.0f);
-                    mHeadingTextView.setText("Hmmm");
-                    mDescriptionTextView.setText("We seem to have difficulties filling your mattress");
-                    mContinueButton.setText("Get help");
+                    mHeadingTextView.setText(R.string.onboarding_fill_mattress_error_title);
+                    mDescriptionTextView.setText(R.string.onboarding_fill_mattress_error_description);
+                    mContinueButton.setText(R.string.get_help_text);
                     mContinueButton.setAlpha(1.0f);
                 }
             }
