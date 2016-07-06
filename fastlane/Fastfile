@@ -36,8 +36,17 @@ platform :android do
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do
-    gradle(task: "assembleRelease")
+    gradle(
+      task: 'assemble',
+      flavor: 'Playstore',
+      build_type: 'Release'
+    )
     supply
+  end
+
+  desc "Assemble playstore version"
+  lane :playstore do 
+    gradle(task: "assemblePlaystore")
   end
 
   # You can define as many lanes as you want

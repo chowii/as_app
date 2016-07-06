@@ -11,9 +11,9 @@ import com.beddit.analysis.TimeValueFragment;
 import com.beddit.sensor.SensorException;
 import com.beddit.sensor.SensorSession;
 import com.beddit.sensor.SessionAccounting;
+import com.beddit.sensor.log.SSLogger;
 import com.beddit.synchronization.SampledTrackDescriptor;
 import com.beddit.synchronization.Synchronizer;
-import com.logentries.logger.AndroidLogger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -107,7 +107,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
     @Override
     public void onSensorSessionOpened(final SensorSession sensorSession) {
 
-        AndroidLogger.getInstance().log("onSensorSessionOpened: " + sensorSession.getSensorDetails());
+        SSLogger.log("onSensorSessionOpened: " + sensorSession.getSensorDetails());
         LogService.d(TAG, "SENSOR DETAILS: " + sensorSession.getSensorDetails());
 
         mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Connected);
@@ -143,15 +143,15 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
 
         if (error == null) {
             LogService.d(TAG, "onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
-            AndroidLogger.getInstance().log("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
+            SSLogger.log("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
 
             // Once again, shift this over to a computation thread.
             mSensorDataObservable.onCompleted();
         } else {
             mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Error);
 
-            AndroidLogger.getInstance().log("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
-            AndroidLogger.getInstance().log("error: " + error.getMessage());
+            SSLogger.log("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
+            SSLogger.log("error: " + error.getMessage());
             LogService.e(TAG, "onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
             LogService.e(TAG, "error: ", error);
             // Once again, shift this over to a computation thread.
@@ -182,7 +182,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
 
         mAnalysisStartTime = System.currentTimeMillis();
 
-        AndroidLogger.getInstance().log("startSensorSessionCalled...");
+        SSLogger.log("startSensorSessionCalled...");
 
         // Create the InputSpec.
         InputSpec inputSpec = new InputSpec(FRAME_LENGTH);
@@ -209,13 +209,13 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
 
             mStreamingAnalysis = new StreamingAnalysis(inputSpec);
 
-            AndroidLogger.getInstance().log("about to start streaming...");
+            SSLogger.log("about to start streaming...");
             LogService.d("TrackingSessionAnalyzer", "about to start streaming...");
 
             Schedulers.io().createWorker().schedule(new Action0() {
                 @Override
                 public void call() {
-                    AndroidLogger.getInstance().log("sensorSession.startStreaming called...");
+                    SSLogger.log("sensorSession.startStreaming called...");
                     sensorSession.startStreaming();
                     mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.StartingTracking);
                 }
@@ -275,7 +275,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
                 mTimeValueTrackFragmentPublishSubject.onNext(mStreamingAnalysis.analyze(sampledFragment));
 
             } catch (AnalysisException e) {
-                AndroidLogger.getInstance().log("exception analysing raw stream data: " + e.getMessage());
+                SSLogger.log("exception analysing raw stream data: " + e.getMessage());
                 LogService.e(TAG, "exception analysing raw stream data: ", e);
             }
 
@@ -290,12 +290,12 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
         try {
 
             if (mStreamingAnalysis != null) {
-                AndroidLogger.getInstance().log("Finalizing analysis...");
+                SSLogger.log("Finalizing analysis...");
                 LogService.d(TAG, "Finalizing analysis");
 
                 TimeValueFragment timeValueFragment = mStreamingAnalysis.finalizeAnalysis();
 
-                AndroidLogger.getInstance().log("Analysis finalized...");
+                SSLogger.log("Analysis finalized...");
                 LogService.d(TAG, "Analysis finalized");
 
                 if (timeValueFragment != null) {

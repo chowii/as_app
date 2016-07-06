@@ -8,10 +8,6 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
-import com.logentries.logger.AndroidLogger;
-
-import java.io.IOException;
-
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
@@ -61,11 +57,11 @@ public class SleepSenseApplication extends Application {
         RemoteSleepDataService.initialize(this);
         AnalyticsService.initialize(this);
 
-        try {
-            AndroidLogger.createInstance(getApplicationContext(),false,true,false,null,0,"fc1fc163-a9c8-4634-bff6-d4b4e577c881", true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            AndroidLogger.createInstance(getApplicationContext(),false,true,false,null,0,"fc1fc163-a9c8-4634-bff6-d4b4e577c881", true);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 

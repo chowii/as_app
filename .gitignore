@@ -1,3 +1,5 @@
+.signing
+
 *.apk
 *.iml
 .gradle
