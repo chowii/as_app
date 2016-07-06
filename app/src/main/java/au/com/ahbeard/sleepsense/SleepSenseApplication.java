@@ -1,6 +1,11 @@
 package au.com.ahbeard.sleepsense;
 
 import android.app.Application;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.logentries.logger.AndroidLogger;
@@ -22,13 +27,20 @@ import rx.functions.Action1;
  */
 public class SleepSenseApplication extends Application {
 
+    private static SleepSenseApplication sharedInstance;
+
+    public static SleepSenseApplication instance() {
+        return sharedInstance;
+    }
+
     /**
      *
      */
     @Override
     public void onCreate() {
-
         super.onCreate();
+
+        sharedInstance = this;
 
         LogService.initialize(1024);
         LogService.instance().getLogObservable().subscribe(new Action1<LogService.LogMessage>() {
@@ -105,5 +117,26 @@ public class SleepSenseApplication extends Application {
 
         }
 
+    }
+
+    private boolean isShowingBluetoothAlert;
+
+    public void showBluetoothOffAlertDialog(final Context context) {
+        if (isShowingBluetoothAlert) { return; }
+        isShowingBluetoothAlert = true;
+        new AlertDialog.Builder(context)
+                .setPositiveButton(getString(R.string.dismiss), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        isShowingBluetoothAlert = false;
+                    }
+                })
+                .setNeutralButton(getString(R.string.enable_bluetooth), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        context.startActivity(intent);
+                    }
+                })
+                .setMessage("Bluetooth is disabled.").create().show();
     }
 }

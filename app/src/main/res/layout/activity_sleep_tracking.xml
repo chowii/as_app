@@ -139,7 +139,8 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:visibility="visible" tools:visibility="invisible">
+        android:visibility="visible"
+        tools:visibility="invisible">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -182,7 +183,8 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:visibility="gone" tools:visibility="invisible">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -198,25 +200,27 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
                 android:src="@drawable/sleep_tracking_error" android:layout_marginBottom="70dp"/>
 
             <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:id="@+id/error_title_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:includeFontPadding="false"
-                android:text="Connecting..."
+                android:text="Error connecting"
                 android:textColor="#fff"
                 android:textSize="20sp"
-                app:typeface="OpenSansRegular" android:layout_marginBottom="20dp"/>
+                app:typeface="OpenSansRegular"
+                android:layout_marginBottom="20dp"/>
             <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:id="@+id/error_subtitle_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:includeFontPadding="false"
-                android:text="I cant seem to connect..."
+                android:gravity="center_horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="I cant seem to connect, bluetooth is turned off or the device isn't in range"
                 android:textColor="#fff"
                 android:textSize="14sp"
                 app:typeface="OpenSansLight"/>

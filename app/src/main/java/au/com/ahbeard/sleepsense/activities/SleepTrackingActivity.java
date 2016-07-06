@@ -3,6 +3,7 @@ package au.com.ahbeard.sleepsense.activities;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -34,6 +35,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
@@ -85,6 +87,9 @@ public class SleepTrackingActivity extends BaseActivity {
     @Bind(R.id.sleep_tracking_text_view_sample_count)
     TextView mSampleCountTextView;
 
+    @Bind(R.id.sleep_tracking_layout_tracking)
+    View mClockLayout;
+
     @Bind(R.id.sleep_tracking_layout_connecting)
     View mConnectingLayout;
 
@@ -93,6 +98,14 @@ public class SleepTrackingActivity extends BaseActivity {
 
     @Bind(R.id.sleep_tracking_image_view_connecting)
     ImageView mConnectingImageView;
+
+    @OnClick(R.id.sleep_tracking_button_error)
+    void tryAgainButton_onClick() {
+        //Relaunch activity for now
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+    }
 
     int spawnerCounter = 0;
 
@@ -107,18 +120,13 @@ public class SleepTrackingActivity extends BaseActivity {
 
         mCalendar = Calendar.getInstance();
 
-        if (SleepSenseDeviceService.instance().getTrackerDevice().getTrackerState()== TrackerDevice.TrackerState.Tracking) {
-            mConnectingLayout.setVisibility(View.GONE);
+        if (!BluetoothService.instance().isBluetoothEnabled()) {
+            showErrorView();
+        } else if (SleepSenseDeviceService.instance().getTrackerDevice().getTrackerState()== TrackerDevice.TrackerState.Tracking) {
+            showClockView();
         } else {
-            mConnectingLayout.setVisibility(View.VISIBLE);
-
+            showConnectingView();
         }
-
-        RotateAnimation rotateAnimation = new RotateAnimation(0f,360f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
-        rotateAnimation.setRepeatCount(Animation.INFINITE);
-        rotateAnimation.setDuration(1000);
-        rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        mConnectingImageView.startAnimation(rotateAnimation);
 
         SleepSenseDeviceService.instance().getTrackerDevice()
                 .getTrackingStateObservable()
@@ -128,6 +136,7 @@ public class SleepTrackingActivity extends BaseActivity {
                     public void call(TrackerDevice.TrackerState trackerState) {
                         if (TrackerDevice.TrackerState.Tracking == trackerState) {
                             mConnectingLayout.animate().alpha(0.0f).setDuration(300).start();
+                            showClockView();
                         } else if ( TrackerDevice.TrackerState.Error == trackerState ) {
                             mErrorLayout.animate().alpha(0.0f).setDuration(300).start();
                         }
@@ -161,8 +170,33 @@ public class SleepTrackingActivity extends BaseActivity {
         }
     }
 
-    private void setButtonState() {
+    void showConnectingView() {
+        mConnectingLayout.setVisibility(View.VISIBLE);
+        RotateAnimation rotateAnimation = new RotateAnimation(0f,360f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        rotateAnimation.setRepeatCount(Animation.INFINITE);
+        rotateAnimation.setDuration(1000);
+        rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        mConnectingImageView.startAnimation(rotateAnimation);
+    }
 
+    void hideConnectionView() {
+        mConnectingLayout.setVisibility(View.GONE);
+    }
+
+    void showClockView() {
+        mClockLayout.setVisibility(View.VISIBLE);
+    }
+
+    void hideClockView() {
+        mClockLayout.setVisibility(View.GONE);
+    }
+
+    void showErrorView() {
+        mErrorLayout.setVisibility(View.VISIBLE);
+    }
+
+    void hideErrorView() {
+        mErrorLayout.setVisibility(View.GONE);
     }
 
     int mHours;
@@ -201,8 +235,6 @@ public class SleepTrackingActivity extends BaseActivity {
                         mClockAmPmTextView.setText(mAMPM == Calendar.AM ? "AM" : "PM");
                     }
                 });
-
-        setButtonState();
     }
 
     @Override

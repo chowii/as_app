@@ -75,5 +75,7 @@
     <string name="try_again_text">Try Again</string>
     <string name="help_me_text">Help Me</string>
     <string name="dashboard_empty_sleep_now_description">Simply tap the moon when you are ready to sleep</string>
+    <string name="enable_bluetooth">Enable Bluetooth</string>
+    <string name="dismiss">Dismiss</string>
 
 </resources>

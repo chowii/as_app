@@ -16,6 +16,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.SleepSenseApplication;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothEvent;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import rx.android.schedulers.AndroidSchedulers;
@@ -124,14 +125,14 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public void call(BluetoothEvent bluetoothEvent) {
                 if ( bluetoothEvent instanceof BluetoothEvent.BluetoothUseWhileDisabledEvent ) {
-                    new AlertDialog.Builder(BaseActivity.this).setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                        }
-                    }).setMessage("Bluetooth is disabled.").create().show();
-
+                    showBluetoothOffAlertView();
                 }
             }
         }));
+    }
+
+    void showBluetoothOffAlertView() {
+        SleepSenseApplication.instance().showBluetoothOffAlertDialog(this);
     }
 
     @Override
