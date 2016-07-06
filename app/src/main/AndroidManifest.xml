@@ -19,6 +19,12 @@
             android:name=".activities.SleepScoreBreakdownActivity"
             android:screenOrientation="userPortrait">
         </activity>
-    </application>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d340877592487019d618eada69d27ba7f41dad0f" />
+     <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d340877592487019d618eada69d27ba7f41dad0f" />
+       </application>
 
 </manifest>

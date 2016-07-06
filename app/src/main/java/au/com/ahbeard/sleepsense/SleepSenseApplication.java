@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
@@ -16,6 +18,7 @@ import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.services.RemoteSleepDataService;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.services.TypefaceService;
+import io.fabric.sdk.android.Fabric;
 import rx.functions.Action1;
 
 /**
@@ -29,12 +32,10 @@ public class SleepSenseApplication extends Application {
         return sharedInstance;
     }
 
-    /**
-     *
-     */
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         sharedInstance = this;
 
