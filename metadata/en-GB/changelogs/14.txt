@@ -1,0 +1,1 @@
+Fix an issue that stopped the app from tracking your sleep.
