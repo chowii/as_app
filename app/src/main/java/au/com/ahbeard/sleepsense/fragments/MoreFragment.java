@@ -90,7 +90,7 @@ public class MoreFragment extends Fragment {
 
         try {
             PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
-            add(inflater,mItemsLayout,"App Version", packageInfo.versionName,null);
+            add(inflater,mItemsLayout,"App Version", String.format("%s (%s)", packageInfo.versionName, packageInfo.versionCode),null);
             addSpacer(mItemsLayout);
         } catch (PackageManager.NameNotFoundException e) {
 

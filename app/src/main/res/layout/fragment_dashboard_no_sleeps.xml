@@ -64,14 +64,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:clipToPadding="false"
-        android:layout_marginEnd="11dp"
         android:orientation="horizontal">
 
         <au.com.ahbeard.sleepsense.widgets.StyledTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginBottom="15dp"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/dashboard_fab_start_sleep"
             android:gravity="end"
@@ -84,6 +84,8 @@
             android:id="@+id/dashboard_fab_start_sleep"
             android:layout_width="56dp"
             android:layout_height="56dp"
+            android:layout_marginEnd="11dp"
+            android:layout_marginBottom="15dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:src="@drawable/fab_icon_sleep" />

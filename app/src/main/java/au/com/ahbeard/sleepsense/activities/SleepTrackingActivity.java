@@ -60,6 +60,7 @@ public class SleepTrackingActivity extends BaseActivity {
         if (SleepSenseDeviceService.instance().getTrackerDevice().isTracking()) {
             new AlertDialog.Builder(this).setPositiveButton(R.string.sleep_tracking_dialog_yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                    mIgnoreStateUpdate = true;
                     AnalyticsService.instance().logEvent(AnalyticsService.EVENT_SLEEP_SCREEN_STOP_TRACKING);
                     Schedulers.io().createWorker().schedule(new Action0() {
                         @Override
@@ -107,7 +108,9 @@ public class SleepTrackingActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    int spawnerCounter = 0;
+    private int spawnerCounter = 0;
+    private boolean mIsPaused = false;
+    private boolean mIgnoreStateUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +125,7 @@ public class SleepTrackingActivity extends BaseActivity {
 
         if (!BluetoothService.instance().isBluetoothEnabled()) {
             showErrorView();
-        } else if (SleepSenseDeviceService.instance().getTrackerDevice().getTrackerState()== TrackerDevice.TrackerState.Tracking) {
+        } else if (SleepSenseDeviceService.instance().getTrackerDevice().getTrackerState() == TrackerDevice.TrackerState.Tracking) {
             showClockView();
         } else {
             showConnectingView();
@@ -134,11 +137,23 @@ public class SleepTrackingActivity extends BaseActivity {
                 .subscribe(new Action1<TrackerDevice.TrackerState>() {
                     @Override
                     public void call(TrackerDevice.TrackerState trackerState) {
-                        if (TrackerDevice.TrackerState.Tracking == trackerState) {
-                            mConnectingLayout.animate().alpha(0.0f).setDuration(300).start();
-                            showClockView();
-                        } else if ( TrackerDevice.TrackerState.Error == trackerState ) {
-                            mErrorLayout.animate().alpha(0.0f).setDuration(300).start();
+                        switch (trackerState) {
+                            case Connecting:
+                                hideClockView();
+                                hideErrorView();
+                                showConnectingView();
+                            case Tracking:
+                                hideConnectionView();
+                                hideErrorView();
+                                showClockView();
+                                break;
+                            case Disconnected:
+                            case Error:
+                                hideConnectionView();
+                                hideClockView();
+                                showErrorView();
+                                break;
+                            default: break;
                         }
                     }
                 });
@@ -152,21 +167,26 @@ public class SleepTrackingActivity extends BaseActivity {
                     public void call(Integer packetCount) {
                         mSampleCountTextView.setText(Integer.toString(packetCount));
 
-                        if (spawnerCounter % 2 == 0) {
+                        if (!mIsPaused && spawnerCounter % 2 == 0) {
+                            Log.d("ZED", "Spawning Zed");
                             spawnZed();
                         }
                         spawnerCounter++;
                     }
                 });
 
+        startSleepSession();
+
+        for (int i = 0; i < 20; i++){ //prefill zed pool
+            zedsPool.add(createZed());
+        }
+    }
+
+    void startSleepSession() {
         SleepSenseDeviceService.instance().getTrackerDevice().startSensorSession();
 
         if ( SleepSenseDeviceService.instance().getPumpDevice() != null ) {
             SleepSenseDeviceService.instance().getPumpDevice().connectToGetFirmness();
-        }
-
-        for (int i = 0; i < 20; i++){ //prefill zed pool
-            zedsPool.add(createZed());
         }
     }
 
@@ -206,8 +226,9 @@ public class SleepTrackingActivity extends BaseActivity {
 
     @Override
     protected void onStart() {
-
         super.onStart();
+
+        mIsPaused = false;
 
         // Not using a standard date format here, because we will probably have to split it up into multiple
         // fields to get the alignment to work correctly.
@@ -244,11 +265,8 @@ public class SleepTrackingActivity extends BaseActivity {
             mClockSubscription = null;
         }
         super.onStop();
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+        mIsPaused = true;
     }
 
     @Bind(R.id.zeds_container)
