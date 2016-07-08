@@ -19,6 +19,7 @@ import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.SleepSenseApplication;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothEvent;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
+import au.com.ahbeard.sleepsense.services.LogService;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -108,10 +109,12 @@ public class BaseActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mCompositeSubscription.add(BluetoothService.instance().getBluetoothEventObservable()
+                .onBackpressureBuffer()
                 .observeOn(AndroidSchedulers.mainThread())
                 .onErrorReturn(new Func1<Throwable, BluetoothEvent>() {
                     @Override
                     public BluetoothEvent call(Throwable throwable) {
+                        LogService.d("BaseActivity", "Error on bluetoothEvent", throwable);
                         return null;
                     }
                 })

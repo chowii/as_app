@@ -3,6 +3,9 @@ package au.com.ahbeard.sleepsense.services;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+import com.google.android.gms.common.api.BooleanResult;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.HashMap;
@@ -47,22 +50,27 @@ public class AnalyticsService {
     }
 
     private void logEvent(String event, Map<String, Object> attrs) {
-        Liquid.getInstance().track(event, attrs);
-
+        CustomEvent answersEvent = new CustomEvent(event);
         Bundle bundle = new Bundle();
         for (Map.Entry<String, Object> entry : attrs.entrySet())
         {
             if (entry.getValue() instanceof String) {
                 bundle.putString(entry.getKey(), (String) entry.getValue());
+                answersEvent.putCustomAttribute(entry.getKey(), (String) entry.getValue());
             }
             else if (entry.getValue() instanceof Boolean) {
                 bundle.putBoolean(entry.getKey(), (Boolean) entry.getValue());
+                answersEvent.putCustomAttribute(entry.getKey(), Boolean.toString((Boolean) entry.getValue()));
             }
             else if (entry.getValue() instanceof Float) {
                 bundle.putFloat(entry.getKey(), (Float) entry.getValue());
+                answersEvent.putCustomAttribute(entry.getKey(), (Float) entry.getValue());
             }
         }
+
         mFirebaseAnalytics.logEvent(event, bundle);
+        Liquid.getInstance().track(event, attrs);
+        Answers.getInstance().logCustom(answersEvent);
     }
 
     private void logUserProperty(String name, String property) {
