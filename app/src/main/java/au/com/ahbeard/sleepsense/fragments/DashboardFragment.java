@@ -50,7 +50,7 @@ public class DashboardFragment extends Fragment {
     @OnClick(R.id.dashboard_fab_start_sleep)
     void onStartSleepClicked() {
 
-        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_TOUCH_TRACK_SLEEP);
+        AnalyticsService.instance().logDashboardTouchTrackSleep();
 
         Intent intent = new Intent(getActivity(), SleepTrackingActivity.class);
         startActivity(intent);
@@ -114,11 +114,9 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onTabChanged(String tabId) {
                 if ("DAILY".equalsIgnoreCase(tabId)) {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_DAILY_STATS,
-                            AnalyticsService.PROPERTY_ORIGIN, AnalyticsService.VALUE_ORIGIN_TOUCH);
+                    AnalyticsService.instance().logDashboardViewDailyStats(AnalyticsService.VALUE_ORIGIN_TOUCH);
                 } else if ("WEEKLY".equalsIgnoreCase(tabId)) {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_WEEKLY_STATS,
-                            AnalyticsService.PROPERTY_ORIGIN, AnalyticsService.VALUE_ORIGIN_TOUCH);
+                    AnalyticsService.instance().logDashboardViewWeeklyStats(AnalyticsService.VALUE_ORIGIN_TOUCH);
                 }
             }
         });

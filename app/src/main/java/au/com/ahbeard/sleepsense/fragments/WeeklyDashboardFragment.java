@@ -221,8 +221,7 @@ public class WeeklyDashboardFragment extends Fragment {
                     mBestNight.layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_DAILY_STATS,
-                                    AnalyticsService.PROPERTY_ORIGIN, AnalyticsService.VALUE_ORIGIN_BEST_NIGHT);
+                            AnalyticsService.instance().logDashboardViewDailyStats(AnalyticsService.VALUE_ORIGIN_BEST_NIGHT);
                             SleepService.instance().notifySleepIdSelected(SleepService.getSleepId(aggregateStatistics.getBestNight()));
 
                         }
@@ -235,8 +234,7 @@ public class WeeklyDashboardFragment extends Fragment {
                     mWorstNight.layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_DAILY_STATS,
-                                    AnalyticsService.PROPERTY_ORIGIN, AnalyticsService.VALUE_ORIGIN_WORST_NIGHT);
+                            AnalyticsService.instance().logDashboardViewDailyStats(AnalyticsService.VALUE_ORIGIN_WORST_NIGHT);
                             SleepService.instance().notifySleepIdSelected(SleepService.getSleepId(aggregateStatistics.getWorstNight()));
 
                         }

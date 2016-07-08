@@ -55,20 +55,16 @@ public class PositionControlFragment extends Fragment {
     void onClick(View clickedButton) {
 
         if (clickedButton.getId() == R.id.position_button_rest) {
-            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
-                    AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_PRESET_REST);
+            AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_PRESET_REST);
             SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetFlat());
         } else if (clickedButton.getId() == R.id.position_button_recline) {
-            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
-                    AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_PRESET_RECLINE);
+            AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_PRESET_RECLINE);
             SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetLounge());
         } else if (clickedButton.getId() == R.id.position_button_relax) {
-            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
-                    AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_PRESET_RELAX);
+            AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_PRESET_RELAX);
             SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetTV());
         } else if (clickedButton.getId() == R.id.position_button_recover) {
-            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
-                    AnalyticsService.PROPERTY_COMMAND,AnalyticsService.VALUE_COMMAND_PRESET_RECOVER);
+            AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_PRESET_RECOVER);
             SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetZeroG());
         }
 
@@ -151,8 +147,7 @@ public class PositionControlFragment extends Fragment {
             mHeadPositionUpButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
                 @Override
                 public void onDown(StyledImageButton view) {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
-                            AnalyticsService.PROPERTY_COMMAND, AnalyticsService.VALUE_COMMAND_ADJUST_HEAD_UP);
+                    AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_ADJUST_HEAD_UP);
                 }
 
                 @Override
@@ -164,8 +159,7 @@ public class PositionControlFragment extends Fragment {
             mHeadPositionDownButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
                 @Override
                 public void onDown(StyledImageButton view) {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
-                            AnalyticsService.PROPERTY_COMMAND, AnalyticsService.VALUE_COMMAND_ADJUST_HEAD_DOWN);
+                    AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_ADJUST_HEAD_DOWN);
                 }
 
                 @Override
@@ -177,8 +171,7 @@ public class PositionControlFragment extends Fragment {
             mFootPositionUpButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
                 @Override
                 public void onDown(StyledImageButton view) {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
-                            AnalyticsService.PROPERTY_COMMAND, AnalyticsService.VALUE_COMMAND_ADJUST_FOOT_UP);
+                    AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_ADJUST_FOOT_UP);
                 }
 
                 @Override
@@ -190,8 +183,7 @@ public class PositionControlFragment extends Fragment {
             mFootPositionDownButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
                 @Override
                 public void onDown(StyledImageButton view) {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_BASE_POSITION_CONTROL_TOUCH,
-                            AnalyticsService.PROPERTY_COMMAND, AnalyticsService.VALUE_COMMAND_ADJUST_FOOT_DOWN);
+                    AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_ADJUST_FOOT_DOWN);
                 }
 
                 @Override

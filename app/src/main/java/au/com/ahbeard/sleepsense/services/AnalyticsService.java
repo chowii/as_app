@@ -5,9 +5,14 @@ import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import au.com.ahbeard.sleepsense.BuildConfig;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.utils.StringUtils;
+import io.lqd.sdk.Liquid;
 
 /**
  * Created by neal on 21/06/2016.
@@ -25,6 +30,12 @@ public class AnalyticsService {
 
     public static void initialize(Context context) {
         sContext = context.getApplicationContext();
+
+        if (BuildConfig.DEBUG) {
+            Liquid.initialize(sContext, "yw-jr0gP_nGJd4WWigFEkAWyl_ifapZo", BuildConfig.DEBUG);
+        } else {
+            Liquid.initialize(sContext, "UnQ1PVTRJPohf9RYChvD9CXh6stMnM_0");
+        }
     }
 
     public static AnalyticsService instance() {
@@ -35,65 +46,34 @@ public class AnalyticsService {
         return sAnalyticsService;
     }
 
-    public void logEvent(String event, Object... properties) {
+    private void logEvent(String event, Map<String, Object> attrs) {
+        Liquid.getInstance().track(event, attrs);
 
         Bundle bundle = new Bundle();
-
-        if (properties.length % 2 != 0) {
-            return;
-        }
-
-        for (int i = 0; i < properties.length; i = i + 2) {
-
-            Object value = properties[i + 1];
-
-            if (value instanceof String) {
-                bundle.putString((String) properties[i], (String) value);
-            } else if (value instanceof Boolean) {
-                bundle.putBoolean((String) properties[i], (Boolean) value);
-            } else if (value instanceof Float) {
-                bundle.putFloat((String) properties[i], (Float)value);
+        for (Map.Entry<String, Object> entry : attrs.entrySet())
+        {
+            if (entry.getValue() instanceof String) {
+                bundle.putString(entry.getKey(), (String) entry.getValue());
             }
-
+            else if (entry.getValue() instanceof Boolean) {
+                bundle.putBoolean(entry.getKey(), (Boolean) entry.getValue());
+            }
+            else if (entry.getValue() instanceof Float) {
+                bundle.putFloat(entry.getKey(), (Float) entry.getValue());
+            }
         }
-
         mFirebaseAnalytics.logEvent(event, bundle);
     }
 
-    public void logSleep(String event, Sleep sleep) {
-
-        Bundle bundle = new Bundle();
-
-        bundle.putString(PROPERTY_SLEEP_DATE, SleepService.getYYYYMMDDD(SleepService.getCalendar((int) sleep.getSleepId())));
-        bundle.putFloat(PROPERTY_SLEEP_SCORE, sleep.getTotalSleepScore());
-
-        if (SleepSenseDeviceService.instance().hasPumpDevice()) {
-            bundle.putFloat(PROPERTY_MATTRESS_FIRMNESS, sleep.getMattressFirmness());
-        }
-
-        bundle.putFloat(PROPERTY_TOTAL_HOURS_SLEPT, sleep.getSleepTotalTime());
-        bundle.putInt(PROPERTY_TIMES_OUT_OF_BED, sleep.getTimesOutOfBed());
-
-        mFirebaseAnalytics.logEvent(event, bundle);
-    }
-
-    public void logItemsSelected(boolean hasPump, boolean hasTracker, boolean hasBase) {
-
-        Bundle bundle = new Bundle();
-
-        if (hasBase) {
-            bundle.putBoolean(PROPERTY_SELECTED_MATTRESS, hasPump);
-            bundle.putBoolean(PROPERTY_SELECTED_BASE, hasBase);
-            bundle.putBoolean(PROPERTY_SELECTED_SLEEP_TRACKER, hasTracker);
-        }
-
-        mFirebaseAnalytics.logEvent(EVENT_SETUP_ITEMS_SELECTED, bundle);
+    private void logUserProperty(String name, String property) {
+        Liquid.getInstance().setUserAttribute(name, property);
+        mFirebaseAnalytics.setUserProperty(name, property);
     }
 
     public static final String EVENT_SETUP_ITEMS_SELECTED = "setup_items_selected";
     public static final String EVENT_CLOSE_SETUP = "close_setup";
     public static final String EVENT_SETUP_ERROR_RESOLVING = "setup_error_resolving";
-    public static final String EVENT_SETUP_SETUP_TIME_TO_SKIP_LAY_ON_BED = "setup_time_to_skip_lay_on_bed";
+    public static final String EVENT_SETUP_TIME_TO_SKIP_LAY_ON_BED = "setup_time_to_skip_lay_on_bed";
 
     public static final String PROPERTY_SELECTED_MATTRESS = "selected_mattress";
     public static final String PROPERTY_SELECTED_BASE = "selected_base";
@@ -102,6 +82,7 @@ public class AnalyticsService {
 
     public static final String PROPERTY_TRY_AGAIN_BUTTON = "try_again_button";
     public static final String PROPERTY_CALL_US_BUTTON = "call_us_button";
+    public static final String PROPERTY_CLOSE_BUTTON = "close_button";
 
     public static final String EVENT_DASHBOARD_SLEEP_SCORE_CLICKED = "dashboard_view_sleep_detail";
     public static final String EVENT_DASHBOARD_TOUCH_TRACK_SLEEP = "dashboard_touch_track_sleep";
@@ -167,10 +148,6 @@ public class AnalyticsService {
     public static final String USER_PROPERTY_SIDE_OF_BED = "side_of_bed";
     public static final String USER_PROPERTY_USER_EMAIL = "user_email";
 
-    public void setUserProperty(String property, String value) {
-        mFirebaseAnalytics.setUserProperty(property,value);
-    }
-
     public void setSleepGoal(float sleepTargetTime) {
 
         String sleepHourGoal = "";
@@ -185,27 +162,188 @@ public class AnalyticsService {
             sleepHourGoal = "9-10";
         }
 
-        mFirebaseAnalytics.setUserProperty(AnalyticsService.USER_PROPERTY_SLEEP_HOUR_GOAL,sleepHourGoal);
-
+        logUserProperty(USER_PROPERTY_SLEEP_HOUR_GOAL, sleepHourGoal);
     }
 
     public void setProfile(String sex, String age, String emailAddress) {
-        mFirebaseAnalytics.setUserProperty(AnalyticsService.USER_PROPERTY_GENDER,sex);
-        mFirebaseAnalytics.setUserProperty(AnalyticsService.USER_PROPERTY_AGE,age);
-        mFirebaseAnalytics.setUserProperty(AnalyticsService.USER_PROPERTY_SIX_WSC_SUBSCRIBER, Boolean.toString(StringUtils.isNotEmpty(emailAddress)));
+        logUserProperty(USER_PROPERTY_GENDER,sex);
+        logUserProperty(USER_PROPERTY_AGE,age);
+        logUserProperty(USER_PROPERTY_SIX_WSC_SUBSCRIBER, Boolean.toString(StringUtils.isNotEmpty(emailAddress)));
     }
 
+    public void setUserOwnsBase(boolean ownsBase) {
+        logUserProperty(USER_PROPERTY_OWNS_BASE, Boolean.toString(ownsBase));
+    }
 
-    /**
-     * sleep_session_end
+    public void setUserOwnsMattress(boolean ownsMattress) {
+        logUserProperty(USER_PROPERTY_OWNS_ADJUSTABLE_MATTRESS, Boolean.toString(ownsMattress));
+    }
 
-     sleep_date (yyyy-MM-dd)
-     sleep_score
-     mattress_firmness ( [0-1] )
-     total_hours_slept
-     times_out_of_bed
-     error
-     */
+    public void setUserOwnsTracker(boolean ownsTracker) {
+        logUserProperty(USER_PROPERTY_OWNS_SLEEP_TRACKER, Boolean.toString(ownsTracker));
+    }
 
+    public void setUserSideOfBed(String sideOfBed) {
+        logUserProperty(USER_PROPERTY_SIDE_OF_BED, sideOfBed);
+    }
 
+    public void logSleep(Sleep sleep) {
+        HashMap<String, Object> attrs = new HashMap<>();
+
+        attrs.put(PROPERTY_SLEEP_DATE, SleepService.getYYYYMMDDD(SleepService.getCalendar((int) sleep.getSleepId())));
+        attrs.put(PROPERTY_SLEEP_SCORE, sleep.getTotalSleepScore());
+
+        if (SleepSenseDeviceService.instance().hasPumpDevice()) {
+            attrs.put(PROPERTY_MATTRESS_FIRMNESS, sleep.getMattressFirmness());
+        }
+
+        attrs.put(PROPERTY_TOTAL_HOURS_SLEPT, sleep.getSleepTotalTime());
+        attrs.put(PROPERTY_TIMES_OUT_OF_BED, sleep.getTimesOutOfBed());
+
+        logEvent(EVENT_SLEEP_SESSION_END, attrs);
+    }
+
+    public void logItemsSelected(boolean hasPump, boolean hasTracker, boolean hasBase) {
+
+        HashMap<String, Object> attrs = new HashMap<>();
+
+        attrs.put(PROPERTY_SELECTED_MATTRESS, hasPump);
+        attrs.put(PROPERTY_SELECTED_BASE, hasBase);
+        attrs.put(PROPERTY_SELECTED_SLEEP_TRACKER, hasTracker);
+
+        logEvent(EVENT_SETUP_ITEMS_SELECTED, attrs);
+    }
+
+    public void logDashboardViewTracking() {
+        logEvent(EVENT_DASHBOARD_VIEW_TRACKING, null);
+    }
+
+    public void logDashboardViewMattress() {
+        logEvent(EVENT_DASHBOARD_VIEW_MATTRESS, null);
+    }
+
+    public void logDashboardViewPosition() {
+        logEvent(EVENT_DASHBOARD_VIEW_POSITION, null);
+    }
+
+    public void logDashboardViewMassage() {
+        logEvent(EVENT_DASHBOARD_VIEW_MASSAGE, null);
+    }
+
+    public void logDashboardViewSettings() {
+        logEvent(EVENT_DASHBOARD_VIEW_SETTINGS, null);
+    }
+
+    public void logSetupErrorResolvingTryAgain() {
+        logEvent(EVENT_SETUP_ERROR_RESOLVING, attrs()
+                .put(PROPERTY_TRY_AGAIN_BUTTON, true)
+                .put(PROPERTY_CALL_US_BUTTON, false)
+                .put(PROPERTY_CLOSE_BUTTON, false)
+                .build());
+    }
+
+    public void logSetupErrorResolvingCallUs() {
+        logEvent(EVENT_SETUP_ERROR_RESOLVING, attrs()
+                .put(PROPERTY_TRY_AGAIN_BUTTON, false)
+                .put(PROPERTY_CALL_US_BUTTON, true)
+                .put(PROPERTY_CLOSE_BUTTON, false)
+                .build());
+    }
+
+    public void logCloseSetup() {
+        logEvent(EVENT_CLOSE_SETUP, null);
+    }
+
+    public void logSetupTimeToSkipLayOnBed(float time) {
+        logEvent(EVENT_SETUP_TIME_TO_SKIP_LAY_ON_BED, attrs()
+                .put(PROPERTY_TIME_TO_SKIP_SECONDS, time)
+                .build());
+    }
+
+    public void logOnboardingTouchFirmness(boolean didTouchControl) {
+        logEvent(EVENT_ONBOARDING_TOUCH_FIRMNESS, attrs()
+                .put(PROPERTY_DID_TOUCH_CONTROL, didTouchControl)
+                .build());
+    }
+
+    public void logOnboardingTouchPosition(boolean didTouchControl) {
+        logEvent(EVENT_ONBOARDING_TOUCH_POSITION, attrs()
+                .put(PROPERTY_DID_TOUCH_CONTROL, didTouchControl)
+                .build());
+    }
+
+    public void logOnboardingTouchMassage(boolean didTouchControl) {
+        logEvent(EVENT_ONBOARDING_TOUCH_MASSAGE, attrs()
+                .put(PROPERTY_DID_TOUCH_CONTROL, didTouchControl)
+                .build());
+    }
+
+    public void logPreferencesResetApp() {
+        logEvent(EVENT_PREFERENCES_RESET_APP, null);
+    }
+
+    public void logSleepScreenStopTracking() {
+        logEvent(EVENT_SLEEP_SCREEN_STOP_TRACKING, null);
+    }
+
+    public void logDashboardSleepScoreClicked() {
+        logEvent(EVENT_DASHBOARD_SLEEP_SCORE_CLICKED, null);
+    }
+
+    public void logDashboardTouchTrackSleep() {
+        logEvent(EVENT_DASHBOARD_TOUCH_TRACK_SLEEP, null);
+    }
+
+    public void logDashboardViewDailyStats(String origin) {
+        logEvent(EVENT_DASHBOARD_VIEW_DAILY_STATS, attrs()
+                .put(PROPERTY_ORIGIN, origin)
+                .build());
+    }
+
+    public void logDashboardViewWeeklyStats(String origin) {
+        logEvent(EVENT_DASHBOARD_VIEW_WEEKLY_STATS, attrs()
+                .put(PROPERTY_ORIGIN, origin)
+                .build());
+    }
+
+    public void logFirmnessControlTouch(String side, String preference) {
+        logEvent(EVENT_FIRMNESS_CONTROL_TOUCH, attrs()
+                .put(PROPERTY_SIDE, side)
+                .put(PROPERTY_PREFERENCE, preference)
+                .build());
+    }
+
+    public void logMassageControlTouch(String command) {
+        logEvent(EVENT_MASSAGE_CONTROL_TOUCH, attrs()
+                .put(PROPERTY_COMMAND, command)
+                .build());
+    }
+
+    public void logPositionControlTouch(String command) {
+        logEvent(EVENT_BASE_POSITION_CONTROL_TOUCH, attrs()
+                .put(PROPERTY_COMMAND, command)
+                .build());
+    }
+
+    private AttributesMap attrs() {
+        return new AttributesMap();
+    }
+
+    private class AttributesMap {
+
+        HashMap<String, Object> attrs;
+
+        public AttributesMap() {
+            attrs = new HashMap<>();
+        }
+
+        public AttributesMap put(String key, Object value) {
+            attrs.put(key, value);
+            return this;
+        }
+
+        public HashMap<String, Object> build() {
+            return attrs;
+        }
+    }
 }

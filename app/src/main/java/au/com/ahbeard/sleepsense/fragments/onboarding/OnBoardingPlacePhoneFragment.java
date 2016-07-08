@@ -38,8 +38,7 @@ public class OnBoardingPlacePhoneFragment  extends OnBoardingFragment{
     @OnClick(R.id.on_board_button_continue)
     void continueClicked() {
         if ( mListener != null ) {
-            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_SETUP_SETUP_TIME_TO_SKIP_LAY_ON_BED,
-                    AnalyticsService.PROPERTY_TIME_TO_SKIP_SECONDS,(float)(SystemClock.currentThreadTimeMillis()-mStartTime)/1000f);
+            AnalyticsService.instance().logSetupTimeToSkipLayOnBed((SystemClock.currentThreadTimeMillis()-mStartTime)/1000f);
 
             mListener.onPlacePhoneContinueClicked();
         }

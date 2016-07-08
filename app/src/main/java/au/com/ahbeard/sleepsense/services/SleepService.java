@@ -106,8 +106,7 @@ public class SleepService {
 
                 if ( sleep != null ) {
 
-                    AnalyticsService.instance().logSleep(
-                            AnalyticsService.EVENT_SLEEP_SESSION_END,sleep);
+                    AnalyticsService.instance().logSleep(sleep);
 
                 }
 

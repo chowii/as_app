@@ -33,7 +33,7 @@ public class PreferenceActivity extends AppCompatActivity {
     @OnClick(R.id.preference_button_reset_sleepsense)
     void clear() {
 
-        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_PREFERENCES_RESET_APP);
+        AnalyticsService.instance().logPreferencesResetApp();
 
         new AlertDialog.Builder(this).setPositiveButton(getString(R.string.preference_dialog_yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

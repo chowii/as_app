@@ -61,7 +61,7 @@ public class SleepTrackingActivity extends BaseActivity {
             new AlertDialog.Builder(this).setPositiveButton(R.string.sleep_tracking_dialog_yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     mIgnoreStateUpdate = true;
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_SLEEP_SCREEN_STOP_TRACKING);
+                    AnalyticsService.instance().logSleepScreenStopTracking();
                     Schedulers.computation().createWorker().schedule(new Action0() {
                         @Override
                         public void call() {

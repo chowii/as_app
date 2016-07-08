@@ -137,7 +137,7 @@ public class NewOnBoardActivity extends BaseActivity implements
 
         PreferenceService.instance().setSideOfBed(sideOfBed);
 
-        AnalyticsService.instance().setUserProperty(AnalyticsService.USER_PROPERTY_SIDE_OF_BED, sideOfBed.toLowerCase());
+        AnalyticsService.instance().setUserSideOfBed(sideOfBed.toLowerCase());
 
         mOnBoardingState.sideOfBed = sideOfBed;
 
@@ -255,8 +255,7 @@ public class NewOnBoardActivity extends BaseActivity implements
     @Override
     public void onRetryButtonClicked() {
 
-        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_SETUP_ERROR_RESOLVING,
-                AnalyticsService.PROPERTY_TRY_AGAIN_BUTTON, true);
+        AnalyticsService.instance().logSetupErrorResolvingTryAgain();
 
         if (mOnBoardingState.state == OnBoardingState.State.InflationError) {
             transitionTo(OnBoardingInflateMattressFragment.newInstance());
@@ -268,8 +267,7 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     @Override
     public void onCallButtonClicked() {
-        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_SETUP_ERROR_RESOLVING,
-                AnalyticsService.PROPERTY_CALL_US_BUTTON, true);
+        AnalyticsService.instance().logSetupErrorResolvingCallUs();
 
         Uri numberUri = Uri.parse("tel:1300001150");
         Intent callIntent = new Intent(Intent.ACTION_DIAL, numberUri);
@@ -319,7 +317,7 @@ public class NewOnBoardActivity extends BaseActivity implements
         if (mCurrentFragment != null && !mCurrentFragment.onBackPressed()) {
             new AlertDialog.Builder(this).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_CLOSE_SETUP);
+                    AnalyticsService.instance().logCloseSetup();
                     finish();
                 }
             }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -354,7 +352,7 @@ public class NewOnBoardActivity extends BaseActivity implements
 
                     }
 
-                    AnalyticsService.instance().setUserProperty(AnalyticsService.USER_PROPERTY_OWNS_BASE, Boolean.toString(mOnBoardingState.requiredBase && mOnBoardingState.foundBase));
+                    AnalyticsService.instance().setUserOwnsBase(mOnBoardingState.requiredBase && mOnBoardingState.foundBase);
 
                     if (mOnBoardingState.requiredPump) {
                         if (mAquiredDevices.getPumpDevices().isEmpty()) {
@@ -365,7 +363,7 @@ public class NewOnBoardActivity extends BaseActivity implements
                         }
                     }
 
-                    AnalyticsService.instance().setUserProperty(AnalyticsService.USER_PROPERTY_OWNS_ADJUSTABLE_MATTRESS, Boolean.toString(mOnBoardingState.requiredPump && mOnBoardingState.foundPump));
+                    AnalyticsService.instance().setUserOwnsMattress(mOnBoardingState.requiredPump && mOnBoardingState.foundPump);
 
                     if (mOnBoardingState.requiredTracker) {
                         if (mAquiredDevices.getTrackerDevices().size() < mOnBoardingState.numberOfTrackersRequired) {
@@ -378,7 +376,7 @@ public class NewOnBoardActivity extends BaseActivity implements
                         }
                     }
 
-                    AnalyticsService.instance().setUserProperty(AnalyticsService.USER_PROPERTY_OWNS_SLEEP_TRACKER, Boolean.toString(mOnBoardingState.requiredTracker && mOnBoardingState.foundTracker));
+                    AnalyticsService.instance().setUserOwnsTracker(mOnBoardingState.requiredTracker && mOnBoardingState.foundTracker);
 
                     if (failed) {
                         mOnBoardingState.failedAttempts += 1;

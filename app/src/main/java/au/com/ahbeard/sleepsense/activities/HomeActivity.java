@@ -133,14 +133,14 @@ public class HomeActivity extends BaseActivity {
                 mDashboardPagerAdapter.addTab("Dashboard", R.drawable.tab_dashboard_unselected, R.drawable.tab_dashboard_selected, DashboardFragment.newInstance(), new Runnable() {
                     @Override
                     public void run() {
-                        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_TRACKING);
+                        AnalyticsService.instance().logDashboardViewTracking();
                     }
                 });
             } else {
                 mDashboardPagerAdapter.addTab("Dashboard",R.drawable.tab_dashboard_unselected,R.drawable.tab_dashboard_selected, DashboardNoSleepsFragment.newInstance(), new Runnable() {
                     @Override
                     public void run() {
-                        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_TRACKING);
+                        AnalyticsService.instance().logDashboardViewTracking();
                     }
                 });
             }
@@ -150,7 +150,7 @@ public class HomeActivity extends BaseActivity {
             mDashboardPagerAdapter.addTab("Firmness",R.drawable.tab_firmness_unselected,R.drawable.tab_firmness_selected, FirmnessControlFragment.newInstance(), new Runnable() {
                 @Override
                 public void run() {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_MATTRESS);
+                    AnalyticsService.instance().logDashboardViewMattress();
                 }
             });
         }
@@ -159,13 +159,13 @@ public class HomeActivity extends BaseActivity {
             mDashboardPagerAdapter.addTab("Position",R.drawable.tab_position_unselected,R.drawable.tab_position_selected, PositionControlFragment.newInstance(), new Runnable() {
                 @Override
                 public void run() {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_POSITION);
+                    AnalyticsService.instance().logDashboardViewPosition();
                 }
             });
             mDashboardPagerAdapter.addTab("Massage",R.drawable.tab_massage_unselected,R.drawable.tab_massage_selected, MassageControlFragment.newInstance(), new Runnable() {
                 @Override
                 public void run() {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_MASSAGE);
+                    AnalyticsService.instance().logDashboardViewMassage();
                 }
             });
         }
@@ -173,7 +173,7 @@ public class HomeActivity extends BaseActivity {
         mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance(), new Runnable() {
             @Override
             public void run() {
-                AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_SETTINGS);
+                AnalyticsService.instance().logDashboardViewSettings();
             }
         });
 

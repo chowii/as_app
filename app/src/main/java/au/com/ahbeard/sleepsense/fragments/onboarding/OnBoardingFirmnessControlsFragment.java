@@ -27,7 +27,7 @@ public class OnBoardingFirmnessControlsFragment  extends OnBoardingFragment {
     @OnClick(R.id.on_board_button_continue)
     void continueClicked() {
         if ( mOnActionListener != null ) {
-            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_ONBOARDING_TOUCH_FIRMNESS, AnalyticsService.PROPERTY_DID_TOUCH_CONTROL,mControlsTouched);
+            AnalyticsService.instance().logOnboardingTouchFirmness(mControlsTouched);
             mOnActionListener.onFirmnessControlsAction();
         }
     }

@@ -25,7 +25,7 @@ public class OnBoardingMassageControlsFragment  extends OnBoardingFragment {
     @OnClick(R.id.on_board_button_continue)
     void continueClicked() {
         if ( mOnActionListener!=null) {
-            AnalyticsService.instance().logEvent(AnalyticsService.EVENT_ONBOARDING_TOUCH_MASSAGE, AnalyticsService.PROPERTY_DID_TOUCH_CONTROL,mControlsTouched);
+            AnalyticsService.instance().logOnboardingTouchMassage(mControlsTouched);
             mOnActionListener.onMassageControlsAction();
         }
     }

@@ -74,8 +74,7 @@ public class WeeklyGraphFragment extends Fragment {
                 mGraphView.setOnClickListener(new WeeklyGraphView.OnClickListener() {
                     @Override
                     public void onValueClicked(Object identifier) {
-                        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_DAILY_STATS,
-                                AnalyticsService.PROPERTY_ORIGIN, AnalyticsService.VALUE_ORIGIN_GRAPH);
+                        AnalyticsService.instance().logDashboardViewDailyStats(AnalyticsService.VALUE_ORIGIN_GRAPH);
                         SleepService.instance().notifySleepIdSelected((Integer)identifier);
                     }
                 });
