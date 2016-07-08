@@ -84,12 +84,14 @@ public class BaseDevice extends Device {
 
         mBaseStatusSubscription = getNotifyEventObservable()
                 .subscribeOn(Schedulers.computation())
+                .onBackpressureBuffer()
                 .map(new Func1<ValueChangeEvent, byte[]>() {
                     @Override
                     public byte[] call(ValueChangeEvent valueChangeEvent) {
                         return valueChangeEvent.getValue();
                     }
-                }).subscribe(new Action1<byte[]>() {
+                })
+                .subscribe(new Action1<byte[]>() {
                     @Override
                     public void call(byte[] value) {
                         BaseStatusEvent baseStatusEvent = BaseStatusEvent.safeInstance(value);
@@ -98,7 +100,6 @@ public class BaseDevice extends Device {
                         }
                     }
                 });
-
     }
 
     @Override
