@@ -174,7 +174,7 @@ public class DailyDashboardFragment extends Fragment {
                 // Count back the number of pages.
                 calendar.add(Calendar.DAY_OF_YEAR, position - 1023);
 
-                Schedulers.io().createWorker().schedule(new Action0() {
+                Schedulers.computation().createWorker().schedule(new Action0() {
                     @Override
                     public void call() {
                         final Sleep sleep = SleepService.instance().getSleepFromDatabase(SleepService.getSleepId(calendar));

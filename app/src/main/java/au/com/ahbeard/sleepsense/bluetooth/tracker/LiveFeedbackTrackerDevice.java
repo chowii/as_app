@@ -118,86 +118,90 @@ public class LiveFeedbackTrackerDevice extends Device {
             e.printStackTrace();
         }
 
-        getDeviceEventObservable().observeOn(Schedulers.io()).subscribe(new Action1<DeviceEvent>() {
-            @Override
-            public void call(DeviceEvent deviceEvent) {
-                if ( deviceEvent instanceof DeviceDisconnectedEvent ) {
-                    if (mNotifySubscription != null ) {
-                        mNotifySubscription.unsubscribe();
-                        mNotifySubscription = null;
+        getDeviceEventObservable()
+                .observeOn(Schedulers.computation())
+                .subscribe(new Action1<DeviceEvent>() {
+                    @Override
+                    public void call(DeviceEvent deviceEvent) {
+                        if ( deviceEvent instanceof DeviceDisconnectedEvent ) {
+                            if (mNotifySubscription != null ) {
+                                mNotifySubscription.unsubscribe();
+                                mNotifySubscription = null;
+                            }
+                            if ( mSessionPublishSubject != null ) {
+                                mSessionPublishSubject.onCompleted();
+                                mSessionPublishSubject = null;
+                            }
+                        }
                     }
-                    if ( mSessionPublishSubject != null ) {
-                        mSessionPublishSubject.onCompleted();
-                        mSessionPublishSubject = null;
-                    }
-                }
-            }
-        });
+                });
 
         if ( mNotifySubscription != null) {
             mNotifySubscription.unsubscribe();
             mNotifySubscription = null;
         }
 
-        mNotifySubscription = getNotifyEventObservable().observeOn(Schedulers.io()).subscribe(new Action1<ValueChangeEvent>() {
+        mNotifySubscription = getNotifyEventObservable()
+                .observeOn(Schedulers.computation())
+                .subscribe(new Action1<ValueChangeEvent>() {
 
-            int currentPacketNumber = 0;
+                    int currentPacketNumber = 0;
 //            int currentSampleNumber = 0;
 
-            @Override
-            public void call(ValueChangeEvent valueChangeEvent) {
+                    @Override
+                    public void call(ValueChangeEvent valueChangeEvent) {
 
-                byte[] data = valueChangeEvent.getValue();
+                        byte[] data = valueChangeEvent.getValue();
 
-                if (data.length < 4 || data.length % 2 != 0) {
-                    // closeWithError(new SensorProtocolViolationException("Invalid packet length"));
-                    return;
-                }
+                        if (data.length < 4 || data.length % 2 != 0) {
+                            // closeWithError(new SensorProtocolViolationException("Invalid packet length"));
+                            return;
+                        }
 
-                int packetTypeCode = data[0] & 0xFF;
-                int packetNumber = data[1] & 0xFF;
+                        int packetTypeCode = data[0] & 0xFF;
+                        int packetNumber = data[1] & 0xFF;
 
-                byte[] sampleData = Arrays.copyOfRange(data, 2, data.length);
-                int samplesInCurrentPacket = sampleData.length / 2;
+                        byte[] sampleData = Arrays.copyOfRange(data, 2, data.length);
+                        int samplesInCurrentPacket = sampleData.length / 2;
 
-                if (!(packetTypeCode == PACKET_TYPE_DEFAULT || packetTypeCode == PACKET_TYPE_NO_MOVEMENT)) {
-                    // closeWithError(new SensorProtocolViolationException("Invalid packet type code", String.valueOf(packetTypeCode)));
-                    return;
-                }
+                        if (!(packetTypeCode == PACKET_TYPE_DEFAULT || packetTypeCode == PACKET_TYPE_NO_MOVEMENT)) {
+                            // closeWithError(new SensorProtocolViolationException("Invalid packet type code", String.valueOf(packetTypeCode)));
+                            return;
+                        }
 
-                if (packetNumber != this.currentPacketNumber) {
-                    int packetsLost = packetNumber - this.currentPacketNumber;
-                    if (packetsLost < 0) {
-                        packetsLost = packetsLost + 256;
-                    }
+                        if (packetNumber != this.currentPacketNumber) {
+                            int packetsLost = packetNumber - this.currentPacketNumber;
+                            if (packetsLost < 0) {
+                                packetsLost = packetsLost + 256;
+                            }
 
-                    // We assume that the lost packets have the same length as this one.
-                    // It may or may not be like so, but tests have shown that all packets
-                    // always have the same length.
-                    final int samplesToRepeat = packetsLost * samplesInCurrentPacket;
+                            // We assume that the lost packets have the same length as this one.
+                            // It may or may not be like so, but tests have shown that all packets
+                            // always have the same length.
+                            final int samplesToRepeat = packetsLost * samplesInCurrentPacket;
 
-                    byte[] firstSample = Arrays.copyOfRange(sampleData, 2, 4);
+                            byte[] firstSample = Arrays.copyOfRange(sampleData, 2, 4);
 
-                    sampleData = padSampleDataPacket(sampleData, firstSample, samplesToRepeat);
+                            sampleData = padSampleDataPacket(sampleData, firstSample, samplesToRepeat);
 
-                    this.currentPacketNumber = packetNumber;
+                            this.currentPacketNumber = packetNumber;
 
-                }
+                        }
 
 //                if (sessionListener != null) {
 //                    sessionListener.onSensorSessionReceivedData(LESensorSession.this,
 //                            sampleData, TRACK_NAME, this.currentSampleNumber);
 //                }
 
-                mSessionPublishSubject.onNext(sampleData);
+                        mSessionPublishSubject.onNext(sampleData);
 
 //                int numberOfSamples = sampleData.length / 2;
 //
 //                this.currentSampleNumber += numberOfSamples;
 //                this.currentPacketNumber += 1;
 //                this.currentPacketNumber &= 0xFF;
-            }
-        });
+                    }
+                });
 
         EnableNotificationOperation enableNotificationCommand = new EnableNotificationOperation(BEDDIT_SERVICE_UUID, SIGNAL_DATA_CHARACTERISTIC_UUID);
         sendCommand(enableNotificationCommand);

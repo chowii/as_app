@@ -83,7 +83,7 @@ public class BaseDevice extends Device {
         mLastActiveTime = System.currentTimeMillis();
 
         mBaseStatusSubscription = getNotifyEventObservable()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .map(new Func1<ValueChangeEvent, byte[]>() {
                     @Override
                     public byte[] call(ValueChangeEvent valueChangeEvent) {

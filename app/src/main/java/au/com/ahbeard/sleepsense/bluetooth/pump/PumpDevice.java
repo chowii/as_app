@@ -146,7 +146,7 @@ public class PumpDevice extends Device {
     public void onConnect() {
 
         mPumpStatusSubscription = getNotifyEventObservable().subscribeOn(
-                Schedulers.io()).map(new Func1<ValueChangeEvent, byte[]>() {
+                Schedulers.computation()).map(new Func1<ValueChangeEvent, byte[]>() {
             @Override
             public byte[] call(ValueChangeEvent valueChangeEvent) {
                 return valueChangeEvent.getValue();

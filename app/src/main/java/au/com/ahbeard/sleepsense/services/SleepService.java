@@ -739,7 +739,7 @@ public class SleepService {
 
         if (!mAggregateStatisticsCalculated) {
             mAggregateStatisticsCalculated = true;
-            Schedulers.io().createWorker().schedule(new Action0() {
+            Schedulers.computation().createWorker().schedule(new Action0() {
                 @Override
                 public void call() {
                     updateAggregateStatistics();

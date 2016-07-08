@@ -117,7 +117,7 @@ public class SleepSenseDeviceService {
 
         BluetoothService.instance()
                 .startScanning()
-                .observeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
                 .filter(new ScanningFilter())
                 .cast(BluetoothEvent.PacketEvent.class)
                 .take(milliseconds, TimeUnit.MILLISECONDS)

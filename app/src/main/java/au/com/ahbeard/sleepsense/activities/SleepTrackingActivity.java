@@ -62,7 +62,7 @@ public class SleepTrackingActivity extends BaseActivity {
                 public void onClick(DialogInterface dialog, int id) {
                     mIgnoreStateUpdate = true;
                     AnalyticsService.instance().logEvent(AnalyticsService.EVENT_SLEEP_SCREEN_STOP_TRACKING);
-                    Schedulers.io().createWorker().schedule(new Action0() {
+                    Schedulers.computation().createWorker().schedule(new Action0() {
                         @Override
                         public void call() {
                             SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
@@ -137,6 +137,7 @@ public class SleepTrackingActivity extends BaseActivity {
                 .subscribe(new Action1<TrackerDevice.TrackerState>() {
                     @Override
                     public void call(TrackerDevice.TrackerState trackerState) {
+                        if (mIgnoreStateUpdate) return;
                         switch (trackerState) {
                             case Connecting:
                                 hideClockView();
@@ -168,7 +169,6 @@ public class SleepTrackingActivity extends BaseActivity {
                         mSampleCountTextView.setText(Integer.toString(packetCount));
 
                         if (!mIsPaused && spawnerCounter % 2 == 0) {
-                            Log.d("ZED", "Spawning Zed");
                             spawnZed();
                         }
                         spawnerCounter++;

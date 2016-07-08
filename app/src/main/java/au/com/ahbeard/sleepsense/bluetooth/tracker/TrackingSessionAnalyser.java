@@ -78,25 +78,28 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
 
         });
 
-        mTimeValueTrackFragmentPublishSubject.onBackpressureBuffer().observeOn(Schedulers.io()).subscribe(
-                new TrackingSessionDataWriter());
+        mTimeValueTrackFragmentPublishSubject.onBackpressureBuffer()
+                .observeOn(Schedulers.computation())
+                .subscribe(new TrackingSessionDataWriter());
 
-        mSensorDataObservable.onBackpressureBuffer().observeOn(Schedulers.io()).subscribe(new Observer<SensorData>() {
-            @Override
-            public void onCompleted() {
+        mSensorDataObservable.onBackpressureBuffer()
+                .observeOn(Schedulers.computation())
+                .subscribe(new Observer<SensorData>() {
+                    @Override
+                    public void onCompleted() {
 
-            }
+                    }
 
-            @Override
-            public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-            }
+                    }
 
-            @Override
-            public void onNext(SensorData sensorData) {
-                mTrackerDevice.logPacket();
-            }
-        });
+                    @Override
+                    public void onNext(SensorData sensorData) {
+                        mTrackerDevice.logPacket();
+                    }
+                });
 
     }
 
@@ -212,7 +215,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
             SSLogger.log("about to start streaming...");
             LogService.d("TrackingSessionAnalyzer", "about to start streaming...");
 
-            Schedulers.io().createWorker().schedule(new Action0() {
+            Schedulers.computation().createWorker().schedule(new Action0() {
                 @Override
                 public void call() {
                     SSLogger.log("sensorSession.startStreaming called...");

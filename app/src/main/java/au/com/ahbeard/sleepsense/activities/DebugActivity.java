@@ -16,7 +16,7 @@ public class DebugActivity extends AppCompatActivity {
 
     @OnClick(R.id.debug_button_generate_fake_data)
     void generateFakeData() {
-        Schedulers.io().createWorker().schedule(new Action0() {
+        Schedulers.computation().createWorker().schedule(new Action0() {
             @Override
             public void call() {
                 SleepService.instance().generateFakeData(Calendar.getInstance(),60);
