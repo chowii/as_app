@@ -52,19 +52,18 @@ public class AnalyticsService {
     private void logEvent(String event, Map<String, Object> attrs) {
         CustomEvent answersEvent = new CustomEvent(event);
         Bundle bundle = new Bundle();
-        for (Map.Entry<String, Object> entry : attrs.entrySet())
-        {
-            if (entry.getValue() instanceof String) {
-                bundle.putString(entry.getKey(), (String) entry.getValue());
-                answersEvent.putCustomAttribute(entry.getKey(), (String) entry.getValue());
-            }
-            else if (entry.getValue() instanceof Boolean) {
-                bundle.putBoolean(entry.getKey(), (Boolean) entry.getValue());
-                answersEvent.putCustomAttribute(entry.getKey(), Boolean.toString((Boolean) entry.getValue()));
-            }
-            else if (entry.getValue() instanceof Float) {
-                bundle.putFloat(entry.getKey(), (Float) entry.getValue());
-                answersEvent.putCustomAttribute(entry.getKey(), (Float) entry.getValue());
+        if (attrs != null) {
+            for (Map.Entry<String, Object> entry : attrs.entrySet()) {
+                if (entry.getValue() instanceof String) {
+                    bundle.putString(entry.getKey(), (String) entry.getValue());
+                    answersEvent.putCustomAttribute(entry.getKey(), (String) entry.getValue());
+                } else if (entry.getValue() instanceof Boolean) {
+                    bundle.putBoolean(entry.getKey(), (Boolean) entry.getValue());
+                    answersEvent.putCustomAttribute(entry.getKey(), Boolean.toString((Boolean) entry.getValue()));
+                } else if (entry.getValue() instanceof Float) {
+                    bundle.putFloat(entry.getKey(), (Float) entry.getValue());
+                    answersEvent.putCustomAttribute(entry.getKey(), (Float) entry.getValue());
+                }
             }
         }
 
