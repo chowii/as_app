@@ -359,7 +359,7 @@ public class Device extends BluetoothGattCallback {
     }
 
     public Observable<Device> getChangeObservable() {
-        return mChangeSubject;
+        return mChangeSubject.asObservable().onBackpressureBuffer();
     }
 
     public Observable<ValueChangeEvent> getNotifyEventObservable() {

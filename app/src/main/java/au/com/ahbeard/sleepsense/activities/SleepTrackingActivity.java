@@ -56,8 +56,9 @@ public class SleepTrackingActivity extends BaseActivity {
 
     @OnClick(R.id.sleep_tracking_button_start_stop)
     void onStopTracking() {
+        TrackerDevice trackerDevice = SleepSenseDeviceService.instance().getTrackerDevice();
 
-        if (SleepSenseDeviceService.instance().getTrackerDevice().isTracking()) {
+        if (trackerDevice != null && trackerDevice.isTracking()) {
             new AlertDialog.Builder(this).setPositiveButton(R.string.sleep_tracking_dialog_yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     mIgnoreStateUpdate = true;
@@ -65,7 +66,8 @@ public class SleepTrackingActivity extends BaseActivity {
                     Schedulers.computation().createWorker().schedule(new Action0() {
                         @Override
                         public void call() {
-                            SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
+                            if (SleepSenseDeviceService.instance().getTrackerDevice() != null)
+                                SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
                         }
                     });
                     finish();
@@ -123,59 +125,64 @@ public class SleepTrackingActivity extends BaseActivity {
 
         mCalendar = Calendar.getInstance();
 
-        if (!BluetoothService.instance().isBluetoothEnabled()) {
+        TrackerDevice trackerDevice = SleepSenseDeviceService.instance().getTrackerDevice();
+
+        if (!BluetoothService.instance().isBluetoothEnabled() || trackerDevice == null) {
             showErrorView();
-        } else if (SleepSenseDeviceService.instance().getTrackerDevice().getTrackerState() == TrackerDevice.TrackerState.Tracking) {
+        } else if (trackerDevice.getTrackerState() == TrackerDevice.TrackerState.Tracking) {
             showClockView();
         } else {
             showConnectingView();
         }
 
-        SleepSenseDeviceService.instance().getTrackerDevice()
-                .getTrackingStateObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<TrackerDevice.TrackerState>() {
-                    @Override
-                    public void call(TrackerDevice.TrackerState trackerState) {
-                        if (mIgnoreStateUpdate) return;
-                        switch (trackerState) {
-                            case Connecting:
-                                hideClockView();
-                                hideErrorView();
-                                showConnectingView();
-                            case Tracking:
-                                hideConnectionView();
-                                hideErrorView();
-                                showClockView();
-                                break;
-                            case Disconnected:
-                            case Error:
-                                hideConnectionView();
-                                hideClockView();
-                                showErrorView();
-                                break;
-                            default: break;
+        if (trackerDevice != null) {
+            trackerDevice.getTrackingStateObservable()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<TrackerDevice.TrackerState>() {
+                        @Override
+                        public void call(TrackerDevice.TrackerState trackerState) {
+                            if (mIgnoreStateUpdate) return;
+                            switch (trackerState) {
+                                case Connecting:
+                                    hideClockView();
+                                    hideErrorView();
+                                    showConnectingView();
+                                case Tracking:
+                                    hideConnectionView();
+                                    hideErrorView();
+                                    showClockView();
+                                    break;
+                                case Disconnected:
+                                case Error:
+                                    hideConnectionView();
+                                    hideClockView();
+                                    showErrorView();
+                                    break;
+                                default: break;
+                            }
                         }
-                    }
-                });
+                    });
 
-        SleepSenseDeviceService.instance().getTrackerDevice()
-                .getPacketCountObservable()
-                .sample(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Integer>() {
-                    @Override
-                    public void call(Integer packetCount) {
-                        mSampleCountTextView.setText(Integer.toString(packetCount));
+            trackerDevice
+                    .getPacketCountObservable()
+                    .sample(500, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<Integer>() {
+                        @Override
+                        public void call(Integer packetCount) {
+                            mSampleCountTextView.setText(Integer.toString(packetCount));
 
-                        if (!mIsPaused && spawnerCounter % 2 == 0) {
-                            spawnZed();
+                            if (!mIsPaused && spawnerCounter % 2 == 0) {
+                                spawnZed();
+                            }
+                            spawnerCounter++;
                         }
-                        spawnerCounter++;
-                    }
-                });
+                    });
 
-        startSleepSession();
+            startSleepSession();
+        }
+
+
 
         for (int i = 0; i < 20; i++){ //prefill zed pool
             zedsPool.add(createZed());
@@ -183,11 +190,12 @@ public class SleepTrackingActivity extends BaseActivity {
     }
 
     void startSleepSession() {
-        SleepSenseDeviceService.instance().getTrackerDevice().startSensorSession();
+        TrackerDevice trackerDevice = SleepSenseDeviceService.instance().getTrackerDevice();
+        if (trackerDevice != null)
+            trackerDevice.startSensorSession();
 
-        if ( SleepSenseDeviceService.instance().getPumpDevice() != null ) {
+        if ( SleepSenseDeviceService.instance().getPumpDevice() != null )
             SleepSenseDeviceService.instance().getPumpDevice().connectToGetFirmness();
-        }
     }
 
     void showConnectingView() {

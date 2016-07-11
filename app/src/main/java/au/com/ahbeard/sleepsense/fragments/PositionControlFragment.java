@@ -19,6 +19,7 @@ import au.com.ahbeard.sleepsense.activities.HomeActivity;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseCommand;
+import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseStatusEvent;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.widgets.StyledButton;
@@ -54,18 +55,21 @@ public class PositionControlFragment extends Fragment {
     @OnClick({R.id.position_button_rest, R.id.position_button_recline, R.id.position_button_relax, R.id.position_button_recover})
     void onClick(View clickedButton) {
 
-        if (clickedButton.getId() == R.id.position_button_rest) {
-            AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_PRESET_REST);
-            SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetFlat());
-        } else if (clickedButton.getId() == R.id.position_button_recline) {
-            AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_PRESET_RECLINE);
-            SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetLounge());
-        } else if (clickedButton.getId() == R.id.position_button_relax) {
-            AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_PRESET_RELAX);
-            SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetTV());
-        } else if (clickedButton.getId() == R.id.position_button_recover) {
-            AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_PRESET_RECOVER);
-            SleepSenseDeviceService.instance().getBaseDevice().sendCommand(BaseCommand.presetZeroG());
+        BaseDevice baseDevice = SleepSenseDeviceService.instance().getBaseDevice();
+        if (baseDevice != null) {
+            if (clickedButton.getId() == R.id.position_button_rest) {
+                AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_PRESET_REST);
+                baseDevice.sendCommand(BaseCommand.presetFlat());
+            } else if (clickedButton.getId() == R.id.position_button_recline) {
+                AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_PRESET_RECLINE);
+                baseDevice.sendCommand(BaseCommand.presetLounge());
+            } else if (clickedButton.getId() == R.id.position_button_relax) {
+                AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_PRESET_RELAX);
+                baseDevice.sendCommand(BaseCommand.presetTV());
+            } else if (clickedButton.getId() == R.id.position_button_recover) {
+                AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_PRESET_RECOVER);
+                baseDevice.sendCommand(BaseCommand.presetZeroG());
+            }
         }
 
         /*

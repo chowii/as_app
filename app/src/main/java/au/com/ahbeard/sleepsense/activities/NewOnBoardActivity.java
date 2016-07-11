@@ -411,44 +411,48 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     public void inflateMattress() {
 
-        SleepSenseDeviceService.instance().getPumpDevice().getChangeObservable().onBackpressureBuffer().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
-            @Override
-            public void call(Device device) {
-                if (mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound && device.isDisconnected() && device.getLastConnectionStatus() != 0) {
-                    // We had an error connecting to the pump.
-                    mOnBoardingState.state = OnBoardingState.State.InflationError;
-                    mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
+        if (SleepSenseDeviceService.instance().getPumpDevice() != null) {
+
+            PumpDevice pumpDevice = SleepSenseDeviceService.instance().getPumpDevice();
+
+            pumpDevice.getChangeObservable().onBackpressureBuffer().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
+                @Override
+                public void call(Device device) {
+                    if (mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound && device.isDisconnected() && device.getLastConnectionStatus() != 0) {
+                        // We had an error connecting to the pump.
+                        mOnBoardingState.state = OnBoardingState.State.InflationError;
+                        mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
+                    }
                 }
-            }
-        });
+            });
 
-        SleepSenseDeviceService.instance().getPumpDevice().getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
+            pumpDevice.getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
 
-            long mStartedInflatingAt;
+                long mStartedInflatingAt;
 
-            @Override
-            public void call(PumpEvent pumpEvent) {
+                @Override
+                public void call(PumpEvent pumpEvent) {
 
-                if (pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state ==
-                        OnBoardingState.State.RequiredDevicesFound) {
-                    mStartedInflatingAt = System.currentTimeMillis();
-                    mOnBoardingState.state = OnBoardingState.State.Inflating;
-                    mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
-                } else if (!pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state ==
-                        OnBoardingState.State.Inflating) {
-                    mOnBoardingState.state = OnBoardingState.State.InflationComplete;
-                    mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
-                } else if (pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state ==
-                        OnBoardingState.State.Inflating && (System.currentTimeMillis() - mStartedInflatingAt) > 30000) {
-                    mOnBoardingState.state = OnBoardingState.State.InflationError;
-                    mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
+                    if (pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state ==
+                            OnBoardingState.State.RequiredDevicesFound) {
+                        mStartedInflatingAt = System.currentTimeMillis();
+                        mOnBoardingState.state = OnBoardingState.State.Inflating;
+                        mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
+                    } else if (!pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state ==
+                            OnBoardingState.State.Inflating) {
+                        mOnBoardingState.state = OnBoardingState.State.InflationComplete;
+                        mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
+                    } else if (pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state ==
+                            OnBoardingState.State.Inflating && (System.currentTimeMillis() - mStartedInflatingAt) > 30000) {
+                        mOnBoardingState.state = OnBoardingState.State.InflationError;
+                        mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
+                    }
+
                 }
+            });
 
-            }
-        });
-
-        SleepSenseDeviceService.instance().getPumpDevice().sendCommand(PumpCommand.setPressure(PreferenceService.instance().getSideOfBed(), 20));
-
+            pumpDevice.sendCommand(PumpCommand.setPressure(PreferenceService.instance().getSideOfBed(), 20));
+        }
     }
 
     public Observable<OnBoardingState> getOnBoardingObservable() {

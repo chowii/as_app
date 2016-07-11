@@ -175,7 +175,7 @@ public class BluetoothService extends BluetoothGattCallback {
 
     public BluetoothDevice createDeviceFromAddress(String address) {
         initializeBluetoothAdapter();
-        if ( mBluetoothAdapter != null ) {
+        if ( mBluetoothAdapter != null && address != null) {
             return mBluetoothAdapter.getRemoteDevice(address);
         } else {
             return null;

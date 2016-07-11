@@ -171,7 +171,7 @@ public class FirmnessControlFragment extends Fragment {
 
     public void connectPump() {
 
-        if (SleepSenseDeviceService.instance().hasPumpDevice()) {
+        if (SleepSenseDeviceService.instance().getPumpDevice() != null) {
 
             mSubscriptions.add(SleepSenseDeviceService.instance().getPumpDevice().getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
                 @Override

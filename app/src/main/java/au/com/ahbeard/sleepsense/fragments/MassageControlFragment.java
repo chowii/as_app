@@ -176,7 +176,8 @@ public class MassageControlFragment extends Fragment {
                                 showToast("Connection timeout","Try again",new Action1<Void>(){
                                     @Override
                                     public void call(Void aVoid) {
-                                        SleepSenseDeviceService.instance().getBaseDevice().connect();
+                                        if (SleepSenseDeviceService.instance().getBaseDevice() != null)
+                                            SleepSenseDeviceService.instance().getBaseDevice().connect();
                                     }
 
                                 });
