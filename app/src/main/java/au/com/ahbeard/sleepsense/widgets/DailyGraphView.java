@@ -303,33 +303,33 @@ public class DailyGraphView extends ViewGroup {
 
         super.onDraw(canvas);
 
-        canvas.drawPath(mAreaPath, mAreaPaint);
-        canvas.drawPath(mPath, mLinePaint);
+        if (mAreaPath != null && mPath != null) {
+            canvas.drawPath(mAreaPath, mAreaPaint);
+            canvas.drawPath(mPath, mLinePaint);
 
-        canvas.drawPath(mDashedLinePaths, mDashedLinePaint);
+            canvas.drawPath(mDashedLinePaths, mDashedLinePaint);
 
-        float deepSleepHeight = mGraphRegionHeight - mGraphExtent * 0.25f - mSideLabelPaint.getFontMetrics().ascent + mSideLabelPadding * 0.75f;
-        canvas.drawText("DEEP", mSideLabelPadding, deepSleepHeight, mSideLabelPaint);
-        canvas.drawText("SLEEP", mSideLabelPadding, deepSleepHeight + mSideLabelPaint.getTextSize() * 1.25f, mSideLabelPaint);
+            float deepSleepHeight = mGraphRegionHeight - mGraphExtent * 0.25f - mSideLabelPaint.getFontMetrics().ascent + mSideLabelPadding * 0.75f;
+            canvas.drawText("DEEP", mSideLabelPadding, deepSleepHeight, mSideLabelPaint);
+            canvas.drawText("SLEEP", mSideLabelPadding, deepSleepHeight + mSideLabelPaint.getTextSize() * 1.25f, mSideLabelPaint);
 
-        float awakeSleepHeight = mGraphRegionHeight - mGraphExtent * 0.0f + mSideLabelPaint.getFontMetrics().descent -mSideLabelPadding;
-        canvas.drawText("AWAKE", mSideLabelPadding, awakeSleepHeight, mSideLabelPaint);
+            float awakeSleepHeight = mGraphRegionHeight - mGraphExtent * 0.0f + mSideLabelPaint.getFontMetrics().descent - mSideLabelPadding;
+            canvas.drawText("AWAKE", mSideLabelPadding, awakeSleepHeight, mSideLabelPaint);
 
-        if (mLegends != null) {
+            if (mLegends != null) {
 
-            canvas.clipPath(mAreaPath);
+                canvas.clipPath(mAreaPath);
 
-            for (Legend legend : mLegends) {
+                for (Legend legend : mLegends) {
 
-                float legendWidth = mLabelPaint.measureText(legend.value);
+                    float legendWidth = mLabelPaint.measureText(legend.value);
 
-                canvas.drawText(legend.value, legend.center.x - legendWidth / 2f, legend.center.y - mLabelPaint.getFontMetrics().ascent / 2, mLabelPaint);
-                // canvas.drawLine(legend.center.x, 0, legend.center.x, legend.center.y - mLabelPaint.getTextSize() / 2, mLabelLinePaint);
-                // canvas.drawLine(legend.center.x,legend.center.y+mLabelPaint.getFontMetrics().descent+mLabelPaint.getTextSize()/2,legend.center.x,canvas.getHeight(),mSideLabelPaint);
+                    canvas.drawText(legend.value, legend.center.x - legendWidth / 2f, legend.center.y - mLabelPaint.getFontMetrics().ascent / 2, mLabelPaint);
+                    // canvas.drawLine(legend.center.x, 0, legend.center.x, legend.center.y - mLabelPaint.getTextSize() / 2, mLabelLinePaint);
+                    // canvas.drawLine(legend.center.x,legend.center.y+mLabelPaint.getFontMetrics().descent+mLabelPaint.getTextSize()/2,legend.center.x,canvas.getHeight(),mSideLabelPaint);
+                }
             }
         }
-
-
     }
 
 
