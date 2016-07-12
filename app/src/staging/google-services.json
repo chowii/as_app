@@ -1,0 +1,132 @@
+{
+  "project_info": {
+    "project_number": "340598154722",
+    "firebase_url": "https://project-4339160620500439290.firebaseio.com",
+    "project_id": "project-4339160620500439290",
+    "storage_bucket": "project-4339160620500439290.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340598154722:android:8a053835c606daef",
+        "android_client_info": {
+          "package_name": "au.com.ahbeard.sleepsense"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "340598154722-8elahob3cvq6lvhr31jo4b6tl272a3va.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "au.com.ahbeard.sleepsense",
+            "certificate_hash": "60A32C462452ED0B4ED13961009731801814FF3E"
+          }
+        },
+        {
+          "client_id": "340598154722-8ovq6kvrru8ts4iqbvr7lrfld7tvj771.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDFjFw17I2LQmbk7fe-hQXHKECg0vL2mY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340598154722:android:8cac698bc2e9266b",
+        "android_client_info": {
+          "package_name": "au.com.ahbeard.sleepsense.instore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "340598154722-8ovq6kvrru8ts4iqbvr7lrfld7tvj771.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDFjFw17I2LQmbk7fe-hQXHKECg0vL2mY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340598154722:android:ac6642ac01246db3",
+        "android_client_info": {
+          "package_name": "au.com.ahbeard.sleepsense.staging"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "340598154722-2kb9orhimilth5t0uqj1qll530jnl5lu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "au.com.ahbeard.sleepsense.staging",
+            "certificate_hash": "19CF434661BBBA275A22576901CB44B698243C77"
+          }
+        },
+        {
+          "client_id": "340598154722-8ovq6kvrru8ts4iqbvr7lrfld7tvj771.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDFjFw17I2LQmbk7fe-hQXHKECg0vL2mY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "340598154722-8ovq6kvrru8ts4iqbvr7lrfld7tvj771.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "340598154722-ksbfsg7davsup06sakl6kppu1un45h54.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "au.com.ahbeard.sleepsense"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
