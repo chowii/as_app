@@ -69,3 +69,15 @@
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
+
+#Liquid
+-keep class io.lqd.sdk.* { *; }
+-dontwarn io.lqd.sdk.**
+
+#Beddit
+-keep class com.beddit.* { *; }
+-dontwarn com.beddit.**
+
+#Android GMS
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**

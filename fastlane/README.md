@@ -11,9 +11,9 @@ sudo gem install fastlane
 fastlane android test
 ```
 Runs all the tests
-### android beta
+### android staging
 ```
-fastlane android beta
+fastlane android staging
 ```
 Submit a new Beta Build to Crashlytics Beta
 ### android deploy
