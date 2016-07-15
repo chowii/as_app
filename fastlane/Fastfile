@@ -24,7 +24,16 @@ platform :android do
 
   desc "Runs all the tests"
   lane :test do
-    gradle(task: "test")
+    gradle(
+      task: "test",
+      flavor: "Staging",
+      build_type: "Debug",
+    )
+    gradle(
+      task: "test",
+      flavor: "Playstore",
+      build_type: "Debug",
+    )
   end
 
   desc "Submit a new Beta Build to Crashlytics Beta"

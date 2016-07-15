@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,6 +44,7 @@ public class OnBoardingHelpFragment extends OnBoardingFragment {
 
     @OnClick(R.id.on_board_button_call_for_help)
     public void onCallForHelpButtonClicked() {
+        AnalyticsService.instance().logSetupErrorResolvingCallUs();
         callNumber("tel:1300001150");
     }
 

@@ -93,7 +93,7 @@ public class OnBoardingPlacePhoneFragment  extends OnBoardingFragment{
     @Override
     public void onStart() {
         super.onStart();
-        mStartTime = System.currentTimeMillis();
+        mStartTime = SystemClock.currentThreadTimeMillis();
     }
 
     @Override

@@ -29,7 +29,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     @OnClick(R.id.profile_button_female)
     void onClickFemale() {
-        mSex = "Male";
+        mSex = "Female";
         mMaleButton.setSelected(false);
         mFemaleButton.setSelected(true);
         mUnspecifiedButton.setSelected(false);
@@ -51,7 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     @OnClick(R.id.profile_button_save_profile)
     void onClickSaveProfile() {
-        String age = mAgeEditText.getText().toString();
+        Integer age = Integer.parseInt(mAgeEditText.getText().toString());
         String emailAddress = mEmailAddressEditText.getText().toString();
         PreferenceService.instance().setProfile(mSex, age, emailAddress);
         finish();

@@ -1,6 +1,8 @@
 package au.com.ahbeard.sleepsense.services;
 
 import android.content.Context;
+import android.content.Loader;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.crashlytics.android.answers.Answers;
@@ -13,6 +15,7 @@ import java.util.Map;
 
 import au.com.ahbeard.sleepsense.BuildConfig;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
+import au.com.ahbeard.sleepsense.model.Firmness;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.utils.StringUtils;
 import io.lqd.sdk.Liquid;
@@ -34,7 +37,7 @@ public class AnalyticsService {
     public static void initialize(Context context) {
         sContext = context.getApplicationContext();
 
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG || BuildConfig.FLAVOR == "staging") {
             Liquid.initialize(sContext, "yw-jr0gP_nGJd4WWigFEkAWyl_ifapZo", BuildConfig.DEBUG);
         } else {
             Liquid.initialize(sContext, "UnQ1PVTRJPohf9RYChvD9CXh6stMnM_0");
@@ -72,9 +75,13 @@ public class AnalyticsService {
         Answers.getInstance().logCustom(answersEvent);
     }
 
-    private void logUserProperty(String name, String property) {
+    private void logUserProperty(String name, Object property) {
         Liquid.getInstance().setUserAttribute(name, property);
-        mFirebaseAnalytics.setUserProperty(name, property);
+        if (property instanceof String) {
+            mFirebaseAnalytics.setUserProperty(name, (String) property);
+        } else if (property instanceof Boolean || property instanceof Float) {
+            mFirebaseAnalytics.setUserProperty(name, property.toString());
+        }
     }
 
     public static final String EVENT_SETUP_ITEMS_SELECTED = "setup_items_selected";
@@ -172,9 +179,10 @@ public class AnalyticsService {
         logUserProperty(USER_PROPERTY_SLEEP_HOUR_GOAL, sleepHourGoal);
     }
 
-    public void setProfile(String sex, String age, String emailAddress) {
+    public void setProfile(String sex, Integer age, String emailAddress) {
         logUserProperty(USER_PROPERTY_GENDER,sex);
-        logUserProperty(USER_PROPERTY_AGE,age);
+        logUserProperty(USER_PROPERTY_AGE, age);
+        logUserProperty(USER_PROPERTY_USER_EMAIL, emailAddress);
         logUserProperty(USER_PROPERTY_SIX_WSC_SUBSCRIBER, Boolean.toString(StringUtils.isNotEmpty(emailAddress)));
     }
 
@@ -201,7 +209,7 @@ public class AnalyticsService {
         attrs.put(PROPERTY_SLEEP_SCORE, sleep.getTotalSleepScore());
 
         if (SleepSenseDeviceService.instance().hasPumpDevice()) {
-            attrs.put(PROPERTY_MATTRESS_FIRMNESS, sleep.getMattressFirmness());
+            attrs.put(PROPERTY_MATTRESS_FIRMNESS, Firmness.getControlValueForPressure(sleep.getMattressFirmness().intValue()));
         }
 
         attrs.put(PROPERTY_TOTAL_HOURS_SLEPT, sleep.getSleepTotalTime());

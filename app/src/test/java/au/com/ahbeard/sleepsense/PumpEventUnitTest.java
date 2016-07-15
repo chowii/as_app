@@ -24,7 +24,6 @@ public class PumpEventUnitTest {
         assertEquals(444,pumpEvent.getRightPressure());
 
         assertEquals(2,pumpEvent.getStatuses().size());
-
     }
 
     @Test

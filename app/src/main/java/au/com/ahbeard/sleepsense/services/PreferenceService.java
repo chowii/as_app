@@ -125,14 +125,14 @@ public class PreferenceService {
         getSharedPreferences().edit().putString("sideOfBed",sideOfBed).commit();
     }
 
-    public void setProfile(String sex, String age, String emailAddress) {
+    public void setProfile(String sex, Integer age, String emailAddress) {
 
         AnalyticsService.instance().setProfile(sex,age,emailAddress);
 
         SharedPreferences.Editor edit = getSharedPreferences().edit();
 
         edit.putString("profile_sex", sex);
-        edit.putString("profile_age", age);
+        edit.putString("profile_age", age.toString());
         edit.putString("profile_emailAddress", emailAddress);
 
         edit.commit();
