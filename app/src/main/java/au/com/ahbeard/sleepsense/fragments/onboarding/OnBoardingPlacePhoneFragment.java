@@ -33,13 +33,9 @@ public class OnBoardingPlacePhoneFragment  extends OnBoardingFragment{
     @Bind(R.id.onboarding_image_view_phone)
     ImageView mPhoneImageView;
 
-    private long mStartTime;
-
     @OnClick(R.id.on_board_button_continue)
     void continueClicked() {
         if ( mListener != null ) {
-            AnalyticsService.instance().logSetupTimeToSkipLayOnBed((SystemClock.currentThreadTimeMillis()-mStartTime)/1000f);
-
             mListener.onPlacePhoneContinueClicked();
         }
     }
@@ -88,12 +84,6 @@ public class OnBoardingPlacePhoneFragment  extends OnBoardingFragment{
         PulseAnimator.startAnimation(pulses, getContext(), null);
 
         return view;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mStartTime = SystemClock.currentThreadTimeMillis();
     }
 
     @Override

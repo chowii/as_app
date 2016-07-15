@@ -86,6 +86,7 @@ public class AnalyticsService {
 
     public static final String EVENT_SETUP_ITEMS_SELECTED = "setup_items_selected";
     public static final String EVENT_CLOSE_SETUP = "close_setup";
+    public static final String EVENT_SETUP_ERROR_PAIRING = "setup_error_pairing";
     public static final String EVENT_SETUP_ERROR_RESOLVING = "setup_error_resolving";
     public static final String EVENT_SETUP_TIME_TO_SKIP_LAY_ON_BED = "setup_time_to_skip_lay_on_bed";
 
@@ -117,6 +118,16 @@ public class AnalyticsService {
     public static final String EVENT_ONBOARDING_TOUCH_MASSAGE ="onboarding_touch_massage";
     public static final String EVENT_ONBOARDING_TOUCH_POSITION ="onboarding_touch_position";
 
+    public static final String EVENT_SETTINGS_FAQ = "settings_touch_faq";
+    public static final String EVENT_SETTINGS_ABOUT = "settings_touch_about";
+    public static final String EVENT_SETTINGS_CONTACT_US = "settings_touch_contact_us";
+    public static final String EVENT_SETTINGS_IMPROVE_SLEEP = "settings_touch_improve_sleep";
+    public static final String EVENT_SETTINGS_PREFS = "settings_touch_prefs";
+    public static final String EVENT_SETTINGS_PROFILE = "settings_touch_profile";
+    public static final String EVENT_SETTINGS_TERMS_OF_SERVICE = "settings_touch_terms_of_service";
+    public static final String EVENT_SETTINGS_PRIVACY_POLICY = "settings_touch_privacy_policy";
+    public static final String EVENT_SETTINGS_DEBUG = "settings_touch_debug";
+
     public static final String PROPERTY_DID_TOUCH_CONTROL = "did_touch_control";
 
 
@@ -134,6 +145,9 @@ public class AnalyticsService {
     public static final String PROPERTY_TOTAL_HOURS_SLEPT = "total_hours_slept";
     public static final String PROPERTY_TIMES_OUT_OF_BED = "times_out_of_bed";
     public static final String PROPERTY_ERROR = "error";
+    public static final String PROPERTY_ERROR_PAIRING_MATTRESS = "error_pairing_base";
+    public static final String PROPERTY_ERROR_PAIRING_BASE = "error_pairing_mattress";
+    public static final String PROPERTY_ERROR_PAIRING_TRACKER = "error_pairing_tracker";
 
     public static final String VALUE_COMMAND_PRESET_REST = "preset_rest";
     public static final String VALUE_COMMAND_PRESET_RECLINE = "preset_recline";
@@ -249,6 +263,15 @@ public class AnalyticsService {
         logEvent(EVENT_DASHBOARD_VIEW_SETTINGS, null);
     }
 
+    public void logSetupErrorPairing(boolean errorInMattress, boolean errorInBase, boolean errorInTracker) {
+        logEvent(EVENT_SETUP_ERROR_PAIRING, attrs()
+                .put(PROPERTY_ERROR_PAIRING_MATTRESS, errorInMattress)
+                .put(PROPERTY_ERROR_PAIRING_BASE, errorInBase)
+                .put(PROPERTY_ERROR_PAIRING_TRACKER, errorInTracker)
+                .build()
+        );
+    }
+
     public void logSetupErrorResolvingTryAgain() {
         logEvent(EVENT_SETUP_ERROR_RESOLVING, attrs()
                 .put(PROPERTY_TRY_AGAIN_BUTTON, true)
@@ -338,6 +361,34 @@ public class AnalyticsService {
         logEvent(EVENT_BASE_POSITION_CONTROL_TOUCH, attrs()
                 .put(PROPERTY_COMMAND, command)
                 .build());
+    }
+
+    public void logEventSettingsTouchFAQ() {
+        logEvent(EVENT_SETTINGS_FAQ, null);
+    }
+    public void logEventSettingsTouchAbout() {
+        logEvent(EVENT_SETTINGS_ABOUT, null);
+    }
+    public void logEventSettingsTouchContactUs() {
+        logEvent(EVENT_SETTINGS_CONTACT_US, null);
+    }
+    public void logEventSettingsTouchImproveSleep() {
+        logEvent(EVENT_SETTINGS_IMPROVE_SLEEP, null);
+    }
+    public void logEventSettingsTouchPrefs() {
+        logEvent(EVENT_SETTINGS_PREFS, null);
+    }
+    public void logEventSettingsTouchProfile() {
+        logEvent(EVENT_SETTINGS_PROFILE, null);
+    }
+    public void logEventSettingsTouchTermsOfService() {
+        logEvent(EVENT_SETTINGS_TERMS_OF_SERVICE, null);
+    }
+    public void logEventSettingsTouchPrivacyPolicy() {
+        logEvent(EVENT_SETTINGS_PRIVACY_POLICY, null);
+    }
+    public void logEventSettingsTouchDebug() {
+        logEvent(EVENT_SETTINGS_DEBUG, null);
     }
 
     private AttributesMap attrs() {

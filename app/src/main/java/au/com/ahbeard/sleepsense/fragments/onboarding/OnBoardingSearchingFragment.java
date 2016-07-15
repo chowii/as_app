@@ -14,6 +14,7 @@ import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.NewOnBoardActivity;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -134,6 +135,10 @@ public class OnBoardingSearchingFragment  extends OnBoardingFragment {
                     mMattressFoundImageView.setImageResource(onBoardingState.foundPump ? R.drawable.success_tick : R.drawable.failure_cross);
                     mTrackerFoundImageView.setImageResource(onBoardingState.foundTracker ? R.drawable.success_tick : R.drawable.failure_cross);
 
+                    boolean errorFindingMattress = onBoardingState.requiredPump && onBoardingState.foundPump;
+                    boolean errorFindingBase = onBoardingState.requiredBase && onBoardingState.foundBase;
+                    boolean errorFindingTracker = onBoardingState.requiredTracker && onBoardingState.foundTracker;
+
                     if (onBoardingState.state == OnBoardingState.State.RequiredDevicesFound) {
                         mContinueButton.animate().alpha(1.0f).start();
                         mPhoneImageView.setImageResource(R.drawable.onboarding_phone_searching_success);
@@ -141,12 +146,14 @@ public class OnBoardingSearchingFragment  extends OnBoardingFragment {
                         mTextTextView.setText(R.string.onboarding_searching_success_description);
                         mContinueButton.setText(R.string.continue_text);
                     } else if (onBoardingState.state == OnBoardingState.State.DevicesMissingAllowRetry) {
+                        AnalyticsService.instance().logSetupErrorPairing(errorFindingMattress, errorFindingBase, errorFindingTracker);
                         mPhoneImageView.setImageResource(R.drawable.onboarding_phone_worried);
                         mContinueButton.animate().alpha(1.0f).start();
                         mHeadingTextView.setText(R.string.onboarding_searching_error_title);
                         mTextTextView.setText(R.string.onboarding_searching_error_description);
                         mContinueButton.setText(R.string.try_again_text);
                     } else if (onBoardingState.state == OnBoardingState.State.DevicesMissingShowHelp) {
+                        AnalyticsService.instance().logSetupErrorPairing(errorFindingMattress, errorFindingBase, errorFindingTracker);
                         mPhoneImageView.setImageResource(R.drawable.onboarding_phone_worried);
                         mContinueButton.animate().alpha(1.0f).start();
                         mHeadingTextView.setText(R.string.onboarding_searching_error_title);

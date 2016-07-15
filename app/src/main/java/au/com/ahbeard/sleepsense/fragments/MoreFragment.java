@@ -26,6 +26,7 @@ import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import au.com.ahbeard.sleepsense.activities.HomeActivity;
 import au.com.ahbeard.sleepsense.activities.PreferenceActivity;
 import au.com.ahbeard.sleepsense.activities.ProfileActivity;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -76,16 +77,64 @@ public class MoreFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        add(inflater,mItemsLayout,"FAQs",null,HelpActivity.getIntent(getContext(),"FAQs","https://www.sleepsense.com.au/faq"));
-        add(inflater,mItemsLayout,"About A.H. Beard",null,HelpActivity.getIntent(getContext(),"About AH Beard","http://www.ahbeard.com.au/ourcompany"));
-        add(inflater,mItemsLayout,"Contact us",null,new Intent(getActivity(), ContactUsActivity.class));
-        add(inflater,mItemsLayout,"Improve your sleep",null,HelpActivity.getIntent(getContext(),"Improve your sleep","http://www.ahbeard.com.au/sleepchallenge"));
-        add(inflater,mItemsLayout,"Preferences",null,new Intent(getActivity(), PreferenceActivity.class));
+        add(inflater, mItemsLayout, "FAQs", null, new Runnable() {
+            @Override
+            public void run() {
+                AnalyticsService.instance().logEventSettingsTouchFAQ();
+                startActivity(HelpActivity.getIntent(getContext(),"FAQs","https://www.sleepsense.com.au/faq"));
+            }
+        });
+        add(inflater, mItemsLayout, "About A.H. Beard", null, new Runnable() {
+            @Override
+            public void run() {
+                AnalyticsService.instance().logEventSettingsTouchAbout();
+                startActivity(HelpActivity.getIntent(getContext(),"About AH Beard","http://www.ahbeard.com.au/ourcompany"));
+            }
+        });
+        add(inflater, mItemsLayout, "Contact us", null, new Runnable() {
+            @Override
+            public void run() {
+                AnalyticsService.instance().logEventSettingsTouchContactUs();
+                startActivity(new Intent(getActivity(), ContactUsActivity.class));
+            }
+        });
+        add(inflater, mItemsLayout, "Improve your sleep", null, new Runnable() {
+            @Override
+            public void run() {
+                AnalyticsService.instance().logEventSettingsTouchImproveSleep();
+                startActivity(HelpActivity.getIntent(getContext(),"Improve your sleep","http://www.ahbeard.com.au/sleepchallenge"));
+            }
+        });
+        add(inflater, mItemsLayout, "Preferences", null, new Runnable() {
+            @Override
+            public void run() {
+                AnalyticsService.instance().logEventSettingsTouchPrefs();
+                startActivity(new Intent(getActivity(), PreferenceActivity.class));
+            }
+        });
         addSpacer(mItemsLayout);
-        add(inflater,mItemsLayout,"My Profile",null,new Intent(getActivity(), ProfileActivity.class));
+        add(inflater, mItemsLayout, "My Profile", null, new Runnable() {
+            @Override
+            public void run() {
+                AnalyticsService.instance().logEventSettingsTouchProfile();
+                startActivity(new Intent(getActivity(), ProfileActivity.class));
+            }
+        });
         addSpacer(mItemsLayout);
-        add(inflater,mItemsLayout,"Terms of Service",null,HelpActivity.getIntent(getContext(),"Terms of Service","https://sleepsense.com.au/terms-of-service"));
-        add(inflater,mItemsLayout,"Privacy Policy",null,HelpActivity.getIntent(getContext(),"Privacy Policy","http://www.ahbeard.com.au/privacypolicy"));
+        add(inflater, mItemsLayout, "Terms of Service", null, new Runnable() {
+            @Override
+            public void run() {
+                AnalyticsService.instance().logEventSettingsTouchTermsOfService();
+                startActivity(HelpActivity.getIntent(getContext(),"Terms of Service","https://sleepsense.com.au/terms-of-service"));
+            }
+        });
+        add(inflater, mItemsLayout, "Privacy Policy", null, new Runnable() {
+            @Override
+            public void run() {
+                AnalyticsService.instance().logEventSettingsTouchPrivacyPolicy();
+                startActivity(HelpActivity.getIntent(getContext(),"Privacy Policy","https://www.ahbeard.com.au/privacypolicy"));
+            }
+        });
         addSpacer(mItemsLayout);
 
         try {
@@ -97,7 +146,13 @@ public class MoreFragment extends Fragment {
         }
 
         if (BuildConfig.DEBUG ) {
-            add(inflater,mItemsLayout,"Debug",null,new Intent(getActivity(), DebugActivity.class));
+            add(inflater, mItemsLayout, "Debug", null, new Runnable() {
+                @Override
+                public void run() {
+                    AnalyticsService.instance().logEventSettingsTouchDebug();
+                    startActivity(new Intent(getActivity(), DebugActivity.class));
+                }
+            });
             addSpacer(mItemsLayout);
             addSpacer(mItemsLayout);
         }
@@ -105,9 +160,9 @@ public class MoreFragment extends Fragment {
         return view;
     }
 
-    public void add(LayoutInflater inflater, ViewGroup container, String title, String detail, Intent intent) {
+    public void add(LayoutInflater inflater, ViewGroup container, String title, String detail, Runnable runnable) {
         View view = inflater.inflate(R.layout.item_more,container,false);
-        new MoreItemViewHolder().bind(view).populate(title,detail,intent);
+        new MoreItemViewHolder().bind(view).populate(title,detail,runnable);
         container.addView(view);
     }
 
@@ -125,7 +180,7 @@ public class MoreFragment extends Fragment {
 
     class MoreItemViewHolder {
 
-        Intent mIntent;
+        Runnable mRunnable;
 
         @Bind(R.id.more_text_view_title)
         TextView mTitleTextView;
@@ -138,8 +193,8 @@ public class MoreFragment extends Fragment {
 
         @OnClick(R.id.more_layout)
         void itemClicked() {
-            if ( mIntent != null ) {
-                startActivity(mIntent);
+            if ( mRunnable != null ) {
+                mRunnable.run();
             }
         }
 
@@ -148,11 +203,11 @@ public class MoreFragment extends Fragment {
             return this;
         }
 
-        public void populate(String title, String detail, Intent intent ) {
-            mIntent = intent;
+        public void populate(String title, String detail, Runnable runnable ) {
+            mRunnable = runnable;
             mTitleTextView.setText(title);
             mDetailTextView.setText(detail);
-            if ( mIntent == null ) {
+            if ( runnable == null ) {
                 mChevronImageView.setVisibility(View.GONE);
                 mLayout.setClickable(false);
             } else {

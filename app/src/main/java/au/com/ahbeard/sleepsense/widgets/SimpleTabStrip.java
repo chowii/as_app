@@ -96,13 +96,21 @@ public class SimpleTabStrip extends LinearLayout {
 
                 @Override
                 public void onClick(View v) {
-                    mViewPager.setCurrentItem(position,false);updateTabs(position);
+                    mViewPager.setCurrentItem(position,false);
+                    updateTabs(position);
+                    clickOnTab(position);
                 }
             });
 
             addView(view);
 
         }
+    }
+
+    private void clickOnTab(int selectedPosition) {
+        TabProvider tabProvider = (TabProvider) mViewPager.getAdapter();
+        Runnable onClick = tabProvider.getOnClickAction(selectedPosition);
+        onClick.run();
     }
 
     private void updateTabs(int selectedPosition) {
@@ -134,6 +142,7 @@ public class SimpleTabStrip extends LinearLayout {
         String getName(int position);
         int getIconResourceId(int position);
         int getSelectedIconResourceId(int position);
+        Runnable getOnClickAction(int position);
 
     }
 
