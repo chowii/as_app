@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.SleepTrackingActivity;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -22,6 +23,8 @@ public class DashboardNoSleepsFragment extends Fragment {
 
     @OnClick(R.id.dashboard_fab_start_sleep)
     void onStartSleepClicked() {
+        AnalyticsService.instance().logDashboardTouchTrackSleep();
+
         Intent intent = new Intent(getActivity(), SleepTrackingActivity.class);
         startActivity(intent);
     }
