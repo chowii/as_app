@@ -68,6 +68,7 @@ public class DashboardFragment extends Fragment {
         }
     }
 
+    private boolean ignoreTabChange = false;
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
@@ -113,6 +114,10 @@ public class DashboardFragment extends Fragment {
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
+                if (ignoreTabChange){
+                    ignoreTabChange = false;
+                    return;
+                }
                 if ("DAILY".equalsIgnoreCase(tabId)) {
                     AnalyticsService.instance().logDashboardViewDailyStats(AnalyticsService.VALUE_ORIGIN_TOUCH);
                 } else if ("WEEKLY".equalsIgnoreCase(tabId)) {
@@ -126,6 +131,7 @@ public class DashboardFragment extends Fragment {
                 .subscribe(new Action1<Integer>() {
                     @Override
                     public void call(Integer sleepId) {
+                        ignoreTabChange = true;
                         mTabHost.setCurrentTab(0);
                     }
                 }));
