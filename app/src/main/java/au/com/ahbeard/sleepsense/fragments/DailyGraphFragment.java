@@ -48,7 +48,7 @@ public class DailyGraphFragment extends Fragment {
     @OnClick(R.id.sleep_score_view)
     void openSleepScoreBreakdown() {
 
-        AnalyticsService.instance().logDashboardSleepScoreClicked();
+        AnalyticsService.instance().logDashboardSleepScoreClicked(mSleep);
 
         if (mSleep != null) {
 
@@ -61,7 +61,6 @@ public class DailyGraphFragment extends Fragment {
             } else if (getActivity() instanceof BaseActivity) {
                 ((BaseActivity) getActivity()).openSleepScoreBreakdown(mSleepId);
             }
-
 
         }
 

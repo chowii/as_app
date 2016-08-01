@@ -222,6 +222,11 @@ public class AnalyticsService {
     }
 
     public void logSleep(Sleep sleep) {
+        logEvent(EVENT_SLEEP_SESSION_END, attrsForSleep(sleep));
+    }
+
+    private HashMap<String, Object> attrsForSleep(Sleep sleep) {
+        if (sleep == null) { return null; }
         HashMap<String, Object> attrs = new HashMap<>();
 
         attrs.put(PROPERTY_SLEEP_DATE, SleepService.getYYYYMMDDD(SleepService.getCalendar((int) sleep.getSleepId())));
@@ -234,7 +239,7 @@ public class AnalyticsService {
         attrs.put(PROPERTY_TOTAL_HOURS_SLEPT, sleep.getSleepTotalTime());
         attrs.put(PROPERTY_TIMES_OUT_OF_BED, sleep.getTimesOutOfBed());
 
-        logEvent(EVENT_SLEEP_SESSION_END, attrs);
+        return attrs;
     }
 
     public void logItemsSelected(boolean hasPump, boolean hasTracker, boolean hasBase) {
@@ -333,8 +338,8 @@ public class AnalyticsService {
         logEvent(EVENT_SLEEP_SCREEN_STOP_TRACKING, null);
     }
 
-    public void logDashboardSleepScoreClicked() {
-        logEvent(EVENT_DASHBOARD_SLEEP_SCORE_CLICKED, null);
+    public void logDashboardSleepScoreClicked(Sleep sleep) {
+        logEvent(EVENT_DASHBOARD_SLEEP_SCORE_CLICKED, attrsForSleep(sleep));
     }
 
     public void logDashboardTouchTrackSleep() {
