@@ -132,7 +132,7 @@ public class MoreFragment extends Fragment {
             @Override
             public void run() {
                 AnalyticsService.instance().logEventSettingsTouchPrivacyPolicy();
-                startActivity(HelpActivity.getIntent(getContext(),"Privacy Policy","https://www.ahbeard.com.au/privacypolicy"));
+                startActivity(HelpActivity.getIntent(getContext(),"Privacy Policy","http://www.ahbeard.com.au/privacypolicy"));
             }
         });
         addSpacer(mItemsLayout);

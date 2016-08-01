@@ -135,9 +135,9 @@ public class OnBoardingSearchingFragment  extends OnBoardingFragment {
                     mMattressFoundImageView.setImageResource(onBoardingState.foundPump ? R.drawable.success_tick : R.drawable.failure_cross);
                     mTrackerFoundImageView.setImageResource(onBoardingState.foundTracker ? R.drawable.success_tick : R.drawable.failure_cross);
 
-                    boolean errorFindingMattress = onBoardingState.requiredPump && onBoardingState.foundPump;
-                    boolean errorFindingBase = onBoardingState.requiredBase && onBoardingState.foundBase;
-                    boolean errorFindingTracker = onBoardingState.requiredTracker && onBoardingState.foundTracker;
+                    boolean errorFindingMattress = onBoardingState.requiredPump &&!onBoardingState.foundPump;
+                    boolean errorFindingBase = onBoardingState.requiredBase && !onBoardingState.foundBase;
+                    boolean errorFindingTracker = onBoardingState.requiredTracker && !onBoardingState.foundTracker;
 
                     if (onBoardingState.state == OnBoardingState.State.RequiredDevicesFound) {
                         AnalyticsService.instance().logSetupSuccessPairing();
@@ -146,22 +146,19 @@ public class OnBoardingSearchingFragment  extends OnBoardingFragment {
                         mHeadingTextView.setText(R.string.onboarding_searching_success_title);
                         mTextTextView.setText(R.string.onboarding_searching_success_description);
                         mContinueButton.setText(R.string.continue_text);
-                    } else if (onBoardingState.state == OnBoardingState.State.DevicesMissingAllowRetry) {
+                    } else if (onBoardingState.state == OnBoardingState.State.DevicesMissingAllowRetry
+                            || onBoardingState.state == OnBoardingState.State.DevicesMissingShowHelp) {
                         AnalyticsService.instance().logSetupErrorPairing(errorFindingMattress, errorFindingBase, errorFindingTracker);
                         mPhoneImageView.setImageResource(R.drawable.onboarding_phone_worried);
                         mContinueButton.animate().alpha(1.0f).start();
                         mHeadingTextView.setText(R.string.onboarding_searching_error_title);
                         mTextTextView.setText(R.string.onboarding_searching_error_description);
-                        mContinueButton.setText(R.string.try_again_text);
-                    } else if (onBoardingState.state == OnBoardingState.State.DevicesMissingShowHelp) {
-                        AnalyticsService.instance().logSetupErrorPairing(errorFindingMattress, errorFindingBase, errorFindingTracker);
-                        mPhoneImageView.setImageResource(R.drawable.onboarding_phone_worried);
-                        mContinueButton.animate().alpha(1.0f).start();
-                        mHeadingTextView.setText(R.string.onboarding_searching_error_title);
-                        mTextTextView.setText(R.string.onboarding_searching_error_description);
-                        mContinueButton.setText(R.string.help_me_text);
+                        if (onBoardingState.state == OnBoardingState.State.DevicesMissingAllowRetry) {
+                            mContinueButton.setText(R.string.try_again_text);
+                        } else {
+                            mContinueButton.setText(R.string.help_me_text);
+                        }
                     }
-
                 }
             }
         }));

@@ -1,14 +1,11 @@
 package au.com.ahbeard.sleepsense.services;
 
 import android.content.Context;
-import android.content.Loader;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.google.android.gms.common.api.BooleanResult;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.HashMap;

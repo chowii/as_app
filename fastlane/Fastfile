@@ -46,6 +46,16 @@ platform :android do
     crashlytics
   end
 
+  desc "Submit a new Playstore release Build to Crashlytics Beta"
+  lane :release do
+    gradle(
+      task: 'assemble',
+      flavor: 'Playstore',
+      build_type: 'Release'
+    )
+    crashlytics
+  end
+
   desc "Deploy a new version to the Google Play"
   lane :deploy do
     gradle(

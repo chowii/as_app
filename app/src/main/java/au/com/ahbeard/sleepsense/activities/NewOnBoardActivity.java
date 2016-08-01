@@ -134,6 +134,7 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     @Override
     public void onChooseSideContinueClicked(String sideOfBed) {
+        if (sideOfBed == null) { return; }
 
         PreferenceService.instance().setSideOfBed(sideOfBed);
 
@@ -146,7 +147,6 @@ public class NewOnBoardActivity extends BaseActivity implements
         } else {
             onPlacePhoneContinueClicked();
         }
-
 
     }
 
