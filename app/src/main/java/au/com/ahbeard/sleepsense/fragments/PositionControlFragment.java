@@ -40,6 +40,8 @@ public class PositionControlFragment extends Fragment {
 
     private boolean mControlOnly;
 
+    private HardwareControlListener listener;
+
     @Bind({R.id.position_button_rest, R.id.position_button_recline, R.id.position_button_relax, R.id.position_button_recover})
     List<StyledButton> mPositionButtons;
 
@@ -54,6 +56,8 @@ public class PositionControlFragment extends Fragment {
 
     @OnClick({R.id.position_button_rest, R.id.position_button_recline, R.id.position_button_relax, R.id.position_button_recover})
     void onClick(View clickedButton) {
+
+        callHardwareControlListener();
 
         BaseDevice baseDevice = SleepSenseDeviceService.instance().getBaseDevice();
         if (baseDevice != null) {
@@ -151,6 +155,7 @@ public class PositionControlFragment extends Fragment {
             mHeadPositionUpButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
                 @Override
                 public void onDown(StyledImageButton view) {
+                    callHardwareControlListener();
                     AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_ADJUST_HEAD_UP);
                 }
 
@@ -163,6 +168,7 @@ public class PositionControlFragment extends Fragment {
             mHeadPositionDownButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
                 @Override
                 public void onDown(StyledImageButton view) {
+                    callHardwareControlListener();
                     AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_ADJUST_HEAD_DOWN);
                 }
 
@@ -175,6 +181,7 @@ public class PositionControlFragment extends Fragment {
             mFootPositionUpButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
                 @Override
                 public void onDown(StyledImageButton view) {
+                    callHardwareControlListener();
                     AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_ADJUST_FOOT_UP);
                 }
 
@@ -187,6 +194,7 @@ public class PositionControlFragment extends Fragment {
             mFootPositionDownButton.setOnPressPulseListener(new StyledImageButton.OnPressPulseListener() {
                 @Override
                 public void onDown(StyledImageButton view) {
+                    callHardwareControlListener();
                     AnalyticsService.instance().logPositionControlTouch(AnalyticsService.VALUE_COMMAND_ADJUST_FOOT_DOWN);
                 }
 
@@ -296,5 +304,13 @@ public class PositionControlFragment extends Fragment {
 
     }
 
+    public void setHardwareControlListener(HardwareControlListener listener) {
+        this.listener = listener;
+    }
 
+    private void callHardwareControlListener() {
+        if (listener != null) {
+            listener.didTouchControl();
+        }
+    }
 }

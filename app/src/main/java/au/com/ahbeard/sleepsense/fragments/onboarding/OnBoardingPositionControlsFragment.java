@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
+import au.com.ahbeard.sleepsense.fragments.HardwareControlListener;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
@@ -31,12 +32,6 @@ public class OnBoardingPositionControlsFragment  extends OnBoardingFragment {
     }
 
     boolean mControlsTouched = false;
-
-    @OnTouch(R.id.on_boarding_layout_controls)
-    boolean onTouch() {
-        mControlsTouched = true;
-        return false;
-    }
 
     public static OnBoardingPositionControlsFragment newInstance() {
         OnBoardingPositionControlsFragment fragment = new OnBoardingPositionControlsFragment();
@@ -60,7 +55,14 @@ public class OnBoardingPositionControlsFragment  extends OnBoardingFragment {
 
         ButterKnife.bind(this,view);
 
-        getChildFragmentManager().beginTransaction().add(R.id.on_boarding_layout_controls, PositionControlFragment.newInstance(true)).commit();
+        PositionControlFragment controlFragment = PositionControlFragment.newInstance(true);
+        controlFragment.setHardwareControlListener(new HardwareControlListener() {
+            @Override
+            public void didTouchControl() {
+                mControlsTouched = true;
+            }
+        });
+        getChildFragmentManager().beginTransaction().add(R.id.on_boarding_layout_controls, controlFragment).commit();
 
         return view;
     }

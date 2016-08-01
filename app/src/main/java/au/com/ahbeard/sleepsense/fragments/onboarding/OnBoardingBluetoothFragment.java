@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.HelpActivity;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -41,6 +42,7 @@ public class OnBoardingBluetoothFragment extends OnBoardingFragment {
 
     @OnClick(R.id.on_board_text_view_find_out_more)
     void findOutMoreClicked() {
+        AnalyticsService.instance().logOnboardingFindOutMoreTouch();
         startActivity(HelpActivity.getIntent(getActivity(),"More About Sleepsense", "http://sleepsense.com.au"));
     }
 

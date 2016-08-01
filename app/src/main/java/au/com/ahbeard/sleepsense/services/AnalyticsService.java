@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Loader;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -53,6 +54,7 @@ public class AnalyticsService {
     }
 
     private void logEvent(String event, Map<String, Object> attrs) {
+       Log.d("AnalyticsService", "logEvent " + event + " attrs: " + attrs);
         CustomEvent answersEvent = new CustomEvent(event);
         Bundle bundle = new Bundle();
         if (attrs != null) {
@@ -76,6 +78,7 @@ public class AnalyticsService {
     }
 
     private void logUserProperty(String name, Object property) {
+        Log.d("AnalyticsService", "logUserProperty " + name + " value: " + property);
         Liquid.getInstance().setUserAttribute(name, property);
         if (property instanceof String) {
             mFirebaseAnalytics.setUserProperty(name, (String) property);
@@ -86,6 +89,7 @@ public class AnalyticsService {
 
     public static final String EVENT_SETUP_ITEMS_SELECTED = "setup_items_selected";
     public static final String EVENT_CLOSE_SETUP = "close_setup";
+    public static final String EVENT_DASHBOARD_SUCCESS_PAIRING = "setup_success";
     public static final String EVENT_SETUP_ERROR_PAIRING = "setup_error_pairing";
     public static final String EVENT_SETUP_ERROR_RESOLVING = "setup_error_resolving";
     public static final String EVENT_SETUP_TIME_TO_SKIP_LAY_ON_BED = "setup_time_to_skip_lay_on_bed";
@@ -117,6 +121,7 @@ public class AnalyticsService {
     public static final String EVENT_ONBOARDING_TOUCH_FIRMNESS ="onboarding_touch_firmness";
     public static final String EVENT_ONBOARDING_TOUCH_MASSAGE ="onboarding_touch_massage";
     public static final String EVENT_ONBOARDING_TOUCH_POSITION ="onboarding_touch_position";
+    public static final String EVENT_ONBOARDING_FIND_OUT_MORE = "onboarding_find_out_more_button";
 
     public static final String EVENT_SETTINGS_FAQ = "settings_touch_faq";
     public static final String EVENT_SETTINGS_ABOUT = "settings_touch_about";
@@ -194,7 +199,7 @@ public class AnalyticsService {
     }
 
     public void setProfile(String sex, Integer age, String emailAddress) {
-        logUserProperty(USER_PROPERTY_GENDER,sex);
+        logUserProperty(USER_PROPERTY_GENDER,sex.toLowerCase());
         logUserProperty(USER_PROPERTY_AGE, age);
         logUserProperty(USER_PROPERTY_USER_EMAIL, emailAddress);
         logUserProperty(USER_PROPERTY_SIX_WSC_SUBSCRIBER, Boolean.toString(StringUtils.isNotEmpty(emailAddress)));
@@ -261,6 +266,10 @@ public class AnalyticsService {
 
     public void logDashboardViewSettings() {
         logEvent(EVENT_DASHBOARD_VIEW_SETTINGS, null);
+    }
+
+    public void logSetupSuccessPairing() {
+        logEvent(EVENT_DASHBOARD_SUCCESS_PAIRING, null);
     }
 
     public void logSetupErrorPairing(boolean errorInMattress, boolean errorInBase, boolean errorInTracker) {
@@ -389,6 +398,10 @@ public class AnalyticsService {
     }
     public void logEventSettingsTouchDebug() {
         logEvent(EVENT_SETTINGS_DEBUG, null);
+    }
+
+    public void logOnboardingFindOutMoreTouch() {
+        logEvent(EVENT_ONBOARDING_FIND_OUT_MORE, null);
     }
 
     private AttributesMap attrs() {

@@ -45,40 +45,48 @@ public class MassageControlFragment extends Fragment {
 
     private boolean mControlOnly;
 
+    private HardwareControlListener listener;
+
     @OnClick(R.id.massage_button_whole_body)
     void wholeBodyMassageClicked() {
         AnalyticsService.instance().logMassageControlTouch(AnalyticsService.VALUE_COMMAND_INTENSITY);
         mBaseDevice.sendCommand(BaseCommand.wholeBody());
+        callHardwareControlListener();
     }
 
     @OnClick(R.id.massage_button_timer)
     void timerClicked() {
         AnalyticsService.instance().logMassageControlTouch(AnalyticsService.VALUE_COMMAND_TIMER);
         mBaseDevice.sendCommand(BaseCommand.timer());
+        callHardwareControlListener();
     }
 
     @OnClick(R.id.massage_button_head_plus)
     void headPlusClicked() {
         AnalyticsService.instance().logMassageControlTouch(AnalyticsService.VALUE_COMMAND_ADJUST_HEAD_UP);
         mBaseDevice.sendCommand(BaseCommand.headMassageIncrease());
+        callHardwareControlListener();
     }
 
     @OnClick(R.id.massage_button_head_minus)
     void headMinusClicked() {
         AnalyticsService.instance().logMassageControlTouch(AnalyticsService.VALUE_COMMAND_ADJUST_HEAD_DOWN);
         mBaseDevice.sendCommand(BaseCommand.headMassageDecrease());
+        callHardwareControlListener();
     }
 
     @OnClick(R.id.massage_button_foot_plus)
     void footPlusClicked() {
         AnalyticsService.instance().logMassageControlTouch(AnalyticsService.VALUE_COMMAND_ADJUST_FOOT_UP);
         mBaseDevice.sendCommand(BaseCommand.footMassageIncrease());
+        callHardwareControlListener();
     }
 
     @OnClick(R.id.massage_button_foot_minus)
     void footMinusClicked() {
         AnalyticsService.instance().logMassageControlTouch(AnalyticsService.VALUE_COMMAND_ADJUST_FOOT_DOWN);
         mBaseDevice.sendCommand(BaseCommand.footMassageDecrease());
+        callHardwareControlListener();
     }
 
     @Bind({R.id.massage_text_view_full_off,R.id.massage_text_view_full_low, R.id.massage_text_view_full_medium, R.id.massage_text_view_full_high})
@@ -278,6 +286,13 @@ public class MassageControlFragment extends Fragment {
 
     }
 
+    public void setHardwareControlListener(HardwareControlListener listener) {
+        this.listener = listener;
+    }
 
-
+    private void callHardwareControlListener(){
+        if (listener != null){
+            listener.didTouchControl();
+        }
+    }
 }

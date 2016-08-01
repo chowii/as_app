@@ -56,6 +56,8 @@ public class FirmnessControlFragment extends Fragment {
     @Bind(R.id.firmness_control_layout_choose_side)
     View mChooseSideLayout;
 
+    private HardwareControlListener listener;
+
     private String mSide;
     private boolean mControlOnly;
 
@@ -137,6 +139,9 @@ public class FirmnessControlFragment extends Fragment {
                     AnalyticsService.instance().logFirmnessControlTouch("Left", Firmness.getAnalyticsValueForControlValue(targetValue));
                     SleepSenseDeviceService.instance().getPumpDevice().inflateToTarget(PumpDevice.Side.Left, Firmness.getPressureForControlValue(targetValue));
                 }
+                if (listener != null) {
+                    listener.didTouchControl();
+                }
             }
         });
 
@@ -146,6 +151,9 @@ public class FirmnessControlFragment extends Fragment {
                 if (SleepSenseDeviceService.instance().hasPumpDevice()) {
                     AnalyticsService.instance().logFirmnessControlTouch("Right", Firmness.getAnalyticsValueForControlValue(targetValue));
                     SleepSenseDeviceService.instance().getPumpDevice().inflateToTarget(PumpDevice.Side.Right, Firmness.getPressureForControlValue(targetValue));
+                }
+                if (listener != null) {
+                    listener.didTouchControl();
                 }
             }
         });
@@ -297,5 +305,7 @@ public class FirmnessControlFragment extends Fragment {
 
     }
 
-
+    public void setHardwareControlListener(HardwareControlListener listener){
+        this.listener = listener;
+    }
 }

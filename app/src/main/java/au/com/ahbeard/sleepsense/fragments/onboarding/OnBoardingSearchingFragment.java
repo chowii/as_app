@@ -140,6 +140,7 @@ public class OnBoardingSearchingFragment  extends OnBoardingFragment {
                     boolean errorFindingTracker = onBoardingState.requiredTracker && onBoardingState.foundTracker;
 
                     if (onBoardingState.state == OnBoardingState.State.RequiredDevicesFound) {
+                        AnalyticsService.instance().logSetupSuccessPairing();
                         mContinueButton.animate().alpha(1.0f).start();
                         mPhoneImageView.setImageResource(R.drawable.onboarding_phone_searching_success);
                         mHeadingTextView.setText(R.string.onboarding_searching_success_title);
@@ -160,6 +161,7 @@ public class OnBoardingSearchingFragment  extends OnBoardingFragment {
                         mTextTextView.setText(R.string.onboarding_searching_error_description);
                         mContinueButton.setText(R.string.help_me_text);
                     }
+
                 }
             }
         }));
