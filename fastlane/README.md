@@ -16,16 +16,16 @@ Runs all the tests
 fastlane android staging
 ```
 Submit a new Beta Build to Crashlytics Beta
+### android release
+```
+fastlane android release
+```
+Submit a new Playstore release Build to Crashlytics Beta
 ### android deploy
 ```
 fastlane android deploy
 ```
 Deploy a new version to the Google Play
-### android playstore
-```
-fastlane android playstore
-```
-Assemble playstore version
 
 ----
 
