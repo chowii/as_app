@@ -34,11 +34,13 @@ android {
         applicationId "au.com.ahbeard.sleepsense"
         minSdkVersion 18
         targetSdkVersion 23
-        versionCode 15
+        versionCode 16
         versionName "1.0.2"
     }
     buildTypes {
         release {
+            debuggable false
+
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 

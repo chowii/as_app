@@ -46,6 +46,16 @@ platform :android do
     crashlytics
   end
 
+  desc "Submit a new Playstore release Build to Crashlytics Beta"
+  lane :release do
+    gradle(
+      task: 'assemble',
+      flavor: 'Playstore',
+      build_type: 'Release'
+    )
+    crashlytics
+  end
+
   desc "Deploy a new version to the Google Play"
   lane :deploy do
     gradle(
@@ -56,15 +66,10 @@ platform :android do
     supply
   end
 
-  desc "Assemble playstore version"
-  lane :playstore do 
-    gradle(task: "assemblePlaystore")
-  end
-
-  # You can define as many lanes as you want
-
   after_all do |lane|
-    # This block is called, only if the executed lane was successful
+    
+    # Clear generated .apks so supply doesn't try to upload everything when it runs
+    sh "rm ../app/build/outputs/apk/*.apk"
 
     # slack(
     #   message: "Successfully deployed new App Update."
