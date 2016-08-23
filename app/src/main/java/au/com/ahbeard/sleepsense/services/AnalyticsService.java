@@ -51,7 +51,7 @@ public class AnalyticsService {
     }
 
     private void logEvent(String event, Map<String, Object> attrs) {
-       Log.d("AnalyticsService", "logEvent " + event + " attrs: " + attrs);
+        if (BuildConfig.DEBUG) { Log.d("AnalyticsService", "logEvent " + event + " attrs: " + attrs); }
         CustomEvent answersEvent = new CustomEvent(event);
         Bundle bundle = new Bundle();
         if (attrs != null) {
@@ -75,7 +75,7 @@ public class AnalyticsService {
     }
 
     private void logUserProperty(String name, Object property) {
-        Log.d("AnalyticsService", "logUserProperty " + name + " value: " + property);
+        if (BuildConfig.DEBUG) { Log.d("AnalyticsService", "logUserProperty " + name + " value: " + property); }
         Liquid.getInstance().setUserAttribute(name, property);
         if (property instanceof String) {
             mFirebaseAnalytics.setUserProperty(name, (String) property);

@@ -75,7 +75,7 @@
 -dontwarn io.lqd.sdk.**
 
 #Beddit
--keep class com.beddit.* { *; }
+-keep class com.beddit.** { *; }
 -dontwarn com.beddit.**
 
 #Android GMS
