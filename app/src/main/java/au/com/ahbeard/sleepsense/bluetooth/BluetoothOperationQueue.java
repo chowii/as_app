@@ -39,7 +39,7 @@ public class BluetoothOperationQueue {
         return mObservable;
     }
 
-    public ArrayList<BluetoothOperation> mBluetoothOperations = new ArrayList<>(1024);
+    public ArrayList<BluetoothOperation> mBluetoothOperations = new ArrayList<>(2048);
 
     private boolean mIsRunning = false;
 
@@ -58,9 +58,11 @@ public class BluetoothOperationQueue {
                 processQueue();
                 return true;
             } else {
-                for ( int i=0; i < mBluetoothOperations.size(); i++ ) {
+                for ( int i = 0; i < mBluetoothOperations.size(); i++ ) {
                     if ( operation.replacesOperation(mBluetoothOperations.get(i))) {
-                        mBluetoothOperations.set(i,operation);
+                        //try to avoid out of bounds exceptions
+                        int pos = Math.min(i, mBluetoothOperations.size());
+                        mBluetoothOperations.set(pos, operation);
                         processQueue();
                         return true;
                     }

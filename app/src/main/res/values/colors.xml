@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#0074BF</color>
     <color name="colorAccent">#3C709C</color>
 
+    <color name="appBackgroundColor">#F4F4F4</color>
+
     <color name="splashBackground">#042234</color>
 
     <color name="onBoardHeaderTextColor">#4A4A4A</color>

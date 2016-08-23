@@ -6,7 +6,9 @@ import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -27,8 +29,8 @@ public class OnBoardingPlacePhoneFragment  extends OnBoardingFragment{
 
     private OnActionListener mListener;
 
-    @Bind(R.id.onboarding_image_view_place_phone_bed)
-    ImageView mPlacePhoneBedImageView;
+    @Bind(R.id.onboarding_place_phone_bed)
+    LinearLayout mPlacePhoneBedLayout;
 
     @Bind(R.id.onboarding_image_view_phone)
     ImageView mPhoneImageView;
@@ -71,11 +73,11 @@ public class OnBoardingPlacePhoneFragment  extends OnBoardingFragment{
 
         ButterKnife.bind(this,view);
 
-        if ( VALUE_LEFT.equals(mSide)) {
-            mPlacePhoneBedImageView.setImageResource(R.drawable.onboarding_background_place_phone_left);
-        } else {
-            mPlacePhoneBedImageView.setImageResource(R.drawable.onboarding_background_place_phone_right);
-        }
+//        if ( !VALUE_LEFT.equals(mSide)) {
+//            //reverse the image
+//
+//        }
+        mPlacePhoneBedLayout.animate().rotationY(180).setDuration(0).start();
 
 //        if ( mPhoneImageView.getDrawable() instanceof AnimationDrawable ) {
 //            ((AnimationDrawable)mPhoneImageView.getDrawable()).start();
