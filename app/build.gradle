@@ -34,8 +34,8 @@ android {
         applicationId "au.com.ahbeard.sleepsense"
         minSdkVersion 18
         targetSdkVersion 23
-        versionCode 16
-        versionName "1.0.2"
+        versionCode 17
+        versionName "1.0.3"
     }
     buildTypes {
         release {
