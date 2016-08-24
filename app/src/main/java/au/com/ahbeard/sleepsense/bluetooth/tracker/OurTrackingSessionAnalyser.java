@@ -11,6 +11,7 @@ import com.beddit.sensor.SensorSession;
 import com.beddit.sensor.SessionAccounting;
 import com.beddit.sensor.log.SSLogger;
 import com.beddit.synchronization.SampledTrackDescriptor;
+import com.beddit.synchronization.SynchronizationException;
 import com.beddit.synchronization.Synchronizer;
 
 import java.io.Serializable;
@@ -246,8 +247,12 @@ public class OurTrackingSessionAnalyser implements SensorSession.Listener {
 
         mPreviousTimestamp = sensorData.timestamp;
 
-        com.beddit.synchronization.SampledFragment synchronizedSampleFragment =
-                mSynchronizer.appendData(sensorData.data, sensorData.trackName, sensorData.timestamp);
+        com.beddit.synchronization.SampledFragment synchronizedSampleFragment = null;
+        try {
+            synchronizedSampleFragment = mSynchronizer.appendData(sensorData.data, sensorData.trackName, sensorData.timestamp);
+        } catch (SynchronizationException e) {
+            e.printStackTrace();
+        }
 
         if (synchronizedSampleFragment != null) {
 

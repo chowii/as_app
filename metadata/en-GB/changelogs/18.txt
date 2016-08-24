@@ -1,0 +1,1 @@
+Fix a user reported crash that affected sleep tracking starting for some users.
