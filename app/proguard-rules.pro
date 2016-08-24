@@ -76,7 +76,7 @@
 
 #Beddit
 -keep class com.beddit.** { *; }
--dontwarn com.beddit.**
+
 
 #Android GMS
 -keep class com.google.android.gms.** { *; }
