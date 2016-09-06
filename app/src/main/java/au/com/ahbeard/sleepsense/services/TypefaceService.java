@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import au.com.ahbeard.sleepsense.widgets.TypefaceSpan;
 
 /**
@@ -61,7 +62,7 @@ public class TypefaceService {
 
 
         } catch (IOException e) {
-            LogService.d(TAG, "Exception initialising list of typefaces...", e);
+            SSLog.e("Exception initialising list of typefaces: %s", e.getMessage());
         }
 
 

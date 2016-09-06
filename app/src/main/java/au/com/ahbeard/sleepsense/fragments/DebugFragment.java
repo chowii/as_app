@@ -14,14 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.activities.HomeActivity;
 import au.com.ahbeard.sleepsense.adapters.SimpleItemAnimator;
-import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
-import au.com.ahbeard.sleepsense.services.LogService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
@@ -56,13 +51,14 @@ public class DebugFragment extends Fragment {
 
         updateControls(false);
 
-        mLogAdapter.setLogMessages(LogService.instance().getLogMessages(mLogAdapter.getMaxLogItems()));
-        mCompositeSubscription.add(LogService.instance().getLogObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<LogService.LogMessage>() {
-            @Override
-            public void call(LogService.LogMessage logMessage) {
-                mLogAdapter.log(logMessage);
-            }
-        }));
+        //TODO: Add logs from file
+//        mLogAdapter.setLogMessages(LogService.instance().getLogMessages(mLogAdapter.getMaxLogItems()));
+//        mCompositeSubscription.add(LogService.instance().getLogObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<LogService.LogMessage>() {
+//            @Override
+//            public void call(LogService.LogMessage logMessage) {
+//                mLogAdapter.log(logMessage);
+//            }
+//        }));
 
 
         return view;
@@ -88,8 +84,8 @@ public class DebugFragment extends Fragment {
     public class LogAdapter extends RecyclerView.Adapter<LogViewHolder> {
 
         int mMaxLogItems = 128;
-        List<LogService.LogMessage> mLogItems = new ArrayList<>();
-        private List<LogService.LogMessage> mLogMessages;
+        List<String> mLogItems = new ArrayList<>();
+        private List<String> mLogMessages;
 
         public LogAdapter() {
         }
@@ -115,7 +111,7 @@ public class DebugFragment extends Fragment {
             notifyDataSetChanged();
         }
 
-        public void log(LogService.LogMessage message) {
+        public void log(String message) {
             if (mLogItems.size() >= mMaxLogItems) {
                 mLogItems.remove(0);
             }
@@ -127,7 +123,7 @@ public class DebugFragment extends Fragment {
             return mMaxLogItems;
         }
 
-        public void setLogMessages(List<LogService.LogMessage> logMessages) {
+        public void setLogMessages(List<String> logMessages) {
             mLogMessages = logMessages;
             notifyDataSetChanged();
         }
@@ -143,8 +139,8 @@ public class DebugFragment extends Fragment {
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(LogService.LogMessage logMessage) {
-            mDebugTextView.setText(logMessage.getMessage());
+        public void bind(String logMessage) {
+            mDebugTextView.setText(logMessage);
         }
     }
 

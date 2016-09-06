@@ -14,8 +14,8 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import au.com.ahbeard.sleepsense.services.LogService;
 import au.com.ahbeard.sleepsense.services.SleepService;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import rx.Observer;
 
 /**
@@ -78,9 +78,9 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
             writeError(e);
 //            FirebaseCrash.log("Error thrown during sleep session capture...");
 //            FirebaseCrash.report(e);
-            LogService.e("TrackingSessionDataWriter","Error thrown during sleep session capture...",e);
+            SSLog.e("Error during sleep session capture: %s", e);
         } catch (IOException ioe) {
-            LogService.e("TrackingSessionDataWriter","Error thrown writing error...",ioe);
+            SSLog.e("Error writing session data: %s",ioe);
         }
 
         try {
@@ -102,7 +102,7 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
             }
 
         } catch (java.io.IOException ioe) {
-            LogService.e("TrackingSessionDataWriter","Error thrown closing session...",ioe);
+            SSLog.e("Error closing session: %s",ioe);
         }
 
     }
@@ -113,7 +113,7 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
     @Override
     public void onNext(TimeValueFragment timeValueFragment) {
 
-        //TrackerUtils.logTimeValueFragment(timeValueFragment);
+        TrackerUtils.logTimeValueFragment(timeValueFragment);
 
         for (String trackName : timeValueFragment.getNames()) {
 

@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
-import au.com.ahbeard.sleepsense.services.LogService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -115,6 +115,7 @@ public class SleepSenseDeviceService {
 
         mChangeEventPublishSubject.onNext(SleepSenseDeviceServiceEvent.StartedSearchingForDevices);
 
+        SSLog.d("Starting devices scan...");
         BluetoothService.instance()
                 .startScanning()
                 .observeOn(Schedulers.computation())
@@ -150,13 +151,13 @@ public class SleepSenseDeviceService {
                     @Override
                     public void call(List<Device> devices) {
 
-                        LogService.d("SleepSenseDeviceService",
-                                String.format("found %d SleepSense devices while scanning...", devices.size()));
+                        SSLog.d("Found %d devices", devices.size());
 
                         SleepSenseDeviceAquisition sleepSenseDeviceAquisition = new SleepSenseDeviceAquisition();
 
                         // Assign the closest of each device if we don't have one.
                         for (Device device : devices) {
+                            SSLog.d(device.getName());
                             // Log.d("SleepSenseDeviceService", String.format("device found: %s", device.getName()));
                             if (device instanceof BaseDevice) {
                                 sleepSenseDeviceAquisition.getBaseDevices().add((BaseDevice) device);

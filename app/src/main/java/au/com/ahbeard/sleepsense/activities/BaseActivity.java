@@ -3,8 +3,6 @@ package au.com.ahbeard.sleepsense.activities;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,14 +10,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Window;
-import android.view.WindowManager;
 
-import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.SleepSenseApplication;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothEvent;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
-import au.com.ahbeard.sleepsense.services.LogService;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -114,7 +109,7 @@ public class BaseActivity extends AppCompatActivity {
                 .onErrorReturn(new Func1<Throwable, BluetoothEvent>() {
                     @Override
                     public BluetoothEvent call(Throwable throwable) {
-                        LogService.d("BaseActivity", "Error on bluetoothEvent", throwable);
+                        SSLog.d("Error on bluetoothEvent" + throwable.getMessage());
                         return null;
                     }
                 })

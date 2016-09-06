@@ -1,7 +1,5 @@
 package au.com.ahbeard.sleepsense.bluetooth.tracker;
 
-import android.util.Log;
-
 import com.beddit.analysis.AnalysisException;
 import com.beddit.analysis.InputSpec;
 import com.beddit.analysis.SampledFragment;
@@ -21,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import au.com.ahbeard.sleepsense.services.LogService;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import rx.Observer;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
@@ -111,8 +109,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
     @Override
     public void onSensorSessionOpened(final SensorSession sensorSession) {
 
-        SSLogger.log("onSensorSessionOpened: " + sensorSession.getSensorDetails());
-        LogService.d(TAG, "SENSOR DETAILS: " + sensorSession.getSensorDetails());
+        SSLog.d("onSensorSessionOpened sensor details: " + sensorSession.getSensorDetails());
 
         mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Connected);
 
@@ -130,7 +127,6 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
     @Override
     public void onSensorSessionReceivedData(SensorSession sensorSession, byte[] data, String trackName, int sampleIndex) {
         // Use the observable to publish the data to the computation thread.
-        // LogService.e(TAG, "data recieved");
         mSensorDataObservable.onNext(new SensorData(data, trackName, sampleIndex, System.currentTimeMillis() - mAnalysisStartTime));
     }
 
@@ -146,18 +142,15 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
         mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Disconnected);
 
         if (error == null) {
-            LogService.d(TAG, "onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
-            SSLogger.log("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
+            SSLog.d("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
 
             // Once again, shift this over to a computation thread.
             mSensorDataObservable.onCompleted();
         } else {
             mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Error);
 
-            SSLogger.log("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
-            SSLogger.log("error: " + error.getMessage());
-            LogService.e(TAG, "onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
-            LogService.e(TAG, "error: ", error);
+            SSLog.e("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
+            SSLog.e("error: " + error.getMessage());
             // Once again, shift this over to a computation thread.
             mSensorDataObservable.onError(error);
         }
@@ -173,7 +166,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
     @Override
     public void onSensorSessionPaddedTrack(SensorSession sensorSession, String trackName, int numberOfSamples) {
         // Still unsure if we're supposed to do anything here.
-        LogService.d(TAG, "onSensorPaddedTrack: " + trackName + " : " + numberOfSamples);
+        SSLog.d("onSensorPaddedTrack: " + trackName + " : " + numberOfSamples);
     }
 
 
@@ -213,13 +206,11 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
 
             mStreamingAnalysis = new StreamingAnalysis(inputSpec);
 
-            SSLogger.log("about to start streaming...");
-            LogService.d("TrackingSessionAnalyzer", "about to start streaming...");
+            SSLog.d("Streaming Start");
 
             Schedulers.computation().createWorker().schedule(new Action0() {
                 @Override
                 public void call() {
-                    SSLogger.log("sensorSession.startStreaming called...");
                     sensorSession.startStreaming();
                     mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.StartingTracking);
                 }
@@ -283,8 +274,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
                 mTimeValueTrackFragmentPublishSubject.onNext(mStreamingAnalysis.analyze(sampledFragment));
 
             } catch (AnalysisException e) {
-                SSLogger.log("exception analysing raw stream data: " + e.getMessage());
-                LogService.e(TAG, "exception analysing raw stream data: ", e);
+                SSLog.e("exception analysing raw stream data: %s", e.getMessage());
             }
 
         }
@@ -298,13 +288,11 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
         try {
 
             if (mStreamingAnalysis != null) {
-                SSLogger.log("Finalizing analysis...");
-                LogService.d(TAG, "Finalizing analysis");
+                SSLog.d("Finalizing analysis");
 
                 TimeValueFragment timeValueFragment = mStreamingAnalysis.finalizeAnalysis();
 
-                SSLogger.log("Analysis finalized...");
-                LogService.d(TAG, "Analysis finalized");
+                SSLog.d("Analysis finalized");
 
                 if (timeValueFragment != null) {
                     mTimeValueTrackFragmentPublishSubject.onNext(timeValueFragment);

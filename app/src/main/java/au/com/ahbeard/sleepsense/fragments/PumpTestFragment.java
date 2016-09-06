@@ -4,7 +4,6 @@ package au.com.ahbeard.sleepsense.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.adapters.SimpleItemAnimator;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
-import au.com.ahbeard.sleepsense.services.LogService;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -175,7 +170,7 @@ public class PumpTestFragment extends Fragment {
                     new Action1<PumpEvent>() {
                         @Override
                         public void call(PumpEvent pumpEvent) {
-                            LogService.d("PumpTestFragment","PUMP EVENT: " + pumpEvent.toString());
+                            SSLog.d("PUMP EVENT: " + pumpEvent.toString());
                         }
                     }));
 

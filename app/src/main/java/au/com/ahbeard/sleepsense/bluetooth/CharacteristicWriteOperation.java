@@ -3,11 +3,10 @@ package au.com.ahbeard.sleepsense.bluetooth;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
-import android.util.Log;
 
 import java.util.UUID;
 
-import au.com.ahbeard.sleepsense.services.LogService;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import au.com.ahbeard.sleepsense.utils.ByteUtils;
 import au.com.ahbeard.sleepsense.utils.ConversionUtils;
 
@@ -159,14 +158,14 @@ public class CharacteristicWriteOperation extends BluetoothOperation {
 
     @Override
     public boolean perform(BluetoothGatt bluetoothGatt) {
-        LogService.d("SleepSenseDeviceService","Actually performing write to device...");
+        SSLog.d("Performing write to device");
         BluetoothGattService service = bluetoothGatt.getService(mServiceUUID);
         if (service != null) {
             BluetoothGattCharacteristic characteristic = service.getCharacteristic(mCharacteristicUUID);
             if (characteristic != null) {
                 characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
                 characteristic.setValue(getValue());
-                LogService.d("SleepSenseDeviceService","Really performing write to device..." + ConversionUtils.byteArrayToString(getValue()," "));
+                SSLog.d("Writing value: %s", ConversionUtils.byteArrayToString(getValue()," "));
 
                 bluetoothGatt.writeCharacteristic(characteristic);
             }

@@ -121,41 +121,41 @@ public class SleepService {
 
     }
 
-    /**
-     * Run a batch analysis for a set number of days.
-     *
-     * @param numberOfDays
-     */
-    public void runBatchAnalysis(final int numberOfDays) {
-
-        try {
-            checkSessionData();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Schedulers.computation().createWorker().schedule(new Action0() {
-            @Override
-            public void call() {
-
-                Calendar calendar = Calendar.getInstance();
-
-                calendar.add(Calendar.DAY_OF_YEAR, -numberOfDays);
-
-                for (int i = 0; i < numberOfDays; i++) {
-                    calendar.add(Calendar.DAY_OF_YEAR, 1);
-                    runBatchAnalysis(calendar);
-                }
-
-                PreferenceService.instance().setHasRecordedASleep(true);
-
-                mDataChangePublishSubject.onNext(-1);
-
-                updateAggregateStatistics();
-
-            }
-        });
-    }
+//    /**
+//     * Run a batch analysis for a set number of days.
+//     *
+//     * @param numberOfDays
+//     */
+//    public void runBatchAnalysis(final int numberOfDays) {
+//
+//        try {
+//            checkSessionData();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        Schedulers.computation().createWorker().schedule(new Action0() {
+//            @Override
+//            public void call() {
+//
+//                Calendar calendar = Calendar.getInstance();
+//
+//                calendar.add(Calendar.DAY_OF_YEAR, -numberOfDays);
+//
+//                for (int i = 0; i < numberOfDays; i++) {
+//                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+//                    runBatchAnalysis(calendar);
+//                }
+//
+//                PreferenceService.instance().setHasRecordedASleep(true);
+//
+//                mDataChangePublishSubject.onNext(-1);
+//
+//                updateAggregateStatistics();
+//
+//            }
+//        });
+//    }
 
     /**
      * Run a batch analysis for a given calendar date.
@@ -207,7 +207,7 @@ public class SleepService {
                         calendarDate,
                         new BatchAnalysisContext(PreferenceService.instance().getSleepTargetTime() * 3600f));
 
-                // TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
+                TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
 
                 Sleep sleep = Sleep.fromBatchAnalysisResult(batchAnalysisResult);
 

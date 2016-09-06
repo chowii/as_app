@@ -5,22 +5,22 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
-import au.com.ahbeard.sleepsense.services.LogService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.services.RemoteSleepDataService;
+import au.com.ahbeard.sleepsense.services.SSActivityCallbacks;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.services.TypefaceService;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import io.fabric.sdk.android.Fabric;
-import io.lqd.sdk.Liquid;
-import rx.functions.Action1;
 
 /**
  * Created by neal on 3/03/2016.
@@ -40,13 +40,15 @@ public class SleepSenseApplication extends Application {
 
         sharedInstance = this;
 
-        LogService.initialize(1024);
-        LogService.instance().getLogObservable().subscribe(new Action1<LogService.LogMessage>() {
-            @Override
-            public void call(LogService.LogMessage logMessage) {
-                log(logMessage);
-            }
-        });
+        SSLog.initialize(this);
+        String appString = "";
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            appString = String.format(" %s (%s)", packageInfo.versionName, packageInfo.versionCode);
+        } catch (PackageManager.NameNotFoundException e) {
+
+        }
+        SSLog.i("Sleepsense Started" + appString);
 
         // Kind of have to do these first!
         TypefaceService.initialize(this);
@@ -59,61 +61,13 @@ public class SleepSenseApplication extends Application {
         RemoteSleepDataService.initialize(this);
         AnalyticsService.initialize(this);
 
+        SSActivityCallbacks.initialize(this, new AppActivityLogger());
+
 //        try {
 //            AndroidLogger.createInstance(getApplicationContext(),false,true,false,null,0,"fc1fc163-a9c8-4634-bff6-d4b4e577c881", true);
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-
-    }
-
-    /**
-     *
-     * @param logMessage
-     */
-    private void log(LogService.LogMessage logMessage) {
-
-        switch (logMessage.getLevel()) {
-
-            case Verbose:
-                if ( logMessage.getT() == null ) {
-                    Log.v(logMessage.getTag(),logMessage.getMessage());
-                } else {
-                    Log.v(logMessage.getTag(),logMessage.getMessage(),logMessage.getT());
-                }
-                break;
-            case Debug:
-                if ( logMessage.getT() == null ) {
-                    Log.d(logMessage.getTag(),logMessage.getMessage());
-                } else {
-                    Log.d(logMessage.getTag(),logMessage.getMessage(),logMessage.getT());
-                }
-                break;
-            case Info:
-                if ( logMessage.getT() == null ) {
-                    Log.i(logMessage.getTag(),logMessage.getMessage());
-                } else {
-                    Log.i(logMessage.getTag(),logMessage.getMessage(),logMessage.getT());
-                }
-                break;
-            case Warn:
-                if ( logMessage.getT() == null ) {
-                    Log.w(logMessage.getTag(),logMessage.getMessage());
-                } else {
-                    Log.w(logMessage.getTag(),logMessage.getMessage(),logMessage.getT());
-                }
-                break;
-            case Error:
-                if ( logMessage.getT() == null ) {
-                    Log.e(logMessage.getTag(),logMessage.getMessage());
-                } else {
-                    Log.e(logMessage.getTag(),logMessage.getMessage(),logMessage.getT());
-                }
-                break;
-            default:
-                break;
-
-        }
 
     }
 
@@ -136,5 +90,18 @@ public class SleepSenseApplication extends Application {
                     }
                 })
                 .setMessage("Bluetooth is disabled.").create().show();
+    }
+
+    private static class AppActivityLogger implements SSActivityCallbacks.AppActivityInterface {
+
+        @Override
+        public void appIsActive() {
+            SSLog.d("Sleepsense is active");
+        }
+
+        @Override
+        public void appWentToBackground() {
+            SSLog.d("Sleepsense went to background");
+        }
     }
 }

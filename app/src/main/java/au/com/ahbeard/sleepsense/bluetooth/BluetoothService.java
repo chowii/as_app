@@ -15,8 +15,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import au.com.ahbeard.sleepsense.services.LogService;
-import au.com.ahbeard.sleepsense.utils.ConversionUtils;
 import rx.Observable;
 import rx.functions.Action0;
 import rx.subjects.PublishSubject;
@@ -60,9 +58,6 @@ public class BluetoothService extends BluetoothGattCallback {
                 @Override
                 public void onLeScan(final BluetoothDevice device, int rssi,
                                      byte[] scanRecord) {
-
-                    LogService.e(TAG, String.format("device: %s rssi: %d name: '%s' scanRecord: %s",
-                            device.getAddress(), rssi, device.getName(), ConversionUtils.byteArrayToString(scanRecord," ")));
 
                     if (StringUtils.isNotEmpty(device.getName())) {
                         mBluetoothEventSubject.onNext(
