@@ -36,9 +36,10 @@ public class SleepSenseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
 
         sharedInstance = this;
+
+        Fabric.with(this, new Crashlytics());
 
         SSLog.initialize(this);
         String appString = "";

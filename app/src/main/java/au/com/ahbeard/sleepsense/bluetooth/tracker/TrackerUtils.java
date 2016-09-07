@@ -1,7 +1,5 @@
 package au.com.ahbeard.sleepsense.bluetooth.tracker;
 
-import android.util.Log;
-
 import com.beddit.analysis.BatchAnalysisResult;
 import com.beddit.analysis.CalendarDate;
 import com.beddit.analysis.TimeValueFragment;

@@ -9,7 +9,6 @@ import com.beddit.analysis.TimeValueFragment;
 import com.beddit.sensor.SensorException;
 import com.beddit.sensor.SensorSession;
 import com.beddit.sensor.SessionAccounting;
-import com.beddit.sensor.log.SSLogger;
 import com.beddit.synchronization.SampledTrackDescriptor;
 import com.beddit.synchronization.SynchronizationException;
 import com.beddit.synchronization.Synchronizer;
@@ -177,7 +176,7 @@ public class OurTrackingSessionAnalyser implements SensorSession.Listener {
 
         mAnalysisStartTime = System.currentTimeMillis();
 
-        SSLogger.log("startSensorSessionCalled...");
+        SSLog.d("startSensorSessionCalled");
 
         // Create the InputSpec.
         InputSpec inputSpec = new InputSpec(FRAME_LENGTH);

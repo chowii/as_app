@@ -15,8 +15,10 @@ import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.adapters.SimpleItemAnimator;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import ch.qos.logback.core.net.ssl.SSL;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
@@ -52,6 +54,7 @@ public class DebugFragment extends Fragment {
         updateControls(false);
 
         //TODO: Add logs from file
+        mLogAdapter.setLogMessages(SSLog.getLogMessages());
 //        mLogAdapter.setLogMessages(LogService.instance().getLogMessages(mLogAdapter.getMaxLogItems()));
 //        mCompositeSubscription.add(LogService.instance().getLogObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<LogService.LogMessage>() {
 //            @Override
@@ -81,7 +84,7 @@ public class DebugFragment extends Fragment {
     /**
      * Log adapter... manages the log entries.
      */
-    public class LogAdapter extends RecyclerView.Adapter<LogViewHolder> {
+    static class LogAdapter extends RecyclerView.Adapter<LogViewHolder> {
 
         int mMaxLogItems = 128;
         List<String> mLogItems = new ArrayList<>();
@@ -129,7 +132,7 @@ public class DebugFragment extends Fragment {
         }
     }
 
-    public class LogViewHolder extends RecyclerView.ViewHolder {
+    static class LogViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.log_text_view)
         TextView mDebugTextView;

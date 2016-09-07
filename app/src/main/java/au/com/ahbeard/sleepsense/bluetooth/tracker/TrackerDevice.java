@@ -7,11 +7,11 @@ import com.beddit.sensor.Sensor;
 import com.beddit.sensor.SensorException;
 import com.beddit.sensor.SensorManager;
 import com.beddit.sensor.SensorSession;
-import com.beddit.sensor.log.SSLogger;
 
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -86,9 +86,9 @@ public class TrackerDevice extends Device {
 
             mSensorSession = SensorManager.getInstance().createSession(getSensor());
             mSensorSession.setListener(new TrackingSessionAnalyser(this));
-            SSLogger.log("Sensor session created...");
+            SSLog.d("Sensor session created...");
             mSensorSession.open();
-            SSLogger.log("Sensor session open called...");
+            SSLog.d("Sensor session open called...");
             mTrackerState = TrackerState.StartingTracking;
             mTrackerStateSubject.onNext(mTrackerState);
 
@@ -101,7 +101,7 @@ public class TrackerDevice extends Device {
     public void stopSensorSession() {
 
         if (mSensorSession != null) {
-            SSLogger.log("Sensor session close called...");
+            SSLog.d("Sensor session close called...");
             mSensorSession.close();
             mSensorSession = null;
             mTrackerState=TrackerState.Disconnecting;

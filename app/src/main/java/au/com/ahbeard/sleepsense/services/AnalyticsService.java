@@ -2,7 +2,6 @@ package au.com.ahbeard.sleepsense.services;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -15,6 +14,7 @@ import au.com.ahbeard.sleepsense.BuildConfig;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.model.Firmness;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import au.com.ahbeard.sleepsense.utils.StringUtils;
 import io.lqd.sdk.Liquid;
 
@@ -51,7 +51,7 @@ public class AnalyticsService {
     }
 
     private void logEvent(String event, Map<String, Object> attrs) {
-        if (BuildConfig.DEBUG) { Log.d("AnalyticsService", "logEvent " + event + " attrs: " + attrs); }
+        if (BuildConfig.DEBUG) { SSLog.d("logEvent " + event + " attrs: " + attrs); }
         CustomEvent answersEvent = new CustomEvent(event);
         Bundle bundle = new Bundle();
         if (attrs != null) {
@@ -75,7 +75,7 @@ public class AnalyticsService {
     }
 
     private void logUserProperty(String name, Object property) {
-        if (BuildConfig.DEBUG) { Log.d("AnalyticsService", "logUserProperty " + name + " value: " + property); }
+        if (BuildConfig.DEBUG) { SSLog.d("logUserProperty " + name + " value: " + property); }
         Liquid.getInstance().setUserAttribute(name, property);
         if (property instanceof String) {
             mFirebaseAnalytics.setUserProperty(name, (String) property);

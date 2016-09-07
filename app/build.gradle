@@ -72,23 +72,35 @@ dependencies {
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':beddit-mobile-android-sensor')
+
     compile "com.android.support:support-v4:$androidSupportVersion"
     compile "com.android.support:appcompat-v7:$androidSupportVersion"
     compile "com.android.support:design:$androidSupportVersion"
     compile "com.android.support:recyclerview-v7:$androidSupportVersion"
+
     compile "com.jakewharton:butterknife:7.0.1"
+
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'org.apache.commons:commons-collections4:4.1'
+
     compile 'io.reactivex:rxjava:1.1.7'
     compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava-async-util:0.21.0'
     compile 'com.artemzin.rxjava:proguard-rules:1.1.7.0'
+
     compile 'com.google.android.gms:play-services-base:9.4.0'
     compile 'com.google.firebase:firebase-core:9.2.0'
+
     compile 'io.lqd:liquid-android:2.+@aar'
-    compile 'io.reactivex:rxjava-async-util:0.21.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.0@aar') {
         transitive = true;
     }
+
+    compile 'com.jakewharton.timber:timber:4.3.0'
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'com.github.tony19:logback-android-core:1.1.1-6'
+    compile 'com.github.tony19:logback-android-classic:1.1.1-6'
+
     testCompile 'junit:junit:4.12'
 }
 

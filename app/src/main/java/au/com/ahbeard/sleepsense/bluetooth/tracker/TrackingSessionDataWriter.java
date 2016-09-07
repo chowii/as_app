@@ -113,7 +113,7 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
     @Override
     public void onNext(TimeValueFragment timeValueFragment) {
 
-        TrackerUtils.logTimeValueFragment(timeValueFragment);
+//        TrackerUtils.logTimeValueFragment(timeValueFragment);
 
         for (String trackName : timeValueFragment.getNames()) {
 

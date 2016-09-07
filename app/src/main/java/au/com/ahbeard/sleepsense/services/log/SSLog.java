@@ -1,82 +1,54 @@
 package au.com.ahbeard.sleepsense.services.log;
 
 import android.app.Application;
+import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import au.com.ahbeard.sleepsense.BuildConfig;
+import timber.log.Timber;
 
 /**
  * Created by luisramos on 5/09/16.
  */
 public class SSLog {
 
-    static LogLevel logLevel = LogLevel.Verbose;
-    static String TAG = "Sleepsense";
-    static Logger[] loggers;
+    static int priority = Log.DEBUG;
+
+    static String fileName = "sleepsense.log";
+    private static String logFilePath;
+
+    private static SSLogCacheTree logCache;
 
     public static void initialize(Application app) {
-        loggers = new Logger[] {
-                new DumbLogger()
-        };
-    }
-
-    public static void v(String format, Object... args) {
-        v(String.format(format, args));
-    }
-
-    public static void v(String message) {
-        if (!LogLevel.Verbose.lower(logLevel)) {
-            for(Logger logger : loggers) {
-                logger.log(LogLevel.Verbose, TAG, message);
-            }
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+            logCache = new SSLogCacheTree();
+            Timber.plant(logCache);
         }
+        logFilePath = app.getFileStreamPath(fileName).getAbsolutePath();
+        Timber.plant(new SSLogToFileTree(logFilePath, priority));
+
+        d("logFile: " + logFilePath);
     }
 
     public static void d(String format, Object... args) {
-        d(String.format(format, args));
-    }
-
-    public static void d(String message) {
-        if (!LogLevel.Debug.lower(logLevel)) {
-            for(Logger logger : loggers) {
-                logger.log(LogLevel.Debug, TAG, message);
-            }
-        }
+        Timber.d(format, args);
     }
 
     public static void i(String format, Object... args) {
-        i(String.format(format, args));
-    }
-
-    public static void i(String message) {
-        if (!LogLevel.Info.lower(logLevel)) {
-            for(Logger logger : loggers) {
-                logger.log(LogLevel.Info, TAG, message);
-            }
-        }
+        Timber.i(format, args);
     }
 
     public static void w(String format, Object... args) {
-        w(String.format(format, args));
-    }
-
-    public static void w(String message) {
-        if (!LogLevel.Warn.lower(logLevel)) {
-            for(Logger logger : loggers) {
-                logger.log(LogLevel.Warn, TAG, message);
-            }
-        }
+        Timber.w(format, args);
     }
 
     public static void e(String format, Object... args) {
-        e(String.format(format, args));
+        Timber.e(format, args);
     }
 
-    public static void e(String message) {
-        if (!LogLevel.Error.lower(logLevel)) {
-            for(Logger logger : loggers) {
-                logger.log(LogLevel.Error, TAG, message);
-            }
-        }
+    public static List<String> getLogMessages() {
+        return logCache.getLogs();
     }
 }

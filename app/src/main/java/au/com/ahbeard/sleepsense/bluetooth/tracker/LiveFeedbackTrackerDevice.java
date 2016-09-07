@@ -3,7 +3,6 @@ package au.com.ahbeard.sleepsense.bluetooth.tracker;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
 import android.os.PowerManager;
-import android.util.Log;
 import android.util.SparseArray;
 
 import java.nio.ByteBuffer;
@@ -14,7 +13,6 @@ import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.EnableNotificationOperation;
 import au.com.ahbeard.sleepsense.bluetooth.ValueChangeEvent;
-import au.com.ahbeard.sleepsense.utils.ConversionUtils;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;

@@ -44,6 +44,7 @@ import au.com.ahbeard.sleepsense.model.Firmness;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepProperty;
 import au.com.ahbeard.sleepsense.model.beddit.TrackData;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import au.com.ahbeard.sleepsense.utils.OptimalBedtimeCalculator;
 import rx.Observable;
 import rx.Subscriber;
@@ -92,6 +93,8 @@ public class SleepService {
      */
     public void runBatchAnalysis() {
 
+        SSLog.d("Running sleep analysis");
+
         try {
             checkSessionData();
         } catch (IOException e) {
@@ -107,7 +110,9 @@ public class SleepService {
                 if ( sleep != null ) {
 
                     AnalyticsService.instance().logSleep(sleep);
-
+                    SSLog.d("Saved sleep with %.0f", sleep.getTotalSleepScore());
+                } else {
+                    SSLog.d("Sleep after analysis is null");
                 }
 
                 PreferenceService.instance().setHasRecordedASleep(true);
@@ -207,7 +212,7 @@ public class SleepService {
                         calendarDate,
                         new BatchAnalysisContext(PreferenceService.instance().getSleepTargetTime() * 3600f));
 
-                TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
+//                TrackerUtils.logBatchAnalysisResult(batchAnalysisResult);
 
                 Sleep sleep = Sleep.fromBatchAnalysisResult(batchAnalysisResult);
 
@@ -921,7 +926,6 @@ public class SleepService {
                     new String[]{Double.toString(startDate), Double.toString(endDate)});
 
             mattressPressureCursor.moveToFirst();
-
 
             while (!mattressPressureCursor.isAfterLast()) {
                 double timeRead = mattressPressureCursor.getDouble(mattressPressureCursor.getColumnIndex(MattressFirmnessContract.MattressFirmness.TIME_READ));

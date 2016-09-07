@@ -77,7 +77,12 @@
 #Beddit
 -keep class com.beddit.** { *; }
 
-
 #Android GMS
 -keep class com.google.android.gms.** { *; }
 -dontwarn com.google.android.gms.**
+
+#Loggers
+-keep class ch.qos.** { *; }
+-keep class org.slf4j.** { *; }
+-keepattributes *Annotation*
+-dontwarn ch.qos.logback.core.net.*
