@@ -39,7 +39,9 @@ public class SleepSenseApplication extends Application {
 
         sharedInstance = this;
 
-        Fabric.with(this, new Crashlytics());
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, new Crashlytics());
+        }
 
         SSLog.initialize(this);
         String appString = "";

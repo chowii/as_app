@@ -71,7 +71,9 @@ public class AnalyticsService {
 
         mFirebaseAnalytics.logEvent(event, bundle);
         Liquid.getInstance().track(event, attrs);
-        Answers.getInstance().logCustom(answersEvent);
+        if (!BuildConfig.DEBUG) { //Fabric is not setup in Debug mode
+            Answers.getInstance().logCustom(answersEvent);
+        }
     }
 
     private void logUserProperty(String name, Object property) {

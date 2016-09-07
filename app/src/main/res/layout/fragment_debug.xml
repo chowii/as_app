@@ -1,21 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center"
-              android:padding="16dp" >
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/debug_recycler_view_log"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" android:layout_weight="1">
-
-    </android.support.v7.widget.RecyclerView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="8dp"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="16dp"
+    android:weightSum="1">
 
     <Button
         android:id="@+id/debug_button_acquire"
@@ -28,6 +18,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Redo OnBoarding"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/debug_recycler_view_log"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" android:layout_weight="1">
+
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
 

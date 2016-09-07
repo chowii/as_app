@@ -67,11 +67,10 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/sleep_sense_button_blue"
                     android:text="Generate Fake Data"
-                    android:textColor="#fff"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"/>
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#fff"
+                    android:visibility="gone"
+                    />
 
                 <au.com.ahbeard.sleepsense.widgets.StyledButton
                     android:id="@+id/debug_button_re_run_batch_analysis"
@@ -79,11 +78,9 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/sleep_sense_button_blue"
                     android:text="Re-run batch analysis"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone"
                     android:textColor="#fff"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" android:visibility="gone"/>
 
                 <au.com.ahbeard.sleepsense.widgets.StyledButton
                     android:id="@+id/debug_button_email_sleep_data"
@@ -91,7 +88,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/sleep_sense_button_blue"
                     android:text="Upload sleep data"
-                    android:textColor="#fff" android:visibility="gone"/>
+                    android:textColor="#fff"
+                    />
 
             </LinearLayout>
 

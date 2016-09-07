@@ -26,10 +26,8 @@ public class SSLog {
             logCache = new SSLogCacheTree();
             Timber.plant(logCache);
         }
-        logFilePath = app.getFileStreamPath(fileName).getAbsolutePath();
-        Timber.plant(new SSLogToFileTree(logFilePath, priority));
-
-        d("logFile: " + logFilePath);
+        logFilePath = app.getFileStreamPath(fileName).getAbsolutePath().replace(fileName, "");
+        Timber.plant(new SSLogToFileTree(fileName, logFilePath, priority));
     }
 
     public static void d(String format, Object... args) {
@@ -50,5 +48,9 @@ public class SSLog {
 
     public static List<String> getLogMessages() {
         return logCache.getLogs();
+    }
+
+    public static String getLogFilePath() {
+        return logFilePath;
     }
 }
