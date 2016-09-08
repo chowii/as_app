@@ -44,6 +44,8 @@ public class MoreFragment extends Fragment {
     @Bind(R.id.more_layout_items)
     ViewGroup mItemsLayout;
 
+    private int debugClickCounter = 0;
+
     public MoreFragment() {
         // Required empty public constructor
     }
@@ -139,30 +141,33 @@ public class MoreFragment extends Fragment {
 
         try {
             PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
-            add(inflater,mItemsLayout,"App Version", String.format("%s (%s)", packageInfo.versionName, packageInfo.versionCode),null);
-            addSpacer(mItemsLayout);
-        } catch (PackageManager.NameNotFoundException e) {
-
-        }
-
-        if (BuildConfig.DEBUG ) {
-            add(inflater, mItemsLayout, "Debug", null, new Runnable() {
+            add(inflater, mItemsLayout, "App Version", String.format("%s (%s)", packageInfo.versionName, packageInfo.versionCode), true, new Runnable() {
                 @Override
                 public void run() {
-                    AnalyticsService.instance().logEventSettingsTouchDebug();
-                    startActivity(new Intent(getActivity(), DebugActivity.class));
+                    if (debugClickCounter > 3) { //Needs five touches to trigger
+                        debugClickCounter = 0;
+                        AnalyticsService.instance().logEventSettingsTouchDebug();
+                        startActivity(new Intent(getActivity(), DebugActivity.class));
+                    } else {
+                        debugClickCounter++;
+                    }
                 }
             });
             addSpacer(mItemsLayout);
-            addSpacer(mItemsLayout);
+        } catch (PackageManager.NameNotFoundException e) {
+
         }
 
         return view;
     }
 
     public void add(LayoutInflater inflater, ViewGroup container, String title, String detail, Runnable runnable) {
+        add(inflater, container, title, detail, false, runnable);
+    }
+
+    public void add(LayoutInflater inflater, ViewGroup container, String title, String detail, boolean hideChevron, Runnable runnable) {
         View view = inflater.inflate(R.layout.item_more,container,false);
-        new MoreItemViewHolder().bind(view).populate(title,detail,runnable);
+        new MoreItemViewHolder().bind(view).populate(title,detail,runnable, hideChevron);
         container.addView(view);
     }
 
@@ -203,11 +208,14 @@ public class MoreFragment extends Fragment {
             return this;
         }
 
-        public void populate(String title, String detail, Runnable runnable ) {
+        public void populate(String title, String detail, Runnable runnable, boolean hideChevron) {
             mRunnable = runnable;
             mTitleTextView.setText(title);
             mDetailTextView.setText(detail);
-            if ( runnable == null ) {
+            if (hideChevron) {
+                mChevronImageView.setVisibility(View.GONE);
+                mLayout.setClickable(true);
+            } else if ( runnable == null ) {
                 mChevronImageView.setVisibility(View.GONE);
                 mLayout.setClickable(false);
             } else {
