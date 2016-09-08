@@ -21,29 +21,35 @@ import au.com.ahbeard.sleepsense.services.log.SSLog;
 public class DebugEmailService {
 
     private static final int BUFFER = 80000;
-    private static final String ZIP_FILE_NAME = "sleepsense-android.zip";
+    private static final String ZIP_TMP_DIR = Environment.getExternalStorageDirectory() + "/.temp";
+    private static final String ZIP_FILE_NAME = ZIP_TMP_DIR + "/sleepsense-android.zip";
 
     public static Intent getDebugEmailIntent(final Context context) {
         String logFilePath = SSLog.getLogFilePath();
-        String zipFileName = context.getFileStreamPath(ZIP_FILE_NAME).getAbsolutePath();
 
-        zip(zipFileName, logFilePath);
+        File tmpDir = new File(ZIP_TMP_DIR);
+        if (!tmpDir.exists()) {
+            tmpDir.mkdirs();
+        }
 
-        File zipFile = new File(zipFileName);
+        File zipFile = zip(ZIP_FILE_NAME, logFilePath);
+        if (zipFile == null) {
+            return null;
+        }
+
         Uri zipUri = Uri.fromFile(zipFile);
 
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("vnd.android.cursor.dir/email");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "luis@mentallyfriendly.com" });
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"luis@mentallyfriendly.com"});
         emailIntent.putExtra(Intent.EXTRA_STREAM, zipUri);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Sleepsense Android app.zip");
-
         return emailIntent;
     }
 
-    private static void zip(String zipFileName, String... files) {
+    private static File zip(String zipFileName, String... files) {
         try {
-            BufferedInputStream origin = null;
+            BufferedInputStream origin;
             FileOutputStream dest = new FileOutputStream(zipFileName);
             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
                     dest));
@@ -67,6 +73,8 @@ public class DebugEmailService {
             out.close();
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
+        return new File(zipFileName);
     }
 }

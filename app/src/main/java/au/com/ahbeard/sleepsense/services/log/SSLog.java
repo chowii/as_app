@@ -15,9 +15,6 @@ public class SSLog {
 
     static int priority = Log.DEBUG;
 
-    static String fileName = "sleepsense.log";
-    private static String logFilePath;
-
     private static SSLogCacheTree logCache;
 
     public static void initialize(Application app) {
@@ -26,8 +23,7 @@ public class SSLog {
             logCache = new SSLogCacheTree();
             Timber.plant(logCache);
         }
-        logFilePath = app.getFileStreamPath(fileName).getAbsolutePath().replace(fileName, "");
-        Timber.plant(new SSLogToFileTree(fileName, logFilePath, priority));
+        Timber.plant(new SSLogToFileTree(priority));
     }
 
     public static void d(String format, Object... args) {
@@ -51,6 +47,6 @@ public class SSLog {
     }
 
     public static String getLogFilePath() {
-        return logFilePath;
+        return SSLogToFileTree.getLogFilePath();
     }
 }

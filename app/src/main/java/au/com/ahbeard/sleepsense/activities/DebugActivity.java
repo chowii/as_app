@@ -3,6 +3,7 @@ package au.com.ahbeard.sleepsense.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -43,7 +44,11 @@ public class DebugActivity extends AppCompatActivity {
     void uploadSleepData() {
         SSLog.d("Uploading sleepsense data");
         Intent emailIntent = DebugEmailService.getDebugEmailIntent(this);
-        startActivity(emailIntent);
+        if (emailIntent != null) {
+            startActivity(emailIntent);
+        } else {
+            Toast.makeText(this, "Failed to upload sleep data. Please try again later.", Toast.LENGTH_LONG).show();
+        }
     }
 
 }

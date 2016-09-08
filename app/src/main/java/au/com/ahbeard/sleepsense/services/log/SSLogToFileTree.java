@@ -1,17 +1,17 @@
 package au.com.ahbeard.sleepsense.services.log;
 
+import android.os.Environment;
 import android.util.Log;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import au.com.ahbeard.sleepsense.BuildConfig;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.core.joran.spi.JoranException;
 import timber.log.Timber;
 
 /**
@@ -19,13 +19,31 @@ import timber.log.Timber;
  */
 public class SSLogToFileTree extends Timber.DebugTree {
 
-    Logger logger;
-    int currPriority;
+    static String LOG_DIR = BuildConfig.APPLICATION_ID;
+    static String LOG_FILE = LOG_DIR + "/sleepsense.log";
 
-    SSLogToFileTree(String filePath, String fileName, int priority) {
+    int currPriority;
+    File logFile;
+    SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm:ss", Locale.US);
+
+    SSLogToFileTree(int priority) {
         currPriority = priority;
-        logger = LoggerFactory.getLogger(SSLogToFileTree.class);
-        configureLogbackByString(filePath, fileName);
+
+        File logDir = new File(Environment.getExternalStorageDirectory(), LOG_DIR);
+        logFile = new File(Environment.getExternalStorageDirectory(), LOG_FILE);
+        try {
+            if (!logFile.exists()) {
+                logDir.mkdirs();
+                logFile.createNewFile();
+            }
+        } catch (IOException e) {
+            //Error file not created
+            e.printStackTrace();
+        }
+    }
+
+    public static String getLogFilePath() {
+        return Environment.getExternalStorageDirectory() + "/" + LOG_FILE;
     }
 
     @Override
@@ -35,56 +53,35 @@ public class SSLogToFileTree extends Timber.DebugTree {
 
     @Override
     protected void log(int priority, String tag, String message, Throwable t) {
-        String logMessage = tag + ": " + message;
+        String level = "D";
         switch (priority) {
             case Log.DEBUG:
-                logger.debug(logMessage);
+                level = "D";
                 break;
             case Log.INFO:
-                logger.info(logMessage);
+                level = "I";
                 break;
             case Log.WARN:
-                logger.warn(logMessage);
+                level = "W";
                 break;
             case Log.ERROR:
-                logger.error(logMessage);
+                level = "E";
                 break;
         }
+        String logMessage = String.format("%s %s/%s: %s", df.format(new Date()), level, tag, message);
+        writeToFile(logMessage);
     }
 
-    static final String LOGBACK_XML =
-            "<configuration"+ (BuildConfig.DEBUG ? "debug='true'" : "") + ">" +
-                "<appender name=\"ROLLING\" class=\"ch.qos.logback.core.rolling.RollingFileAppender\">" +
-                    "<file>${LOG_DIR}/${LOG_FILENAME}</file>" +
-                    "<rollingPolicy class=\"ch.qos.logback.core.rolling.TimeBasedRollingPolicy\">" +
-                        "<fileNamePattern>${LOG_DIR}/sleepsense.%d{yyyy-MM-dd}.%i.log</fileNamePattern>" +
-                        "<timeBasedFileNamingAndTriggeringPolicy" +
-                            "class=\"ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP\">" +
-                            "<maxFileSize>5MB</maxFileSize>" +
-                        "</timeBasedFileNamingAndTriggeringPolicy>" +
-                        "<maxHistory>15</maxHistory>" +
-                    "</rollingPolicy>" +
-                "</appender>" +
-                "<root level=\"DEBUG\">" +
-                    "<appender-ref ref=\"ROLLING\" />" +
-                "</root>" +
-            "</configuration>";
-
-    private void configureLogbackByString(String logFileDir, String logFileName) {
-        // reset the default context (which may already have been initialized)
-        // since we want to reconfigure it
-        LoggerContext lc = (LoggerContext)LoggerFactory.getILoggerFactory();
-        lc.reset();
-
-        JoranConfigurator config = new JoranConfigurator();
-        config.setContext(lc);
-
-        String xml = LOGBACK_XML.replace("${LOG_DIR}", logFileDir).replace("${LOG_FILENAME}", logFileName);
-        InputStream stream = new ByteArrayInputStream(xml.getBytes());
+    private void writeToFile(String message) {
+        if (!logFile.exists()) { return; }
         try {
-            config.doConfigure(stream);
-        } catch (JoranException e) {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(logFile, true));
+            writer.append(message);
+            writer.newLine();
+            writer.close();
+        } catch (IOException e) {
             e.printStackTrace();
+            // Couldn't write to file
         }
     }
 }
