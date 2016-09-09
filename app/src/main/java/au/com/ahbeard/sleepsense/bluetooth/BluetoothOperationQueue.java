@@ -20,7 +20,6 @@ import rx.subscriptions.Subscriptions;
 public class BluetoothOperationQueue {
 
     private final Map<Subscriber<? super BluetoothOperation>, Boolean> subscribers = new ConcurrentHashMap<>();
-
     private final Observable<BluetoothOperation> mObservable = Observable.create(
             new Observable.OnSubscribe<BluetoothOperation>() {
                 @Override
@@ -34,14 +33,12 @@ public class BluetoothOperationQueue {
                     }));
                 }
             });
+    private final ArrayList<BluetoothOperation> mBluetoothOperations = new ArrayList<>(2048);
+    private boolean mIsRunning = false;
 
     public Observable<BluetoothOperation> observe() {
         return mObservable;
     }
-
-    public ArrayList<BluetoothOperation> mBluetoothOperations = new ArrayList<>(2048);
-
-    private boolean mIsRunning = false;
 
     public void start() {
         mIsRunning = true;
@@ -61,7 +58,7 @@ public class BluetoothOperationQueue {
                 for ( int i = 0; i < mBluetoothOperations.size(); i++ ) {
                     if ( operation.replacesOperation(mBluetoothOperations.get(i))) {
                         //try to avoid out of bounds exceptions
-                        int pos = Math.min(i, mBluetoothOperations.size());
+                        int pos = Math.min(i, mBluetoothOperations.size() - 1);
                         mBluetoothOperations.set(pos, operation);
                         processQueue();
                         return true;

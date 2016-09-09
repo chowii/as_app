@@ -2,12 +2,15 @@ package au.com.ahbeard.sleepsense.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
+import au.com.ahbeard.sleepsense.utils.TextInputUtils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -51,8 +54,25 @@ public class ProfileActivity extends AppCompatActivity {
 
     @OnClick(R.id.profile_button_save_profile)
     void onClickSaveProfile() {
-        Integer age = Integer.parseInt(mAgeEditText.getText().toString());
+        //If no sex selected, select unspecified when saving
+        if (mSex == null) {
+            onClickUnspecified();
+        }
+
+        Integer age;
+        try {
+            age = Integer.parseInt(mAgeEditText.getText().toString());
+        } catch (NumberFormatException e) {
+            mAgeEditText.setError("Please provide a valid age.");
+            return;
+        }
+
         String emailAddress = mEmailAddressEditText.getText().toString();
+        if (!TextInputUtils.isValidEmail(emailAddress)) {
+            mEmailAddressEditText.setError("Please provide a valid email.");
+            return;
+        }
+
         PreferenceService.instance().setProfile(mSex, age, emailAddress);
         finish();
     }
