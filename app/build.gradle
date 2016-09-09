@@ -34,8 +34,8 @@ android {
         applicationId "au.com.ahbeard.sleepsense"
         minSdkVersion 18
         targetSdkVersion 24
-        versionCode 18
-        versionName "1.0.4"
+        versionCode 19
+        versionName "1.0.5"
     }
     buildTypes {
         release {
@@ -97,9 +97,6 @@ dependencies {
     }
 
     compile 'com.jakewharton.timber:timber:4.3.0'
-    compile 'org.slf4j:slf4j-api:1.7.21'
-    compile 'com.github.tony19:logback-android-core:1.1.1-6'
-    compile 'com.github.tony19:logback-android-classic:1.1.1-6'
 
     testCompile 'junit:junit:4.12'
 }

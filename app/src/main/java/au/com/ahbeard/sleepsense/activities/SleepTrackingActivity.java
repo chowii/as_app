@@ -54,33 +54,6 @@ public class SleepTrackingActivity extends BaseActivity {
 
     private Subscription mClockSubscription;
 
-    @OnClick(R.id.sleep_tracking_button_start_stop)
-    void onStopTracking() {
-        TrackerDevice trackerDevice = SleepSenseDeviceService.instance().getTrackerDevice();
-
-        if (trackerDevice != null && trackerDevice.isTracking()) {
-            new AlertDialog.Builder(this).setPositiveButton(R.string.sleep_tracking_dialog_yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    mIgnoreStateUpdate = true;
-                    AnalyticsService.instance().logSleepScreenStopTracking();
-                    Schedulers.computation().createWorker().schedule(new Action0() {
-                        @Override
-                        public void call() {
-                            if (SleepSenseDeviceService.instance().getTrackerDevice() != null)
-                                SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
-                        }
-                    });
-                    finish();
-                }
-            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-
-                }
-            }).setMessage(getString(R.string.sleep_tracking_dialog_message)).create().show();
-
-        }
-    }
-
     @Bind(R.id.sleep_tracking_text_view_clock_time)
     TextView mClockTimeTextView;
 
@@ -182,10 +155,33 @@ public class SleepTrackingActivity extends BaseActivity {
             startSleepSession();
         }
 
+        prefillZedsPool();
+    }
 
+    @OnClick(R.id.sleep_tracking_button_start_stop)
+    void onStopTracking() {
+        TrackerDevice trackerDevice = SleepSenseDeviceService.instance().getTrackerDevice();
 
-        for (int i = 0; i < 20; i++){ //prefill zed pool
-            zedsPool.add(createZed());
+        if (trackerDevice != null && trackerDevice.isTracking()) {
+            new AlertDialog.Builder(this).setPositiveButton(R.string.sleep_tracking_dialog_yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    mIgnoreStateUpdate = true;
+                    AnalyticsService.instance().logSleepScreenStopTracking();
+                    Schedulers.computation().createWorker().schedule(new Action0() {
+                        @Override
+                        public void call() {
+                            if (SleepSenseDeviceService.instance().getTrackerDevice() != null)
+                                SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
+                        }
+                    });
+                    finish();
+                }
+            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            }).setMessage(getString(R.string.sleep_tracking_dialog_message)).create().show();
+
         }
     }
 
@@ -282,6 +278,12 @@ public class SleepTrackingActivity extends BaseActivity {
     Long animationDuration = 5500L;
     ArrayList<ImageView> zedsPool = new ArrayList<>();
     Random r = new Random();
+
+    private void prefillZedsPool() {
+        for (int i = 0; i < 20; i++){ //prefill zed pool
+            zedsPool.add(createZed());
+        }
+    }
 
     private void spawnZed() {
         final ImageView zed = zedsPool.size() > 0 ? zedsPool.remove(zedsPool.size() - 1) : createZed();

@@ -18,9 +18,6 @@ import au.com.ahbeard.sleepsense.adapters.SimpleItemAnimator;
 import au.com.ahbeard.sleepsense.services.log.SSLog;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import ch.qos.logback.core.net.ssl.SSL;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
