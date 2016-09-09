@@ -32,13 +32,6 @@ public class OnBoardingInflateMattressFragment  extends OnBoardingFragment {
     @Bind(R.id.on_board_button_continue)
     Button mContinueButton;
 
-    @OnClick(R.id.on_board_button_continue)
-    public void onContinueClicked() {
-        if (mOnActionListener != null) {
-            mOnActionListener.onInflateContinueClicked();
-        }
-    }
-
     @Bind(R.id.onboarding_image_filling_mattress_happy)
     ImageView mMattressHappyImageView;
 
@@ -66,11 +59,16 @@ public class OnBoardingInflateMattressFragment  extends OnBoardingFragment {
         return fragment;
     }
 
+    @OnClick(R.id.on_board_button_continue)
+    public void onContinueClicked() {
+        if (mOnActionListener != null) {
+            mOnActionListener.onInflateContinueClicked();
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override

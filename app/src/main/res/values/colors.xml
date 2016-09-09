@@ -62,9 +62,12 @@
     <color name="statisticsItemCircleGreen">#34DABA</color>
     <color name="statisticsItemCircleRed">#FD807B</color>
 
+    <color name="onboarding_background_blue">#92C2E2</color>
+
 
     <color name="debug1">#7000FF00</color>
     <color name="debug2">#70FF0000</color>
     <color name="debug3">#700000FF</color>
+    <color name="onboarding_bottom_blue_gradient">#D0E3EF</color>
 
 </resources>
