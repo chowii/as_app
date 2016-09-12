@@ -58,7 +58,9 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
         mTrackerDevice = trackerDevice;
 
         // Subscribe to the raw sensor data on a computation thread.
-        mSensorDataObservable.onBackpressureBuffer().observeOn(Schedulers.computation()).subscribe(new Observer<SensorData>() {
+        mSensorDataObservable.onBackpressureBuffer()
+                .observeOn(Schedulers.computation())
+                .subscribe(new Observer<SensorData>() {
             @Override
             public void onCompleted() {
                 endSensorSession();
@@ -71,6 +73,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
 
             @Override
             public void onNext(SensorData sensorData) {
+                mTrackerDevice.logPacket();
                 processSensorData(sensorData);
             }
 
@@ -79,26 +82,6 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
         mTimeValueTrackFragmentPublishSubject.onBackpressureBuffer()
                 .observeOn(Schedulers.computation())
                 .subscribe(new TrackingSessionDataWriter());
-
-        mSensorDataObservable.onBackpressureBuffer()
-                .observeOn(Schedulers.computation())
-                .subscribe(new Observer<SensorData>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(SensorData sensorData) {
-                        mTrackerDevice.logPacket();
-                    }
-                });
-
     }
 
     /**
@@ -137,9 +120,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
      */
     @Override
     public void onSensorSessionFinished(SensorSession sensorSession, SessionAccounting accounting, SensorException error) {
-
         mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Disconnected);
-
         if (error == null) {
             SSLog.d("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
 
@@ -148,12 +129,11 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
         } else {
             mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Error);
 
-            SSLog.e("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
+            SSLog.e("onSensorSessionFinishedWithError: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
             SSLog.e("error: " + error.getMessage());
             // Once again, shift this over to a computation thread.
             mSensorDataObservable.onError(error);
         }
-
     }
 
     /**

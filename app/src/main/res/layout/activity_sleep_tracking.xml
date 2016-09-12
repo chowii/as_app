@@ -110,7 +110,7 @@
             android:layout_marginEnd="30dp"
             android:background="@drawable/sleep_sense_button_white"
             android:layout_alignParentBottom="true"
-            android:text="Stop Tracking"
+            android:text="@string/stop_tracking"
             android:textColor="@color/sleepTrackingBackgroundColor"
             app:typeface="OpenSansSemiBold"
             android:textSize="11.5sp"/>
@@ -123,7 +123,7 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:lineSpacingExtra="6dp"
-            android:text="Remember to keep your phone\ncharged and next to your bed"
+            android:text="@string/remember_to_keep_your_phone_charged"
             android:textColor="#fff"
             android:textSize="16sp"
             app:typeface="OpenSansRegular"/>
@@ -157,16 +157,13 @@
                 android:id="@+id/sleep_tracking_image_view_connecting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
                 android:src="@drawable/sleep_tracking_connecting" android:layout_marginBottom="70dp"/>
 
             <au.com.ahbeard.sleepsense.widgets.StyledTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:includeFontPadding="false"
-                android:text="Connecting..."
+                android:text="@string/connecting"
                 android:textColor="#fff"
                 android:textSize="20sp"
                 app:typeface="OpenSansRegular"/>
@@ -176,6 +173,75 @@
 
     <RelativeLayout
         android:id="@+id/sleep_tracking_layout_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/sleepTrackingBackgroundColor"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/sleep_tracking_header_no_moon"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_centerInParent="true" android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/sleep_tracking_error" android:layout_marginBottom="70dp"/>
+
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:id="@+id/error_title_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="@string/error_connecting"
+                android:textColor="#fff"
+                android:textSize="20sp"
+                app:typeface="OpenSansRegular"
+                android:layout_marginBottom="20dp"/>
+            <au.com.ahbeard.sleepsense.widgets.StyledTextView
+                android:id="@+id/error_subtitle_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:gravity="center_horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:text="@string/i_cant_seem_to_connect"
+                android:textColor="#fff"
+                android:textSize="14sp"
+                app:typeface="OpenSansLight"/>
+        </LinearLayout>
+
+        <au.com.ahbeard.sleepsense.widgets.StyledButton
+            android:id="@+id/sleep_tracking_button_error"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/sleep_sense_button_white"
+            android:layout_alignParentBottom="true"
+            android:text="@string/try_again"
+            android:textColor="@color/sleepTrackingBackgroundColor"
+            app:typeface="OpenSansSemiBold"
+            android:textSize="11.5sp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/sleep_tracking_layout_bluetooth_off"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/sleepTrackingBackgroundColor"
@@ -203,31 +269,31 @@
                 android:src="@drawable/sleep_tracking_error" android:layout_marginBottom="70dp"/>
 
             <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                android:id="@+id/error_title_textview"
+                android:id="@+id/bluetooth_off_title_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
-                android:text="Error connecting"
+                android:text="Bluetooth Turned Off"
                 android:textColor="#fff"
                 android:textSize="20sp"
                 app:typeface="OpenSansRegular"
                 android:layout_marginBottom="20dp"/>
             <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                android:id="@+id/error_subtitle_textview"
+                android:id="@+id/bluetooth_off_subtitle_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
                 android:gravity="center_horizontal"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:text="I cant seem to connect, bluetooth is turned off or the device isn't in range"
+                android:text="@string/cant_connect_bluetooth_off"
                 android:textColor="#fff"
                 android:textSize="14sp"
                 app:typeface="OpenSansLight"/>
         </LinearLayout>
 
         <au.com.ahbeard.sleepsense.widgets.StyledButton
-            android:id="@+id/sleep_tracking_button_error"
+            android:id="@+id/sleep_tracking_button_bluetooth_off"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginTop="17dp"
@@ -236,7 +302,7 @@
             android:layout_marginEnd="30dp"
             android:background="@drawable/sleep_sense_button_white"
             android:layout_alignParentBottom="true"
-            android:text="Try again"
+            android:text="@string/turn_on_bluetooth"
             android:textColor="@color/sleepTrackingBackgroundColor"
             app:typeface="OpenSansSemiBold"
             android:textSize="11.5sp"/>

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -11,23 +12,33 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import com.trello.rxlifecycle.LifecycleProvider;
+import com.trello.rxlifecycle.LifecycleTransformer;
+import com.trello.rxlifecycle.RxLifecycle;
+import com.trello.rxlifecycle.android.ActivityEvent;
+import com.trello.rxlifecycle.android.RxLifecycleAndroid;
+
 import au.com.ahbeard.sleepsense.SleepSenseApplication;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothEvent;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.services.log.SSLog;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by neal on 3/03/2016.
  */
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements LifecycleProvider<ActivityEvent>{
 
     private static final int PERMISSIONS_REQUEST_COARSE_LOCATION = 123;
 
     private boolean mCallOnScanningPermissionGranted;
+
+    private final BehaviorSubject<ActivityEvent> lifecycleSubject = BehaviorSubject.create();
 
     public void openSleepScoreBreakdown(int sleepId) {
 
@@ -98,6 +109,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        lifecycleSubject.onNext(ActivityEvent.CREATE);
     }
 
     @Override
@@ -127,21 +139,36 @@ public class BaseActivity extends AppCompatActivity {
                 }
             }
         }));
+        lifecycleSubject.onNext(ActivityEvent.START);
     }
 
-    void showBluetoothOffAlertView() {
-        SleepSenseApplication.instance().showBluetoothOffAlertDialog(this);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        lifecycleSubject.onNext(ActivityEvent.RESUME);
+    }
+
+    @Override
+    protected void onPause() {
+        lifecycleSubject.onNext(ActivityEvent.PAUSE);
+        super.onPause();
     }
 
     @Override
     protected void onStop() {
         mCompositeSubscription.clear();
+        lifecycleSubject.onNext(ActivityEvent.STOP);
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
+        lifecycleSubject.onNext(ActivityEvent.DESTROY);
         super.onDestroy();
+    }
+
+    void showBluetoothOffAlertView() {
+        SleepSenseApplication.instance().showBluetoothOffAlertDialog(this);
     }
 
     public void onScanningPermissionGranted() {
@@ -166,5 +193,26 @@ public class BaseActivity extends AppCompatActivity {
 
     public void startHelpActivity() {
 
+    }
+
+    @Override
+    @NonNull
+    @CheckResult
+    public final Observable<ActivityEvent> lifecycle() {
+        return lifecycleSubject.asObservable();
+    }
+
+    @Override
+    @NonNull
+    @CheckResult
+    public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull ActivityEvent event) {
+        return RxLifecycle.bindUntilEvent(lifecycleSubject, event);
+    }
+
+    @Override
+    @NonNull
+    @CheckResult
+    public final <T> LifecycleTransformer<T> bindToLifecycle() {
+        return RxLifecycleAndroid.bindActivity(lifecycleSubject);
     }
 }

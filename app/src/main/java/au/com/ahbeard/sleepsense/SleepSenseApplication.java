@@ -75,7 +75,6 @@ public class SleepSenseApplication extends Application {
     }
 
     private boolean isShowingBluetoothAlert;
-
     public void showBluetoothOffAlertDialog(final Context context) {
         if (isShowingBluetoothAlert) { return; }
         isShowingBluetoothAlert = true;
@@ -88,6 +87,7 @@ public class SleepSenseApplication extends Application {
                 .setNeutralButton(getString(R.string.enable_bluetooth), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        isShowingBluetoothAlert = false;
                         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         context.startActivity(intent);
                     }

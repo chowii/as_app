@@ -16,7 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Action0;
+import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 
 /**
@@ -90,19 +92,47 @@ public class BluetoothService extends BluetoothGattCallback {
     }
 
     public boolean isBluetoothEnabled() {
+        return isBluetoothEnabled(true);
+    }
+
+    /**
+     * Checks if Bluetooth is enabled.
+     * @param sendUseEvent Sends a "UseWhileDisabledEvent" if true to the bluetoothEventSubject
+     * @return
+     */
+    public boolean isBluetoothEnabled(boolean sendUseEvent) {
         if( mBluetoothAdapter.isEnabled() ) {
             return true;
-        } else {
+        } else if(sendUseEvent) {
             mBluetoothEventSubject.onNext(new BluetoothEvent.BluetoothUseWhileDisabledEvent());
-            return false;
         }
+        return false;
     }
 
     public boolean isBluetoothDisabled() {
         return ! isBluetoothEnabled();
     }
 
-
+    public Observable<BluetoothEvent> waitForPowerOn() {
+        return Observable.create(new Observable.OnSubscribe<BluetoothEvent>() {
+            @Override
+            public void call(Subscriber<? super BluetoothEvent> subscriber) {
+                if (isBluetoothEnabled(false)) {
+                    subscriber.onNext(new BluetoothEvent.BluetoothEnabledEvent());
+                } else {
+                    mBluetoothEventSubject
+                            .skipWhile(new Func1<BluetoothEvent, Boolean>() {
+                                @Override
+                                public Boolean call(BluetoothEvent bluetoothEvent) {
+                                    return !(bluetoothEvent instanceof BluetoothEvent.BluetoothEnabledEvent);
+                                }
+                            })
+                            .take(1) //we only want the next enabled event
+                            .subscribe(subscriber);
+                }
+            }
+        });
+    }
 
     private void _scan(final boolean enable) {
 
@@ -152,6 +182,15 @@ public class BluetoothService extends BluetoothGattCallback {
         }
     };
 
+    public BluetoothDevice createDeviceFromAddress(String address) {
+        initializeBluetoothAdapter();
+        if ( mBluetoothAdapter != null && address != null) {
+            return mBluetoothAdapter.getRemoteDevice(address);
+        } else {
+            return null;
+        }
+    }
+
     private void initializeBluetoothAdapter() {
         // Get the Bluetooth adapter.
         if (mBluetoothAdapter == null) {
@@ -165,15 +204,5 @@ public class BluetoothService extends BluetoothGattCallback {
 
         }
 
-    }
-
-
-    public BluetoothDevice createDeviceFromAddress(String address) {
-        initializeBluetoothAdapter();
-        if ( mBluetoothAdapter != null && address != null) {
-            return mBluetoothAdapter.getRemoteDevice(address);
-        } else {
-            return null;
-        }
     }
 }

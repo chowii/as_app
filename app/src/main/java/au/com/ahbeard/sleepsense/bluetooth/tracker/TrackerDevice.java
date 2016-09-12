@@ -82,8 +82,6 @@ public class TrackerDevice extends Device {
         }
 
         try {
-
-
             mSensorSession = SensorManager.getInstance().createSession(getSensor());
             mSensorSession.setListener(new TrackingSessionAnalyser(this));
             SSLog.d("Sensor session created...");
@@ -91,27 +89,28 @@ public class TrackerDevice extends Device {
             SSLog.d("Sensor session open called...");
             mTrackerState = TrackerState.StartingTracking;
             mTrackerStateSubject.onNext(mTrackerState);
-
         } catch (SensorException e) {
             e.printStackTrace();
         }
-
     }
 
     public void stopSensorSession() {
+        setTrackerState(TrackerState.Disconnecting);
+        SSLog.d("Sensor session stop.");
+        cleanUp();
+    }
 
+    public void cleanUp() {
+        SSLog.d("Sensor session cleaning up.");
         if (mSensorSession != null) {
-            SSLog.d("Sensor session close called...");
             mSensorSession.close();
             mSensorSession = null;
-            mTrackerState=TrackerState.Disconnecting;
-            mTrackerStateSubject.onNext(mTrackerState);
         }
 
-        if (mWakeLock != null) {
+        if (mWakeLock != null && mWakeLock.isHeld()) {
             mWakeLock.release();
         }
-
+        mWakeLock = null;
     }
 
     public boolean isTracking() {

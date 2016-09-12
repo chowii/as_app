@@ -77,5 +77,13 @@
     <string name="dashboard_empty_sleep_now_description">Simply tap the moon when you are ready to sleep</string>
     <string name="enable_bluetooth">Enable Bluetooth</string>
     <string name="dismiss">Dismiss</string>
+    <string name="stop_tracking">Stop Tracking</string>
+    <string name="remember_to_keep_your_phone_charged">Remember to keep your phone\ncharged and next to your bed</string>
+    <string name="connecting">Connecting...</string>
+    <string name="error_connecting">Error connecting</string>
+    <string name="i_cant_seem_to_connect">I can\'t seem to connect, the tracker could be turned off or not in range.</string>
+    <string name="try_again">Try again</string>
+    <string name="cant_connect_bluetooth_off">I can\'t connect to the tracker. Please turn on bluetooth for sleep tracking to work.</string>
+    <string name="turn_on_bluetooth">Turn On Bluetooth</string>
 
 </resources>

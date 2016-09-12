@@ -1,31 +1,22 @@
 package au.com.ahbeard.sleepsense.activities;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.CycleInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,6 +26,8 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.SleepSenseApplication;
+import au.com.ahbeard.sleepsense.bluetooth.BluetoothEvent;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
@@ -49,6 +42,7 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 public class SleepTrackingActivity extends BaseActivity {
 
@@ -72,161 +66,63 @@ public class SleepTrackingActivity extends BaseActivity {
     @Bind(R.id.sleep_tracking_layout_error)
     View mErrorLayout;
 
+    @Bind(R.id.sleep_tracking_layout_bluetooth_off)
+    View mBluetoothOffLayout;
+
     @Bind(R.id.sleep_tracking_image_view_connecting)
     ImageView mConnectingImageView;
 
-    @OnClick(R.id.sleep_tracking_button_error)
-    void tryAgainButton_onClick() {
-        //Relaunch activity for now
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
-    }
+    @Bind(R.id.zeds_container)
+    FrameLayout zedsContainer;
 
     private int spawnerCounter = 0;
     private boolean mIsPaused = false;
     private boolean mIgnoreStateUpdate;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_sleep_tracking);
-
-        ButterKnife.bind(this);
-
-        mCalendar = Calendar.getInstance();
-
-        TrackerDevice trackerDevice = SleepSenseDeviceService.instance().getTrackerDevice();
-
-        if (!BluetoothService.instance().isBluetoothEnabled() || trackerDevice == null) {
-            showErrorView();
-        } else if (trackerDevice.getTrackerState() == TrackerDevice.TrackerState.Tracking) {
-            showClockView();
-        } else {
-            showConnectingView();
-        }
-
-        if (trackerDevice != null) {
-            trackerDevice.getTrackingStateObservable()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<TrackerDevice.TrackerState>() {
-                        @Override
-                        public void call(TrackerDevice.TrackerState trackerState) {
-                            if (mIgnoreStateUpdate) return;
-                            switch (trackerState) {
-                                case Connecting:
-                                    hideClockView();
-                                    hideErrorView();
-                                    showConnectingView();
-                                case Tracking:
-                                    hideConnectionView();
-                                    hideErrorView();
-                                    showClockView();
-                                    break;
-                                case Disconnected:
-                                case Error:
-                                    hideConnectionView();
-                                    hideClockView();
-                                    showErrorView();
-                                    break;
-                                default: break;
-                            }
-                        }
-                    });
-
-            trackerDevice
-                    .getPacketCountObservable()
-                    .sample(500, TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<Integer>() {
-                        @Override
-                        public void call(Integer packetCount) {
-                            mSampleCountTextView.setText(Integer.toString(packetCount));
-
-                            if (!mIsPaused && spawnerCounter % 2 == 0) {
-                                spawnZed();
-                            }
-                            spawnerCounter++;
-                        }
-                    });
-
-            startSleepSession();
-        }
-
-        prefillZedsPool();
-    }
-
-    @OnClick(R.id.sleep_tracking_button_start_stop)
-    void onStopTracking() {
-        TrackerDevice trackerDevice = SleepSenseDeviceService.instance().getTrackerDevice();
-
-        if (trackerDevice != null && trackerDevice.isTracking()) {
-            new AlertDialog.Builder(this).setPositiveButton(R.string.sleep_tracking_dialog_yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    mIgnoreStateUpdate = true;
-                    AnalyticsService.instance().logSleepScreenStopTracking();
-                    Schedulers.computation().createWorker().schedule(new Action0() {
-                        @Override
-                        public void call() {
-                            if (SleepSenseDeviceService.instance().getTrackerDevice() != null)
-                                SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
-                        }
-                    });
-                    finish();
-                }
-            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-
-                }
-            }).setMessage(getString(R.string.sleep_tracking_dialog_message)).create().show();
-
-        }
-    }
-
-    void startSleepSession() {
-        TrackerDevice trackerDevice = SleepSenseDeviceService.instance().getTrackerDevice();
-        if (trackerDevice != null)
-            trackerDevice.startSensorSession();
-
-        if ( SleepSenseDeviceService.instance().getPumpDevice() != null )
-            SleepSenseDeviceService.instance().getPumpDevice().connectToGetFirmness();
-    }
-
-    void showConnectingView() {
-        mConnectingLayout.setVisibility(View.VISIBLE);
-        RotateAnimation rotateAnimation = new RotateAnimation(0f,360f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
-        rotateAnimation.setRepeatCount(Animation.INFINITE);
-        rotateAnimation.setDuration(1000);
-        rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        mConnectingImageView.startAnimation(rotateAnimation);
-    }
-
-    void hideConnectionView() {
-        mConnectingLayout.setVisibility(View.GONE);
-    }
-
-    void showClockView() {
-        mClockLayout.setVisibility(View.VISIBLE);
-    }
-
-    void hideClockView() {
-        mClockLayout.setVisibility(View.GONE);
-    }
-
-    void showErrorView() {
-        mErrorLayout.setVisibility(View.VISIBLE);
-    }
-
-    void hideErrorView() {
-        mErrorLayout.setVisibility(View.GONE);
-    }
+    private PublishSubject<TrackerDevice.TrackerState> mStateSubject = PublishSubject.create();
 
     int mHours;
     int mMinutes;
     int mAMPM;
     Calendar mCalendar;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sleep_tracking);
+        ButterKnife.bind(this);
+
+        mCalendar = Calendar.getInstance();
+
+        mStateSubject
+                .compose(this.<TrackerDevice.TrackerState>bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<TrackerDevice.TrackerState>() {
+                    @Override
+                    public void call(TrackerDevice.TrackerState trackerState) {
+                        if (mIgnoreStateUpdate) return;
+                        switch (trackerState) {
+                            case Connecting:
+                                showConnectingView();
+                                break;
+                            case Tracking:
+                                showClockView();
+                                break;
+                            case Disconnected:
+                            case Error:
+                                showErrorView();
+                                if (SleepSenseDeviceService.instance().getTrackerDevice() != null)
+                                    SleepSenseDeviceService.instance().getTrackerDevice().cleanUp();
+                                break;
+                            default: break;
+                        }
+                    }
+                });
+
+        connectToTracker();
+
+        prefillZedsPool();
+    }
 
     @Override
     protected void onStart() {
@@ -273,16 +169,177 @@ public class SleepTrackingActivity extends BaseActivity {
         mIsPaused = true;
     }
 
-    @Bind(R.id.zeds_container)
-    FrameLayout zedsContainer;
-    Long animationDuration = 5500L;
-    ArrayList<ImageView> zedsPool = new ArrayList<>();
-    Random r = new Random();
+    @Override
+    public void onBackPressed() {
+        if (SleepSenseDeviceService.instance().getTrackerDevice().getTrackerState() == TrackerDevice.TrackerState.Tracking) {
+            onStopTracking();
+        } else {
+            finish();
+        }
+    }
+
+    @OnClick(R.id.sleep_tracking_button_bluetooth_off)
+    void turnOnBluetooth() {
+        SleepSenseApplication.instance().showBluetoothOffAlertDialog(this);
+    }
+
+    @OnClick(R.id.sleep_tracking_button_error)
+    void tryAgainButton_onClick() {
+        connectToTracker();
+    }
+
+    @OnClick(R.id.sleep_tracking_button_start_stop)
+    void onStopTracking() {
+        TrackerDevice trackerDevice = SleepSenseDeviceService.instance().getTrackerDevice();
+
+        if (trackerDevice != null && trackerDevice.isTracking()) {
+            new AlertDialog.Builder(this).setPositiveButton(R.string.sleep_tracking_dialog_yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    mIgnoreStateUpdate = true;
+                    AnalyticsService.instance().logSleepScreenStopTracking();
+                    Schedulers.computation().createWorker().schedule(new Action0() {
+                        @Override
+                        public void call() {
+                            if (SleepSenseDeviceService.instance().getTrackerDevice() != null)
+                                SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
+                        }
+                    });
+                    finish();
+                }
+            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            }).setMessage(getString(R.string.sleep_tracking_dialog_message)).create().show();
+
+        }
+    }
+
+    private void connectToTracker() {
+        BluetoothService.instance().waitForPowerOn()
+                .compose(this.<BluetoothEvent>bindToLifecycle())
+                .subscribe(new Action1<BluetoothEvent>() {
+                    @Override
+                    public void call(BluetoothEvent bluetoothEvent) {
+                        setupTracker();
+                    }
+                });
+
+        if (!BluetoothService.instance().isBluetoothEnabled(false)) {
+            showTurnOnBluetoothView();
+        } else {
+            mStateSubject.onNext(TrackerDevice.TrackerState.Connecting);
+        }
+    }
+
+    private void setupTracker() {
+        TrackerDevice trackerDevice = SleepSenseDeviceService.instance().getTrackerDevice();
+
+        if (trackerDevice == null) {
+            mStateSubject.onNext(TrackerDevice.TrackerState.Error);
+        } else if (trackerDevice.getTrackerState() == TrackerDevice.TrackerState.Tracking) {
+            mStateSubject.onNext(TrackerDevice.TrackerState.Tracking);
+        } else {
+            //Link tracker state to state subject
+            trackerDevice.getTrackingStateObservable()
+                    .compose(this.<TrackerDevice.TrackerState>bindToLifecycle())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(mStateSubject);
+
+            turnOnZepSpawner();
+
+            startSleepSession();
+        }
+    }
+
+    private void startSleepSession() {
+        TrackerDevice trackerDevice = SleepSenseDeviceService.instance().getTrackerDevice();
+        if (trackerDevice != null)
+            trackerDevice.startSensorSession();
+
+        if ( SleepSenseDeviceService.instance().getPumpDevice() != null )
+            SleepSenseDeviceService.instance().getPumpDevice().connectToGetFirmness();
+    }
+
+    private void showConnectingView() {
+        hideClockView();
+        hideErrorView();
+        hideTurnOnBluetoothView();
+
+        mConnectingLayout.setVisibility(View.VISIBLE);
+        RotateAnimation rotateAnimation = new RotateAnimation(0f,360f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        rotateAnimation.setRepeatCount(Animation.INFINITE);
+        rotateAnimation.setDuration(1000);
+        rotateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        mConnectingImageView.startAnimation(rotateAnimation);
+    }
+
+    private void hideConnectionView() {
+        mConnectingLayout.setVisibility(View.GONE);
+    }
+
+    private void showClockView() {
+        hideConnectionView();
+        hideErrorView();
+        hideTurnOnBluetoothView();
+
+        mClockLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hideClockView() {
+        mClockLayout.setVisibility(View.GONE);
+    }
+
+    private void showErrorView() {
+        hideConnectionView();
+        hideClockView();
+        hideTurnOnBluetoothView();
+
+        mErrorLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hideErrorView() {
+        mErrorLayout.setVisibility(View.GONE);
+    }
+
+    private void showTurnOnBluetoothView() {
+        hideClockView();
+        hideConnectionView();
+        hideErrorView();
+
+        mBluetoothOffLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hideTurnOnBluetoothView() {
+        mBluetoothOffLayout.setVisibility(View.GONE);
+    }
+
+    private Long animationDuration = 5500L;
+    private ArrayList<ImageView> zedsPool = new ArrayList<>();
+    private Random r = new Random();
 
     private void prefillZedsPool() {
         for (int i = 0; i < 20; i++){ //prefill zed pool
             zedsPool.add(createZed());
         }
+    }
+
+    private void turnOnZepSpawner() {
+        SleepSenseDeviceService.instance().getTrackerDevice()
+                .getPacketCountObservable()
+                .sample(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Integer>() {
+                    @Override
+                    public void call(Integer packetCount) {
+                        mSampleCountTextView.setText(Integer.toString(packetCount));
+
+                        if (!mIsPaused && spawnerCounter % 2 == 0) {
+                            spawnZed();
+                        }
+                        spawnerCounter++;
+                    }
+                });
     }
 
     private void spawnZed() {
