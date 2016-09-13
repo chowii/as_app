@@ -87,8 +87,7 @@ public class TrackerDevice extends Device {
             SSLog.d("Sensor session created...");
             mSensorSession.open();
             SSLog.d("Sensor session open called...");
-            mTrackerState = TrackerState.StartingTracking;
-            mTrackerStateSubject.onNext(mTrackerState);
+            setTrackerState(TrackerState.StartingTracking);
         } catch (SensorException e) {
             e.printStackTrace();
         }
@@ -114,7 +113,7 @@ public class TrackerDevice extends Device {
     }
 
     public boolean isTracking() {
-        return mSensorSession != null;
+        return mTrackerState == TrackerState.Tracking;
     }
 
     public Observable<TrackerState> getTrackingStateObservable() {

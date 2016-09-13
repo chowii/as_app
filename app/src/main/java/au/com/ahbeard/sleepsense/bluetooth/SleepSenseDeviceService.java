@@ -69,7 +69,7 @@ public class SleepSenseDeviceService {
         mPumpDeviceAddress = PreferenceService.instance().getPumpDeviceAddress();
         mBaseDeviceAddress = PreferenceService.instance().getBaseDeviceAddress();
         mTrackerDeviceAddress = PreferenceService.instance().getTrackerDeviceAddress();
-        mAltTrackerDeviceAddress = PreferenceService.instance().getTrackerDeviceAddress();
+        mAltTrackerDeviceAddress = PreferenceService.instance().getAltTrackerDeviceAddress();
 
         if (mPumpDeviceAddress != null) {
             mPumpDevice = new PumpDevice();

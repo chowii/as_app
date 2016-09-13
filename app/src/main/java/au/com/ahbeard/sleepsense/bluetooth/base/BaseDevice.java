@@ -22,10 +22,10 @@ public class BaseDevice extends Device {
     public static final int DISCONNECT_AFTER = 15000;
 
     private static UUID[] REQUIRED_SERVICES = {
-            BluetoothUtils.uuidFrom16BitUuid(0xffb0),
-            BluetoothUtils.uuidFrom16BitUuid(0xffe0),
+            BluetoothUtils.uuidFrom16BitUuid(0xfff0), //fff0 and ffb0 are an hack to properly connect to the base
+            BluetoothUtils.uuidFrom16BitUuid(0xffb0), //they are not actually setup has services, but without them we can't connect
             BluetoothUtils.uuidFrom16BitUuid(0xffe5),
-            BluetoothUtils.uuidFrom16BitUuid(0xfff0),
+            BluetoothUtils.uuidFrom16BitUuid(0xffe0),
     };
 
     private Subscription mBaseStatusSubscription;

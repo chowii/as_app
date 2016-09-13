@@ -1,7 +1,6 @@
 package au.com.ahbeard.sleepsense.activities;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -79,7 +79,8 @@ public class SleepTrackingActivity extends BaseActivity {
     private boolean mIsPaused = false;
     private boolean mIgnoreStateUpdate;
 
-    private PublishSubject<TrackerDevice.TrackerState> mStateSubject = PublishSubject.create();
+    private PublishSubject<TrackerDevice.TrackerState> mStateSubject;
+    private Subscription mTrackerSubscription;
 
     int mHours;
     int mMinutes;
@@ -94,6 +95,8 @@ public class SleepTrackingActivity extends BaseActivity {
 
         mCalendar = Calendar.getInstance();
 
+
+        mStateSubject = PublishSubject.create();
         mStateSubject
                 .compose(this.<TrackerDevice.TrackerState>bindToLifecycle())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -132,28 +135,30 @@ public class SleepTrackingActivity extends BaseActivity {
 
         // Not using a standard date format here, because we will probably have to split it up into multiple
         // fields to get the alignment to work correctly.
-        mClockSubscription = Observable.interval(0, 50, TimeUnit.MILLISECONDS).filter(new Func1<Long, Boolean>() {
-            @Override
-            public Boolean call(Long elapsedTime) {
-                mCalendar.setTimeInMillis(System.currentTimeMillis());
-                if (mMinutes != mCalendar.get(Calendar.MINUTE)) {
-                    mHours = mCalendar.get(Calendar.HOUR);
-                    if (mHours == 0) {
-                        mHours = 12;
+        updateClockText();
+        mClockSubscription = Observable.interval(0, 50, TimeUnit.MILLISECONDS)
+                .filter(new Func1<Long, Boolean>() {
+                    @Override
+                    public Boolean call(Long elapsedTime) {
+                        mCalendar.setTimeInMillis(System.currentTimeMillis());
+                        if (mMinutes != mCalendar.get(Calendar.MINUTE)) {
+                            mHours = mCalendar.get(Calendar.HOUR);
+                            if (mHours == 0) {
+                                mHours = 12;
+                            }
+                            mMinutes = mCalendar.get(Calendar.MINUTE);
+                            mAMPM = mCalendar.get(Calendar.AM_PM);
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
-                    mMinutes = mCalendar.get(Calendar.MINUTE);
-                    mAMPM = mCalendar.get(Calendar.AM_PM);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }).observeOn(AndroidSchedulers.mainThread())
+                })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
                     @Override
                     public void call(Long elapsedTime) {
-                        mClockTimeTextView.setText(String.format("%d:%02d", mHours, mMinutes));
-                        mClockAmPmTextView.setText(mAMPM == Calendar.AM ? "AM" : "PM");
+                        updateClockText();
                     }
                 });
     }
@@ -240,11 +245,21 @@ public class SleepTrackingActivity extends BaseActivity {
         } else if (trackerDevice.getTrackerState() == TrackerDevice.TrackerState.Tracking) {
             mStateSubject.onNext(TrackerDevice.TrackerState.Tracking);
         } else {
+            //Clean up previous subscription to tracker state
             //Link tracker state to state subject
-            trackerDevice.getTrackingStateObservable()
+            if (mTrackerSubscription != null) {
+                mTrackerSubscription.unsubscribe();
+                mTrackerSubscription = null;
+            }
+            mTrackerSubscription = trackerDevice.getTrackingStateObservable()
                     .compose(this.<TrackerDevice.TrackerState>bindToLifecycle())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(mStateSubject);
+                    .subscribe(new Action1<TrackerDevice.TrackerState>() {
+                        @Override
+                        public void call(TrackerDevice.TrackerState trackerState) {
+                            mStateSubject.onNext(trackerState);
+                        }
+                    });
 
             turnOnZepSpawner();
 
@@ -314,36 +329,50 @@ public class SleepTrackingActivity extends BaseActivity {
         mBluetoothOffLayout.setVisibility(View.GONE);
     }
 
+    private void updateClockText() {
+        mClockTimeTextView.setText(String.format(Locale.ENGLISH, "%d:%02d", mHours, mMinutes));
+        mClockAmPmTextView.setText(mAMPM == Calendar.AM ? "AM" : "PM");
+    }
+
     private Long animationDuration = 5500L;
-    private ArrayList<ImageView> zedsPool = new ArrayList<>();
+    private ArrayList<ImageView> mZedsPool = new ArrayList<>();
     private Random r = new Random();
+    private Subscription mZedsSubscription;
 
     private void prefillZedsPool() {
         for (int i = 0; i < 20; i++){ //prefill zed pool
-            zedsPool.add(createZed());
+            mZedsPool.add(createZed());
         }
     }
 
     private void turnOnZepSpawner() {
-        SleepSenseDeviceService.instance().getTrackerDevice()
-                .getPacketCountObservable()
-                .sample(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Integer>() {
-                    @Override
-                    public void call(Integer packetCount) {
-                        mSampleCountTextView.setText(Integer.toString(packetCount));
+        if (mZedsSubscription != null) {
+            mZedsSubscription.unsubscribe();
+            mZedsSubscription = null;
+        }
 
-                        if (!mIsPaused && spawnerCounter % 2 == 0) {
-                            spawnZed();
+        TrackerDevice trackerDevice = SleepSenseDeviceService.instance().getTrackerDevice();
+        if (trackerDevice != null) {
+            mZedsSubscription = trackerDevice
+                    .getPacketCountObservable()
+                    .sample(500, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<Integer>() {
+                        @Override
+                        public void call(Integer packetCount) {
+                            mSampleCountTextView.setText(String.format(Locale.ENGLISH, "%d", packetCount));
+
+                            if (!mIsPaused && spawnerCounter % 2 == 0) {
+                                spawnZed();
+                            }
+                            spawnerCounter++;
                         }
-                        spawnerCounter++;
-                    }
-                });
+                    });
+        }
     }
 
     private void spawnZed() {
-        final ImageView zed = zedsPool.size() > 0 ? zedsPool.remove(zedsPool.size() - 1) : createZed();
+        final ImageView zed = mZedsPool.size() > 0 ? mZedsPool.remove(mZedsPool.size() - 1) : createZed();
 
         final int width = zedsContainer.getWidth();
         final int height = zedsContainer.getHeight();
@@ -405,7 +434,7 @@ public class SleepTrackingActivity extends BaseActivity {
 
     private void recycleZed(ImageView zed) {
         zed.setVisibility(View.INVISIBLE);
-        zedsPool.add(zed);
+        mZedsPool.add(zed);
     }
 
     private ImageView createZed() {

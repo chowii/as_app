@@ -120,8 +120,8 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
      */
     @Override
     public void onSensorSessionFinished(SensorSession sensorSession, SessionAccounting accounting, SensorException error) {
-        mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Disconnected);
         if (error == null) {
+            mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Disconnected);
             SSLog.d("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
 
             // Once again, shift this over to a computation thread.
@@ -208,8 +208,14 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
      */
     private void processSensorData(SensorData sensorData) {
 
-        if ( mTrackerDevice.getTrackerState() != TrackerDevice.TrackerState.Tracking ) {
+        //If device is starting to track, update to tracking when the first packet is received
+        if (mTrackerDevice.getTrackerState() == TrackerDevice.TrackerState.StartingTracking) {
             mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Tracking);
+        }
+        //Else if the state is different from Tracking or StartTracking, ignore this data
+        //since we do not want to track sleep anymore
+        else if (mTrackerDevice.getTrackerState() != TrackerDevice.TrackerState.Tracking) {
+            return;
         }
 
         // Append the data to the synchronizer and get the fragment if we have one.
