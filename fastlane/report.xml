@@ -3,27 +3,27 @@
   <testsuite name="fastlane.lanes">
     
       
-      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.000449">
+      <testcase classname="fastlane.lanes" name="0: Verifying required fastlane version" time="0.000477">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.000169">
+      <testcase classname="fastlane.lanes" name="1: default_platform" time="0.000188">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: gradle" time="37.886049">
+      <testcase classname="fastlane.lanes" name="2: gradle" time="34.233318">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: crashlytics" time="15.001695">
+      <testcase classname="fastlane.lanes" name="3: crashlytics" time="26.929974">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: rm ../app/build/outputs/apk/*.apk" time="0.008623">
+      <testcase classname="fastlane.lanes" name="4: rm ../app/build/outputs/apk/*.apk" time="0.008919">
         
       </testcase>
     

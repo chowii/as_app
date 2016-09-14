@@ -46,12 +46,14 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
     private long mAnalysisStartTime = 0;
     private long mAnalysisEndTime = 0;
 
+    private boolean didErrorOutOrFinished;
+
     //
     // Create a publish subject to stream the sensor data to, so we can process it in order and off the
     // receiving thread.
     //
-    public PublishSubject<SensorData> mSensorDataObservable = PublishSubject.create();
-    public PublishSubject<TimeValueFragment> mTimeValueTrackFragmentPublishSubject = PublishSubject.create();
+    private PublishSubject<SensorData> mSensorDataObservable = PublishSubject.create();
+    private PublishSubject<TimeValueFragment> mTimeValueTrackFragmentPublishSubject = PublishSubject.create();
 
     public TrackingSessionAnalyser(TrackerDevice trackerDevice) {
 
@@ -120,6 +122,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
      */
     @Override
     public void onSensorSessionFinished(SensorSession sensorSession, SessionAccounting accounting, SensorException error) {
+        didErrorOutOrFinished = true;
         if (error == null) {
             mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Disconnected);
             SSLog.d("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
@@ -129,8 +132,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
         } else {
             mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Error);
 
-            SSLog.e("onSensorSessionFinishedWithError: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
-            SSLog.e("error: " + error.getMessage());
+            SSLog.e("onSensorSessionFinishedWithError: " + error.getMessage() + " PaddedSamples: " + accounting.totalNumberOfPaddedSamples + " PaddedEvents: " + accounting.totalNumberOfPaddingEvents);
             // Once again, shift this over to a computation thread.
             mSensorDataObservable.onError(error);
         }
@@ -185,13 +187,20 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
 
             mStreamingAnalysis = new StreamingAnalysis(inputSpec);
 
-            SSLog.d("Streaming Start");
 
             Schedulers.computation().createWorker().schedule(new Action0() {
                 @Override
                 public void call() {
-                    sensorSession.startStreaming();
-                    mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.StartingTracking);
+                    //Since we perform a delay when starting the stream
+                    //the session could error out and calling startStreaming will fail
+                    //so we need to check if its safe to start streaming
+                    if (!didErrorOutOrFinished) {
+                        SSLog.d("Streaming Start");
+                        sensorSession.startStreaming();
+                        mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.StartingTracking);
+                    } else {
+                        SSLog.d("Streaming not started, error detected.");
+                    }
                 }
             },2500, TimeUnit.MILLISECONDS);
 
