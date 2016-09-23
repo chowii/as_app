@@ -1,0 +1,2 @@
+Fixed issue reported by some users that could get you stuck on the connecting to sleep tracker screen.
+Also improved sleep tracking scoring system.

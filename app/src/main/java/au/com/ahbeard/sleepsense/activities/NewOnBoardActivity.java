@@ -123,9 +123,9 @@ public class NewOnBoardActivity extends BaseActivity implements
         mOnBoardingState.requiredTracker = hasTracker;
         mOnBoardingState.requiredBase = hasBase;
 
-        if (!hasPump) {
-            mOnBoardingState.numberOfTrackersRequired = 1;
-        }
+//        if (!hasPump) {
+//            mOnBoardingState.numberOfTrackersRequired = 1;
+//        }
 
         transitionTo(OnBoardingChooseSideFragment.newInstance());
 
