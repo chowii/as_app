@@ -14,33 +14,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:alpha="1.0"
-            android:src="@drawable/onboarding_background_choose_side" android:adjustViewBounds="true"/>
+            android:src="@drawable/onboarding_background_choose_side"
+            android:adjustViewBounds="true"/>
 
         <ImageView
             android:paddingStart="4dp"
-            android:id="@+id/onboarding_image_view_choose_left"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:alpha="1.0"
-            android:src="@drawable/onboarding_background_choose_side_left" android:adjustViewBounds="true"/>
-
-        <ImageView
-            android:paddingEnd="4dp"
             android:id="@+id/onboarding_image_view_choose_right"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:alpha="1.0"
+            android:src="@drawable/onboarding_background_choose_side_left"
+            android:adjustViewBounds="true"/>
+
+        <ImageView
+            android:paddingEnd="4dp"
+            android:id="@+id/onboarding_image_view_choose_left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:alpha="0.5"
-            android:src="@drawable/onboarding_background_choose_side_right" android:adjustViewBounds="true"/>
+            android:src="@drawable/onboarding_background_choose_side_right"
+            android:adjustViewBounds="true"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:layout_gravity="center">
             <View
-                android:id="@+id/onboarding_view_choose_right"
+                android:id="@+id/onboarding_view_choose_left"
                 android:layout_width="0dp"
                 android:layout_height="300dp" android:layout_weight="1"/>
             <View
-                android:id="@+id/onboarding_view_choose_left"
+                android:id="@+id/onboarding_view_choose_right"
                 android:layout_width="0dp"
                 android:layout_height="300dp" android:layout_weight="1" />
         </LinearLayout>

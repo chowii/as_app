@@ -73,7 +73,7 @@ public class OnBoardingPlacePhoneFragment  extends OnBoardingFragment{
 
         ButterKnife.bind(this,view);
 
-        if ( !VALUE_LEFT.equals(mSide)) {
+        if ( VALUE_LEFT.equals(mSide)) {
             //reverse the image
             mPlacePhoneBedLayout.animate().rotationY(180).setDuration(0).start();
         }
