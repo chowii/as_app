@@ -20,6 +20,9 @@ platform :android do
     ENV["CRASHLYTICS_API_TOKEN"] = "d340877592487019d618eada69d27ba7f41dad0f"
     ENV["CRASHLYTICS_BUILD_SECRET"] = "668e828def754610dab7a26b1d9434de77f2ba234f14b9b04586e434a95ff1b7"
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+
+    # Clear generated .apks so supply doesn't try to upload everything when it runs
+    sh "rm ../app/build/outputs/apk/*.apk"
   end
 
   desc "Runs all the tests"
@@ -63,14 +66,11 @@ platform :android do
       flavor: 'Playstore',
       build_type: 'Release'
     )
+    crashlytics
     supply
   end
 
   after_all do |lane|
-    
-    # Clear generated .apks so supply doesn't try to upload everything when it runs
-    sh "rm ../app/build/outputs/apk/*.apk"
-
     # slack(
     #   message: "Successfully deployed new App Update."
     # )
