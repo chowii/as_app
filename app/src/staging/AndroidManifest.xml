@@ -41,9 +41,9 @@
             android:screenOrientation="userPortrait">
         </activity>
         <activity
-            android:name=".activities.SplashActivity"
+            android:name=".activities.MattressSizeActivity"
             android:screenOrientation="userPortrait"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

@@ -8,6 +8,9 @@
 
     <color name="splashBackground">#042234</color>
 
+    <color name="screenGradientStart">#237AFB</color>
+    <color name="screenGradientEnd">#4DA7FC</color>
+
     <color name="onBoardHeaderTextColor">#4A4A4A</color>
     <color name="onBoardBodyTextColor">#994A4A4A</color>
     <color name="onBoardFooterTextColor">#A9B2BC</color>
@@ -46,11 +49,14 @@
     <color name="detailedSleepScoreAltTextColor">#806E788D</color>
 
     <color name="whiteButtonTextColor">#588FB4</color>
+    <color name="buttonTextNormal">#ffffff</color>
+    <color name="buttonTextPressed">#2E86FC</color>
 
     <color name="firmnessControllerColor">#4FB2EA</color>
     <color name="firmnessControllerBackgroundColor">#E7E7E7</color>
     <color name="firmnessControllerForegroundColor">#FFFFFF</color>
     <color name="firmnessControllerForegroundShadowColor">#BECED4</color>
+    <color name="whiteTextColor">#FFFFFF</color>
 
     <color name="paddingBackgroundColor">#00000000</color>
 

@@ -18,7 +18,7 @@
                 <inset>
                     <shape android:shape="rectangle">
                         <corners android:radius="5dp" />
-                        <solid android:color="#377DA4"/>
+                        <solid android:color="#FFFFFF"/>
                     </shape>
                 </inset>
             </item>
@@ -30,7 +30,7 @@
                 <inset>
                     <shape android:shape="rectangle">
                         <corners android:radius="5dp" />
-                        <solid android:color="#52B8F2"/>
+                        <solid android:color="#8052B8F2"/>
                     </shape>
                 </inset>
             </item>
