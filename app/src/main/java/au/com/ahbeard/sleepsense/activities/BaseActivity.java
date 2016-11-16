@@ -1,6 +1,7 @@
 package au.com.ahbeard.sleepsense.activities;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -115,30 +116,38 @@ public class BaseActivity extends AppCompatActivity implements LifecycleProvider
     @Override
     protected void onStart() {
         super.onStart();
-        mCompositeSubscription.add(BluetoothService.instance().getBluetoothEventObservable()
-                .onBackpressureBuffer()
-                .observeOn(AndroidSchedulers.mainThread())
-                .onErrorReturn(new Func1<Throwable, BluetoothEvent>() {
-                    @Override
-                    public BluetoothEvent call(Throwable throwable) {
-                        SSLog.d("Error on bluetoothEvent" + throwable.getMessage());
-                        return null;
-                    }
-                })
-                .filter(new Func1<BluetoothEvent, Boolean>() {
-                    @Override
-                    public Boolean call(BluetoothEvent bluetoothEvent) {
-                        return bluetoothEvent != null;
-                    }
-                })
-                .subscribe(new Action1<BluetoothEvent>() {
-            @Override
-            public void call(BluetoothEvent bluetoothEvent) {
-                if ( bluetoothEvent instanceof BluetoothEvent.BluetoothUseWhileDisabledEvent ) {
-                    showBluetoothOffAlertView();
-                }
-            }
-        }));
+
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if(mBluetoothAdapter == null) {
+            //Device does not support bluetooth
+        }
+        else if (!mBluetoothAdapter.isEnabled()) {
+            showBluetoothOffAlertView();
+        }
+//        mCompositeSubscription.add(BluetoothService.instance().getBluetoothEventObservable()
+//                .onBackpressureBuffer()
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .onErrorReturn(new Func1<Throwable, BluetoothEvent>() {
+//                    @Override
+//                    public BluetoothEvent call(Throwable throwable) {
+//                        SSLog.d("Error on bluetoothEvent" + throwable.getMessage());
+//                        return null;
+//                    }
+//                })
+//                .filter(new Func1<BluetoothEvent, Boolean>() {
+//                    @Override
+//                    public Boolean call(BluetoothEvent bluetoothEvent) {
+//                        return bluetoothEvent != null;
+//                    }
+//                })
+//                .subscribe(new Action1<BluetoothEvent>() {
+//            @Override
+//            public void call(BluetoothEvent bluetoothEvent) {
+//                if ( bluetoothEvent instanceof BluetoothEvent.BluetoothUseWhileDisabledEvent ) {
+//                    showBluetoothOffAlertView();
+//                }
+//            }
+//        }));
         lifecycleSubject.onNext(ActivityEvent.START);
     }
 

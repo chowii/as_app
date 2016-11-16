@@ -1,0 +1,80 @@
+package au.com.ahbeard.sleepsense.fragments.onboarding;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+
+import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.HelpActivity;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class ConnectingFragment extends OnBoardingFragment {
+//    private ConnectingFragment.OnActionListener mOnActionListener;
+//
+//    public interface OnActionListener {
+//        void onBluetoothContinueClicked();
+//    }
+
+//    @Bind(R.id.on_board_button_continue)
+//    Button mContinueButton;
+
+//    @OnClick(R.id.on_board_button_continue)
+//    void continueClicked() {
+//        if (mOnActionListener != null) {
+//            mOnActionListener.onBluetoothContinueClicked();
+//            mContinueButton.animate().alpha(0.0f).start();
+//        }
+//    }
+
+//    @OnClick(R.id.on_board_text_view_find_out_more)
+//    void findOutMoreClicked() {
+//        AnalyticsService.instance().logOnboardingFindOutMoreTouch();
+//        startActivity(HelpActivity.getIntent(getActivity(),"More About Sleepsense", "http://sleepsense.com.au"));
+//    }
+
+    public static ConnectingFragment newInstance() {
+        ConnectingFragment fragment = new ConnectingFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+//        if ( context instanceof ConnectingFragment.OnActionListener) {
+//            mOnActionListener = (ConnectingFragment.OnActionListener)context;
+//        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+        }
+    }
+
+    @Override
+    public void onDetach() {
+//        mOnActionListener = null;
+        super.onDetach();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view =  inflater.inflate(R.layout.fragment_connecting, container, false);
+
+        ButterKnife.bind(this,view);
+
+        return view;
+    }
+
+}

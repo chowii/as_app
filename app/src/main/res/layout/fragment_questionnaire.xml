@@ -1,0 +1,54 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient_new"
+    tools:context="au.com.ahbeard.sleepsense.fragments.onboarding.QuestionnaireFragment">
+
+    <TextView
+        android:text="Header Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:textSize="@dimen/text_header_font_size"
+        android:textColor="@color/whiteTextColor"
+        android:textStyle="bold"
+        android:id="@+id/textHeader" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/button_option1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
+        android:padding="@dimen/button_padding"
+        android:textSize="@dimen/button_font_size"
+        android:background="@drawable/sleep_sense_button_blue"
+        android:textColor="@drawable/button_text_color"
+        android:stateListAnimator="@null"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:text="Option1" />
+
+    <Button
+        android:id="@+id/button_option2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
+        android:padding="@dimen/button_padding"
+        android:textSize="@dimen/button_font_size"
+        android:background="@drawable/sleep_sense_button_blue"
+        android:textColor="@drawable/button_text_color"
+        android:stateListAnimator="@null"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:text="Option2" />
+    </LinearLayout>
+</FrameLayout>
