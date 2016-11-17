@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_mattress_size"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background_gradient_new"
+    tools:context="au.com.ahbeard.sleepsense.activities.MattressSizeActivity">
+
+    <TextView
+        android:text="What size is \nyour mattress?"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:textSize="@dimen/text_header_font_size"
+        android:textColor="@color/whiteTextColor"
+        android:textStyle="bold"
+        android:id="@+id/textHeader" />
+
+    <ScrollView
+        android:layout_below="@+id/textHeader"
+        android:requiresFadingEdge="vertical"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:scrollbars="none"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/button_single"
+        android:onClick="buttonSingleClick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
+        android:padding="@dimen/button_padding"
+        android:textSize="@dimen/button_font_size"
+        android:background="@drawable/sleep_sense_button_blue"
+        android:textColor="@drawable/button_text_color"
+        android:stateListAnimator="@null"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:text="Single" />
+
+    <Button
+        android:id="@+id/button_king_single"
+        android:onClick="buttonKingSingleClick"
+        android:layout_below="@+id/button_single"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
+        android:padding="@dimen/button_padding"
+        android:textSize="@dimen/button_font_size"
+        android:background="@drawable/sleep_sense_button_blue"
+        android:textColor="@drawable/button_text_color"
+        android:stateListAnimator="@null"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:text="King Single" />
+
+    <Button
+        android:id="@+id/button_double"
+        android:onClick="buttonDoubleClick"
+        android:layout_below="@+id/button_king_single"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
+        android:padding="@dimen/button_padding"
+        android:textSize="@dimen/button_font_size"
+        android:background="@drawable/sleep_sense_button_blue"
+        android:textColor="@drawable/button_text_color"
+        android:stateListAnimator="@null"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:text="Double" />
+
+    <Button
+        android:id="@+id/button_queen"
+        android:onClick="buttonQueenClick"
+        android:layout_below="@+id/button_double"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
+        android:padding="@dimen/button_padding"
+        android:textSize="@dimen/button_font_size"
+        android:background="@drawable/sleep_sense_button_blue"
+        android:textColor="@drawable/button_text_color"
+        android:stateListAnimator="@null"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:text="Queen" />
+
+    <Button
+        android:id="@+id/button_king"
+        android:onClick="buttonKingClick"
+        android:layout_below="@+id/button_queen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
+        android:padding="@dimen/button_padding"
+        android:textSize="@dimen/button_font_size"
+        android:background="@drawable/sleep_sense_button_blue"
+        android:textColor="@drawable/button_text_color"
+        android:stateListAnimator="@null"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:text="King" />
+
+    <Button
+        android:id="@+id/button_split_king"
+        android:onClick="buttonSplitKingClick"
+        android:layout_below="@+id/button_king"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
+        android:padding="@dimen/button_padding"
+        android:textSize="@dimen/button_font_size"
+        android:background="@drawable/sleep_sense_button_blue"
+        android:textColor="@drawable/button_text_color"
+        android:stateListAnimator="@null"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:text="Split King" />
+
+    <Button
+        android:id="@+id/button_not_sure"
+        android:onClick="buttonNotSureClick"
+        android:layout_below="@+id/button_split_king"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/button_extra_margin"
+        android:layout_marginStart="@dimen/button_margin"
+        android:layout_marginEnd="@dimen/button_margin"
+        android:padding="@dimen/button_padding"
+        android:textSize="@dimen/button_font_size"
+        android:background="@drawable/sleep_sense_button_dark_blue"
+        android:textColor="@drawable/button_text_color"
+        android:stateListAnimator="@null"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:text="Not sure?" />
+    </RelativeLayout>
+</ScrollView>
+</RelativeLayout>
