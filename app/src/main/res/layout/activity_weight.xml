@@ -7,41 +7,32 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <TextView
-        android:id="@+id/text_height_header"
+        android:id="@+id/text_weight_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:layout_marginBottom="@dimen/text_margin"
-        android:text="How tall are you?"
+        android:text="How much do you weigh?"
         android:textAlignment="center"
         android:textColor="@color/whiteTextColor"
         android:textSize="@dimen/text_header_font_size"
         android:textStyle="bold" />
 
-    <LinearLayout
-        android:id="@+id/scale"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="65dp"
-        android:gravity="right|center_vertical"
-        android:orientation="horizontal">
-
         <TextView
-            android:id="@+id/txt_height"
+            android:id="@+id/txt_weight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_gravity="center"
+            android:layout_marginBottom="85dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white" />
 
         <au.com.ahbeard.sleepsense.widgets.ScaleView
-            android:id="@+id/height_scale"
-            android:layout_width="160dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
+            android:id="@+id/weight_scale"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:background="@android:color/transparent" />
-
-    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -50,7 +41,7 @@
         android:layout_gravity="bottom">
 
         <Button
-            android:id="@+id/button_height_skip"
+            android:id="@+id/button_weight_skip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -66,11 +57,11 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/button_height_continue"
+            android:id="@+id/button_weight_continue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/sleep_sense_button_blue"
-            android:layout_below="@+id/button_height_skip"
+            android:layout_below="@+id/button_weight_skip"
             android:padding="@dimen/button_padding"
             android:layout_margin="@dimen/button_margin"
             android:stateListAnimator="@null"

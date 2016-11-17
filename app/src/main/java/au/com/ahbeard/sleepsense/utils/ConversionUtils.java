@@ -1,5 +1,9 @@
 package au.com.ahbeard.sleepsense.utils;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
+
 /**
  * Created by nealmaloney on 4/03/2014.
  */
@@ -51,5 +55,12 @@ public class ConversionUtils {
         }
 
         return true;
+    }
+
+    public static float convertDpToPixel(float dp, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
     }
 }

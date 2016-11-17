@@ -40,7 +40,8 @@
         <activity
             android:name=".activities.ConnectingTrackerActivity"
             android:screenOrientation="userPortrait" />
-        <activity android:name=".activities.HeightActivity"></activity>
+        <activity android:name=".activities.HeightActivity" android:screenOrientation="userPortrait" />
+        <activity android:name=".activities.WeightActivity" android:screenOrientation="userPortrait" />
     </application>
 
 </manifest>
