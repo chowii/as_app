@@ -6,8 +6,18 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="button_padding">20dp</dimen>
-    <dimen name="button_margin">8dp</dimen>
+    <dimen name="button_margin">16dp</dimen>
     <dimen name="button_extra_margin">40dp</dimen>
     <dimen name="button_font_size">18sp</dimen>
     <dimen name="text_header_font_size">22sp</dimen>
+    <dimen name="text_other_font_size">18sp</dimen>
+
+    <dimen name="scale_line_small">10dp</dimen>
+    <dimen name="scale_line_medium">25dp</dimen>
+    <dimen name="scale_line_large">50dp</dimen>
+    <dimen name="yellow_line_stroke_width">4dp</dimen>
+    <dimen name="scale_text_size">16dp</dimen>
+    <dimen name="txt_size">17dp</dimen>
+    <dimen name="text_start_point">107dp</dimen>
+
 </resources>

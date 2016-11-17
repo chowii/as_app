@@ -116,14 +116,7 @@ public class BaseActivity extends AppCompatActivity implements LifecycleProvider
     @Override
     protected void onStart() {
         super.onStart();
-
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(mBluetoothAdapter == null) {
-            //Device does not support bluetooth
-        }
-        else if (!mBluetoothAdapter.isEnabled()) {
-            showBluetoothOffAlertView();
-        }
+//        if(!isBluetoothEnabled()) showBluetoothOffAlertView();
 //        mCompositeSubscription.add(BluetoothService.instance().getBluetoothEventObservable()
 //                .onBackpressureBuffer()
 //                .observeOn(AndroidSchedulers.mainThread())
@@ -176,7 +169,22 @@ public class BaseActivity extends AppCompatActivity implements LifecycleProvider
         super.onDestroy();
     }
 
-    void showBluetoothOffAlertView() {
+    public boolean isBluetoothEnabled(){
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if(mBluetoothAdapter == null) {
+            //TODO: Device does not support bluetooth
+            return false;
+        }
+        else if (!mBluetoothAdapter.isEnabled()) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    public void showBluetoothOffAlertView() {
+        this.setFinishOnTouchOutside(false);
         SleepSenseApplication.instance().showBluetoothOffAlertDialog(this);
     }
 

@@ -4,6 +4,11 @@
     <color name="colorPrimaryDark">#0074BF</color>
     <color name="colorAccent">#3C709C</color>
 
+    <color name="yellow">#F0CF43</color>
+    <color name="green">#24c4b6</color>
+    <color name="transparent_white">#60ffffff</color>
+    <color name="transparent_full">@android:color/transparent</color>
+
     <color name="appBackgroundColor">#F4F4F4</color>
 
     <color name="splashBackground">#042234</color>

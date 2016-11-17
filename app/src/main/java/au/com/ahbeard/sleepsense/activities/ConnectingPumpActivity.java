@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
@@ -17,7 +16,6 @@ import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 import au.com.ahbeard.sleepsense.fragments.onboarding.ConnectingFragment;
-import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingBluetoothFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingChooseSideFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingFirmnessControlsFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingFragment;
@@ -63,20 +61,20 @@ public class ConnectingPumpActivity  extends BaseActivity implements
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
     private PublishSubject<OnBoardingState> mOnBoardingEventPublishSubject = PublishSubject.create();
 
-    public void successContinue() {
+    public void parseDeviceFinderResult() {
 //        Intent intent = new Intent(this, ConnectingTrackerActivity.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //        startActivity(intent);
 //        finish();
 
         //verify if we have found any pump devices around
-       // if(mAquiredDevices.getPumpDevices().size() > 0) {
+//        if(mAquiredDevices.getPumpDevices().size() > 0) {
             //Load pump questionnaire if selected mattress type is single, else take user to tracking device
             if (mattressType.equals(GlobalVars.MattressType.SINGLE)) {
                 QuestionnaireFragment questionnaireFragment = QuestionnaireFragment.newInstance(
-                        "What side of the mattress pump did you plug in?",
-                        "Left",
-                        "Right");
+                        GlobalVars.MATTRESS_PUMP_SIDE_QUESTION,
+                        GlobalVars.LEFT_STRING,
+                        GlobalVars.RIGHT_STRING);
                 transitionTo(questionnaireFragment);
             } else {
                 Intent intent = ConnectingTrackerActivity.getConnectingTrackerActivity(this);
@@ -93,9 +91,16 @@ public class ConnectingPumpActivity  extends BaseActivity implements
 //        finish();
     }
 
+    //listener for QuestionnaireFragment selection
     @Override
     public void onSelectionClicked(QuestionnaireFragment.SelectedOption selectedOption) {
         //TODO: process the selected side in case of single mattress
+        if(selectedOption == QuestionnaireFragment.SelectedOption.OPTION_1) {
+            //left side selected
+        }
+        else if(selectedOption == QuestionnaireFragment.SelectedOption.OPTION_2) {
+            //right side selected
+        }
         Intent intent = ConnectingTrackerActivity.getConnectingTrackerActivity(this);
         startActivity(intent);
         finish();
@@ -112,10 +117,14 @@ public class ConnectingPumpActivity  extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connecting_pump);
         ButterKnife.bind(this);
-        requestBackgroundScanningPermissions();
 
-        transitionTo(ConnectingFragment.newInstance());
+        //TODO: why do we need location access?
+//        requestBackgroundScanningPermissions();
+
+        transitionTo(ConnectingFragment.newInstance(GlobalVars.SEARCHING_PUMP_DEVICE));
         mattressType = (GlobalVars.MattressType)getIntent().getSerializableExtra(GlobalVars.SELECTED_MATTRESS_TYPE);
+        subscribeToDeviceFinder();
+        findInitialDevices();
     }
 
     @Override
@@ -139,7 +148,7 @@ public class ConnectingPumpActivity  extends BaseActivity implements
             public void call(OnBoardingState onBoardingState) {
                 if (onBoardingState.state == OnBoardingState.State.ChoosingDevices) {
 
-                    successContinue();
+                    parseDeviceFinderResult();
 
 //                    mHasPump = true;
 //                    mHasBase = onBoardingState.foundBase;

@@ -92,6 +92,7 @@ public class SleepSenseApplication extends Application {
                         context.startActivity(intent);
                     }
                 })
+                .setCancelable(false)
                 .setMessage("Bluetooth is disabled.").create().show();
     }
 

@@ -34,8 +34,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ConnectingPumpActivity" android:screenOrientation="userPortrait" />
-        <activity android:name=".activities.ConnectingTrackerActivity" android:screenOrientation="userPortrait"></activity>
+        <activity
+            android:name=".activities.ConnectingPumpActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activities.ConnectingTrackerActivity"
+            android:screenOrientation="userPortrait" />
+        <activity android:name=".activities.HeightActivity"></activity>
     </application>
 
 </manifest>

@@ -6,16 +6,15 @@
 tools:context=".fragments.onboarding.ConnectingFragment">
 
     <TextView
-        android:text="Connecting with your \nmattress pump"
+        android:text="Header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:layout_marginBottom="@dimen/text_margin"
-        android:layout_marginTop="@dimen/text_margin"
+        android:layout_margin="@dimen/text_margin"
         android:textSize="@dimen/text_header_font_size"
         android:textColor="@color/whiteTextColor"
         android:textStyle="bold"
-        android:id="@+id/textHeader" />
+        android:id="@+id/connecting_fragment_header" />
 
 </FrameLayout>
 

@@ -57,7 +57,6 @@ public class QuestionnaireFragment extends OnBoardingFragment {
 
     public static QuestionnaireFragment newInstance(String headerString, String option1String, String option2String) {
         QuestionnaireFragment fragment = new QuestionnaireFragment();
-
         Bundle bundle = new Bundle();
         bundle.putString(GlobalVars.QUESTIONNAIRE_HEADER, headerString);
         bundle.putString(GlobalVars.QUESTIONNAIRE_OPTION1, option1String);
