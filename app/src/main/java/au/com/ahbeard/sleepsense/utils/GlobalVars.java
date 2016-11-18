@@ -15,6 +15,9 @@ public class GlobalVars {
     public static final String QUESTIONNAIRE_BUTTON = "QUESTIONNAIRE_BUTTON";
     public static final String QUESTIONNAIRE_PART = "QUESTIONNAIRE_PART";
     public static final String CONNECTING_HEADER = "CONNECTING_HEADER";
+    public static final String IMAGE_QUESTIONNAIRE_HEADER = "IMAGE_QUESTIONNAIRE_HEADER";
+    public static final String IMAGE_QUESTIONNAIRE_LABEL1 = "IMAGE_QUESTIONNAIRE_LABEL1";
+    public static final String IMAGE_QUESTIONNAIRE_LABEL2 = "IMAGE_QUESTIONNAIRE_LABEL2";
 
     public static final String SEARCHING_PUMP_DEVICE = "Connecting with your mattress pump";
     public static final String SEARCHING_SLEEP_TRACKERS = "Searching for sleep trackers";
@@ -31,6 +34,9 @@ public class GlobalVars {
     public static final String TRACKER_PART2_TITLE = "Let's get to \nknow each other";
     public static final String TRACKER_PART2_OTHER = "This will make sure we get better \nand personalised results";
     public static final String TRACKER_PART2_BUTTON = "Let's do it";
+    public static final String GENDER_HEADER = "What's your gender?";
+    public static final String GENDER_MALE = "Male";
+    public static final String GENDER_FEMALE = "Female";
 
     public enum MattressType{
         SINGLE, QUEEENKING, SPLITKING

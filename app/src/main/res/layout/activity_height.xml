@@ -18,7 +18,7 @@
         android:textSize="@dimen/text_header_font_size"
         android:textStyle="bold" />
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/scale"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,17 +31,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white" />
 
         <au.com.ahbeard.sleepsense.widgets.ScaleView
             android:id="@+id/height_scale"
-            android:layout_width="160dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginRight="-20dp"
             android:layout_gravity="right"
             android:background="@android:color/transparent" />
 
-    </LinearLayout>
+    </FrameLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

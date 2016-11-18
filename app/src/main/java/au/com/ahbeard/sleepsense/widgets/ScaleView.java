@@ -40,6 +40,7 @@ public class ScaleView extends View {
     private int textStartPoint;
     private int yellowLineStrokeWidth;
     boolean isFirstTime = true;
+    private int rulerPointer = 0; //this variable will cut the ruler pointer by desired point
 
     public ScaleView(Context context, AttributeSet foo) {
         super(context, foo);
@@ -116,7 +117,7 @@ public class ScaleView extends View {
                 canvas.drawText("", endPoint - textStartPoint, startingPoint + 8, textPaint);
             }
         }
-        canvas.drawLine(0f, midScreenPoint, width - 20, midScreenPoint, goldenPaint);
+        canvas.drawLine(0f + width - rulerPointer, midScreenPoint, width + width - rulerPointer, midScreenPoint, goldenPaint);
     }
 
     @Override
@@ -203,6 +204,10 @@ public class ScaleView extends View {
                 mListener.onViewUpdate(point);
             }
         }
+    }
+
+    public void setRulerPointer(int value) {
+        rulerPointer = value;
     }
 
     public interface onViewUpdateListener {

@@ -18,27 +18,28 @@
         android:textSize="@dimen/text_header_font_size"
         android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/txt_weight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="85dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/txt_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="85dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/white" />
 
-        <au.com.ahbeard.sleepsense.widgets.ScaleView
-            android:id="@+id/weight_scale"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@android:color/transparent" />
+    <au.com.ahbeard.sleepsense.widgets.ScaleView
+        android:id="@+id/weight_scale"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginBottom="120dp"
+        android:background="@android:color/transparent" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_gravity="bottom">
+        android:layout_gravity="bottom"
+        android:gravity="center_horizontal">
 
         <Button
             android:id="@+id/button_weight_skip"
@@ -60,10 +61,10 @@
             android:id="@+id/button_weight_continue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/sleep_sense_button_blue"
             android:layout_below="@+id/button_weight_skip"
-            android:padding="@dimen/button_padding"
             android:layout_margin="@dimen/button_margin"
+            android:background="@drawable/sleep_sense_button_blue"
+            android:padding="@dimen/button_padding"
             android:stateListAnimator="@null"
             android:text="Continue"
             android:textAllCaps="false"

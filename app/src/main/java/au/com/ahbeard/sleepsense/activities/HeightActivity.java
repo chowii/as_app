@@ -26,13 +26,13 @@ public class HeightActivity extends AppCompatActivity {
         setContentView(R.layout.activity_height);
         ButterKnife.bind(this);
         final ScaleView rulerViewMm = (ScaleView) findViewById(R.id.height_scale);
-        rulerViewMm.setStartingPoint(175);
-        setTextValue(((float) Math.round(175 * 10f) / 10f) + " cm");
+        rulerViewMm.setStartingPoint(17);
+        rulerViewMm.setRulerPointer(250);
+        setTextValue(( Math.round((17 * 10f))) + " cm");
         rulerViewMm.setUpdateListener(new ScaleView.onViewUpdateListener() {
             @Override
             public void onViewUpdate(float result) {
-                float value = (float) Math.round(result * 10f) / 10f;
-                setTextValue(value + " cm");
+                setTextValue(Math.round((result * 10f)) + " cm");
             }
         });
     }

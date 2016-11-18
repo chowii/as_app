@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,6 +16,21 @@ tools:context=".fragments.onboarding.ConnectingFragment">
         android:textColor="@color/whiteTextColor"
         android:textStyle="bold"
         android:id="@+id/connecting_fragment_header" />
+
+    <ImageView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/stars"
+        android:id="@+id/image_stars" />
+
+    <ImageView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/sleep_moon"
+        android:id="@+id/image_sleep_moon" />
+
 
 </FrameLayout>
 

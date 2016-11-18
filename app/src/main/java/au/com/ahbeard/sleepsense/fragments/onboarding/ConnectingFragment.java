@@ -5,18 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.activities.HelpActivity;
-import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class ConnectingFragment extends OnBoardingFragment {
 

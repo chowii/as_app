@@ -31,13 +31,13 @@ public class WeightActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         final ScaleView rulerViewMm = (ScaleView) findViewById(R.id.weight_scale);
         rulerViewMm.setRotation(90);
-        rulerViewMm.setStartingPoint(70);
-        setTextValue(((float) Math.round(175 * 10f) / 10f) + " kg");
+        rulerViewMm.setStartingPoint(7);
+        rulerViewMm.setRulerPointer(200);
+        setTextValue((Math.round((7 * 10f))) + " kg");
         rulerViewMm.setUpdateListener(new ScaleView.onViewUpdateListener() {
             @Override
             public void onViewUpdate(float result) {
-                float value = (float) Math.round(result * 10f) / 10f;
-                setTextValue(value + " kg");
+                setTextValue(Math.round((result * 10f)) + " kg");
             }
         });
 
@@ -63,16 +63,16 @@ public class WeightActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_weight_skip)
     public void skipClicked(Button button) {
-//        Intent intent = GenderActivity.getGenderActivity(this);
-//        startActivity(intent);
-//        finish();
+        Intent intent = GenderActivity.getGenderActivity(this);
+        startActivity(intent);
+        finish();
     }
 
     @OnClick(R.id.button_weight_continue)
     public void continueClicked(Button button) {
         //TODO: persist user height before below code
-//        Intent intent = GenderActivity.getGenderActivity(this);
-//        startActivity(intent);
-//        finish();
+        Intent intent = GenderActivity.getGenderActivity(this);
+        startActivity(intent);
+        finish();
     }
 }
