@@ -37,6 +37,9 @@ public class GlobalVars {
     public static final String GENDER_HEADER = "What's your gender?";
     public static final String GENDER_MALE = "Male";
     public static final String GENDER_FEMALE = "Female";
+    public static final String SLEEP_SCENARIO_ALONE = "Along";
+    public static final String SLEEP_SCENARIO_WITH_PARTNER = "With a partner";
+    public static final String SLEEP_SCENARIO_HEADER = "How do you usually sleep?";
 
     public enum MattressType{
         SINGLE, QUEEENKING, SPLITKING

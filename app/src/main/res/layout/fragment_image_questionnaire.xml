@@ -1,0 +1,96 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_gradient_new"
+    tools:context="au.com.ahbeard.sleepsense.fragments.onboarding.ImageQuestionnaireFragment">
+
+    <TextView
+        android:id="@+id/image_questionnaire_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_margin="@dimen/text_margin"
+        android:text="Header"
+        android:textAlignment="center"
+        android:textColor="@color/whiteTextColor"
+        android:textSize="@dimen/text_header_font_size"
+        android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/buttonsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="80dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+            <TextView
+                android:id="@+id/image_questionnaire_option1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="25dp"
+                android:text="Option1"
+                android:textAlignment="center"
+                android:textColor="@color/whiteTextColor"
+                android:textSize="@dimen/text_other_font_size"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/image_questionnaire_option2"
+                android:layout_below="@+id/image_questionnaire_icon2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:text="Option2"
+                android:textAlignment="center"
+                android:textColor="@color/whiteTextColor"
+                android:textSize="@dimen/text_other_font_size"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    <Button
+        android:id="@+id/button_image_questionnaire_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="85dp"
+        android:background="@drawable/sleep_sense_button_transparent"
+        android:padding="@dimen/button_padding"
+        android:stateListAnimator="@null"
+        android:text="Skip"
+        android:textAllCaps="false"
+        android:textColor="@drawable/button_text_color"
+        android:textSize="@dimen/button_font_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/button_image_questionnaire_continue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/button_margin"
+        android:background="@drawable/sleep_sense_button_blue"
+        android:padding="@dimen/button_padding"
+        android:stateListAnimator="@null"
+        android:text="Continue"
+        android:textAllCaps="false"
+        android:textColor="@drawable/button_text_color"
+        android:textSize="@dimen/button_font_size"
+        android:textStyle="bold" />
+
+</FrameLayout>
