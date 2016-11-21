@@ -47,13 +47,13 @@ public class ImageQuestionnaireFragment extends OnBoardingFragment implements Vi
     private final int MAX_BUTTONS = 2;
 
     public interface OnActionListener {
-        void onSelectionClicked(ButtonActioned buttonActioned);
+        void onSelectionClicked(GlobalVars.ButtonActioned buttonActioned);
     }
 
     @OnClick(R.id.button_image_questionnaire_skip)
     void optionClicked1() {
         if (mOnActionListener != null) {
-            mOnActionListener.onSelectionClicked(ButtonActioned.SKIP);
+            mOnActionListener.onSelectionClicked(GlobalVars.ButtonActioned.SKIP);
         }
     }
 
@@ -61,11 +61,11 @@ public class ImageQuestionnaireFragment extends OnBoardingFragment implements Vi
     void optionClicked2() {
         if(activeButton != null) {
             if (mOnActionListener != null) {
-                mOnActionListener.onSelectionClicked(ButtonActioned.CONTINUE);
+                mOnActionListener.onSelectionClicked(GlobalVars.ButtonActioned.CONTINUE);
             }
         }
         else {
-            Toast.makeText(getContext(), "Please select a gender to continue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Please select a value to continue", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -195,9 +195,6 @@ public class ImageQuestionnaireFragment extends OnBoardingFragment implements Vi
         return false;
     }
 
-    public enum ButtonActioned {
-        SKIP, CONTINUE
-    }
 
     public enum Gender {
         MALE, FEMALE

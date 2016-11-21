@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background_gradient_new"
     tools:context="au.com.ahbeard.sleepsense.fragments.onboarding.ImageQuestionnaireFragment">
 

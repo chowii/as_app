@@ -20,11 +20,11 @@ public class QuestionnaireFragment extends OnBoardingFragment {
 
     private QuestionnaireFragment.OnActionListener mOnActionListener;
 
-    @Bind(R.id.textHeader)
+    @Bind(R.id.textQuestionnaireHeader)
     TextView header;
-    @Bind(R.id.button_option1)
+    @Bind(R.id.button_questionnaire_option1)
     Button option1;
-    @Bind(R.id.button_option2)
+    @Bind(R.id.button_questionnaire_option2)
     Button option2;
 
     public interface OnActionListener {
@@ -34,7 +34,7 @@ public class QuestionnaireFragment extends OnBoardingFragment {
 //    @Bind(R.id.on_board_button_continue)
 //    Button mContinueButton;
 
-    @OnClick(R.id.button_option1)
+    @OnClick(R.id.button_questionnaire_option1)
     void optionClicked1() {
         if (mOnActionListener != null) {
             mOnActionListener.onSelectionClicked(SelectedOption.OPTION_1);
@@ -42,7 +42,7 @@ public class QuestionnaireFragment extends OnBoardingFragment {
         }
     }
 
-    @OnClick(R.id.button_option2)
+    @OnClick(R.id.button_questionnaire_option2)
     void option2Clicked() {
         if(mOnActionListener != null) {
             mOnActionListener.onSelectionClicked(SelectedOption.OPTION_2);

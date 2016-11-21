@@ -18,6 +18,7 @@ public class GlobalVars {
     public static final String IMAGE_QUESTIONNAIRE_HEADER = "IMAGE_QUESTIONNAIRE_HEADER";
     public static final String IMAGE_QUESTIONNAIRE_LABEL1 = "IMAGE_QUESTIONNAIRE_LABEL1";
     public static final String IMAGE_QUESTIONNAIRE_LABEL2 = "IMAGE_QUESTIONNAIRE_LABEL2";
+    public static final String VERTICAL_SCROLL_VALUES_MAP = "VERTICAL_SCROLL_VALUES_MAP";
 
     public static final String SEARCHING_PUMP_DEVICE = "Connecting with your mattress pump";
     public static final String SEARCHING_SLEEP_TRACKERS = "Searching for sleep trackers";
@@ -40,8 +41,13 @@ public class GlobalVars {
     public static final String SLEEP_SCENARIO_ALONE = "Along";
     public static final String SLEEP_SCENARIO_WITH_PARTNER = "With a partner";
     public static final String SLEEP_SCENARIO_HEADER = "How do you usually sleep?";
+    public static final String AGE_HEADER = "How old are you?";
 
     public enum MattressType{
         SINGLE, QUEEENKING, SPLITKING
+    }
+
+    public enum ButtonActioned {
+        SKIP, CONTINUE
     }
 }

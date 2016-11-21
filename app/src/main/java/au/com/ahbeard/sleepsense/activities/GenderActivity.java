@@ -28,17 +28,17 @@ public class GenderActivity extends BaseActivity
     }
 
     @Override
-    public void onSelectionClicked(ImageQuestionnaireFragment.ButtonActioned buttonActioned) {
-        if(buttonActioned == ImageQuestionnaireFragment.ButtonActioned.SKIP) {
-//            Intent intent = AgeActivity.getAgeActivity(this);
-//            startActivity(intent);
-//            finish();
+    public void onSelectionClicked(GlobalVars.ButtonActioned buttonActioned) {
+        if(buttonActioned == GlobalVars.ButtonActioned.SKIP) {
+            Intent intent = AgeActivity.getAgeActivity(this);
+            startActivity(intent);
+            finish();
         }
-        else if(buttonActioned == ImageQuestionnaireFragment.ButtonActioned.CONTINUE) {
+        else if(buttonActioned == GlobalVars.ButtonActioned.CONTINUE) {
             //TODO: save selection before continue
-//            Intent intent = AgeActivity.getAgeActivity(this);
-//            startActivity(intent);
-//            finish();
+            Intent intent = AgeActivity.getAgeActivity(this);
+            startActivity(intent);
+            finish();
         }
     }
 

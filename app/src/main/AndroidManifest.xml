@@ -27,7 +27,8 @@
             android:name="io.fabric.ApiKey"
             android:value="d340877592487019d618eada69d27ba7f41dad0f" />
 
-        <activity android:name=".activities.MattressSizeActivity"
+        <activity
+            android:name=".activities.MattressSizeActivity"
             android:screenOrientation="userPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,12 +48,16 @@
         <activity
             android:name=".activities.WeightActivity"
             android:screenOrientation="userPortrait" />
-        <activity android:name=".activities.GenderActivity"
-            android:screenOrientation="userPortrait"/>
-        <activity android:name=".activities.AgeActivity"
-            android:screenOrientation="userPortrait"/>
+        <activity
+            android:name=".activities.GenderActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activities.AgeActivity"
+            android:screenOrientation="userPortrait" />
         <activity
             android:name=".activities.SleepScenarioActivity"
+            android:screenOrientation="userPortrait" />
+        <activity android:name=".activities.SleepTargetActivity"
             android:screenOrientation="userPortrait" />
     </application>
 

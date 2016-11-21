@@ -28,13 +28,13 @@ public class SleepScenarioActivity extends BaseActivity
     }
 
     @Override
-    public void onSelectionClicked(ImageQuestionnaireFragment.ButtonActioned buttonActioned) {
-        if(buttonActioned == ImageQuestionnaireFragment.ButtonActioned.SKIP) {
+    public void onSelectionClicked(GlobalVars.ButtonActioned buttonActioned) {
+        if(buttonActioned == GlobalVars.ButtonActioned.SKIP) {
 //            Intent intent = TrackerInfoActivity.getTrackerInfoActivity(this);
 //            startActivity(intent);
 //            finish();
         }
-        else if(buttonActioned == ImageQuestionnaireFragment.ButtonActioned.CONTINUE) {
+        else if(buttonActioned == GlobalVars.ButtonActioned.CONTINUE) {
             //TODO: save selection before continue
 //            Intent intent = TrackerInfoActivity.getTrackerInfoActivity(this);
 //            startActivity(intent);
