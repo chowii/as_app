@@ -30,8 +30,9 @@ public class GlobalVars {
     public static final String IMAGE_QUESTIONNAIRE_LABEL2 = "IMAGE_QUESTIONNAIRE_LABEL2";
     public static final String VERTICAL_SCROLL_VALUES_MAP = "VERTICAL_SCROLL_VALUES_MAP";
 
-    public static final String SEARCHING_PUMP_DEVICE = "Connecting with your mattress pump";
-    public static final String SEARCHING_SLEEP_TRACKERS = "Searching for sleep trackers";
+    public static final String SEARCHING_PUMP_DEVICE = "Connecting with your \nmattress pump";
+    public static final String SEARCHING_SLEEP_TRACKERS = "Searching for \nsleep trackers";
+    public static final String SEARCHING_ADJUSTABLE_BASE = "Connecting with \nyour base";
 
     public static final String MATTRESS_PUMP_SIDE_QUESTION = "What side of the mattress pump did you plug in?";
     public static final String LEFT_STRING = "Left";
@@ -52,6 +53,7 @@ public class GlobalVars {
     public static final String SLEEP_SCENARIO_WITH_PARTNER = "With a partner";
     public static final String SLEEP_SCENARIO_HEADER = "How do you usually sleep?";
     public static final String AGE_HEADER = "How old are you?";
+    public static final String ADJUSTABLE_BASE_HEADER = "Did you purchase an \nadjustable base?";
 
     public enum MattressType{
         SINGLE, QUEEENKING, SPLITKING

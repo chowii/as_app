@@ -60,8 +60,14 @@
         <activity
             android:name=".activities.SleepTargetActivity"
             android:screenOrientation="userPortrait" />
-        <activity android:name=".activities.TrackerInfoActivity" />
-        <activity android:name=".activities.SleepOnYourSideActivity"></activity>
+        <activity android:name=".activities.TrackerInfoActivity"
+            android:screenOrientation="userPortrait"/>
+        <activity android:name=".activities.SleepOnYourSideActivity"
+            android:screenOrientation="userPortrait"/>
+        <activity android:name=".activities.ConnectingAdjustableBaseActivity"
+            android:screenOrientation="userPortrait"/>
+        <activity android:name=".activities.SetupCompletedActivity"
+            android:screenOrientation="userPortrait" />
     </application>
 
 </manifest>
