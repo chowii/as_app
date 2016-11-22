@@ -6,6 +6,16 @@ package au.com.ahbeard.sleepsense.utils;
 
 public class GlobalVars {
 
+    public static final String SHARED_PREFERENCE = "SHARED_PREFERENCE";
+    public static final String SHARED_PREFERENCE_MATTRESS_TYPE = "SHARED_PREFERENCE_MATTRESS_TYPE";
+    public static final String SHARED_PREFERENCE_CONNECTING_PUMP_SIDE = "SHARED_PREFERENCE_CONNECTING_PUMP_SIDE";
+    public static final String SHARED_PREFERENCE_USER_HEIGHT = "SHARED_PREFERENCE_USER_HEIGHT";
+    public static final String SHARED_PREFERENCE_USER_WEIGHT = "SHARED_PREFERENCE_USER_WEIGHT";
+    public static final String SHARED_PREFERENCE_USER_GENDER = "SHARED_PREFERENCE_USER_GENDER";
+    public static final String SHARED_PREFERENCE_USER_AGE = "SHARED_PREFERENCE_USER_AGE";
+    public static final String SHARED_PREFERENCE_USER_SLEEP_HOURS = "SHARED_PREFERENCE_USER_SLEEP_HOURS";
+    public static final String SHARED_PREFERENCE_USER_SLEEP_SCENARIO = "SHARED_PREFERENCE_USER_SLEEP_SCENARIO";
+
     public static final String SELECTED_MATTRESS_TYPE = "SELECTED_MATTRESS_TYPE";
     public static final String QUESTIONNAIRE_HEADER = "QUESTIONNAIRE_HEADER";
     public static final String QUESTIONNAIRE_OPTION1 = "QUESTIONNAIRE_OPTION1";
@@ -38,7 +48,7 @@ public class GlobalVars {
     public static final String GENDER_HEADER = "What's your gender?";
     public static final String GENDER_MALE = "Male";
     public static final String GENDER_FEMALE = "Female";
-    public static final String SLEEP_SCENARIO_ALONE = "Along";
+    public static final String SLEEP_SCENARIO_ALONE = "Alone";
     public static final String SLEEP_SCENARIO_WITH_PARTNER = "With a partner";
     public static final String SLEEP_SCENARIO_HEADER = "How do you usually sleep?";
     public static final String AGE_HEADER = "How old are you?";

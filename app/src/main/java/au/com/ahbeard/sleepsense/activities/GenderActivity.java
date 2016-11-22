@@ -7,6 +7,7 @@ import android.os.Bundle;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.fragments.onboarding.ImageQuestionnaireFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingFragment;
+import au.com.ahbeard.sleepsense.services.SharedPreferencesStore;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
 
 public class GenderActivity extends BaseActivity
@@ -36,6 +37,8 @@ public class GenderActivity extends BaseActivity
         }
         else if(buttonActioned == GlobalVars.ButtonActioned.CONTINUE) {
             //TODO: save selection before continue
+            SharedPreferencesStore.PutItem(GlobalVars.SHARED_PREFERENCE_USER_GENDER,
+                    "Male", getApplicationContext());
             Intent intent = AgeActivity.getAgeActivity(this);
             startActivity(intent);
             finish();

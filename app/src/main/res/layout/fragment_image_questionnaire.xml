@@ -40,7 +40,7 @@
             android:clipToPadding="false">
             <TextView
                 android:id="@+id/image_questionnaire_option1"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/circular_button_size"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="25dp"
                 android:text="Option1"
@@ -51,9 +51,8 @@
             <TextView
                 android:id="@+id/image_questionnaire_option2"
                 android:layout_below="@+id/image_questionnaire_icon2"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/circular_button_size"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
                 android:text="Option2"
                 android:textAlignment="center"
                 android:textColor="@color/whiteTextColor"

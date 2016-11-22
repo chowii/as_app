@@ -57,8 +57,11 @@
         <activity
             android:name=".activities.SleepScenarioActivity"
             android:screenOrientation="userPortrait" />
-        <activity android:name=".activities.SleepTargetActivity"
+        <activity
+            android:name=".activities.SleepTargetActivity"
             android:screenOrientation="userPortrait" />
+        <activity android:name=".activities.TrackerInfoActivity" />
+        <activity android:name=".activities.SleepOnYourSideActivity"></activity>
     </application>
 
 </manifest>

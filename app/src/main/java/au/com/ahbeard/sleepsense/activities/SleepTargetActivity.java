@@ -37,13 +37,13 @@ public class SleepTargetActivity extends BaseActivity {
         //TODO: replace by actual values (ages)
         //{
         List<String> list = new ArrayList();
-        for(int i = 1; i < 12; i++)
+        //add two empty items in the beginning and one in the end for space display in scroller
+        list.add("");list.add("");
+        for(int i = 2; i < 12; i++)
             list.add(String.valueOf(i) + " hours");
+        list.add("");
 
         String[] values = list.toArray(new String[0]);
-        values[0] = "";
-        values[values.length-1] = "";
-
         //}
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,

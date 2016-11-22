@@ -19,6 +19,7 @@ import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingFragment;
+import au.com.ahbeard.sleepsense.services.SharedPreferencesStore;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -40,12 +41,13 @@ public class AgeActivity extends BaseActivity {
         //TODO: replace by actual values (ages)
         //{
         List<String> list = new ArrayList();
-        for(int i = 1; i < 70; i++)
+        //add two empty items in the beginning and one in the end for space display in scroller
+        list.add("");list.add("");
+        for(int i = 5; i < 70; i++)
             list.add(String.valueOf(i));
+        list.add("");
 
         String[] values = list.toArray(new String[0]);
-        values[0] = "";
-        values[values.length-1] = "";
 
         //}
 
@@ -108,6 +110,8 @@ public class AgeActivity extends BaseActivity {
     @OnClick(R.id.button_age_continue)
     void option2Clicked() {
         //TODO: save "selectedValue"
+        SharedPreferencesStore.PutItem(GlobalVars.SHARED_PREFERENCE_USER_HEIGHT,
+                "20", getApplicationContext());
         Intent intent = SleepTargetActivity.getSleepTargetActivity(this);
         startActivity(intent);
         finish();

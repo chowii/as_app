@@ -31,6 +31,7 @@ import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingState;
 import au.com.ahbeard.sleepsense.fragments.onboarding.QuestionnaireFragment;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
+import au.com.ahbeard.sleepsense.services.SharedPreferencesStore;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
 import butterknife.ButterKnife;
 import rx.Observable;
@@ -97,9 +98,13 @@ public class ConnectingPumpActivity  extends BaseActivity implements
         //TODO: process the selected side in case of single mattress
         if(selectedOption == QuestionnaireFragment.SelectedOption.OPTION_1) {
             //left side selected
+            SharedPreferencesStore.PutItem(GlobalVars.SHARED_PREFERENCE_CONNECTING_PUMP_SIDE,
+                    "LEFT", getApplicationContext());
         }
         else if(selectedOption == QuestionnaireFragment.SelectedOption.OPTION_2) {
             //right side selected
+            SharedPreferencesStore.PutItem(GlobalVars.SHARED_PREFERENCE_CONNECTING_PUMP_SIDE,
+                    "RIGHT", getApplicationContext());
         }
         Intent intent = ConnectingTrackerActivity.getConnectingTrackerActivity(this);
         startActivity(intent);
@@ -203,8 +208,9 @@ public class ConnectingPumpActivity  extends BaseActivity implements
     public void onChooseSideContinueClicked(String sideOfBed) {
         if (sideOfBed == null) { return; }
 
-        PreferenceService.instance().setSideOfBed(sideOfBed);
-
+//        PreferenceService.instance().setSideOfBed(sideOfBed);
+        SharedPreferencesStore.PutItem(GlobalVars.SHARED_PREFERENCE_CONNECTING_PUMP_SIDE,
+                sideOfBed, getApplicationContext());
         AnalyticsService.instance().setUserSideOfBed(sideOfBed.toLowerCase());
 
         mOnBoardingState.sideOfBed = sideOfBed;

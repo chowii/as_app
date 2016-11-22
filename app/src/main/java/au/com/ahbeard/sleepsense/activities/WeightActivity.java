@@ -13,7 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.services.SharedPreferencesStore;
 import au.com.ahbeard.sleepsense.utils.ConversionUtils;
+import au.com.ahbeard.sleepsense.utils.GlobalVars;
 import au.com.ahbeard.sleepsense.widgets.ScaleView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -71,6 +73,8 @@ public class WeightActivity extends AppCompatActivity {
     @OnClick(R.id.button_weight_continue)
     public void continueClicked(Button button) {
         //TODO: persist user height before below code
+        SharedPreferencesStore.PutItem(GlobalVars.SHARED_PREFERENCE_USER_WEIGHT,
+                "75", getApplicationContext());
         Intent intent = GenderActivity.getGenderActivity(this);
         startActivity(intent);
         finish();

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.services.SharedPreferencesStore;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
 import rx.subscriptions.CompositeSubscription;
 
@@ -55,8 +56,10 @@ public class MattressSizeActivity extends BaseActivity {
 
     private void connectToMattressPump(GlobalVars.MattressType mattressType) {
         if (isBluetoothEnabled()) {
-//TODO: test code below, to be deleted
-//            Intent intent = WeightActivity.getWeightActivity(this);
+            SharedPreferencesStore.PutItem(GlobalVars.SHARED_PREFERENCE_MATTRESS_TYPE,
+                    mattressType.name(), getApplicationContext());
+            //TODO: test code below, to be deleted
+//            Intent intent = AgeActivity.getAgeActivity(this);
 //            startActivity(intent);
 //            finish();
 

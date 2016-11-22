@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/activity_tracker_info"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:paddingBottom="@dimen/activity_vertical_margin"
+android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+android:background="@drawable/background_gradient_new">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"/>
+
+<TextView
+    android:id="@+id/tracker_info_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_marginBottom="190dp"
+    android:text="There are 2 trackers \ninside the mattress"
+    android:textAlignment="center"
+    android:textColor="@color/whiteTextColor"
+    android:textSize="@dimen/text_header_font_size"
+    android:textStyle="bold" />
+
+<TextView
+    android:id="@+id/tracker_info_sub_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_marginBottom="120dp"
+    android:text="They are in line with your heart to track \nyour movements throughout the night"
+    android:textAlignment="center"
+    android:textColor="@color/whiteTextColor"
+    android:textSize="@dimen/text_other_font_size"/>
+
+<Button
+    android:id="@+id/button_tracker_info_continue"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_margin="@dimen/button_margin"
+    android:background="@drawable/sleep_sense_button_blue"
+    android:padding="@dimen/button_padding"
+    android:stateListAnimator="@null"
+    android:text="Continue"
+    android:textAllCaps="false"
+    android:textColor="@drawable/button_text_color"
+    android:textSize="@dimen/button_font_size"
+    android:textStyle="bold" />
+</FrameLayout>
+
+
