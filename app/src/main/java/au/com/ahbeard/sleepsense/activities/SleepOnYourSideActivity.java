@@ -26,8 +26,9 @@ public class SleepOnYourSideActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_sleep_on_your_side_continue)
     void option2Clicked() {
-//        Intent intent = SleepOnYourSideActivity.getSleepOnYourSideActivity(this);
-//        startActivity(intent);
-//        finish();
+        //TODO: load tracker movement activity here
+        Intent intent = ConnectingAdjustableBaseActivity.getConnectingAdjustableBaseActivity(this);
+        startActivity(intent);
+        finish();
     }
 }

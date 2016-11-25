@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceAquisition;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
@@ -33,12 +34,6 @@ public class ConnectingTrackerActivity extends BaseActivity implements
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
     private PublishSubject<OnBoardingState> mOnBoardingEventPublishSubject = PublishSubject.create();
 
-    public static Intent getConnectingTrackerActivity(Context context) {
-        Intent intent = new Intent(context, ConnectingTrackerActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        return intent;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +53,24 @@ public class ConnectingTrackerActivity extends BaseActivity implements
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (mCurrentFragment != null && !mCurrentFragment.onBackPressed()) {
+            new AlertDialog.Builder(this).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    AnalyticsService.instance().logCloseSetup();
+                    finish();
+                }
+            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            }).setMessage(getString(R.string.on_boarding_close_warning)).create().show();
+        }
+
+    }
+
     //listener for QuestionnaireFragment selection
     @Override
     public void onSelectionClicked(QuestionnaireFragment.SelectedOption selectedOption) {
@@ -69,15 +82,14 @@ public class ConnectingTrackerActivity extends BaseActivity implements
                 transitionTo(ConnectingFragment.newInstance(GlobalVars.SEARCHING_SLEEP_TRACKERS));
                 subscribeToDeviceFinder();
                 findInitialDevices();
-            }
-            else {
+            } else {
                 showBluetoothOffAlertView();
             }
         } else if (selectedOption == QuestionnaireFragment.SelectedOption.OPTION_2) {
-            //TODO: No Selected (user did not purchase tracker)
-//            Intent intent = ConnectingTrackerActivity.getConnectingBaseActivity(this);
-//            startActivity(intent);
-//            finish();
+            //user did not purchase tracker
+            Intent intent = ConnectingAdjustableBaseActivity.getConnectingAdjustableBaseActivity(this);
+            startActivity(intent);
+            finish();
         }
 
     }
@@ -85,20 +97,25 @@ public class ConnectingTrackerActivity extends BaseActivity implements
     //listener for KnowEachOtherFragment.OnActionListener
     @Override
     public void onContinueClicked(KnowEachOtherFragment.Part part) {
-        if(part == KnowEachOtherFragment.Part.PART1) {
+        if (part == KnowEachOtherFragment.Part.PART1) {
             KnowEachOtherFragment knowEachOtherFragment = KnowEachOtherFragment.newInstance(
                     GlobalVars.TRACKER_PART2_TITLE,
                     GlobalVars.TRACKER_PART2_OTHER,
                     GlobalVars.TRACKER_PART2_BUTTON,
                     KnowEachOtherFragment.Part.PART2);
             transitionTo(knowEachOtherFragment);
-        }
-        else if (part == KnowEachOtherFragment.Part.PART2) {
-            //TODO: take user to questionnaire, "how tall are you?"
+        } else if (part == KnowEachOtherFragment.Part.PART2) {
+            //take user to questionnaires
             Intent intent = HeightActivity.getHeightActivity(this);
             startActivity(intent);
             finish();
         }
+    }
+
+    public static Intent getConnectingTrackerActivity(Context context) {
+        Intent intent = new Intent(context, ConnectingTrackerActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
 
     private void subscribeToDeviceFinder() {
@@ -115,12 +132,12 @@ public class ConnectingTrackerActivity extends BaseActivity implements
     public void parseDeviceFinderResult() {
         //verify if we have found any tracking devices around
 //        if (mAquiredDevices.getTrackerDevices().size() > 0) {
-            KnowEachOtherFragment knowEachOtherFragment = KnowEachOtherFragment.newInstance(
-                    GlobalVars.TRACKER_PART1_TITLE,
-                    GlobalVars.TRACKER_PART1_OTHER,
-                    GlobalVars.TRACKER_PART1_BUTTON,
-                    KnowEachOtherFragment.Part.PART1);
-            transitionTo(knowEachOtherFragment);
+        KnowEachOtherFragment knowEachOtherFragment = KnowEachOtherFragment.newInstance(
+                GlobalVars.TRACKER_PART1_TITLE,
+                GlobalVars.TRACKER_PART1_OTHER,
+                GlobalVars.TRACKER_PART1_BUTTON,
+                KnowEachOtherFragment.Part.PART1);
+        transitionTo(knowEachOtherFragment);
 //        }
 //        else {
 //            //TODO: device not found, retry logic
@@ -173,24 +190,6 @@ public class ConnectingTrackerActivity extends BaseActivity implements
 
     }
 
-    @Override
-    public void onBackPressed() {
-
-        if (mCurrentFragment != null && !mCurrentFragment.onBackPressed()) {
-            new AlertDialog.Builder(this).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    AnalyticsService.instance().logCloseSetup();
-                    finish();
-                }
-            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-
-                }
-            }).setMessage(getString(R.string.on_boarding_close_warning)).create().show();
-        }
-
-    }
-
     public void acquireDevices() {
 
         SleepSenseDeviceService.instance().newAcquireDevices(5000).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
@@ -203,29 +202,6 @@ public class ConnectingTrackerActivity extends BaseActivity implements
                 } else {
 
                     boolean failed = false;
-
-                    if (mOnBoardingState.requiredBase) {
-                        if (mAquiredDevices.getBaseDevices().isEmpty()) {
-                            failed = true;
-                            mOnBoardingState.foundBase = false;
-                        } else {
-                            mOnBoardingState.foundBase = true;
-                        }
-
-                    }
-
-                    AnalyticsService.instance().setUserOwnsBase(mOnBoardingState.requiredBase && mOnBoardingState.foundBase);
-
-                    if (mOnBoardingState.requiredPump) {
-                        if (mAquiredDevices.getPumpDevices().isEmpty()) {
-                            failed = true;
-                            mOnBoardingState.foundPump = false;
-                        } else {
-                            mOnBoardingState.foundPump = true;
-                        }
-                    }
-
-                    AnalyticsService.instance().setUserOwnsMattress(mOnBoardingState.requiredPump && mOnBoardingState.foundPump);
 
                     if (mOnBoardingState.requiredTracker) {
                         if (mAquiredDevices.getTrackerDevices().size() < mOnBoardingState.numberOfTrackersRequired) {

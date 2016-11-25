@@ -1,6 +1,6 @@
 package au.com.ahbeard.sleepsense.activities;
 
-
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
@@ -12,11 +12,8 @@ import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.fragments.onboarding.MattressSizeNotSureDialogFragment;
 import au.com.ahbeard.sleepsense.services.SharedPreferencesStore;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
-import rx.subscriptions.CompositeSubscription;
 
 public class MattressSizeActivity extends BaseActivity {
-
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +23,6 @@ public class MattressSizeActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        mCompositeSubscription.clear();
         super.onDestroy();
     }
 
@@ -57,7 +53,7 @@ public class MattressSizeActivity extends BaseActivity {
     //display pop-up fragment
     public void buttonNotSureClick(View arg) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(GlobalVars.FRAGMENT_DIALOG_ID);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -65,7 +61,7 @@ public class MattressSizeActivity extends BaseActivity {
 
         // Create and show the dialog.
         BottomSheetDialogFragment newFragment = MattressSizeNotSureDialogFragment.newInstance();
-        newFragment.show(ft,"dialog");
+        newFragment.show(ft,GlobalVars.FRAGMENT_DIALOG_ID);
     }
 
     private void connectToMattressPump(GlobalVars.MattressType mattressType) {
@@ -82,5 +78,11 @@ public class MattressSizeActivity extends BaseActivity {
         else {
             showBluetoothOffAlertView();
         }
+    }
+
+    public static Intent getMattressSizeActivity(Context context) {
+        Intent intent = new Intent(context, MattressSizeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
 }

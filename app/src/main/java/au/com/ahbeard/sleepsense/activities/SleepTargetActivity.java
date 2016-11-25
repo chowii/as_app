@@ -3,8 +3,8 @@ package au.com.ahbeard.sleepsense.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -12,18 +12,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingFragment;
+import au.com.ahbeard.sleepsense.utils.GlobalVars;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SleepTargetActivity extends BaseActivity {
 
-    private OnBoardingFragment mCurrentFragment;
-    private HashMap scrollValuesMap = new HashMap();
     ListView listView;
     String selectedValue;
 
@@ -40,7 +37,7 @@ public class SleepTargetActivity extends BaseActivity {
         //add two empty items in the beginning and one in the end for space display in scroller
         list.add("");list.add("");
         for(int i = 2; i < 12; i++)
-            list.add(String.valueOf(i) + " hours");
+            list.add(String.valueOf(i) + " " + GlobalVars.HOURS);
         list.add("");
 
         String[] values = list.toArray(new String[0]);
@@ -72,14 +69,14 @@ public class SleepTargetActivity extends BaseActivity {
             if(i == pos) {
                 if(textView != null) {
                     textView.setTextSize(30);
-                    textView.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    textView.setTextColor(ContextCompat.getColor(this, R.color.scroll_view_highlight));
                     selectedValue = textView.getText().toString();
                 }
             }
             else {
                 if(textView != null) {
                     textView.setTextSize(20);
-                    textView.setTextColor(Color.parseColor("#40FFFFFF"));
+                    textView.setTextColor(ContextCompat.getColor(this, R.color.scroll_view_blur));
                 }
             }
         }

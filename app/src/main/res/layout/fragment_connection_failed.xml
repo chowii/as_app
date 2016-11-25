@@ -1,0 +1,83 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient_new"
+    android:layout_gravity="bottom"
+    android:foregroundGravity="bottom"
+    tools:context="au.com.ahbeard.sleepsense.fragments.onboarding.ConnectionFailedFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/connection_failed_header"
+        android:textAlignment="center"
+        android:textColor="@color/whiteTextColor"
+        android:textSize="@dimen/text_header_font_size"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150px"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+            android:textAlignment="center"
+            android:textColor="@color/whiteTextColor"
+            android:textSize="@dimen/text_other_font_size" />
+
+
+        <Button
+            android:id="@+id/button_connection_failed_help_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@drawable/sleep_sense_button_transparent"
+            android:padding="@dimen/button_padding"
+            android:stateListAnimator="@null"
+            android:text="@string/connection_failed_help_me"
+            android:textAllCaps="false"
+            android:textColor="@drawable/button_text_color"
+            android:textSize="@dimen/button_font_size"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/button_connection_failed_try_again"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@drawable/sleep_sense_button_transparent"
+            android:padding="@dimen/button_padding"
+            android:stateListAnimator="@null"
+            android:text="@string/connection_failed_try_again"
+            android:textAllCaps="false"
+            android:textColor="@drawable/button_text_color"
+            android:textSize="@dimen/button_font_size"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/button_connection_failed_set_up_later"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@drawable/sleep_sense_button_transparent"
+            android:padding="@dimen/button_padding"
+            android:stateListAnimator="@null"
+            android:text="@string/connection_failed_set_up_later"
+            android:textAllCaps="false"
+            android:textColor="@drawable/button_text_color"
+            android:textSize="@dimen/button_font_size"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</FrameLayout>

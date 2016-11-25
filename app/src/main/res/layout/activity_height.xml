@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:layout_marginBottom="@dimen/text_margin"
-        android:text="How tall are you?"
+        android:text="@string/height_fragment_header"
         android:textAlignment="center"
         android:textColor="@color/whiteTextColor"
         android:textSize="@dimen/text_header_font_size"

@@ -33,6 +33,7 @@
     <string name="sleep_score_breakdown_resting_heart_rate_txt">A measure of your average heart rate while sleeping.</string>
 
     <string name="button_continue">Continue</string>
+    <string name="button_skip">Skip</string>
 
     <string name="mattress_firmness_screen_title">Mattress Firmness</string>
     <string name="massage_settings_screen_title">Massage</string>
@@ -176,7 +177,29 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_sleep_scenario">SleepScenarioActivity</string>
     <string name="mattress_size_not_sure_header">"Not sure what mattress \nsize you have?"</string>
+    <string name="mattress_size_activity_header">"What size is \nyour mattress?"</string>
+    <string name="mattress_size_single">Single</string>
+    <string name="mattress_size_king_single">King Single</string>
+    <string name="mattress_size_double">Double</string>
+    <string name="mattress_size_queen">Queen</string>
+    <string name="mattress_size_king">King</string>
+    <string name="mattress_size_split_king">Split King</string>
+    <string name="mattress_size_not_sure">Not sure?</string>
+    <string name="connection_failed_header">Connection failed</string>
+    <string name="connection_failed_help_me">Help me</string>
+    <string name="connection_failed_try_again">Try again</string>
+    <string name="connection_failed_set_up_later">Set up later</string>
+    <string name="height_fragment_header">How tall are you?</string>
+    <string name="weight_fragment_header">How much do you weigh?</string>
+    <string name="age_fragment_header">How old are you?</string>
+    <string name="tracker_info_fragment_header">"There are 2 trackers \ninside the mattress"</string>
+    <string name="tracker_info_fragment_sub_header">"They are in line with your heart to track \nyour movements throughout the night"</string>
+    <string name="sleep_on_your_side_header">"Lay on your side \nof the bed"</string>
+    <string name="sleep_on_your_side_sub_header">To track your sleep accurately we need \nto connect with the tracker on the side \nof the bed that you sleep on most.</string>
+    <string name="set_up_completed_header">"Great you're all set up"</string>
+    <string name="set_up_completed_sleep_tracker">Sleep tracker</string>
+    <string name="set_up_completed_mattress_pump">Mattress pump</string>
+    <string name="set_up_completed_adjustable_base">Adjustable base</string>
 
 </resources>

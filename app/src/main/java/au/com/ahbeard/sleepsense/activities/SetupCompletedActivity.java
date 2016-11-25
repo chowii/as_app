@@ -27,6 +27,7 @@ public class SetupCompletedActivity extends BaseActivity {
 
     @OnClick(R.id.button_setup_completed_continue)
     void continueButtonClicked() {
+        //Handle set up completed
         Toast.makeText(this, "Set up is completed. Congratulations!", Toast.LENGTH_SHORT).show();
     }
 }

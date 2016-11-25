@@ -31,17 +31,17 @@ public class SleepScenarioActivity extends BaseActivity
     @Override
     public void onSelectionClicked(GlobalVars.ButtonActioned buttonActioned) {
         if(buttonActioned == GlobalVars.ButtonActioned.SKIP) {
-//            Intent intent = TrackerInfoActivity.getTrackerInfoActivity(this);
-//            startActivity(intent);
-//            finish();
+            Intent intent = TrackerInfoActivity.getTrackerInfoActivity(this);
+            startActivity(intent);
+            finish();
         }
         else if(buttonActioned == GlobalVars.ButtonActioned.CONTINUE) {
             //TODO: save selection before continue
-            SharedPreferencesStore.PutItem(GlobalVars.SHARED_PREFERENCE_USER_HEIGHT,
-                    "With partner", getApplicationContext());
-//            Intent intent = TrackerInfoActivity.getTrackerInfoActivity(this);
-//            startActivity(intent);
-//            finish();
+            SharedPreferencesStore.PutItem(GlobalVars.SHARED_PREFERENCE_SLEEP_SCENARIO,
+                    GlobalVars.SleepScenario.WITHPARTNER.name(), getApplicationContext());
+            Intent intent = TrackerInfoActivity.getTrackerInfoActivity(this);
+            startActivity(intent);
+            finish();
         }
     }
 

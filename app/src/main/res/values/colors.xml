@@ -81,4 +81,7 @@
     <color name="debug3">#700000FF</color>
     <color name="onboarding_bottom_blue_gradient">#D0E3EF</color>
 
+    <color name="scroll_view_blur">#FFFFFFFF</color>
+    <color name="scroll_view_highlight">#40FFFFFF</color>
+
 </resources>

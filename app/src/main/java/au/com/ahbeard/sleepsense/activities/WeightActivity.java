@@ -2,19 +2,15 @@ package au.com.ahbeard.sleepsense.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
-import android.view.Display;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.services.SharedPreferencesStore;
-import au.com.ahbeard.sleepsense.utils.ConversionUtils;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
 import au.com.ahbeard.sleepsense.widgets.ScaleView;
 import butterknife.Bind;
@@ -43,12 +39,6 @@ public class WeightActivity extends AppCompatActivity {
             }
         });
 
-//        Display display = getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//        llp.setMargins(0, Integer.parseInt(String.valueOf((size.x / 2) - ConversionUtils.convertDpToPixel(100, this))), 0, 0);
-//        txtValue.setLayoutParams(llp);
     }
 
     public static Intent getWeightActivity(Context context) {

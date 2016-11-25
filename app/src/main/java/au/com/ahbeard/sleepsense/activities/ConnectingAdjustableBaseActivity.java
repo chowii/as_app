@@ -74,10 +74,10 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
                 showBluetoothOffAlertView();
             }
         } else if (selectedOption == QuestionnaireFragment.SelectedOption.OPTION_2) {
-            //TODO: No Selected (user did not purchase tracker)
-//            Intent intent = ConnectingTrackerActivity.getConnectingBaseActivity(this);
-//            startActivity(intent);
-//            finish();
+            //set up is completed
+            Intent intent = SetupCompletedActivity.getSetUpCompletedActivity(this);
+            startActivity(intent);
+            finish();
         }
 
     }
@@ -95,14 +95,15 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
 
     public void parseDeviceFinderResult() {
         //verify if we have found any tracking devices around
-//        if (mAquiredDevices.getAdjustableBaseDevices().size() > 0) {
+        if (mAquiredDevices.getBaseDevices().size() > 0) {
             Intent intent = SetupCompletedActivity.getSetUpCompletedActivity(this);
             startActivity(intent);
             finish();
-//        }
-//        else {
-//            //TODO: device not found, retry logic
-//        }
+        }
+        else {
+            //TODO: device not found, retry logic
+            acquireDevices();
+        }
     }
 
     protected void transitionTo(ConnectingFragment connectingFragment) {
@@ -122,12 +123,9 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
                 } else {
 
                     mOnBoardingState.foundBase = mAquiredDevices.getBaseDevices().size() > 0;
-                    mOnBoardingState.foundPump = mAquiredDevices.getPumpDevices().size() > 0;
-                    mOnBoardingState.foundTracker = mAquiredDevices.getTrackerDevices().size() > 0;
                     mOnBoardingState.state = OnBoardingState.State.ChoosingDevices;
 
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
-
                 }
             }
 
@@ -140,15 +138,11 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
             public void onNext(SleepSenseDeviceAquisition sleepSenseDeviceAquisition) {
                 mAquiredDevices = sleepSenseDeviceAquisition;
             }
-
         });
-
-
     }
 
     @Override
     public void onBackPressed() {
-
         if (mCurrentFragment != null && !mCurrentFragment.onBackPressed()) {
             new AlertDialog.Builder(this).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
@@ -157,11 +151,9 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
                 }
             }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-
                 }
             }).setMessage(getString(R.string.on_boarding_close_warning)).create().show();
         }
-
     }
 
     public void acquireDevices() {
@@ -188,30 +180,6 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
                     }
 
                     AnalyticsService.instance().setUserOwnsBase(mOnBoardingState.requiredBase && mOnBoardingState.foundBase);
-
-                    if (mOnBoardingState.requiredPump) {
-                        if (mAquiredDevices.getPumpDevices().isEmpty()) {
-                            failed = true;
-                            mOnBoardingState.foundPump = false;
-                        } else {
-                            mOnBoardingState.foundPump = true;
-                        }
-                    }
-
-                    AnalyticsService.instance().setUserOwnsMattress(mOnBoardingState.requiredPump && mOnBoardingState.foundPump);
-
-                    if (mOnBoardingState.requiredTracker) {
-                        if (mAquiredDevices.getTrackerDevices().size() < mOnBoardingState.numberOfTrackersRequired) {
-                            failed = true;
-                            mOnBoardingState.foundTracker = false;
-                        } else {
-                            // Get the closest tracker.
-
-                            mOnBoardingState.foundTracker = true;
-                        }
-                    }
-
-                    AnalyticsService.instance().setUserOwnsTracker(mOnBoardingState.requiredTracker && mOnBoardingState.foundTracker);
 
                     if (failed) {
                         mOnBoardingState.failedAttempts += 1;

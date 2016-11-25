@@ -13,7 +13,7 @@
     tools:context="au.com.ahbeard.sleepsense.activities.MattressSizeActivity">
 
     <TextView
-        android:text="What size is \nyour mattress?"
+        android:text="@string/mattress_size_activity_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
@@ -48,7 +48,7 @@
         android:stateListAnimator="@null"
         android:textAllCaps="false"
         android:textStyle="bold"
-        android:text="Single" />
+        android:text="@string/mattress_size_single" />
 
     <Button
         android:id="@+id/button_king_single"
@@ -64,7 +64,7 @@
         android:stateListAnimator="@null"
         android:textAllCaps="false"
         android:textStyle="bold"
-        android:text="King Single" />
+        android:text="@string/mattress_size_king_single" />
 
     <Button
         android:id="@+id/button_double"
@@ -80,7 +80,7 @@
         android:stateListAnimator="@null"
         android:textAllCaps="false"
         android:textStyle="bold"
-        android:text="Double" />
+        android:text="@string/mattress_size_double" />
 
     <Button
         android:id="@+id/button_queen"
@@ -96,7 +96,7 @@
         android:stateListAnimator="@null"
         android:textAllCaps="false"
         android:textStyle="bold"
-        android:text="Queen" />
+        android:text="@string/mattress_size_queen" />
 
     <Button
         android:id="@+id/button_king"
@@ -112,7 +112,7 @@
         android:stateListAnimator="@null"
         android:textAllCaps="false"
         android:textStyle="bold"
-        android:text="King" />
+        android:text="@string/mattress_size_king" />
 
     <Button
         android:id="@+id/button_split_king"
@@ -128,7 +128,7 @@
         android:stateListAnimator="@null"
         android:textAllCaps="false"
         android:textStyle="bold"
-        android:text="Split King" />
+        android:text="@string/mattress_size_split_king" />
 
     <Button
         android:id="@+id/button_not_sure"
@@ -146,7 +146,7 @@
         android:stateListAnimator="@null"
         android:textAllCaps="false"
         android:textStyle="bold"
-        android:text="Not sure?" />
+        android:text="@string/mattress_size_not_sure" />
     </RelativeLayout>
 </ScrollView>
 </RelativeLayout>

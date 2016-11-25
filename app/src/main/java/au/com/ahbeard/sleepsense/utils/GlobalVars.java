@@ -12,9 +12,7 @@ public class GlobalVars {
     public static final String SHARED_PREFERENCE_USER_HEIGHT = "SHARED_PREFERENCE_USER_HEIGHT";
     public static final String SHARED_PREFERENCE_USER_WEIGHT = "SHARED_PREFERENCE_USER_WEIGHT";
     public static final String SHARED_PREFERENCE_USER_GENDER = "SHARED_PREFERENCE_USER_GENDER";
-    public static final String SHARED_PREFERENCE_USER_AGE = "SHARED_PREFERENCE_USER_AGE";
-    public static final String SHARED_PREFERENCE_USER_SLEEP_HOURS = "SHARED_PREFERENCE_USER_SLEEP_HOURS";
-    public static final String SHARED_PREFERENCE_USER_SLEEP_SCENARIO = "SHARED_PREFERENCE_USER_SLEEP_SCENARIO";
+    public static final String SHARED_PREFERENCE_SLEEP_SCENARIO = "SHARED_PREFERENCE_SLEEP_SCENARIO";
 
     public static final String SELECTED_MATTRESS_TYPE = "SELECTED_MATTRESS_TYPE";
     public static final String QUESTIONNAIRE_HEADER = "QUESTIONNAIRE_HEADER";
@@ -52,8 +50,9 @@ public class GlobalVars {
     public static final String SLEEP_SCENARIO_ALONE = "Alone";
     public static final String SLEEP_SCENARIO_WITH_PARTNER = "With a partner";
     public static final String SLEEP_SCENARIO_HEADER = "How do you usually sleep?";
-    public static final String AGE_HEADER = "How old are you?";
     public static final String ADJUSTABLE_BASE_HEADER = "Did you purchase an \nadjustable base?";
+    public static final String FRAGMENT_DIALOG_ID = "FRAGMENT_DIALOG_ID";
+    public static final String HOURS = "Hours";
 
     public enum MattressType{
         SINGLE, QUEEENKING, SPLITKING
@@ -65,5 +64,9 @@ public class GlobalVars {
 
     public enum SleepSide {
         LEFT, RIGHT
+    }
+
+    public enum SleepScenario {
+        ALONE, WITHPARTNER
     }
 }

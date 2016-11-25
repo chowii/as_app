@@ -101,7 +101,7 @@ public class BluetoothService extends BluetoothGattCallback {
      * @return
      */
     public boolean isBluetoothEnabled(boolean sendUseEvent) {
-        if( mBluetoothAdapter.isEnabled() ) {
+        if(mBluetoothAdapter != null && mBluetoothAdapter.isEnabled() ) {
             return true;
         } else if(sendUseEvent) {
             mBluetoothEventSubject.onNext(new BluetoothEvent.BluetoothUseWhileDisabledEvent());
@@ -114,6 +114,8 @@ public class BluetoothService extends BluetoothGattCallback {
     }
 
     public Observable<BluetoothEvent> waitForPowerOn() {
+        if (mBluetoothAdapter == null)
+            initializeBluetoothAdapter();
         return Observable.create(new Observable.OnSubscribe<BluetoothEvent>() {
             @Override
             public void call(Subscriber<? super BluetoothEvent> subscriber) {

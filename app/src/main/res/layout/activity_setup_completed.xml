@@ -21,7 +21,7 @@ android:background="@drawable/background_gradient_new">
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:layout_marginBottom="250dp"
-    android:text="Great you're all set up"
+    android:text="@string/set_up_completed_header"
     android:textAlignment="center"
     android:textColor="@color/whiteTextColor"
     android:textSize="@dimen/text_header_font_size"
@@ -49,7 +49,7 @@ android:background="@drawable/background_gradient_new">
             android:layout_toRightOf="@+id/activity_setup_completed_sleep_tracker_image"
             android:layout_margin="@dimen/text_margin"
             android:gravity="left|center"
-            android:text="Sleep tracker"
+            android:text="@string/set_up_completed_sleep_tracker"
             android:textSize="@dimen/text_other_font_size"/>
     </RelativeLayout>
     <RelativeLayout
@@ -74,7 +74,7 @@ android:background="@drawable/background_gradient_new">
             android:layout_toRightOf="@+id/activity_setup_completed_mattress_pump_image"
             android:layout_margin="@dimen/text_margin"
             android:gravity="left|center"
-            android:text="Mattress pump"
+            android:text="@string/set_up_completed_mattress_pump"
             android:textSize="@dimen/text_other_font_size"/>
     </RelativeLayout>
     <RelativeLayout
@@ -100,7 +100,7 @@ android:background="@drawable/background_gradient_new">
             android:paddingTop="7dp"
             android:layout_margin="@dimen/text_margin"
             android:gravity="left|center"
-            android:text="Adjustable base"
+            android:text="@string/set_up_completed_adjustable_base"
             android:textSize="@dimen/text_other_font_size"/>
     </RelativeLayout>
 
@@ -114,7 +114,7 @@ android:background="@drawable/background_gradient_new">
     android:background="@drawable/sleep_sense_button_blue"
     android:padding="@dimen/button_padding"
     android:stateListAnimator="@null"
-    android:text="Continue"
+    android:text="@string/button_continue"
     android:textAllCaps="false"
     android:textColor="@drawable/button_text_color"
     android:textSize="@dimen/button_font_size"

@@ -2,23 +2,18 @@ package au.com.ahbeard.sleepsense.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v4.content.ContextCompat;
 import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingFragment;
 import au.com.ahbeard.sleepsense.services.SharedPreferencesStore;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
 import butterknife.ButterKnife;
@@ -26,8 +21,6 @@ import butterknife.OnClick;
 
 public class AgeActivity extends BaseActivity {
 
-    private OnBoardingFragment mCurrentFragment;
-    private HashMap scrollValuesMap = new HashMap();
     ListView listView;
     String selectedValue;
 
@@ -72,29 +65,19 @@ public class AgeActivity extends BaseActivity {
     }
 
     public void getViewByPosition(int pos, ListView listView) {
-//        View myView;
-//        final int firstListItemPosition = listView.getFirstVisiblePosition();
-//        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-//
-//        if (pos < firstListItemPosition || pos > lastListItemPosition) {
-//            myView = listView.getAdapter().getView(pos, null, listView);
-//        } else {
-//            final int childIndex = pos - firstListItemPosition;
-//            myView = listView.getChildAt(childIndex);
-//        }
         for(int i = 0; i <= listView.getChildCount(); i++) {
             TextView textView = (TextView)listView.getChildAt(i);
             if(i == pos) {
                 if(textView != null) {
                     textView.setTextSize(30);
-                    textView.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    textView.setTextColor(ContextCompat.getColor(this, R.color.scroll_view_highlight));
                     selectedValue = textView.getText().toString();
                 }
             }
             else {
                 if(textView != null) {
                     textView.setTextSize(20);
-                    textView.setTextColor(Color.parseColor("#40FFFFFF"));
+                    textView.setTextColor(ContextCompat.getColor(this, R.color.scroll_view_blur));
                 }
             }
         }
