@@ -32,7 +32,6 @@
             android:screenOrientation="userPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -60,13 +59,17 @@
         <activity
             android:name=".activities.SleepTargetActivity"
             android:screenOrientation="userPortrait" />
-        <activity android:name=".activities.TrackerInfoActivity"
+        <activity
+            android:name=".activities.TrackerInfoActivity"
             android:screenOrientation="userPortrait"/>
-        <activity android:name=".activities.SleepOnYourSideActivity"
+        <activity
+            android:name=".activities.SleepOnYourSideActivity"
             android:screenOrientation="userPortrait"/>
-        <activity android:name=".activities.ConnectingAdjustableBaseActivity"
+        <activity
+            android:name=".activities.ConnectingAdjustableBaseActivity"
             android:screenOrientation="userPortrait"/>
-        <activity android:name=".activities.SetupCompletedActivity"
+        <activity
+            android:name=".activities.SetupCompletedActivity"
             android:screenOrientation="userPortrait" />
     </application>
 

@@ -1,11 +1,15 @@
 package au.com.ahbeard.sleepsense.activities;
 
+
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.fragments.onboarding.MattressSizeNotSureDialogFragment;
 import au.com.ahbeard.sleepsense.services.SharedPreferencesStore;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
 import rx.subscriptions.CompositeSubscription;
@@ -50,18 +54,24 @@ public class MattressSizeActivity extends BaseActivity {
         connectToMattressPump(GlobalVars.MattressType.SPLITKING);
     }
 
+    //display pop-up fragment
     public void buttonNotSureClick(View arg) {
-        //TODO: display not sure content in pop-up
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        BottomSheetDialogFragment newFragment = MattressSizeNotSureDialogFragment.newInstance();
+        newFragment.show(ft,"dialog");
     }
 
     private void connectToMattressPump(GlobalVars.MattressType mattressType) {
         if (isBluetoothEnabled()) {
             SharedPreferencesStore.PutItem(GlobalVars.SHARED_PREFERENCE_MATTRESS_TYPE,
                     mattressType.name(), getApplicationContext());
-            //TODO: test code below, to be deleted
-//            Intent intent = AgeActivity.getAgeActivity(this);
-//            startActivity(intent);
-//            finish();
 
 //            Take user to Pump device and pass selected mattress type as param
             Intent intent = ConnectingPumpActivity.getConnectingPumpActivity(this);

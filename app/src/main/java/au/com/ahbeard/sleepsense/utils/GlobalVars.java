@@ -62,4 +62,8 @@ public class GlobalVars {
     public enum ButtonActioned {
         SKIP, CONTINUE
     }
+
+    public enum SleepSide {
+        LEFT, RIGHT
+    }
 }
