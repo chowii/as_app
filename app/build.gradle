@@ -29,7 +29,7 @@ android {
     }
 
     compileSdkVersion 24
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "au.com.ahbeard.sleepsense"
         minSdkVersion 18
@@ -68,7 +68,7 @@ android {
 }
 
 dependencies {
-    def androidSupportVersion = "24.2.0"
+    def androidSupportVersion = "25.1.0"
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':beddit-mobile-android-sensor')
@@ -96,8 +96,10 @@ dependencies {
     compile 'com.artemzin.rxjava:proguard-rules:1.1.7.0'
     compile 'com.trello:rxlifecycle:0.7.0'
     compile 'com.trello:rxlifecycle-android:0.7.0'
-    compile 'com.google.android.gms:play-services-base:10.0.0'
+
+    compile 'com.google.android.gms:play-services-base:10.0.1'
     compile 'com.google.firebase:firebase-core:10.0.0'
+
     compile 'io.lqd:liquid-android:2.+@aar'
     compile 'com.jakewharton.timber:timber:4.3.0'
     compile 'com.android.support:support-v4:24.2.1'
