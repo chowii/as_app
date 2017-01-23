@@ -121,7 +121,6 @@ public class FirmnessControlFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_firmness, container, false);
 
         ButterKnife.bind(this, view);
-        bind(view);
 
         if ("left".equalsIgnoreCase(mSide)) {
             setLeftSideActive();
@@ -284,10 +283,6 @@ public class FirmnessControlFragment extends Fragment {
             ((AnimationDrawable) mProgressImageView.getDrawable()).stop();
             mProgressImageView.setVisibility(View.INVISIBLE);
         }
-    }
-
-    protected void bind(View view) {
-        ButterKnife.bind(this, view);
     }
 
     protected void unbind() {

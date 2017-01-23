@@ -202,4 +202,17 @@
     <string name="set_up_completed_mattress_pump">Mattress pump</string>
     <string name="set_up_completed_adjustable_base">Adjustable base</string>
 
+    <string name="onboarding_pickMattress_long_single">Long Single</string>
+    <string name="onboarding_pickMattress_king_single">King Single</string>
+    <string name="onboarding_pickMattress_double">Double</string>
+    <string name="onboarding_pickMattress_queen">Queen</string>
+    <string name="onboarding_pickMattress_king">King</string>
+    <string name="onboarding_pickMattress_super_king">Split King</string>
+    <string name="onboarding_pickMattress_kingSplit">Super King</string>
+    <string name="onboarding_what_size_is_your_mattress">What size is your mattress?</string>
+
+    <string name="not_sure">Not sure?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
 </resources>

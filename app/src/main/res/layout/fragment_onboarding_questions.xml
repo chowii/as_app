@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/containerView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="@drawable/onboarding_debug_gradient">
+    <include layout="@layout/toolbar_onboarding" />
+    <au.com.ahbeard.sleepsense.widgets.SSTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        style="@style/OnboardingTitleTextView"
+        android:text="@string/onboarding_what_size_is_your_mattress"
+        />
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleTextView"
+        style="@style/OnboardingQuestionsView"
+        />
+    <ImageView
+        android:id="@+id/shadowImage"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_alignTop="@+id/recyclerView"
+        android:alpha="0"
+        android:src="@drawable/overscroll_shadow"
+        />
+</RelativeLayout>

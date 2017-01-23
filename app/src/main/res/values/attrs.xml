@@ -29,6 +29,8 @@
         <attr name="yAxisLabelSpace" format="dimension"/>
     </declare-styleable>
 
-
+    <declare-styleable name="CustomFontStyle">
+        <attr name="font" format="string"/>
+    </declare-styleable>
 
 </resources>
