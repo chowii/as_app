@@ -214,5 +214,8 @@
     <string name="not_sure">Not sure?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="onboarding_pick_base_title">Did you purchase an adjustable base?</string>
+    <string name="onboarding_pickMattress_title">What size is your mattress?</string>
+    <string name="onboarding_pick_tracker_title">Did you purchase built in sleep tracking?</string>
 
 </resources>

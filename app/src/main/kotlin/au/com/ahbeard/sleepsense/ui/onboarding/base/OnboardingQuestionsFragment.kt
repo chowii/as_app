@@ -16,7 +16,7 @@ import kotterknife.bindView
 /**
  * Created by luisramos on 23/01/2017.
  */
-open class OnboardingQuestionsFragment : OnboardingBaseFragment() {
+abstract class OnboardingQuestionsFragment : OnboardingBaseFragment() {
 
     class QuestionViewModel(val title: String, val isTextButton: Boolean) {
         constructor(title: String) : this(title, false)
@@ -28,6 +28,15 @@ open class OnboardingQuestionsFragment : OnboardingBaseFragment() {
     val shadowView: ImageView by bindView(R.id.shadowImage)
     var layoutManager : LinearLayoutManager? = null
     var adapter : OnboardingQuestionsAdapter? = null
+
+    override fun viewsToAnimate(): List<View> {
+        val firstChildPos = layoutManager?.findFirstVisibleItemPosition()
+        val lastChildPos = layoutManager?.findLastVisibleItemPosition()
+        if (firstChildPos != null && lastChildPos != null) {
+            return (firstChildPos..lastChildPos).map { recyclerView.getChildAt(it) }
+        }
+        return arrayListOf()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

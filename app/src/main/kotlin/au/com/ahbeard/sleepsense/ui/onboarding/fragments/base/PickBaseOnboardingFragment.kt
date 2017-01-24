@@ -1,24 +1,18 @@
-package au.com.ahbeard.sleepsense.ui.onboarding.fragments.tracker
+package au.com.ahbeard.sleepsense.ui.onboarding.fragments.base
 
 import android.os.Bundle
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
 
 /**
- * Created by luisramos on 23/01/2017.
+ * Created by luisramos on 24/01/2017.
  */
-class PickTrackerOnboardingFragment: OnboardingQuestionsFragment() {
-
+class PickBaseOnboardingFragment : OnboardingQuestionsFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        titleRes = R.string.onboarding_pick_tracker_title
+        titleRes = R.string.onboarding_pick_base_title
 
         data = listOf(getString(R.string.yes), getString(R.string.no)).map(::QuestionViewModel)
     }
-
-    override fun didSelectOption(index: Int) {
-        presentNextOnboardingFragment()
-    }
-
 }

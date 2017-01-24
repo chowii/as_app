@@ -13,6 +13,8 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        titleRes = R.string.onboarding_pickMattress_title
+
         var array = MattressLine.values().map { QuestionViewModel(activity.getString(it.nameRes)) }
         array += arrayOf(QuestionViewModel(activity.getString(R.string.not_sure), true))
         data = array
