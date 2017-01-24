@@ -2,6 +2,7 @@ package au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress
 
 import android.os.Bundle
 import android.support.annotation.IntegerRes
+import android.widget.Toast
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
 
@@ -25,9 +26,15 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
     override fun didSelectOption(index: Int) {
         if (index == data.size - 1) {
             //Show not sure screen
+            Toast.makeText(activity, "Not sure screen not implemented", Toast.LENGTH_SHORT).show()
         } else {
-            presentNextOnboardingFragment()
+            state.mattressLine = MattressLine.values()[index]
+            scanForPumps()
         }
+    }
+
+    fun scanForPumps() {
+        onboardingActivity.showLoading(R.string.onboarding_connecting_mattress)
     }
 
     enum class MattressLine(@IntegerRes val nameRes: Int) {

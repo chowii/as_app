@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.ui.onboarding.MainOnboardingActivity
+import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
 import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingTransitionAnimatable
 import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingTransitionAnimator
 import kotterknife.bindOptionalView
@@ -19,6 +20,8 @@ import kotterknife.bindOptionalView
 * Created by luisramos on 23/01/2017.
 */
 abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, OnboardingTransitionAnimatable {
+
+    var state = OnboardingState()
 
     val onboardingActivity : MainOnboardingActivity
         get() = activity as MainOnboardingActivity
