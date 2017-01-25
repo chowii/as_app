@@ -1,6 +1,7 @@
 package au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.IntegerRes
 import android.widget.Toast
 import au.com.ahbeard.sleepsense.R
@@ -10,6 +11,8 @@ import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
 * Created by luisramos on 23/01/2017.
 */
 class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
+
+    var connecting = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +37,11 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
     }
 
     fun scanForPumps() {
+        if (connecting) return
+        connecting = true
+
         onboardingActivity.showLoading(R.string.onboarding_connecting_mattress)
+
     }
 
     enum class MattressLine(@IntegerRes val nameRes: Int) {

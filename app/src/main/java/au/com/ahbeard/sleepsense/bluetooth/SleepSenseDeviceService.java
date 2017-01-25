@@ -18,6 +18,7 @@ import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.services.log.SSLog;
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -109,80 +110,78 @@ public class SleepSenseDeviceService {
         mLogSubject.onNext(message);
     }
 
-    public Observable<SleepSenseDeviceAquisition> newAcquireDevices(long milliseconds) {
+    public Observable<SleepSenseDeviceAquisition> newAcquireDevices(final long milliseconds) {
+        return Observable.create(new Observable.OnSubscribe<SleepSenseDeviceAquisition>() {
+            @Override
+            public void call(final Subscriber<? super SleepSenseDeviceAquisition> subscriber) {
+                SSLog.d("Starting devices scan...");
 
-        final PublishSubject<SleepSenseDeviceAquisition> mObservable = PublishSubject.create();
+                mChangeEventPublishSubject.onNext(SleepSenseDeviceServiceEvent.StartedSearchingForDevices);
 
-        mChangeEventPublishSubject.onNext(SleepSenseDeviceServiceEvent.StartedSearchingForDevices);
-
-        SSLog.d("Starting devices scan...");
-        BluetoothService.instance()
-                .startScanning()
-                .observeOn(Schedulers.computation())
-                .filter(new ScanningFilter())
-                .cast(BluetoothEvent.PacketEvent.class)
-                .take(milliseconds, TimeUnit.MILLISECONDS)
-                .toList()
-                .map(new Func1<List<BluetoothEvent.PacketEvent>, List<Device>>() {
-                    @Override
-                    public List<Device> call(List<BluetoothEvent.PacketEvent> scanPacketEvents) {
-
-                        BluetoothService.instance().stopScanning();
-
-                        // Sort by RSSI.
-                        Collections.sort(scanPacketEvents, new Comparator<BluetoothEvent.PacketEvent>() {
+                BluetoothService.instance()
+                        .startScanning()
+                        .observeOn(Schedulers.computation())
+                        .filter(new ScanningFilter())
+                        .cast(BluetoothEvent.PacketEvent.class)
+                        .take(milliseconds, TimeUnit.MILLISECONDS)
+                        .toList()
+                        .map(new Func1<List<BluetoothEvent.PacketEvent>, List<Device>>() {
                             @Override
-                            public int compare(BluetoothEvent.PacketEvent lhs,
-                                               BluetoothEvent.PacketEvent rhs) {
-                                return rhs.getRssi() - lhs.getRssi();
+                            public List<Device> call(List<BluetoothEvent.PacketEvent> scanPacketEvents) {
+
+                                BluetoothService.instance().stopScanning();
+
+                                // Sort by RSSI.
+                                Collections.sort(scanPacketEvents, new Comparator<BluetoothEvent.PacketEvent>() {
+                                    @Override
+                                    public int compare(BluetoothEvent.PacketEvent lhs,
+                                                       BluetoothEvent.PacketEvent rhs) {
+                                        return rhs.getRssi() - lhs.getRssi();
+                                    }
+                                });
+
+                                ArrayList<Device> devices = new ArrayList<>();
+
+                                for (BluetoothEvent.PacketEvent scanPacketEvent : scanPacketEvents) {
+                                    devices.addAll(SleepSenseDeviceFactory.factorySleepSenseDevice(mContext, scanPacketEvent));
+                                }
+
+                                return devices;
+                            }
+                        })
+                        .subscribe(new Action1<List<Device>>() {
+                            @Override
+                            public void call(List<Device> devices) {
+
+                                SSLog.d("Found %d devices", devices.size());
+
+                                SleepSenseDeviceAquisition sleepSenseDeviceAquisition = new SleepSenseDeviceAquisition();
+
+                                // Assign the closest of each device if we don't have one.
+                                for (Device device : devices) {
+                                    SSLog.d(device.getName());
+                                    // Log.d("SleepSenseDeviceService", String.format("device found: %s", device.getName()));
+                                    if (device instanceof BaseDevice) {
+                                        sleepSenseDeviceAquisition.getBaseDevices().add((BaseDevice) device);
+                                        continue;
+                                    }
+
+                                    if (device instanceof PumpDevice) {
+                                        sleepSenseDeviceAquisition.getPumpDevices().add((PumpDevice) device);
+                                        continue;
+                                    }
+
+                                    if (device instanceof TrackerDevice) {
+                                        sleepSenseDeviceAquisition.getTrackerDevices().add((TrackerDevice) device);
+                                    }
+                                }
+
+                                subscriber.onNext(sleepSenseDeviceAquisition);
+                                subscriber.onCompleted();
                             }
                         });
-
-                        ArrayList<Device> devices = new ArrayList<>();
-
-                        for (BluetoothEvent.PacketEvent scanPacketEvent : scanPacketEvents) {
-                            devices.addAll(SleepSenseDeviceFactory.factorySleepSenseDevice(mContext, scanPacketEvent));
-                        }
-
-                        return devices;
-                    }
-                })
-                .subscribe(new Action1<List<Device>>() {
-                    @Override
-                    public void call(List<Device> devices) {
-
-                        SSLog.d("Found %d devices", devices.size());
-
-                        SleepSenseDeviceAquisition sleepSenseDeviceAquisition = new SleepSenseDeviceAquisition();
-
-                        // Assign the closest of each device if we don't have one.
-                        for (Device device : devices) {
-                            SSLog.d(device.getName());
-                            // Log.d("SleepSenseDeviceService", String.format("device found: %s", device.getName()));
-                            if (device instanceof BaseDevice) {
-                                sleepSenseDeviceAquisition.getBaseDevices().add((BaseDevice) device);
-                                continue;
-                            }
-
-                            if (device instanceof PumpDevice) {
-                                sleepSenseDeviceAquisition.getPumpDevices().add((PumpDevice) device);
-                                continue;
-                            }
-
-                            if (device instanceof TrackerDevice) {
-                                sleepSenseDeviceAquisition.getTrackerDevices().add((TrackerDevice) device);
-                                continue;
-                            }
-                        }
-
-                        mObservable.onNext(sleepSenseDeviceAquisition);
-                        mObservable.onCompleted();
-
-                    }
-                });
-
-
-        return mObservable;
+            }
+        });
     }
 
     public void setDevices(BaseDevice baseDevice, PumpDevice pumpDevice, TrackerDevice trackerDevice, TrackerDevice altTrackerDevice) {
@@ -252,8 +251,20 @@ public class SleepSenseDeviceService {
         return mLogSubject;
     }
 
+    long defaultSearchingTimer = 2500;
+
+//    public Observable<PumpDevice> findPumpDevices() {
+//        return newAcquireDevices(defaultSearchingTimer)
+//                .map(new Func1<SleepSenseDeviceAquisition, PumpDevice>() {
+//                    @Override
+//                    public PumpDevice call(SleepSenseDeviceAquisition sleepSenseDeviceAquisition) {
+//
+//                    }
+//                })
+//    }
+
     // The scanning filter.
-    class ScanningFilter implements Func1<BluetoothEvent, Boolean> {
+    private static class ScanningFilter implements Func1<BluetoothEvent, Boolean> {
 
         // Check the address of the device.
         Map<String, BluetoothEvent.PacketEvent> scannedDevices = Collections.synchronizedMap(new HashMap<String, BluetoothEvent.PacketEvent>());

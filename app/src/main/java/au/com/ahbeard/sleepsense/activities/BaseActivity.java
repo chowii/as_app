@@ -232,4 +232,5 @@ public class BaseActivity extends AppCompatActivity implements LifecycleProvider
     public final <T> LifecycleTransformer<T> bindToLifecycle() {
         return RxLifecycleAndroid.bindActivity(lifecycleSubject);
     }
+
 }

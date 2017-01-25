@@ -24,25 +24,25 @@ public class SleepSenseDeviceFactory {
 
         if (name != null && name.toLowerCase().contains("2618")) {
             Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(scanPacketEvent.getAdvertisingData());
-            for (UUID advertisedUUID : advertisedUUIDs) {
-                // Log.d("SleepSenseDeviceFactory", "pump: " + advertisedUUID);
-            }
+//            for (UUID advertisedUUID : advertisedUUIDs) {
+//                // Log.d("SleepSenseDeviceFactory", "pump: " + advertisedUUID);
+//            }
             return advertisedUUIDs.contains(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
         }
 
         if (name != null && name.toLowerCase().contains("base-i4")) {
             Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(scanPacketEvent.getAdvertisingData());
-            for (UUID advertisedUUID : advertisedUUIDs) {
-                // Log.d("SleepSenseDeviceFactory", "base: " + advertisedUUID);
-            }
+//            for (UUID advertisedUUID : advertisedUUIDs) {
+//                // Log.d("SleepSenseDeviceFactory", "base: " + advertisedUUID);
+//            }
             return advertisedUUIDs.contains(UUID.fromString("0000ffb0-0000-1000-8000-00805f9b34fb"));
         }
 
         if (FIND_TRACKER && name != null && name.toLowerCase().contains("beddit")) {
             Set<UUID> advertisedUUIDs = BluetoothUtils.parseUUIDsFromScanRecord(scanPacketEvent.getAdvertisingData());
-            for (UUID advertisedUUID : advertisedUUIDs) {
-                // Log.d("SleepSenseDeviceFactory", "beddit: " + advertisedUUID);
-            }
+//            for (UUID advertisedUUID : advertisedUUIDs) {
+//                // Log.d("SleepSenseDeviceFactory", "beddit: " + advertisedUUID);
+//            }
             return true;//advertisedUUIDs.contains(UUID.fromString("4ae71336-e44b-39bf-b9d2-752e234818a5"));
         }
 

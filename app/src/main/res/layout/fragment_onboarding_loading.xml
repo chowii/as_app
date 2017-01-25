@@ -26,14 +26,27 @@
             android:layout_centerInParent="true" />
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
+            android:layout_height="300dp"
+            android:layout_marginBottom="-80dp"
             android:layout_above="@+id/centerView">
             <ImageView
-                android:id="@+id/whiteCircle"
+                android:id="@+id/whiteCircleView"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:src="@drawable/white_circle"
+                android:src="@drawable/light_grey_border_circle"
+                android:layout_gravity="center"/>
+            <ImageView
+                android:id="@+id/pulsingCircleView"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/light_grey_border_circle"
+                android:layout_gravity="center"/>
+            <ImageView
+                android:id="@+id/backgroundCircleView"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/light_grey_circle"
+                android:alpha="0"
                 android:layout_gravity="center"/>
             <ImageView
                 android:id="@+id/iconImageView"
@@ -41,6 +54,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_moon_small_white"/>
+            <ImageView
+                android:id="@+id/checkmarkImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:alpha="0"
+                android:src="@drawable/ic_blue_checkmark"/>
         </FrameLayout>
 
 

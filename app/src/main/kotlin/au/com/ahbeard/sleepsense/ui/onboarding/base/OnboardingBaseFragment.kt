@@ -12,8 +12,8 @@ import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.ui.onboarding.MainOnboardingActivity
 import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
-import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingTransitionAnimatable
-import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingTransitionAnimator
+import au.com.ahbeard.sleepsense.ui.onboarding.animations.OnboardingTransitionAnimatable
+import au.com.ahbeard.sleepsense.ui.onboarding.animations.OnboardingTransitionAnimator
 import kotterknife.bindOptionalView
 
 /**
