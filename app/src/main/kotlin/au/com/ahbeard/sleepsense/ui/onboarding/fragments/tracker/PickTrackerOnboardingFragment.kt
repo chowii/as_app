@@ -12,9 +12,8 @@ class PickTrackerOnboardingFragment: OnboardingQuestionsFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        titleRes = R.string.onboarding_pick_tracker_title
-
-        data = listOf(getString(R.string.yes), getString(R.string.no)).map(::QuestionViewModel)
+        configureQuestions(R.string.onboarding_pick_tracker_title,
+                R.string.yes, R.string.no)
     }
 
     override fun didSelectOption(index: Int) {

@@ -48,13 +48,14 @@ class MainOnboardingActivity : BaseActivity() {
                 .commit()
     }
 
-    fun hideLoading() {
+    fun hideLoading(completion: () -> Unit) {
         val loadingFrag = supportFragmentManager.findFragmentByTag(OnboardingLoadingFragment::class.java.name) as? OnboardingLoadingFragment
         loadingFrag?.stopAnimations {
             supportFragmentManager.beginTransaction()
                     .setCustomAnimations(R.anim.alpha_loading_enter, R.anim.alpha_loading_exit)
                     .remove(loadingFrag)
                     .commit()
+            completion()
         }
     }
 

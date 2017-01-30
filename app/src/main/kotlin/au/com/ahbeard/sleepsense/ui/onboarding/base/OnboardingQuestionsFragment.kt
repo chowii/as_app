@@ -1,6 +1,7 @@
 package au.com.ahbeard.sleepsense.ui.onboarding.base
 
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -66,6 +67,11 @@ abstract class OnboardingQuestionsFragment : OnboardingBaseFragment() {
 
     open fun didSelectOption(index: Int) {
 
+    }
+
+    fun configureQuestions(@StringRes title: Int, vararg @StringRes strings: Int) {
+        titleRes = title
+        data = strings.map { QuestionViewModel(getString(it)) }
     }
 
     class OnboardingQuestionsAdapter(var data: List<QuestionViewModel>) : RecyclerView.Adapter<OnboardingQuestionsAdapter.ViewHolder>() {

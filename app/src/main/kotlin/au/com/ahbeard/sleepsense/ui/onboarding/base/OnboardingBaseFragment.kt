@@ -28,7 +28,7 @@ abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, Onboardi
 
     val backButton: ImageButton? by bindOptionalView(R.id.backButton)
 
-    @StringRes var titleRes: Int = R.string.base_position_screen_title
+    @StringRes var titleRes: Int? = null
     val titleTextView: TextView? by bindOptionalView(R.id.titleTextView)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -36,7 +36,7 @@ abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, Onboardi
 
         setBackgroundGradient(R.color.onboarding_gradient_1_top, R.color.onboarding_gradient_1_bottom)
 
-        titleTextView?.text = getString(titleRes)
+        titleRes?.let { titleTextView?.text = getString(it) }
 
         if (fragmentManager.backStackEntryCount > 0) {
             backButton?.animate()?.alpha(1f)?.setDuration(500L)?.start()

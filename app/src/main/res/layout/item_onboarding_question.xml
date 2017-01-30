@@ -4,15 +4,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
     android:paddingBottom="8dp"
-    tools:background="#284f80">
-
+    tools:background="@color/onboarding_gradient_1_top">
     <au.com.ahbeard.sleepsense.widgets.SSButton
         android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="73dp"
         style="@style/OnboardingButton"
         tools:text="Single"
         />

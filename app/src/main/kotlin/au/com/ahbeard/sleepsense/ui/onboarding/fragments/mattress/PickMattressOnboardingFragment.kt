@@ -1,7 +1,6 @@
 package au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress
 
 import android.os.Bundle
-import android.os.Handler
 import android.support.annotation.IntegerRes
 import android.widget.Toast
 import au.com.ahbeard.sleepsense.R
@@ -42,6 +41,12 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
 
         onboardingActivity.showLoading(R.string.onboarding_connecting_mattress)
 
+        //FIXME Actually connect to pump
+        view?.postDelayed({
+            onboardingActivity.hideLoading({
+                presentNextOnboardingFragment()
+            })
+        }, 2000)
     }
 
     enum class MattressLine(@IntegerRes val nameRes: Int) {

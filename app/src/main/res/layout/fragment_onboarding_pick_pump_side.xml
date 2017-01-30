@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    tools:background="@drawable/onboarding_debug_gradient"
+    >
+    <include layout="@layout/toolbar_onboarding"
+        android:id="@+id/toolbar"/>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/pump_pick_side_image"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="80dp"
+        android:contentDescription="@string/content_desc_pump_help_image" />
+    <au.com.ahbeard.sleepsense.widgets.SSTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/OnboardingTitleTextView"
+        android:layout_marginBottom="20dp"
+        android:text="@string/onboarding_which_side_of_the_pump"
+        />
+    <au.com.ahbeard.sleepsense.widgets.SSButton
+        android:id="@+id/leftButton"
+        android:layout_width="match_parent"
+        style="@style/OnboardingButton"
+        android:layout_marginBottom="8dp"
+        android:text="@string/onboarding_left_side"/>
+    <au.com.ahbeard.sleepsense.widgets.SSButton
+        android:id="@+id/rightButton"
+        android:layout_width="match_parent"
+        style="@style/OnboardingButton"
+        android:layout_marginBottom="@dimen/onboarding_leading_margin"
+        android:text="@string/onboarding_right_side"/>
+</LinearLayout>
