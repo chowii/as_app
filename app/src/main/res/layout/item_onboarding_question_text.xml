@@ -8,7 +8,7 @@
     tools:background="#284f80">
     <au.com.ahbeard.sleepsense.widgets.SSButton
         android:id="@+id/button"
-        style="@style/OnboardingTextButton"
+        style="@style/OnboardingButton.Text"
         tools:text="Single"
         />
 </LinearLayout>

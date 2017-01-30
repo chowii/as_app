@@ -8,7 +8,7 @@ import au.com.ahbeard.sleepsense.SleepSenseApplication
  * Created by luisramos on 24/01/2017.
  */
 object DeviceUtils {
-    private val context: Context
+    private val applicationContext: Context
         get() = SleepSenseApplication.instance().applicationContext
 
     val deviceWidthPx : Int
@@ -17,11 +17,25 @@ object DeviceUtils {
     val deviceHeightPx: Int
         get() = Resources.getSystem().displayMetrics.heightPixels
 
-    fun pxToDp(px: Int) : Float {
-        return px / context.resources.displayMetrics.density
+    /**
+     * This method uses application context to access the density
+     */
+    @JvmStatic fun pxToDp(px: Int) : Float {
+        return px / applicationContext.resources.displayMetrics.density
     }
 
-    fun dpToPx(dp: Int) : Float {
-        return dp * context.resources.displayMetrics.density
+    /**
+     * This method uses application context to access the density
+     */
+    @JvmStatic fun dpToPx(dp: Int) : Float {
+        return dp * applicationContext.resources.displayMetrics.density
     }
+}
+
+fun Context.dpToPx(dp: Int) : Float {
+    return dp * resources.displayMetrics.density
+}
+
+fun Context.pxToDp(px: Int) : Float {
+    return px / resources.displayMetrics.density
 }

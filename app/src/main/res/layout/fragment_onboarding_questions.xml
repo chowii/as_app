@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
-        style="@style/OnboardingTitleTextView"
+        style="@style/OnboardingText.Title"
         android:text="@string/onboarding_what_size_is_your_mattress"
         />
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"

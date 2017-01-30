@@ -3,7 +3,7 @@ package au.com.ahbeard.sleepsense.ui.onboarding.base
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.base.PickBaseOnboardingFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress.PickMattressOnboardingFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress.PickPumpSideOnboardingFragment
-import au.com.ahbeard.sleepsense.ui.onboarding.fragments.tracker.PickTrackerOnboardingFragment
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.tracker.*
 
 /**
  * Created by luisramos on 24/01/2017.
@@ -52,9 +52,7 @@ enum class OnboardingFragmentType {
 
 class OnboardingFragmentFlow {
 
-    var currFragmentType = OnboardingFragmentType.PICK_MATTRESS
-
-    var screens = OnboardingFragmentType.values()
+    var currFragmentType = OnboardingFragmentType.HEIGHT_SELECT
 
     fun firstFragment() : OnboardingBaseFragment {
         return factory(currFragmentType)
@@ -74,6 +72,10 @@ class OnboardingFragmentFlow {
         OnboardingFragmentType.PICK_PUMP_SIDE -> PickPumpSideOnboardingFragment()
         OnboardingFragmentType.PICK_TRACKER -> PickTrackerOnboardingFragment()
         OnboardingFragmentType.PICK_BASE -> PickBaseOnboardingFragment()
+        OnboardingFragmentType.TRACKER_SETUP_1 -> TrackerSetupFirstOnboardingFragment()
+        OnboardingFragmentType.TRACKER_SETUP_2 -> TrackerSetupSecondOnboardingFragment()
+        OnboardingFragmentType.HEIGHT_SELECT -> HeightSetupOnboardingFragment()
+        OnboardingFragmentType.WEIGHT_SELECT -> WeightSetupOnboardingFragment()
         else -> PickTrackerOnboardingFragment()
     }
 }

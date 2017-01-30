@@ -17,9 +17,11 @@
     <dimen name="scale_line_large">50dp</dimen>
     <dimen name="yellow_line_stroke_width">4dp</dimen>
     <dimen name="scale_text_size">16dp</dimen>
-    <dimen name="txt_size">17dp</dimen>
+    <dimen name="ruler_txt_size">50sp</dimen>
     <dimen name="text_start_point">107dp</dimen>
     <dimen name="circular_button_size">97dip</dimen>
+
+    <dimen name="rule_line_height">10dp</dimen>
 
     <dimen name="onboarding_leading_margin">16dp</dimen>
 </resources>

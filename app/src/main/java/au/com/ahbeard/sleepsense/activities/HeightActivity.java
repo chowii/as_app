@@ -12,7 +12,7 @@ import android.widget.TextView;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.services.SharedPreferencesStore;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
-import au.com.ahbeard.sleepsense.widgets.ScaleView;
+import au.com.ahbeard.sleepsense.widgets.SSRulerView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,11 +27,11 @@ public class HeightActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_height);
         ButterKnife.bind(this);
-        final ScaleView rulerViewMm = (ScaleView) findViewById(R.id.height_scale);
+        final SSRulerView rulerViewMm = (SSRulerView) findViewById(R.id.height_scale);
         rulerViewMm.setStartingPoint(17);
         rulerViewMm.setRulerPointer(250);
         setTextValue(( Math.round((17 * 10f))) + " cm");
-        rulerViewMm.setUpdateListener(new ScaleView.onViewUpdateListener() {
+        rulerViewMm.setUpdateListener(new SSRulerView.onViewUpdateListener() {
             @Override
             public void onViewUpdate(float result) {
                 setTextValue(Math.round((result * 10f)) + " cm");

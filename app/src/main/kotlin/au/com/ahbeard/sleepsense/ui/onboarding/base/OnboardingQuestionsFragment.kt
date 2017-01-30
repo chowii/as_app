@@ -112,8 +112,6 @@ abstract class OnboardingQuestionsFragment : OnboardingBaseFragment() {
 
             overallYScroll += dy
 
-            SSLog.d("offset $overallYScroll")
-
             if (overallYScroll > 0 && shadowView.alpha != 1f) {
                 shadowView.animate().setDuration(150).alpha(1f).start()
             } else if (overallYScroll <= 0 && shadowView.alpha != 0f) {

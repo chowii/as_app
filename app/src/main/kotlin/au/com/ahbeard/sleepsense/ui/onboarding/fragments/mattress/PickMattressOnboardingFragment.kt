@@ -41,7 +41,7 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
 
         onboardingActivity.showLoading(R.string.onboarding_connecting_mattress)
 
-        //FIXME Actually connect to pump
+        //FIXME Actually connect to device
         view?.postDelayed({
             onboardingActivity.hideLoading({
                 presentNextOnboardingFragment()

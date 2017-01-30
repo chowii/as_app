@@ -36,7 +36,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white" />
 
-        <au.com.ahbeard.sleepsense.widgets.ScaleView
+        <au.com.ahbeard.sleepsense.widgets.SSRulerView
             android:id="@+id/height_scale"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
