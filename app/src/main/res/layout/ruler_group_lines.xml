@@ -8,119 +8,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/rule_line_height"
-            >
-            <View
-                android:layout_width="50dp"
-                android:layout_height="1dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/ruler_line_background"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/rule_line_height"
-            >
-            <View
-                android:layout_width="11dp"
-                android:layout_height="1dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/ruler_line_background"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/rule_line_height"
-            >
-            <View
-                android:layout_width="11dp"
-                android:layout_height="1dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/ruler_line_background"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/rule_line_height"
-            >
-            <View
-                android:layout_width="11dp"
-                android:layout_height="1dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/ruler_line_background"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/rule_line_height"
-            >
-            <View
-                android:layout_width="11dp"
-                android:layout_height="1dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/ruler_line_background"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/rule_line_height"
-            >
-            <View
-                android:layout_width="25dp"
-                android:layout_height="1dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/ruler_line_background"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/rule_line_height"
-            >
-            <View
-                android:layout_width="11dp"
-                android:layout_height="1dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/ruler_line_background"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/rule_line_height"
-            >
-            <View
-                android:layout_width="11dp"
-                android:layout_height="1dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/ruler_line_background"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/rule_line_height"
-            >
-            <View
-                android:layout_width="11dp"
-                android:layout_height="1dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/ruler_line_background"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/rule_line_height"
-            >
-            <View
-                android:layout_width="11dp"
-                android:layout_height="1dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/ruler_line_background"/>
-        </RelativeLayout>
+        android:orientation="vertical"
+        android:gravity="end">
+        <View style="@style/OnboardingRulerHorizontalLine.Big"/>
+        <View style="@style/OnboardingRulerHorizontalLine.Small"/>
+        <View style="@style/OnboardingRulerHorizontalLine.Small"/>
+        <View style="@style/OnboardingRulerHorizontalLine.Small"/>
+        <View style="@style/OnboardingRulerHorizontalLine.Small"/>
+        <View style="@style/OnboardingRulerHorizontalLine.Medium"/>
+        <View style="@style/OnboardingRulerHorizontalLine.Small"/>
+        <View style="@style/OnboardingRulerHorizontalLine.Small"/>
+        <View style="@style/OnboardingRulerHorizontalLine.Small"/>
+        <View style="@style/OnboardingRulerHorizontalLine.Small"/>
     </LinearLayout>
     <au.com.ahbeard.sleepsense.widgets.SSTextView
+        android:id="@+id/textView"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         style="@style/OnboardingRulerText.Small"

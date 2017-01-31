@@ -9,10 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
+import kotterknife.bindOptionalView
 import kotterknife.bindView
 
 /**
  * Created by luisramos on 30/01/2017.
+ *
+ * This fragment creates a ruler to insert Height or Weight.
+ * It can be configured using [configureRuler].
+ *
+ * Usage in this project is done by subclassing and overriding [onCreate],
+ * calling [configureRuler] with the specified fields.
  */
 open class OnboardingRulerFragment : OnboardingBaseFragment() {
 
@@ -20,6 +27,7 @@ open class OnboardingRulerFragment : OnboardingBaseFragment() {
 
     var layoutManager: LinearLayoutManager? = null
     var adapter: RulerAdapter? = null
+    var scrollListener: RulerScrollingListener? = null
     val recyclerView: RecyclerView by bindView(R.id.recyclerView)
     val valueTextView: TextView by bindView(R.id.valueTextView)
     val smallTextView: TextView by bindView(R.id.smallValueTextView)
@@ -29,12 +37,23 @@ open class OnboardingRulerFragment : OnboardingBaseFragment() {
     var min = 80
     var max = 400
 
+    val currentValue : Int
+        get() = scrollListener?.currentValue ?: 0
+
     override fun viewsToAnimate(): List<View> {
         return arrayListOf()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        backgroundGradient = BackgroundGradient.TRACKER
+    }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_onboarding_ruler_vertical, container, false)!!
+        val layout = if (orientation.isVertical()) R.layout.fragment_onboarding_ruler_vertical
+            else R.layout.fragment_onboarding_ruler_horizontal
+        return inflater?.inflate(layout, container, false)!!
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -50,15 +69,16 @@ open class OnboardingRulerFragment : OnboardingBaseFragment() {
             data = (min/5..max/5).toList()
         }
 
-        adapter = RulerAdapter(data, orientation)
+        adapter = RulerAdapter(data, orientation, min)
         recyclerView.adapter = adapter
 
         recyclerView.viewTreeObserver.addOnGlobalLayoutListener {
             adapter?.recyclerViewSize = if (orientation.isVertical()) recyclerView.measuredHeight else recyclerView.measuredWidth
         }
 
-        val lineHeight = context.resources.getDimension(R.dimen.rule_line_height)
-        recyclerView.addOnScrollListener(RulerScrollingListener(valueTextView, smallTextView, min, lineHeight, orientation))
+        val lineHeight = context.resources.getDimension(R.dimen.rule_line_size)
+        scrollListener = RulerScrollingListener(valueTextView, smallTextView, min, lineHeight, orientation)
+        recyclerView.addOnScrollListener(scrollListener)
     }
 
     fun configureRuler(@StringRes title: Int, min: Int, max:Int, orientation: Orientation) {
@@ -68,7 +88,7 @@ open class OnboardingRulerFragment : OnboardingBaseFragment() {
         this.orientation = orientation
     }
 
-    class RulerAdapter(var data: List<Int>, val orientation: Orientation) : RecyclerView.Adapter<RulerAdapter.ViewHolder>() {
+    class RulerAdapter(var data: List<Int>, val orientation: Orientation, val min: Int) : RecyclerView.Adapter<RulerAdapter.ViewHolder>() {
 
         var recyclerViewSize = 0
             set(value) {
@@ -79,7 +99,8 @@ open class OnboardingRulerFragment : OnboardingBaseFragment() {
                 }
             }
 
-        class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val textView: TextView? by bindOptionalView(R.id.textView)
 //            val lineView: View = view.findViewById(R.id.lineView)
 
             fun setMargins(orientation: Orientation, margin1: Int, margin2: Int) {
@@ -91,17 +112,17 @@ open class OnboardingRulerFragment : OnboardingBaseFragment() {
             }
 
             fun setTopBottomMargins(topMargin: Int, bottomMargin: Int) {
-                val layoutParams = view.layoutParams as RecyclerView.LayoutParams
+                val layoutParams = itemView.layoutParams as RecyclerView.LayoutParams
                 layoutParams.topMargin = topMargin
                 layoutParams.bottomMargin = bottomMargin
-                view.layoutParams = layoutParams
+                itemView.layoutParams = layoutParams
             }
 
             fun setLeftRightMargins(leftMargin: Int, rightMargin: Int) {
-                val layoutParams = view.layoutParams as RecyclerView.LayoutParams
+                val layoutParams = itemView.layoutParams as RecyclerView.LayoutParams
                 layoutParams.leftMargin= leftMargin
                 layoutParams.rightMargin= rightMargin
-                view.layoutParams = layoutParams
+                itemView.layoutParams = layoutParams
             }
         }
 
@@ -123,6 +144,10 @@ open class OnboardingRulerFragment : OnboardingBaseFragment() {
             val margin2 = if (position == data.size - 1) recyclerViewSize / 2 else 0
 
             holder?.setMargins(orientation, margin1, margin2)
+
+            if (orientation.isVertical()) {
+                holder?.textView?.text = "${min + position * 10}cm"
+            }
         }
 
     }
@@ -134,16 +159,18 @@ open class OnboardingRulerFragment : OnboardingBaseFragment() {
             val ruleLineHeight: Float,
             val orientation: Orientation
     ) : RecyclerView.OnScrollListener() {
+
         private var overallScroll = 0
+        var currentValue = 0
 
         override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
-            overallScroll += dy
+            overallScroll += if (orientation.isVertical()) dy else dx
 
-            val value = minValue + (overallScroll / ruleLineHeight).toInt()
-            valueTextView.text = value.toString()
-            smallTextView.text = if (orientation.isVertical()) convertCmToFeet(value) else convertKgToLbs(value)
+            currentValue = minValue + (overallScroll / ruleLineHeight).toInt()
+            valueTextView.text = currentValue.toString()
+            smallTextView.text = if (orientation.isVertical()) convertCmToFeet(currentValue) else convertKgToLbs(currentValue)
         }
 
         fun convertKgToLbs(kgs: Int) : String {

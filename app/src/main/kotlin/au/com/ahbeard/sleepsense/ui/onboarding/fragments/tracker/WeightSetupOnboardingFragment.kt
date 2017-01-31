@@ -13,4 +13,9 @@ class WeightSetupOnboardingFragment : OnboardingRulerFragment() {
 
         configureRuler(R.string.onboarding_weight_title, 20, 250, Orientation.HORIZONTAL)
     }
+
+    override fun presentNextOnboardingFragment() {
+        state.weightInKg = currentValue
+        super.presentNextOnboardingFragment()
+    }
 }

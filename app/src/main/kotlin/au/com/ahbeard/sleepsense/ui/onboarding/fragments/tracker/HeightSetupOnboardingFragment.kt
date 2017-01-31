@@ -16,8 +16,7 @@ class HeightSetupOnboardingFragment : OnboardingRulerFragment() {
     }
 
     override fun presentNextOnboardingFragment() {
-
-        //TODO save data
+        state.heightInCm = currentValue
         super.presentNextOnboardingFragment()
     }
 }

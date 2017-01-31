@@ -8,5 +8,7 @@ import au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress.PickMattressOn
  */
 data class OnboardingState(
     var mattressLine: PickMattressOnboardingFragment.MattressLine = PickMattressOnboardingFragment.MattressLine.LONG_SINGLE,
-    var pumpSide: PumpDevice.Side = PumpDevice.Side.Left
+    var pumpSide: PumpDevice.Side = PumpDevice.Side.Left,
+    var heightInCm: Int = 0,
+    var weightInKg: Int = 0
 )

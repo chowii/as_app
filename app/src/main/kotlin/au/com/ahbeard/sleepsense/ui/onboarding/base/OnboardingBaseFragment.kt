@@ -32,6 +32,7 @@ abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, Onboardi
 
     val backButton: ImageButton? by bindOptionalView(R.id.backButton)
     val continueButton: Button? by bindOptionalView(R.id.continueButton)
+    val skipButton: Button? by bindOptionalView(R.id.skipButton)
 
     @StringRes var titleRes: Int? = null
     val titleTextView: TextView? by bindOptionalView(R.id.titleTextView)
@@ -51,14 +52,17 @@ abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, Onboardi
                 activity?.onBackPressed()
         }
 
-        continueButton?.setOnClickListener {
-            presentNextOnboardingFragment()
-        }
+        continueButton?.setOnClickListener { presentNextOnboardingFragment() }
+        skipButton?.setOnClickListener { skipToNextOnboardingFragment() }
 
 //        prepareViewsForEntryAnim()
     }
 
     open fun presentNextOnboardingFragment() {
+        onboardingActivity.presentNextOnboardingFragment()
+    }
+
+    open fun skipToNextOnboardingFragment() {
         onboardingActivity.presentNextOnboardingFragment()
     }
 

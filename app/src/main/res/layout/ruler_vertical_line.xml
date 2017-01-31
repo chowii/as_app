@@ -8,38 +8,9 @@
     android:gravity="center_vertical"
     tools:background="@drawable/onboarding_debug_gradient"
     >
-    <View
-        android:layout_width="1dp"
-        android:layout_height="56dp"
-        android:background="@color/ruler_line_background"
-        android:layout_marginEnd="11dp"
-        />
-    <View
-        android:layout_width="1dp"
-        android:layout_height="30dp"
-        android:background="@color/ruler_line_background"
-        android:layout_marginEnd="11dp"
-        android:layout_marginBottom="-8dp"
-        />
-    <View
-        android:layout_width="1dp"
-        android:layout_height="30dp"
-        android:background="@color/ruler_line_background"
-        android:layout_marginEnd="11dp"
-        android:layout_marginBottom="-8dp"
-        />
-    <View
-        android:layout_width="1dp"
-        android:layout_height="30dp"
-        android:background="@color/ruler_line_background"
-        android:layout_marginEnd="11dp"
-        android:layout_marginBottom="-8dp"
-        />
-    <View
-        android:layout_width="1dp"
-        android:layout_height="30dp"
-        android:background="@color/ruler_line_background"
-        android:layout_marginEnd="11dp"
-        android:layout_marginBottom="-8dp"
-        />
+    <View style="@style/OnboardingRulerVerticalLine.Big" />
+    <View style="@style/OnboardingRulerVerticalLine" />
+    <View style="@style/OnboardingRulerVerticalLine" />
+    <View style="@style/OnboardingRulerVerticalLine" />
+    <View style="@style/OnboardingRulerVerticalLine" />
 </LinearLayout>

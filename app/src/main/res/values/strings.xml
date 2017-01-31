@@ -233,4 +233,5 @@
     <string name="cm">cm</string>
     <string name="onboarding_height_title">How tall are you?</string>
     <string name="onboarding_weight_title">How much do you weigh?</string>
+    <string name="kg">kg</string>
 </resources>

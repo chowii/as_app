@@ -111,6 +111,10 @@
         <item name="android:textColor">#fff</item>
     </style>
 
+    <style name="OnboardingButton.Text.Skip">
+        <item name="android:text">@string/button_skip</item>
+    </style>
+
     <style name="OnboardingButton.Continue">
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:text">@string/continue_text</item>
@@ -130,6 +134,34 @@
 
     <style name="OnboardingRulerText.SideLabel">
         <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="OnboardingRulerVerticalLine">
+        <item name="android:layout_width">@dimen/rule_line_height</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:background">@color/ruler_line_background</item>
+        <item name="android:layout_marginEnd">@dimen/rule_line_margin_bottom</item>
+        <item name="android:layout_marginBottom">-8dp</item>
+    </style>
+
+    <style name="OnboardingRulerVerticalLine.Big">
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+    </style>
+
+    <style name="OnboardingRulerHorizontalLine">
+        <item name="android:layout_height">@dimen/rule_line_height</item>
+        <item name="android:layout_marginBottom">@dimen/rule_line_margin_bottom</item>
+        <item name="android:background">@color/ruler_line_background</item>
+    </style>
+    <style name="OnboardingRulerHorizontalLine.Big">
+        <item name="android:layout_width">50dp</item>
+    </style>
+    <style name="OnboardingRulerHorizontalLine.Medium">
+        <item name="android:layout_width">25dp</item>
+    </style>
+    <style name="OnboardingRulerHorizontalLine.Small">
+        <item name="android:layout_width">11dp</item>
     </style>
 
 </resources>

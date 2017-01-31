@@ -59,7 +59,11 @@
             />
     </RelativeLayout>
 
-
+    <au.com.ahbeard.sleepsense.widgets.SSButton
+        android:id="@+id/skipButton"
+        style="@style/OnboardingButton.Text.Skip"
+        android:layout_above="@id/continueButton"
+        />
     <au.com.ahbeard.sleepsense.widgets.SSButton
         android:id="@+id/continueButton"
         style="@style/OnboardingButton.Continue"
