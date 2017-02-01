@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <View
+        android:id="@+id/centerView"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_centerInParent="true"/>
+    <au.com.ahbeard.sleepsense.ui.onboarding.views.SSOnboardingRadioButton
+        android:id="@+id/leftButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignEnd="@id/centerView"
+        android:layout_marginEnd="25dp"
+        />
+    <au.com.ahbeard.sleepsense.ui.onboarding.views.SSOnboardingRadioButton
+        android:id="@+id/rightButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@id/centerView"
+        android:layout_marginStart="25dp"
+        />
+</merge>

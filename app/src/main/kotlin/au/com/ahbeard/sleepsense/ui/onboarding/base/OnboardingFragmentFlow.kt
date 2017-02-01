@@ -52,7 +52,7 @@ enum class OnboardingFragmentType {
 
 class OnboardingFragmentFlow {
 
-    var currFragmentType = OnboardingFragmentType.HEIGHT_SELECT
+    var currFragmentType = OnboardingFragmentType.GENDER_SELECT
 
     fun firstFragment() : OnboardingBaseFragment {
         return factory(currFragmentType)
@@ -76,6 +76,7 @@ class OnboardingFragmentFlow {
         OnboardingFragmentType.TRACKER_SETUP_2 -> TrackerSetupSecondOnboardingFragment()
         OnboardingFragmentType.HEIGHT_SELECT -> HeightSetupOnboardingFragment()
         OnboardingFragmentType.WEIGHT_SELECT -> WeightSetupOnboardingFragment()
+        OnboardingFragmentType.GENDER_SELECT -> GenderSetupOnboardingFragment()
         else -> PickTrackerOnboardingFragment()
     }
 }

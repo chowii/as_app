@@ -82,11 +82,15 @@
     </style>
 
     <style name="OnboardingText.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">20sp</item>
         <item name="font">AvertaBold</item>
     </style>
 
     <style name="OnboardingText.Desc">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">14sp</item>
         <item name="font">AvertaRegular</item>
         <item name="android:lineSpacingExtra">8dp</item>
