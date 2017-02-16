@@ -50,11 +50,10 @@ open class OnboardingRulerFragment : OnboardingBaseFragment() {
         backgroundGradient = BackgroundGradient.TRACKER
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val layout = if (orientation.isVertical()) R.layout.fragment_onboarding_ruler_vertical
-            else R.layout.fragment_onboarding_ruler_horizontal
-        return inflater?.inflate(layout, container, false)!!
-    }
+    override fun getViewLayoutId(): Int = if (orientation.isVertical())
+            R.layout.fragment_onboarding_ruler_vertical
+        else
+            R.layout.fragment_onboarding_ruler_horizontal
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

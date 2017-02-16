@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <au.com.ahbeard.sleepsense.widgets.SSButton
+        android:id="@+id/skipButton"
+        android:layout_above="@+id/continueButton"
+        style="@style/OnboardingButton.Text.Skip" />
+    <au.com.ahbeard.sleepsense.widgets.SSButton
+        android:id="@+id/continueButton"
+        android:layout_alignParentBottom="true"
+        style="@style/OnboardingButton.Continue" />
+
+</merge>

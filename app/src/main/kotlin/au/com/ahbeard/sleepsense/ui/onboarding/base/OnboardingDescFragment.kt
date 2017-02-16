@@ -27,9 +27,7 @@ open class OnboardingDescFragment : OnboardingBaseFragment() {
         return arrayListOf(imageView, titleTextView!!, descTextView, continueButton!!)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_onboarding_desc, container, false)!!
-    }
+    override fun getViewLayoutId(): Int = R.layout.fragment_onboarding_desc
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

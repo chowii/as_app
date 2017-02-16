@@ -6,7 +6,9 @@ import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -36,6 +38,12 @@ abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, Onboardi
 
     @StringRes var titleRes: Int? = null
     val titleTextView: TextView? by bindOptionalView(R.id.titleTextView)
+
+    abstract fun getViewLayoutId() : Int
+
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater?.inflate(getViewLayoutId(), container, false)!!
+    }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

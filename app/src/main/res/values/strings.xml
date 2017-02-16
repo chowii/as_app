@@ -235,4 +235,7 @@
     <string name="onboarding_weight_title">How much do you weigh?</string>
     <string name="kg">kg</string>
     <string name="onboarding_gender_title">What\'s your gender?</string>
+    <string name="onboarding_nr_people_title">How do you usually sleep?</string>
+    <string name="by_myself">By myself</string>
+    <string name="with_a_partner">With a partner</string>
 </resources>

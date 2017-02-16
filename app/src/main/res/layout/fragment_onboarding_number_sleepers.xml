@@ -13,10 +13,10 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/titleTextView"
         android:layout_above="@+id/skipButton"
-        app:leftIcon="@drawable/ic_male_symbol_selector"
-        app:rightIcon="@drawable/ic_female_symbol_selector"
-        app:leftText="@string/male"
-        app:rightText="@string/female"
+        app:leftIcon="@drawable/ic_single_person_selector"
+        app:rightIcon="@drawable/ic_double_people_selector"
+        app:leftText="@string/by_myself"
+        app:rightText="@string/with_a_partner"
         />
 
     <include layout="@layout/onboarding_footer" />

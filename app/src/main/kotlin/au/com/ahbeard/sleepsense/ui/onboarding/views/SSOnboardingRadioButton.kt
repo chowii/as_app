@@ -5,8 +5,6 @@ import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.ScaleAnimation
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -21,8 +19,6 @@ class SSOnboardingRadioButton : RelativeLayout {
     val circleView: View by bindView(R.id.backgroundCircleView)
     val imageButton: ImageButton by bindView(R.id.imageButton)
     val textView: TextView by bindView(R.id.textView)
-
-    val delegateClickListener: View.OnClickListener? = null
 
     constructor(context: Context?) : super(context) {
         setup(null)

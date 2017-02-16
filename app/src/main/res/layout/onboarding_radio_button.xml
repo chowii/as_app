@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <RelativeLayout
         android:id="@+id/containerView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
         <View
             android:id="@+id/backgroundCircleView"
             android:layout_width="70dp"
@@ -24,7 +26,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/OnboardingText.Desc"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:textAlignment="center"
         android:layout_below="@id/containerView"
         android:layout_centerHorizontal="true"
+        tools:text="With a partiner"
         />
 </merge>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_onboarding" />
+
+    <au.com.ahbeard.sleepsense.widgets.SSTextView
+        android:id="@+id/titleTextView"
+        style="@style/OnboardingText.Title"
+        android:layout_below="@+id/toolbar"
+        tools:text="Generic Title"
+        />
+</merge>

@@ -24,9 +24,7 @@ class PickPumpSideOnboardingFragment : OnboardingBaseFragment() {
         return arrayListOf(imageView, titleTextView!!, leftButton, rightButton)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_onboarding_pick_pump_side, container, false)!!
-    }
+    override fun getViewLayoutId(): Int = R.layout.fragment_onboarding_pick_pump_side
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

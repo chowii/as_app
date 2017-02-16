@@ -39,13 +39,7 @@ abstract class OnboardingQuestionsFragment : OnboardingBaseFragment() {
         return arrayListOf()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_onboarding_questions, container, false)!!
-    }
+    override fun getViewLayoutId(): Int = R.layout.fragment_onboarding_questions
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
