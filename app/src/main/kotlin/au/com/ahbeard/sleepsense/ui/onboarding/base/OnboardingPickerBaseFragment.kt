@@ -25,12 +25,7 @@ open class OnboardingPickerBaseFragment : OnboardingBaseFragment() {
     var adapter : PickerRowAdapter? = null
 
     override fun viewsToAnimate(): List<View> {
-        val firstChildPos = layoutManager?.findFirstVisibleItemPosition()
-        val lastChildPos = layoutManager?.findLastVisibleItemPosition()
-        if (firstChildPos != null && lastChildPos != null) {
-            return (firstChildPos..lastChildPos).map { recyclerView.getChildAt(it) }
-        }
-        return arrayListOf()
+        return recyclerView.getVisibleViews()
     }
 
     override fun getViewLayoutId(): Int = R.layout.fragment_onboarding_age
@@ -84,4 +79,14 @@ open class OnboardingPickerBaseFragment : OnboardingBaseFragment() {
             
         }
     }
+}
+
+fun RecyclerView.getVisibleViews() : List<View> {
+    val layoutManager = this.layoutManager as? LinearLayoutManager
+    layoutManager?.let {
+        val firstChildPos = layoutManager.findFirstVisibleItemPosition()
+        val lastChildPos = layoutManager.findLastVisibleItemPosition()
+        return (firstChildPos..lastChildPos).map { getChildAt(it) }
+    }
+    return arrayListOf()
 }
