@@ -78,6 +78,8 @@ class OnboardingFragmentFlow {
         OnboardingFragmentType.WEIGHT_SELECT -> WeightSetupOnboardingFragment()
         OnboardingFragmentType.GENDER_SELECT -> GenderSetupOnboardingFragment()
         OnboardingFragmentType.NUMBER_USERS_SELECT -> NumberPeopleOnboardingFragment()
+        OnboardingFragmentType.TRACKER_DESC_1 -> TrackerDescFirstOnboardingFragment()
+        OnboardingFragmentType.TRACKER_DESC_2 -> TrackerDescSecondOnboardingFragment()
         else -> PickTrackerOnboardingFragment()
     }
 }

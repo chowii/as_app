@@ -230,6 +230,15 @@
     <string name="onboarding_tracker_setup_1_desc">Learn from your sleep score and\nadjust your mattress to improve\nyour sleep one night at a time</string>
     <string name="onboarding_tracker_setup_2_title">Let\'s get to\nknow each other</string>
     <string name="onboarding_tracker_setup_2_desc">This will make sure we get better\nand personalized results</string>
+    <string name="onboarding_tracker_desc_1_title_double">There are 2 trackers\ninside your mattress</string>
+    <string name="onboarding_tracker_desc_1_desc_double">Your smartbed tracks your sleep during the night using built in sensors that are in line with your heart</string>
+    <string name="onboarding_tracker_desc_1_title_single">Your mattress is designed\nto be smart</string>
+    <string name="onboarding_tracker_desc_1_desc_single">Your smartbed tracks your sleep during the night using built in sensors that are in line with your heart</string>
+    <string name="onboarding_tracker_desc_2_title_double">Lay down on your side\n of the bed</string>
+    <string name="onboarding_tracker_desc_2_desc_double">To track your sleep accurately we need to connect with the tracker on the side of the bed that you sleep on most</string>
+    <string name="onboarding_tracker_desc_2_title_single">Lay down on your bed</string>
+    <string name="onboarding_tracker_desc_2_desc_single">To track your sleep accurately, we need to sync to the right sensor with the strongest signal</string>
+
     <string name="cm">cm</string>
     <string name="onboarding_height_title">How tall are you?</string>
     <string name="onboarding_weight_title">How much do you weigh?</string>

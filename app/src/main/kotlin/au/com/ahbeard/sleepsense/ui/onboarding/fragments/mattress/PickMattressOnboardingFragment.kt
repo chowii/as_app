@@ -5,6 +5,7 @@ import android.support.annotation.IntegerRes
 import android.widget.Toast
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
+import java.util.*
 
 /**
 * Created by luisramos on 23/01/2017.
@@ -56,6 +57,12 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
         QUEEN(R.string.onboarding_pickMattress_queen),
         KING(R.string.onboarding_pickMattress_king),
         SUPER_KING(R.string.onboarding_pickMattress_super_king),
-        KING_SPLIT(R.string.onboarding_pickMattress_kingSplit)
+        KING_SPLIT(R.string.onboarding_pickMattress_kingSplit);
+
+        val isSingle: Boolean
+            get() = this == LONG_SINGLE || this == KING_SINGLE
+
+        val hasSplitBase: Boolean
+            get() = this == KING_SPLIT
     }
 }
