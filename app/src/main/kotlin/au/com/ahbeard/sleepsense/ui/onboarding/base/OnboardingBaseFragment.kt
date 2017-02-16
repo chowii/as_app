@@ -61,6 +61,7 @@ abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, Onboardi
         }
 
         continueButton?.setOnClickListener { presentNextOnboardingFragment() }
+        skipButton?.visibility = View.INVISIBLE
         skipButton?.setOnClickListener { skipToNextOnboardingFragment() }
 
 //        prepareViewsForEntryAnim()

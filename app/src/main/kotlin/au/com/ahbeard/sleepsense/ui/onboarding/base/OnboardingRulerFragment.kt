@@ -87,41 +87,17 @@ open class OnboardingRulerFragment : OnboardingBaseFragment() {
         this.orientation = orientation
     }
 
-    class RulerAdapter(var data: List<Int>, val orientation: Orientation, val min: Int) : RecyclerView.Adapter<RulerAdapter.ViewHolder>() {
+    class RulerAdapter(var data: List<Int>, val orientation: Orientation, val min: Int) : RecyclerWithMarginsAdapter() {
 
-        var recyclerViewSize = 0
-            set(value) {
-                val prev = field
-                field = value
-                if (prev != field) {
-                    notifyDataSetChanged()
-                }
-            }
-
-        class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        class ViewHolder(val orientation: Orientation, view: View) : RecyclerWithMarginsAdapter.MarginViewHolder(view) {
             val textView: TextView? by bindOptionalView(R.id.textView)
-//            val lineView: View = view.findViewById(R.id.lineView)
 
-            fun setMargins(orientation: Orientation, margin1: Int, margin2: Int) {
+            override fun setMargins(topMargin: Int, bottomMargin: Int, leftMargin: Int, rightMargin: Int) {
                 if (orientation.isVertical()) {
-                    setTopBottomMargins(margin1, margin2)
+                    super.setMargins(topMargin, bottomMargin, leftMargin, rightMargin)
                 } else {
-                    setLeftRightMargins(margin1, margin2)
+                    super.setMargins(leftMargin, rightMargin, topMargin, bottomMargin)
                 }
-            }
-
-            fun setTopBottomMargins(topMargin: Int, bottomMargin: Int) {
-                val layoutParams = itemView.layoutParams as RecyclerView.LayoutParams
-                layoutParams.topMargin = topMargin
-                layoutParams.bottomMargin = bottomMargin
-                itemView.layoutParams = layoutParams
-            }
-
-            fun setLeftRightMargins(leftMargin: Int, rightMargin: Int) {
-                val layoutParams = itemView.layoutParams as RecyclerView.LayoutParams
-                layoutParams.leftMargin= leftMargin
-                layoutParams.rightMargin= rightMargin
-                itemView.layoutParams = layoutParams
             }
         }
 
@@ -135,17 +111,15 @@ open class OnboardingRulerFragment : OnboardingBaseFragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent!!.context).inflate(viewType, parent, false)
-            return ViewHolder(view)
+            return ViewHolder(orientation, view)
         }
 
-        override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-            val margin1 = if (position == 0) recyclerViewSize / 2 else 0
-            val margin2 = if (position == data.size - 1) recyclerViewSize / 2 else 0
+        override fun onBindViewHolder(holder: RecyclerWithMarginsAdapter.MarginViewHolder?, position: Int) {
+            super.onBindViewHolder(holder, position)
 
-            holder?.setMargins(orientation, margin1, margin2)
-
+            val viewHolder = holder as? ViewHolder //we need cast because of the base class
             if (orientation.isVertical()) {
-                holder?.textView?.text = "${min + position * 10}cm"
+                viewHolder?.textView?.text = "${min + position * 10}cm"
             }
         }
 

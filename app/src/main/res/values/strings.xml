@@ -247,4 +247,6 @@
     <string name="onboarding_nr_people_title">How do you usually sleep?</string>
     <string name="by_myself">By myself</string>
     <string name="with_a_partner">With a partner</string>
+    <string name="onboarding_sync_tracker_title">Breathe deeply while laying\non your side of the bed</string>
+    <string name="onboarding_age_title">How old are you?</string>
 </resources>
