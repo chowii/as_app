@@ -27,5 +27,8 @@
     <!--we use it to calculate correct height/weight-->
     <dimen name="rule_line_size">10dp</dimen>
 
+    <dimen name="onboarding_picker_line_height">40dp</dimen>
+
     <dimen name="onboarding_leading_margin">16dp</dimen>
+
 </resources>

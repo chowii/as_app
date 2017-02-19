@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.services.log.SSLog
 import kotterknife.bindView
 
 /**
@@ -33,11 +34,16 @@ open class OnboardingPickerBaseFragment : OnboardingBaseFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+//        recyclerView.setBackgroundColor(R.color.debug1)
+
         layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
 
-        adapter = PickerRowAdapter(data)
+        val pickerLineHeight = resources.getDimension(R.dimen.onboarding_picker_line_height).toInt()
+        adapter = PickerRowAdapter(data, pickerLineHeight)
         recyclerView.adapter = adapter
+
+        recyclerView.addOnScrollListener(PickerScrollListener())
 
         recyclerView.viewTreeObserver.addOnGlobalLayoutListener {
             adapter?.recyclerViewSize = recyclerView.measuredHeight
@@ -49,7 +55,7 @@ open class OnboardingPickerBaseFragment : OnboardingBaseFragment() {
         data = values.map { RowViewModel(it, java.lang.String.format(format, it)) }
     }
 
-    class PickerRowAdapter(var data: List<RowViewModel>) : RecyclerWithMarginsAdapter() {
+    class PickerRowAdapter(var data: List<RowViewModel>, itemViewSize: Int) : RecyclerWithMarginsAdapter(itemViewSize) {
 
         class ViewHolder(view: View) : RecyclerWithMarginsAdapter.MarginViewHolder(view) {
             val textView: TextView by bindView(R.id.textView)
@@ -61,6 +67,7 @@ open class OnboardingPickerBaseFragment : OnboardingBaseFragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_onboarding_picker_row, parent, false)
+//            view.setBackgroundColor(R.color.debug2)
             return ViewHolder(view)
         }
 
@@ -72,11 +79,29 @@ open class OnboardingPickerBaseFragment : OnboardingBaseFragment() {
         }
     }
 
-    class PickerScrollListener() : RecyclerView.OnScrollListener() {
+    class PickerScrollListener : RecyclerView.OnScrollListener() {
+
+        var currentOffset = 0
+
         override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
-            
+            currentOffset += dy
+
+//            recyclerView?.getVisibleViews()?.forEach {
+//
+//                val viewHeight = recyclerView.height / 2
+//                val correctedTop = if (it.top <= viewHeight) it.top else (recyclerView.height - it.top)
+//                val offset = correctedTop + it.height / 2
+//
+//                val percentage = offset.toFloat() / viewHeight
+//                it.alpha = Math.max(0f, Math.min(percentage, 1f))
+//
+//                val textView = it.findViewById(R.id.textView) as? TextView
+//                if (textView?.text == "3") {
+//                    SSLog.d("${textView?.text ?: "0"} per: $percentage viewHeight: $viewHeight correctedTop: $correctedTop offset: $offset")
+//                }
+//            }
         }
     }
 }
@@ -84,9 +109,9 @@ open class OnboardingPickerBaseFragment : OnboardingBaseFragment() {
 fun RecyclerView.getVisibleViews() : List<View> {
     val layoutManager = this.layoutManager as? LinearLayoutManager
     layoutManager?.let {
-        val firstChildPos = layoutManager.findFirstVisibleItemPosition()
+        val firstChildPos = layoutManager. findFirstVisibleItemPosition()
         val lastChildPos = layoutManager.findLastVisibleItemPosition()
-        return (firstChildPos..lastChildPos).map { getChildAt(it) }
+        return (firstChildPos..lastChildPos).map { layoutManager.findViewByPosition(it) } .filter { it != null }
     }
     return arrayListOf()
 }

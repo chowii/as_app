@@ -15,7 +15,7 @@ class AgeSetupOnboardingFragment : OnboardingPickerBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        configurePicker(R.string.onboarding_age_title, "%2d", (minAge..maxAge).toList())
+        configurePicker(R.string.onboarding_age_title, "%d", (minAge..maxAge).toList())
     }
 }
 

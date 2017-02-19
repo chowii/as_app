@@ -8,7 +8,9 @@ import android.view.View
  *
  * This method dependes
  */
-abstract class RecyclerWithMarginsAdapter : RecyclerView.Adapter<RecyclerWithMarginsAdapter.MarginViewHolder>() {
+abstract class RecyclerWithMarginsAdapter(val itemViewSize: Int) : RecyclerView.Adapter<RecyclerWithMarginsAdapter.MarginViewHolder>() {
+
+    constructor() : this(0)
 
     var recyclerViewSize = 0
         set(value) {
@@ -33,8 +35,8 @@ abstract class RecyclerWithMarginsAdapter : RecyclerView.Adapter<RecyclerWithMar
     }
 
     override fun onBindViewHolder(holder: RecyclerWithMarginsAdapter.MarginViewHolder?, position: Int) {
-        val marginTop = if (position == 0) recyclerViewSize / 2 else 0
-        val marginBottom = if (position == itemCount - 1) recyclerViewSize / 2 else 0
+        val marginTop = if (position == 0) recyclerViewSize / 2 - itemViewSize else 0
+        val marginBottom = if (position == itemCount - 1) recyclerViewSize / 2 - itemViewSize else 0
 
         holder?.setMargins(marginTop, marginBottom, 0, 0)
     }
