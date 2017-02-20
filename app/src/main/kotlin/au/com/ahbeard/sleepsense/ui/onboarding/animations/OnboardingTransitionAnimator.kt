@@ -40,9 +40,9 @@ object OnboardingTransitionAnimator {
         return fragmentManager.fragments[fragmentManager.backStackEntryCount]
     }
 
-    private fun animateViews(views: List<View>, fromFragment: OnboardingBaseFragment, toFragment: OnboardingBaseFragment, animateLeft: Boolean) {
-
-    }
+//    private fun animateViews(views: List<View>, fromFragment: OnboardingBaseFragment, toFragment: OnboardingBaseFragment, animateLeft: Boolean) {
+//
+//    }
 
     private fun animateView(view: View, delay: Long) {
         view.animate()

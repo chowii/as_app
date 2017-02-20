@@ -2,7 +2,6 @@ package au.com.ahbeard.sleepsense.ui.onboarding.base
 
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -18,7 +17,6 @@ import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
 import au.com.ahbeard.sleepsense.ui.onboarding.animations.OnboardingTransitionAnimatable
 import au.com.ahbeard.sleepsense.ui.onboarding.animations.OnboardingTransitionAnimator
 import kotterknife.bindOptionalView
-import kotterknife.bindView
 
 /**
 * Created by luisramos on 23/01/2017.

@@ -92,4 +92,6 @@
     <color name="onboarding_gradient_3_bottom">#62AAF8</color>
     <color name="onboarding_title_text">#fff</color>
     <color name="ruler_line_background">#4cffffff</color>
+
+    <color name="onboarding_not_sure_background">#2E73FF</color>
 </resources>

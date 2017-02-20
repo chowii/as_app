@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment.OnboardingQuestionsAdapter.OnItemClickListener
@@ -25,6 +26,7 @@ abstract class OnboardingQuestionsFragment : OnboardingBaseFragment() {
 
     var data : List<QuestionViewModel> = arrayListOf()
 
+    val containerView: RelativeLayout by bindView(R.id.containerView)
     val recyclerView: RecyclerView by bindView(R.id.recyclerView)
     val shadowView: ImageView by bindView(R.id.shadowImage)
     var layoutManager : LinearLayoutManager? = null

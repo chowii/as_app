@@ -52,7 +52,7 @@ enum class OnboardingFragmentType {
 
 class OnboardingFragmentFlow {
 
-    var currFragmentType = OnboardingFragmentType.SLEEP_TARGET_SELECT
+    var currFragmentType = OnboardingFragmentType.PICK_MATTRESS
 
     fun firstFragment() : OnboardingBaseFragment {
         return factory(currFragmentType)

@@ -2,9 +2,22 @@ package au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress
 
 import android.os.Bundle
 import android.support.annotation.IntegerRes
+import android.support.v4.animation.AnimatorCompatHelper
+import android.support.v4.animation.ValueAnimatorCompat
+import android.support.v4.view.ViewCompat
+import android.support.v7.widget.ViewUtils
+import android.view.View
+import android.view.ViewAnimationUtils
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import android.widget.Toast
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.setAnimEndListener
+import au.com.ahbeard.sleepsense.ui.onboarding.views.SSNotSureOverlayView
+import kotlinx.android.synthetic.main.fragment_onboarding_questions.view.*
+import kotterknife.bindView
 import java.util.*
 
 /**
@@ -13,6 +26,20 @@ import java.util.*
 class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
 
     var connecting = false
+
+    val notSureOverlayView : SSNotSureOverlayView by lazy {
+        val layoutParams = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT)
+
+        val notOverlayView = SSNotSureOverlayView(view!!.context)
+        notOverlayView.layoutParams = layoutParams
+        notOverlayView.visibility = View.INVISIBLE
+
+        containerView.addView(notOverlayView)
+
+        notOverlayView
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,14 +53,29 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
         super.onCreate(savedInstanceState)
     }
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        notSureOverlayView.closeButton.setOnClickListener {
+            hideNotSureOverlay()
+        }
+    }
+
     override fun didSelectOption(index: Int) {
         if (index == data.size - 1) {
-            //Show not sure screen
-            Toast.makeText(activity, "Not sure screen not implemented", Toast.LENGTH_SHORT).show()
+            showNotSureOverlay()
         } else {
             state.mattressLine = MattressLine.values()[index]
             scanForPumps()
         }
+    }
+
+    private fun showNotSureOverlay() {
+        notSureOverlayView.animateEntry(view!!)
+    }
+
+    private fun hideNotSureOverlay() {
+        notSureOverlayView.animateExit()
     }
 
     fun scanForPumps() {

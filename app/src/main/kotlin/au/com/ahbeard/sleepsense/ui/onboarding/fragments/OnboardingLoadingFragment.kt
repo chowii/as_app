@@ -172,18 +172,18 @@ fun AnimationSet.setAnimEndListener(block: (Animation?) -> Unit) {
 }
 
 fun ViewPropertyAnimator.setAnimEndListener(block: (Animator?) -> Unit) : ViewPropertyAnimator {
-    setListener(OnAnimEndAnimatorListener(block))
+    setListener(OnAnimEndAnimatorListener(this, block))
     return this
 }
 
-class OnAnimEndAnimatorListener(val block: (Animator?) -> Unit): Animator.AnimatorListener {
+class OnAnimEndAnimatorListener(val propertyAnimator: ViewPropertyAnimator, val block: (Animator?) -> Unit): Animator.AnimatorListener {
     override fun onAnimationRepeat(animation: Animator?) {
 
     }
 
     override fun onAnimationEnd(animation: Animator?) {
         block(animation)
-        animation?.removeAllListeners()
+        propertyAnimator.setListener(null)
     }
 
     override fun onAnimationCancel(animation: Animator?) {
