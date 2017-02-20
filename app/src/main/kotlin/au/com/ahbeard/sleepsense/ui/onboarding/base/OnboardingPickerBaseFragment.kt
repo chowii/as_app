@@ -3,7 +3,9 @@ package au.com.ahbeard.sleepsense.ui.onboarding.base
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.LinearSnapHelper
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SnapHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +19,9 @@ import kotterknife.bindView
  */
 open class OnboardingPickerBaseFragment : OnboardingBaseFragment() {
 
+    private var minValue = 3
+    private var maxValue = 120
+
     class RowViewModel(val value: Int, val text: String)
 
     var data : List<RowViewModel> = arrayListOf()
@@ -24,12 +29,13 @@ open class OnboardingPickerBaseFragment : OnboardingBaseFragment() {
     val recyclerView: RecyclerView by bindView(R.id.recyclerView)
     var layoutManager : LinearLayoutManager? = null
     var adapter : PickerRowAdapter? = null
+    var snapHelper: SnapHelper = LinearSnapHelper()
 
     override fun viewsToAnimate(): List<View> {
         return recyclerView.getVisibleViews()
     }
 
-    override fun getViewLayoutId(): Int = R.layout.fragment_onboarding_age
+    override fun getViewLayoutId(): Int = R.layout.fragment_onboarding_base_picker
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,15 +50,28 @@ open class OnboardingPickerBaseFragment : OnboardingBaseFragment() {
         recyclerView.adapter = adapter
 
         recyclerView.addOnScrollListener(PickerScrollListener())
+        snapHelper.attachToRecyclerView(recyclerView)
 
         recyclerView.viewTreeObserver.addOnGlobalLayoutListener {
             adapter?.recyclerViewSize = recyclerView.measuredHeight
         }
     }
 
-    fun configurePicker(@StringRes title: Int, format: String, values: List<Int>) {
+    fun configurePicker(@StringRes title: Int, format: String, min: Int, max: Int) {
+        minValue = min
+        maxValue = max
         titleRes = title
-        data = values.map { RowViewModel(it, java.lang.String.format(format, it)) }
+        data = (minValue..maxValue).toList().map { RowViewModel(it, java.lang.String.format(format, it)) }
+    }
+
+    fun getSelectedValue() : Int {
+        val firstChildPos = layoutManager?.findFirstVisibleItemPosition()
+        val lastChildPos = layoutManager?.findLastVisibleItemPosition()
+        if (firstChildPos != null && lastChildPos != null) {
+            val pos = (lastChildPos - firstChildPos) / 2 + firstChildPos
+            return data[pos].value
+        }
+        return minValue
     }
 
     class PickerRowAdapter(var data: List<RowViewModel>, itemViewSize: Int) : RecyclerWithMarginsAdapter(itemViewSize) {

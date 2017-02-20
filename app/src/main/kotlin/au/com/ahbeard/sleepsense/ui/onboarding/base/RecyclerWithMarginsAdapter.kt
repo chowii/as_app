@@ -35,8 +35,8 @@ abstract class RecyclerWithMarginsAdapter(val itemViewSize: Int) : RecyclerView.
     }
 
     override fun onBindViewHolder(holder: RecyclerWithMarginsAdapter.MarginViewHolder?, position: Int) {
-        val marginTop = if (position == 0) recyclerViewSize / 2 - itemViewSize else 0
-        val marginBottom = if (position == itemCount - 1) recyclerViewSize / 2 - itemViewSize else 0
+        val marginTop = if (position == 0) recyclerViewSize / 2 - itemViewSize / 2 else 0
+        val marginBottom = if (position == itemCount - 1) recyclerViewSize / 2 + itemViewSize / 2 else 0
 
         holder?.setMargins(marginTop, marginBottom, 0, 0)
     }

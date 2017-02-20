@@ -16,6 +16,18 @@
 
     <include layout="@layout/onboarding_header" />
 
+    <au.com.ahbeard.sleepsense.widgets.SSTextView
+        android:id="@+id/descTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/OnboardingText.Desc"
+        android:layout_marginTop="-10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/titleTextView"
+        android:visibility="gone"
+        tools:text="@string/sleep_target_desc"
+        />
+
     <include layout="@layout/onboarding_footer" />
 
 </RelativeLayout>
