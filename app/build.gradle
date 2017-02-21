@@ -72,7 +72,7 @@ android {
 }
 
 dependencies {
-    def androidSupportVersion = "25.1.0"
+    def androidSupportVersion = "25.1.1"
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':beddit-mobile-android-sensor')
@@ -91,8 +91,9 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava-async-util:0.21.0'
     compile 'com.artemzin.rxjava:proguard-rules:1.1.7.0'
-    compile 'com.trello:rxlifecycle:0.7.0'
-    compile 'com.trello:rxlifecycle-android:0.7.0'
+    def rxLifecycleVersion = "1.0"
+    compile "com.trello:rxlifecycle:$rxLifecycleVersion"
+    compile "com.trello:rxlifecycle-android:$rxLifecycleVersion"
     compile 'jp.wasabeef:blurry:2.1.0'
 
     compile 'com.google.android.gms:play-services-base:10.0.1'
