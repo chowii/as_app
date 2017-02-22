@@ -277,7 +277,9 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     public void findInitialDevices() {
 
-        SleepSenseDeviceService.instance().newAcquireDevices(2500).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
+        SleepSenseDeviceService.instance().scanDevices().subscribe(new Observer<SleepSenseDeviceAquisition>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
             @Override
             public void onCompleted() {
@@ -331,7 +333,9 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     public void acquireDevices() {
 
-        SleepSenseDeviceService.instance().newAcquireDevices(5000).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
+        SleepSenseDeviceService.instance().scanDevices().subscribe(new Observer<SleepSenseDeviceAquisition>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
             @Override
             public void onCompleted() {

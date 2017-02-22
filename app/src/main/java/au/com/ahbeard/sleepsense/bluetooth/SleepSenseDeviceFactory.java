@@ -1,5 +1,6 @@
 package au.com.ahbeard.sleepsense.bluetooth;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.UUID;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
+import au.com.ahbeard.sleepsense.hardware.BedHardware;
+import au.com.ahbeard.sleepsense.hardware.PumpHardware;
 
 /**
  * Created by neal on 4/03/2016.
@@ -17,6 +20,10 @@ import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 public class SleepSenseDeviceFactory {
 
     private static final boolean FIND_TRACKER = true;
+
+    private static final String PUMP_SCAN_NAME = "2618";
+    private static final String BASE_SCAN_NAME = "base-i4";
+    private static final String BEDDIT_TRACKER_SCAN_NAME = "beddit";
 
     public static boolean isSleepSenseDevice(BluetoothEvent.PacketEvent scanPacketEvent) {
 
@@ -49,25 +56,25 @@ public class SleepSenseDeviceFactory {
         return false;
     }
 
-    public static List<Device> factorySleepSenseDevice(Context context, BluetoothEvent.PacketEvent scanPacketEvent) {
+    static List<Device> factorySleepSenseDevice(Context context, BluetoothEvent.PacketEvent scanPacketEvent) {
 
         List<Device> mDevices = new ArrayList<>();
 
         String name = scanPacketEvent.getDevice().getName();
 
-        if (name != null && name.toLowerCase().contains("2618")) {
+        if (name != null && name.toLowerCase().contains(PUMP_SCAN_NAME)) {
             PumpDevice pumpDevice = new PumpDevice();
             pumpDevice.link(context, scanPacketEvent.getDevice());
             mDevices.add(pumpDevice);
         }
 
-        if (name != null && name.contains("base-i4")) {
+        if (name != null && name.contains(BASE_SCAN_NAME)) {
             BaseDevice baseDevice = new BaseDevice();
             baseDevice.link(context, scanPacketEvent.getDevice());
             mDevices.add(baseDevice);
         }
 
-        if (FIND_TRACKER && name != null && name.toLowerCase().contains("beddit")) {
+        if (FIND_TRACKER && name != null && name.toLowerCase().contains(BEDDIT_TRACKER_SCAN_NAME)) {
             TrackerDevice trackerDevice = new TrackerDevice();
             trackerDevice.link(context, scanPacketEvent.getDevice());
             mDevices.add(trackerDevice);
@@ -75,5 +82,20 @@ public class SleepSenseDeviceFactory {
 
 
         return mDevices;
+    }
+
+    static List<BedHardware> factoryBedHardware(Context context, BluetoothEvent.PacketEvent packet) {
+        List<BedHardware> hardwareArray = new ArrayList<>();
+
+        BluetoothDevice device = packet.getDevice();
+        String name = device.getName();
+
+        if (name != null) {
+            if (name.toLowerCase().contains(PUMP_SCAN_NAME)) {
+                hardwareArray.add(new PumpHardware(context, device));
+            }
+        }
+
+        return hardwareArray;
     }
 }

@@ -2,23 +2,16 @@ package au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress
 
 import android.os.Bundle
 import android.support.annotation.IntegerRes
-import android.support.v4.animation.AnimatorCompatHelper
-import android.support.v4.animation.ValueAnimatorCompat
-import android.support.v4.view.ViewCompat
-import android.support.v7.widget.ViewUtils
 import android.view.View
-import android.view.ViewAnimationUtils
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.RelativeLayout
-import android.widget.Toast
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService
+import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice
+import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
-import au.com.ahbeard.sleepsense.ui.onboarding.fragments.setAnimEndListener
 import au.com.ahbeard.sleepsense.ui.onboarding.views.SSNotSureOverlayView
-import kotlinx.android.synthetic.main.fragment_onboarding_questions.view.*
-import kotterknife.bindView
-import java.util.*
+import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import io.reactivex.Observable
 
 /**
 * Created by luisramos on 23/01/2017.
@@ -84,6 +77,21 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
 
         onboardingActivity.showLoading(R.string.onboarding_connecting_mattress)
 
+        SleepSenseDeviceService.instance().scanPumps()
+                .bindToLifecycle(this)
+                .subscribe({
+                    if (it.size > 0) {
+                        it[0].connect()
+                                .subscribe {
+                                    SSLog.d("IM CONNECTED")
+                                }
+                    } else {
+                        SSLog.d("NOT THERE YET")
+                    }
+                }, {
+                    SSLog.e("UPS")
+                })
+
         //FIXME Actually connect to device
         view?.postDelayed({
             onboardingActivity.hideLoading({
@@ -91,6 +99,8 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
             })
         }, 2000)
     }
+
+
 
     enum class MattressLine(@IntegerRes val nameRes: Int) {
         LONG_SINGLE(R.string.onboarding_pickMattress_long_single),
@@ -108,3 +118,7 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
             get() = this == KING_SPLIT
     }
 }
+
+open class OnboardingError: Throwable()
+
+class OnboardingErrorPumpNotFound: OnboardingError()

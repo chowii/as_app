@@ -41,6 +41,8 @@ public class BaseActivity extends AppCompatActivity implements LifecycleProvider
 
     private final BehaviorSubject<ActivityEvent> lifecycleSubject = BehaviorSubject.create();
 
+    protected Boolean hasScanPermissions = false;
+
     public void openSleepScoreBreakdown(int sleepId) {
 
     }
@@ -189,7 +191,7 @@ public class BaseActivity extends AppCompatActivity implements LifecycleProvider
     }
 
     public void onScanningPermissionGranted() {
-
+        hasScanPermissions = true;
     }
 
     @Override

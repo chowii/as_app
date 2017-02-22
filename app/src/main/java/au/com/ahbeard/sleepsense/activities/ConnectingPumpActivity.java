@@ -195,7 +195,7 @@ public class ConnectingPumpActivity  extends BaseActivity implements
 
     public void findPumpDevice() {
 
-        SleepSenseDeviceService.instance().newAcquireDevices(2500).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
+        SleepSenseDeviceService.instance().scanDevices().subscribe(new Observer<SleepSenseDeviceAquisition>() {
             @Override
             public void onCompleted() {
 

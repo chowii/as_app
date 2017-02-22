@@ -26,6 +26,9 @@ class MainOnboardingActivity : BaseActivity() {
                     .add(R.id.fragmentContainer, flow.firstFragment())
                     .commit()
         }
+
+        //FIXME: This should be done in the App Tour fragments
+        requestBackgroundScanningPermissions()
     }
 
     override fun onBackPressed() {

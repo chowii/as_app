@@ -87,13 +87,12 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'org.apache.commons:commons-collections4:4.1'
-    compile 'io.reactivex:rxjava:1.1.7'
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava-async-util:0.21.0'
-    compile 'com.artemzin.rxjava:proguard-rules:1.1.7.0'
-    def rxLifecycleVersion = "1.0"
-    compile "com.trello:rxlifecycle:$rxLifecycleVersion"
-    compile "com.trello:rxlifecycle-android:$rxLifecycleVersion"
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.6'
+    def rxLifecycleVersion = "2.0.1"
+    compile "com.trello.rxlifecycle2:rxlifecycle:$rxLifecycleVersion"
+    compile "com.trello.rxlifecycle2:rxlifecycle-android:$rxLifecycleVersion"
+    compile "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rxLifecycleVersion"
     compile 'jp.wasabeef:blurry:2.1.0'
 
     compile 'com.google.android.gms:play-services-base:10.0.1'

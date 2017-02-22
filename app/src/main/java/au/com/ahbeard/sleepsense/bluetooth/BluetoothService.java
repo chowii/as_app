@@ -13,13 +13,21 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Action0;
-import rx.functions.Func1;
-import rx.subjects.PublishSubject;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Single;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by neal on 16/12/2015.
@@ -134,6 +142,16 @@ public class BluetoothService extends BluetoothGattCallback {
                 }
             }
         });
+    }
+
+    public Single<List<BluetoothEvent.PacketEvent>> scanForBLEDevices(long timeoutMilis, Predicate<BluetoothEvent> predicate) {
+        return BluetoothService.instance()
+                .startScanning()
+                .observeOn(Schedulers.computation())
+                .filter(predicate)
+                .cast(BluetoothEvent.PacketEvent.class)
+                .take(timeoutMilis, TimeUnit.MILLISECONDS)
+                .toList();
     }
 
     private void _scan(final boolean enable) {

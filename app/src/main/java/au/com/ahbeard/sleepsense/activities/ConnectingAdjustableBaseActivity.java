@@ -113,7 +113,11 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
 
     public void findInitialDevices() {
 
-        SleepSenseDeviceService.instance().newAcquireDevices(2500).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
+        SleepSenseDeviceService.instance().scanDevices().subscribe(new Observer<SleepSenseDeviceAquisition>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                //do nothing
+            }
 
             @Override
             public void onCompleted() {
@@ -158,8 +162,7 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
 
     public void acquireDevices() {
 
-        SleepSenseDeviceService.instance().newAcquireDevices(5000).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
-
+        SleepSenseDeviceService.instance().scanDevices().subscribe(new Observer<SleepSenseDeviceAquisition>() {
             @Override
             public void onCompleted() {
 
