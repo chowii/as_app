@@ -26,9 +26,10 @@ import au.com.ahbeard.sleepsense.widgets.StyledLinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.internal.operators.completable.CompletableDisposeOn;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,7 +96,7 @@ public class MassageControlFragment extends Fragment {
     @Bind({R.id.massage_text_view_off,R.id.massage_text_view_10_min, R.id.massage_text_view_20_min, R.id.massage_text_view_30_min})
     List<View> mTimeTextViews;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     public MassageControlFragment() {
 
@@ -162,9 +163,9 @@ public class MassageControlFragment extends Fragment {
 
             mBaseDevice.connect();
 
-            mCompositeSubscription.add(mBaseDevice.getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseStatusEvent>() {
+            mCompositeSubscription.add(mBaseDevice.getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<BaseStatusEvent>() {
                 @Override
-                public void call(BaseStatusEvent baseStatusEvent) {
+                public void accept(BaseStatusEvent baseStatusEvent) {
                     updateViews(baseStatusEvent);
 
                 }
@@ -174,16 +175,16 @@ public class MassageControlFragment extends Fragment {
                     .getBaseDevice()
                     .getChangeObservable()
                     .onBackpressureBuffer()
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Device>() {
                         @Override
-                        public void call(Device device) {
+                        public void accept(Device device) {
                             if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
                                 startProgress();
                             } else if ( device.getConnectionState() == Device.CONNECTION_STATE_DISCONNECTED && device.getLastConnectionStatus() > 0 ){
                                 stopProgress();
-                                showToast("Connection timeout","Try again",new Action1<Void>(){
+                                showToast("Connection timeout","Try again",new Runnable(){
                                     @Override
-                                    public void call(Void aVoid) {
+                                    public void run() {
                                         if (SleepSenseDeviceService.instance().getBaseDevice() != null)
                                             SleepSenseDeviceService.instance().getBaseDevice().connect();
                                     }
@@ -237,12 +238,12 @@ public class MassageControlFragment extends Fragment {
     @Bind(R.id.progress_layout_text_view_action)
     protected TextView mActionTextView;
 
-    private Action1<Void> mAction;
+    private Runnable mAction;
 
     @OnClick(R.id.progress_layout_text_view_action)
     protected void progressAction() {
         if (mAction != null) {
-            mAction.call(null);
+            mAction.run();
             mLayout.setVisibility(View.GONE);
         }
     }
@@ -275,7 +276,7 @@ public class MassageControlFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    protected void showToast(String message, String actionText, Action1<Void> action) {
+    protected void showToast(String message, String actionText, Runnable action) {
 
         mAction = action;
 

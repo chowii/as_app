@@ -1,12 +1,10 @@
 package au.com.ahbeard.sleepsense.fragments;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +16,6 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -30,12 +26,11 @@ import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.utils.StatisticsUtils;
 import au.com.ahbeard.sleepsense.widgets.LabelThingy;
-import au.com.ahbeard.sleepsense.widgets.WeeklyGraphView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,7 +75,7 @@ public class WeeklyDashboardFragment extends Fragment {
     @Bind(R.id.dashboard_text_view_sleep_tip_text)
     TextView mSleepTipText;
 
-    CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     private StatisticsUtils.StatisticViewHolder mAverageSleepScore;
     private StatisticsUtils.StatisticViewHolder mOptimalBedtime;
@@ -184,9 +179,9 @@ public class WeeklyDashboardFragment extends Fragment {
                 StatisticsUtils.getCircleDrawable(getContext(), StatisticsUtils.StatisticCircleColor.RED),
                 "Worst Night", null);
 
-        mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+        mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
             @Override
-            public void call(Integer sleepId) {
+            public void accept(Integer sleepId) {
                 mGraphViewPager.getAdapter().notifyDataSetChanged();
             }
         }));
@@ -208,9 +203,9 @@ public class WeeklyDashboardFragment extends Fragment {
         String[] sleepTips = getResources().getStringArray(R.array.sleep_tips);
         mSleepTipText.setText(sleepTips[new Random().nextInt(sleepTips.length)]);
 
-        mCompositeSubscription.add(SleepService.instance().getAggregateStatisticsObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<AggregateStatistics>() {
+        mCompositeSubscription.add(SleepService.instance().getAggregateStatisticsObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<AggregateStatistics>() {
             @Override
-            public void call(final AggregateStatistics aggregateStatistics) {
+            public void accept(final AggregateStatistics aggregateStatistics) {
 
                 // Average sleep score
                 mAverageSleepScore.valueTextView.setText(Integer.toString(aggregateStatistics.getAverageSleepScore().intValue()));

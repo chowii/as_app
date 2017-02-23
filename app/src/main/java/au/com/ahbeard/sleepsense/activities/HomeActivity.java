@@ -2,12 +2,10 @@ package au.com.ahbeard.sleepsense.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -17,9 +15,6 @@ import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.DashboardNoSleepsFragment;
-import au.com.ahbeard.sleepsense.fragments.LiveFeedbackFragment;
-import au.com.ahbeard.sleepsense.fragments.WeeklyDashboardFragment;
-import au.com.ahbeard.sleepsense.fragments.DebugFragment;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MoreFragment;
@@ -31,9 +26,9 @@ import au.com.ahbeard.sleepsense.widgets.SimpleTabStrip;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by neal on 3/03/2016.
@@ -44,7 +39,7 @@ public class HomeActivity extends BaseActivity {
 
     private HomeFragmentPagerAdapter mDashboardPagerAdapter;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     @Bind(R.id.dashboard_view_pager)
     ViewPager mViewPager;
@@ -106,9 +101,9 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+        mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
             @Override
-            public void call(Integer sleepId) {
+            public void accept(Integer sleepId) {
                 if ( mHasRecordedASleep != PreferenceService.instance().getHasRecordedASleep()) {
                     setupTabs();
                 }

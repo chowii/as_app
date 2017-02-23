@@ -27,9 +27,9 @@ import au.com.ahbeard.sleepsense.services.SleepService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,7 +70,7 @@ public class DashboardFragment extends Fragment {
 
     private boolean ignoreTabChange = false;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -128,9 +128,9 @@ public class DashboardFragment extends Fragment {
 
         mCompositeSubscription.add(SleepService.instance().getSleepIdSelectedObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Integer>() {
+                .subscribe(new Consumer<Integer>() {
                     @Override
-                    public void call(Integer sleepId) {
+                    public void accept(Integer sleepId) {
                         ignoreTabChange = true;
                         mTabHost.setCurrentTab(0);
                     }

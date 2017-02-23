@@ -7,9 +7,8 @@ import android.widget.ImageButton;
 
 import java.util.concurrent.TimeUnit;
 
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * So far this just makes the button square.
@@ -45,7 +44,7 @@ public class StyledImageButton extends ImageButton {
         this.mMakeSquareBasedOnWidth = mMakeSquareBasedOnWidth;
     }
 
-    private Subscription mPulseTimerSubscription;
+    private Disposable mPulseTimerSubscription;
 
 
     @Override
@@ -55,9 +54,9 @@ public class StyledImageButton extends ImageButton {
             if (mOnPressPulseListener!=null) {
                 mOnPressPulseListener.onDown(StyledImageButton.this);
             }
-            mPulseTimerSubscription = AndroidSchedulers.mainThread().createWorker().schedulePeriodically(new Action0() {
+            mPulseTimerSubscription = AndroidSchedulers.mainThread().createWorker().schedulePeriodically(new Runnable() {
                 @Override
-                public void call() {
+                public void run() {
                     if (mOnPressPulseListener!=null) {
                         mOnPressPulseListener.onPressPulse(StyledImageButton.this);
                     }
@@ -66,7 +65,7 @@ public class StyledImageButton extends ImageButton {
 
         } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_OUTSIDE) {
             if ( mPulseTimerSubscription != null ) {
-                mPulseTimerSubscription.unsubscribe();
+                mPulseTimerSubscription.dispose();
                 mPulseTimerSubscription = null;
             }
         }

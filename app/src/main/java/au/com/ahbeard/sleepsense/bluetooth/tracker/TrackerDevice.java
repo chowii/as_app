@@ -12,8 +12,8 @@ import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 
 import au.com.ahbeard.sleepsense.services.log.SSLog;
-import rx.Observable;
-import rx.subjects.PublishSubject;
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by neal on 4/03/2016.
@@ -117,11 +117,11 @@ public class TrackerDevice extends Device {
     }
 
     public Observable<TrackerState> getTrackingStateObservable() {
-        return mTrackerStateSubject;
+        return mTrackerStateSubject.hide();
     }
 
     public Observable<Integer> getPacketCountObservable() {
-        return mPacketCountSubject;
+        return mPacketCountSubject.hide();
     }
 
     public void logPacket() {

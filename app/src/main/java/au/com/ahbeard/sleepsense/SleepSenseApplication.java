@@ -21,6 +21,8 @@ import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.services.TypefaceService;
 import au.com.ahbeard.sleepsense.services.log.SSLog;
 import io.fabric.sdk.android.Fabric;
+import io.reactivex.internal.functions.Functions;
+import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Created by neal on 3/03/2016.
@@ -41,6 +43,8 @@ public class SleepSenseApplication extends Application {
 
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
+            // In Release builds, don't spit out stacks for errors in rxjava
+            RxJavaPlugins.setErrorHandler(Functions.<Throwable>emptyConsumer());
         }
 
         SSLog.initialize(this);

@@ -2,6 +2,8 @@ package au.com.ahbeard.sleepsense.ui.onboarding
 
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import au.com.ahbeard.sleepsense.R
@@ -41,24 +43,28 @@ class MainOnboardingActivity : BaseActivity() {
     }
 
     fun showLoading(@StringRes alertText: Int, @StringRes doneText: Int = R.string.connected) {
-        val loadingFragment = OnboardingLoadingFragment(getString(alertText), getString(doneText))
+        Handler(Looper.getMainLooper()).post {
+            val loadingFragment = OnboardingLoadingFragment(getString(alertText), getString(doneText))
 
-        loadingFragment.backgroundToUse = currFragment.view?.background
+            loadingFragment.backgroundToUse = currFragment.view?.background
 
-        supportFragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.alpha_loading_enter, R.anim.alpha_loading_exit)
-                .add(R.id.fragmentContainer, loadingFragment, loadingFragment.javaClass.name)
-                .commit()
+            supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.alpha_loading_enter, R.anim.alpha_loading_exit)
+                    .add(R.id.fragmentContainer, loadingFragment, loadingFragment.javaClass.name)
+                    .commit()
+        }
     }
 
     fun hideLoading(completion: () -> Unit) {
-        val loadingFrag = supportFragmentManager.findFragmentByTag(OnboardingLoadingFragment::class.java.name) as? OnboardingLoadingFragment
-        loadingFrag?.stopAnimations {
-            supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.alpha_loading_enter, R.anim.alpha_loading_exit)
-                    .remove(loadingFrag)
-                    .commit()
-            completion()
+        Handler(Looper.getMainLooper()).post {
+            val loadingFrag = supportFragmentManager.findFragmentByTag(OnboardingLoadingFragment::class.java.name) as? OnboardingLoadingFragment
+            loadingFrag?.stopAnimations {
+                supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.alpha_loading_enter, R.anim.alpha_loading_exit)
+                        .remove(loadingFrag)
+                        .commit()
+                completion()
+            }
         }
     }
 

@@ -17,12 +17,12 @@ import au.com.ahbeard.sleepsense.fragments.onboarding.QuestionnaireFragment;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
 
 public class ConnectingAdjustableBaseActivity extends BaseActivity implements
         QuestionnaireFragment.OnActionListener {
@@ -30,7 +30,7 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
     protected OnBoardingState mOnBoardingState = new OnBoardingState();
     private OnBoardingFragment mCurrentFragment;
     protected SleepSenseDeviceAquisition mAquiredDevices;
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
     private PublishSubject<OnBoardingState> mOnBoardingEventPublishSubject = PublishSubject.create();
 
     public static Intent getConnectingAdjustableBaseActivity(Context context) {
@@ -83,9 +83,9 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
     }
 
     private void subscribeToDeviceFinder() {
-        mCompositeSubscription.add(getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<OnBoardingState>() {
+        mCompositeSubscription.add(getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<OnBoardingState>() {
             @Override
-            public void call(OnBoardingState onBoardingState) {
+            public void accept(@NonNull OnBoardingState onBoardingState) throws Exception {
                 if (onBoardingState.state == OnBoardingState.State.ChoosingDevices) {
                     parseDeviceFinderResult();
                 }
@@ -113,14 +113,10 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
 
     public void findInitialDevices() {
 
-        SleepSenseDeviceService.instance().scanDevices().subscribe(new Observer<SleepSenseDeviceAquisition>() {
+        SleepSenseDeviceService.instance().scanDevices().subscribe(new Consumer<SleepSenseDeviceAquisition>() {
             @Override
-            public void onSubscribe(Disposable d) {
-                //do nothing
-            }
-
-            @Override
-            public void onCompleted() {
+            public void accept(@NonNull SleepSenseDeviceAquisition sleepSenseDeviceAquisition) throws Exception {
+                mAquiredDevices = sleepSenseDeviceAquisition;
 
                 if (mAquiredDevices == null) {
                     // EPIC FAIL
@@ -131,16 +127,6 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
 
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
                 }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(SleepSenseDeviceAquisition sleepSenseDeviceAquisition) {
-                mAquiredDevices = sleepSenseDeviceAquisition;
             }
         });
     }
@@ -162,9 +148,11 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
 
     public void acquireDevices() {
 
-        SleepSenseDeviceService.instance().scanDevices().subscribe(new Observer<SleepSenseDeviceAquisition>() {
+        SleepSenseDeviceService.instance().scanDevices().subscribe(new Consumer<SleepSenseDeviceAquisition>() {
+
             @Override
-            public void onCompleted() {
+            public void accept(@NonNull SleepSenseDeviceAquisition sleepSenseDeviceAquisition) throws Exception {
+                mAquiredDevices = sleepSenseDeviceAquisition;
 
                 if (mAquiredDevices == null) {
 
@@ -200,17 +188,6 @@ public class ConnectingAdjustableBaseActivity extends BaseActivity implements
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
                 }
             }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(SleepSenseDeviceAquisition sleepSenseDeviceAquisition) {
-                mAquiredDevices = sleepSenseDeviceAquisition;
-            }
-
         });
 
     }

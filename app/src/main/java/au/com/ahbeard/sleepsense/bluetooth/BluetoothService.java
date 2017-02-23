@@ -15,18 +15,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Single;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 /**
@@ -83,9 +81,9 @@ public class BluetoothService extends BluetoothGattCallback {
     }
 
     public Observable<BluetoothEvent> startScanning() {
-        return mBluetoothEventSubject.doOnSubscribe(new Action0() {
+        return mBluetoothEventSubject.doOnSubscribe(new Consumer<Disposable>() {
             @Override
-            public void call() {
+            public void accept(@NonNull Disposable disposable) throws Exception {
                 _scan(true);
             }
         });
@@ -124,34 +122,37 @@ public class BluetoothService extends BluetoothGattCallback {
     public Observable<BluetoothEvent> waitForPowerOn() {
         if (mBluetoothAdapter == null)
             initializeBluetoothAdapter();
-        return Observable.create(new Observable.OnSubscribe<BluetoothEvent>() {
+
+        return Observable.defer(new Callable<ObservableSource<? extends BluetoothEvent>>() {
             @Override
-            public void call(Subscriber<? super BluetoothEvent> subscriber) {
+            public ObservableSource<? extends BluetoothEvent> call() throws Exception {
                 if (isBluetoothEnabled(false)) {
-                    subscriber.onNext(new BluetoothEvent.BluetoothEnabledEvent());
+                    return Observable.just(new BluetoothEvent.BluetoothEnabledEvent());
                 } else {
-                    mBluetoothEventSubject
-                            .skipWhile(new Func1<BluetoothEvent, Boolean>() {
+                    return mBluetoothEventSubject
+                            .skipWhile(new Predicate<BluetoothEvent>() {
                                 @Override
-                                public Boolean call(BluetoothEvent bluetoothEvent) {
+                                public boolean test(@NonNull BluetoothEvent bluetoothEvent) throws Exception {
                                     return !(bluetoothEvent instanceof BluetoothEvent.BluetoothEnabledEvent);
                                 }
                             })
-                            .take(1) //we only want the next enabled event
-                            .subscribe(subscriber);
+                            .take(1);
                 }
             }
         });
     }
 
-    public Single<List<BluetoothEvent.PacketEvent>> scanForBLEDevices(long timeoutMilis, Predicate<BluetoothEvent> predicate) {
+    Observable<List<BluetoothEvent.PacketEvent>> scanForBLEDevices(long timeoutMilis, Predicate<BluetoothEvent> predicate) {
         return BluetoothService.instance()
                 .startScanning()
-                .observeOn(Schedulers.computation())
+                // IMPORTANT!
+                // all BLE code needs to run on uiThread for some android devices
+                .observeOn(AndroidSchedulers.mainThread())
                 .filter(predicate)
                 .cast(BluetoothEvent.PacketEvent.class)
                 .take(timeoutMilis, TimeUnit.MILLISECONDS)
-                .toList();
+                .toList()
+                .toObservable();
     }
 
     private void _scan(final boolean enable) {

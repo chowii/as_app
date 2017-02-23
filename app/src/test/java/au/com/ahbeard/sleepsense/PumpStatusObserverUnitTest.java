@@ -7,7 +7,8 @@ import java.util.List;
 
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpEvent;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpStatusObserver;
-import rx.Observer;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 import static org.junit.Assert.*;
 
@@ -17,56 +18,56 @@ import static org.junit.Assert.*;
 public class PumpStatusObserverUnitTest {
 
     @Test
-    public void singleExtendedStatus() {
+    public void singleExtendedStatus() throws Exception {
 
         PumpEventCollector pumpEventCollector = new PumpEventCollector();
 
         PumpStatusObserver pumpStatusObserver = new PumpStatusObserver(pumpEventCollector);
 
-        pumpStatusObserver.onNext("EX1112223334440101".getBytes());
+        pumpStatusObserver.accept("EX1112223334440101".getBytes());
 
         assertEquals(1,pumpEventCollector.getPumpEvents().size());
     }
 
     @Test
-    public void offsetExtendedStatus() {
+    public void offsetExtendedStatus() throws Exception  {
 
         PumpEventCollector pumpEventCollector = new PumpEventCollector();
 
         PumpStatusObserver pumpStatusObserver = new PumpStatusObserver(pumpEventCollector);
 
-        pumpStatusObserver.onNext("912EX11122".getBytes());
-        pumpStatusObserver.onNext("233344401012192891".getBytes());
+        pumpStatusObserver.accept("912EX11122".getBytes());
+        pumpStatusObserver.accept("233344401012192891".getBytes());
 
         assertEquals(1,pumpEventCollector.getPumpEvents().size());
     }
 
     @Test
-    public void multipleExtendedStatus() {
+    public void multipleExtendedStatus() throws Exception  {
 
         PumpEventCollector pumpEventCollector = new PumpEventCollector();
 
         PumpStatusObserver pumpStatusObserver = new PumpStatusObserver(pumpEventCollector);
 
-        pumpStatusObserver.onNext("912EX11122".getBytes());
-        pumpStatusObserver.onNext("23334440101".getBytes());
-        pumpStatusObserver.onNext("912EX11122".getBytes());
-        pumpStatusObserver.onNext("23334440101".getBytes());
-        pumpStatusObserver.onNext("912@#*192_JUNK_EX11122".getBytes());
-        pumpStatusObserver.onNext("23334440101".getBytes());
+        pumpStatusObserver.accept("912EX11122".getBytes());
+        pumpStatusObserver.accept("23334440101".getBytes());
+        pumpStatusObserver.accept("912EX11122".getBytes());
+        pumpStatusObserver.accept("23334440101".getBytes());
+        pumpStatusObserver.accept("912@#*192_JUNK_EX11122".getBytes());
+        pumpStatusObserver.accept("23334440101".getBytes());
 
         assertEquals(3,pumpEventCollector.getPumpEvents().size());
     }
 
     @Test
-    public void badStatus() {
+    public void badStatus() throws Exception  {
         PumpEventCollector pumpEventCollector = new PumpEventCollector();
 
         PumpStatusObserver pumpStatusObserver = new PumpStatusObserver(pumpEventCollector);
 
-        pumpStatusObserver.onNext("912EXABC122".getBytes());
-        pumpStatusObserver.onNext("23334440101".getBytes());
-        pumpStatusObserver.onNext("912EX11122".getBytes());
+        pumpStatusObserver.accept("912EXABC122".getBytes());
+        pumpStatusObserver.accept("23334440101".getBytes());
+        pumpStatusObserver.accept("912EX11122".getBytes());
 
         assertEquals(0,pumpEventCollector.getPumpEvents().size());
     }
@@ -80,7 +81,12 @@ public class PumpStatusObserverUnitTest {
         List<PumpEvent> mPumpEvents = new ArrayList<>();
 
         @Override
-        public void onCompleted() {
+        public void onSubscribe(Disposable d) {
+
+        }
+
+        @Override
+        public void onComplete() {
 
         }
 

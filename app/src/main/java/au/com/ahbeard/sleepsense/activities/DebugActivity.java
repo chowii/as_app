@@ -13,16 +13,15 @@ import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.services.log.SSLog;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.functions.Action0;
-import rx.schedulers.Schedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class DebugActivity extends AppCompatActivity {
 
     @OnClick(R.id.debug_button_generate_fake_data)
     void generateFakeData() {
-        Schedulers.computation().createWorker().schedule(new Action0() {
+        Schedulers.computation().createWorker().schedule(new Runnable() {
             @Override
-            public void call() {
+            public void run() {
                 SleepService.instance().generateFakeData(Calendar.getInstance(),60);
             }
         });

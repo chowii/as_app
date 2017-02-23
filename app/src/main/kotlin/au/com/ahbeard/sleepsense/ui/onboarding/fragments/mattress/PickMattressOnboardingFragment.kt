@@ -7,11 +7,15 @@ import android.widget.RelativeLayout
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice
+import au.com.ahbeard.sleepsense.hardware.PumpHardware
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.views.SSNotSureOverlayView
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 /**
 * Created by luisramos on 23/01/2017.
@@ -74,33 +78,36 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
     fun scanForPumps() {
         if (connecting) return
         connecting = true
-
         onboardingActivity.showLoading(R.string.onboarding_connecting_mattress)
 
         SleepSenseDeviceService.instance().scanPumps()
                 .bindToLifecycle(this)
-                .subscribe({
-                    if (it.size > 0) {
-                        it[0].connect()
-                                .subscribe {
-                                    SSLog.d("IM CONNECTED")
-                                }
+                .flatMap {
+                    if (it.size <= 0) {
+                        Observable.error<PumpHardware> { OnboardingErrorPumpNotFound() }
                     } else {
-                        SSLog.d("NOT THERE YET")
+                        Observable.just(it[0])
                     }
+                }
+                .flatMap { it.connect().toObservable() }
+                .subscribe({
+                    SSLog.d("IM CONNECTED")
+                    connecting = false
+                    onboardingActivity.hideLoading({
+                        presentNextOnboardingFragment()
+                    })
                 }, {
-                    SSLog.e("UPS")
+                    //TODO: Error handling!
+                    SSLog.e("No devices found!")
+                    connecting = false
+                    onboardingActivity.hideLoading {  }
                 })
 
         //FIXME Actually connect to device
-        view?.postDelayed({
-            onboardingActivity.hideLoading({
-                presentNextOnboardingFragment()
-            })
-        }, 2000)
+//        view?.postDelayed({
+
+//        }, 2000)
     }
-
-
 
     enum class MattressLine(@IntegerRes val nameRes: Int) {
         LONG_SINGLE(R.string.onboarding_pickMattress_long_single),

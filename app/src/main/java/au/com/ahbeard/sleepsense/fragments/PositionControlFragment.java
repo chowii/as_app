@@ -27,16 +27,16 @@ import au.com.ahbeard.sleepsense.widgets.StyledImageButton;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  *
  */
 public class PositionControlFragment extends Fragment {
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     private boolean mControlOnly;
 
@@ -123,23 +123,23 @@ public class PositionControlFragment extends Fragment {
         mHeaderLayout.setVisibility(mControlOnly ? View.GONE : View.VISIBLE);
 
         if (SleepSenseDeviceService.instance().getBaseDevice() != null) {
-            mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<BaseStatusEvent>() {
+            mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getBaseEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<BaseStatusEvent>() {
                 @Override
-                public void call(BaseStatusEvent pumpEvent) {
+                public void accept(BaseStatusEvent pumpEvent) {
 
                 }
             }));
 
-            mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
+            mCompositeSubscription.add(SleepSenseDeviceService.instance().getBaseDevice().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Device>() {
                 @Override
-                public void call(Device device) {
+                public void accept(Device device) {
                     if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
                         startProgress();
                     } else if (device.getConnectionState() == Device.CONNECTION_STATE_DISCONNECTED && device.getLastConnectionStatus() > 0) {
                         stopProgress();
-                        showToast("Connection timeout", "Try again", new Action1<Void>() {
+                        showToast("Connection timeout", "Try again", new Runnable() {
                             @Override
-                            public void call(Void aVoid) {
+                            public void run() {
                                 SleepSenseDeviceService.instance().getBaseDevice().connect();
                             }
 
@@ -255,12 +255,12 @@ public class PositionControlFragment extends Fragment {
     @Bind(R.id.progress_layout_text_view_action)
     protected TextView mActionTextView;
 
-    private Action1<Void> mAction;
+    private Runnable mAction;
 
     @OnClick(R.id.progress_layout_text_view_action)
     protected void progressAction() {
         if (mAction != null) {
-            mAction.call(null);
+            mAction.run();
             mLayout.setVisibility(View.GONE);
         }
     }
@@ -293,7 +293,7 @@ public class PositionControlFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    protected void showToast(String message, String actionText, Action1<Void> action) {
+    protected void showToast(String message, String actionText, Runnable action) {
 
         mAction = action;
 

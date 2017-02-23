@@ -13,11 +13,13 @@ import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.EnableNotificationOperation;
 import au.com.ahbeard.sleepsense.bluetooth.ValueChangeEvent;
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.processors.PublishProcessor;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by neal on 4/03/2016.
@@ -50,8 +52,8 @@ public class LiveFeedbackTrackerDevice extends Device {
 
     private static final String TRACK_NAME = "force";
 
-    private PublishSubject<byte[]> mSessionPublishSubject = null;
-    private Subscription mNotifySubscription;
+    private PublishProcessor<byte[]> mSessionPublishSubject = null;
+    private Disposable mNotifySubscription;
 
     @Override
     public UUID getServiceUUID() {
@@ -91,13 +93,16 @@ public class LiveFeedbackTrackerDevice extends Device {
         return false;
     }
 
-    public Observable<byte[]> startSession() {
-
-        if (mSessionPublishSubject != null ) {
-            return mSessionPublishSubject;
+    public Flowable<byte[]> startSession() {
+        if (mSessionPublishSubject == null ) {
+            createSessionPublishSubject();
         }
 
-        mSessionPublishSubject = PublishSubject.create();
+        return mSessionPublishSubject.hide().onBackpressureDrop();
+    }
+
+    private void createSessionPublishSubject() {
+        mSessionPublishSubject = PublishProcessor.create();
 
         // Acquire a wake lock.
         PowerManager powerManager = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
@@ -118,16 +123,16 @@ public class LiveFeedbackTrackerDevice extends Device {
 
         getDeviceEventObservable()
                 .observeOn(Schedulers.computation())
-                .subscribe(new Action1<DeviceEvent>() {
+                .subscribe(new Consumer<DeviceEvent>() {
                     @Override
-                    public void call(DeviceEvent deviceEvent) {
+                    public void accept(DeviceEvent deviceEvent) {
                         if ( deviceEvent instanceof DeviceDisconnectedEvent ) {
                             if (mNotifySubscription != null ) {
-                                mNotifySubscription.unsubscribe();
+                                mNotifySubscription.dispose();
                                 mNotifySubscription = null;
                             }
                             if ( mSessionPublishSubject != null ) {
-                                mSessionPublishSubject.onCompleted();
+                                mSessionPublishSubject.onComplete();
                                 mSessionPublishSubject = null;
                             }
                         }
@@ -135,19 +140,19 @@ public class LiveFeedbackTrackerDevice extends Device {
                 });
 
         if ( mNotifySubscription != null) {
-            mNotifySubscription.unsubscribe();
+            mNotifySubscription.dispose();
             mNotifySubscription = null;
         }
 
         mNotifySubscription = getNotifyEventObservable()
                 .observeOn(Schedulers.computation())
-                .subscribe(new Action1<ValueChangeEvent>() {
+                .subscribe(new Consumer<ValueChangeEvent>() {
 
                     int currentPacketNumber = 0;
 //            int currentSampleNumber = 0;
 
                     @Override
-                    public void call(ValueChangeEvent valueChangeEvent) {
+                    public void accept(ValueChangeEvent valueChangeEvent) {
 
                         byte[] data = valueChangeEvent.getValue();
 
@@ -216,8 +221,6 @@ public class LiveFeedbackTrackerDevice extends Device {
         CharacteristicWriteOperation startCommand = new CharacteristicWriteOperation(BEDDIT_SERVICE_UUID, SIGNAL_DATA_CHARACTERISTIC_UUID);
         startCommand.writeByte(CONTROL_POINT_COMMAND_START);
         sendCommand(startCommand);
-
-        return mSessionPublishSubject;
     }
 
     public void stopSession() {

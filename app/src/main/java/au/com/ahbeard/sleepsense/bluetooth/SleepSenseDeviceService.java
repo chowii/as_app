@@ -117,7 +117,7 @@ public class SleepSenseDeviceService {
 
     private static final long deviceScanTimeout = 2500;
 
-    public Single<List<PumpHardware>> scanPumps() {
+    public Observable<List<PumpHardware>> scanPumps() {
         return BluetoothService.instance().scanForBLEDevices(deviceScanTimeout, new SleepsenseScanningFilter())
                 .map(new CreateHardwareFunction())
                 .map(new Function<List<BedHardware>, List<PumpHardware>>() {

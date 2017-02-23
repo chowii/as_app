@@ -2,7 +2,6 @@ package au.com.ahbeard.sleepsense.bluetooth.pump;
 
 import android.bluetooth.BluetoothGatt;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,24 +9,24 @@ import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothOperation;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
-import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.ValueChangeEvent;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.services.SleepService;
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
+
 
 /**
  * Created by neal on 4/03/2016.
  */
 public class PumpDevice extends Device {
 
-    private Subscription mPumpStatusSubscription;
+    private Disposable mPumpStatusSubscription;
 
     private long mLastActiveTime;
     private boolean mStoreFirmnessOnDisconnect;
@@ -37,14 +36,14 @@ public class PumpDevice extends Device {
         Right
     }
 
-    public class ChamberState {
+    private static class ChamberState {
 
         Side side;
         int currentPressure;
         int targetPressure;
         boolean active;
 
-        public ChamberState(Side side) {
+        ChamberState(Side side) {
             this.side = side;
         }
 
@@ -77,10 +76,9 @@ public class PumpDevice extends Device {
         super();
 
         // Subscribe to our own pump event subject. We need to know this stuff too!
-        mPumpEventSubject.subscribe(new Action1<PumpEvent>() {
+        mPumpEventSubject.subscribe(new Consumer<PumpEvent>() {
             @Override
-            public void call(PumpEvent pumpEvent) {
-
+            public void accept(@io.reactivex.annotations.NonNull PumpEvent pumpEvent) throws Exception {
                 // Log.d("PumpEvent",pumpEvent.toString());
 
                 mLeftChamberState.currentPressure = pumpEvent.getLeftPressure();
@@ -146,9 +144,9 @@ public class PumpDevice extends Device {
     public void onConnect() {
 
         mPumpStatusSubscription = getNotifyEventObservable().subscribeOn(
-                Schedulers.computation()).map(new Func1<ValueChangeEvent, byte[]>() {
+                Schedulers.computation()).map(new Function<ValueChangeEvent, byte[]>() {
             @Override
-            public byte[] call(ValueChangeEvent valueChangeEvent) {
+            public byte[] apply(@io.reactivex.annotations.NonNull ValueChangeEvent valueChangeEvent) throws Exception {
                 return valueChangeEvent.getValue();
             }
         }).subscribe(new PumpStatusObserver(mPumpEventSubject));
@@ -157,7 +155,7 @@ public class PumpDevice extends Device {
 
     public void onDisconnect() {
         if (mPumpStatusSubscription != null) {
-            mPumpStatusSubscription.unsubscribe();
+            mPumpStatusSubscription.dispose();
             mPumpStatusSubscription = null;
         }
         mPumpStatuses = new HashSet<>();

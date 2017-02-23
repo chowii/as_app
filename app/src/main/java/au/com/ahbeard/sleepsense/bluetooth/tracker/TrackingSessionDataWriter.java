@@ -3,6 +3,9 @@ package au.com.ahbeard.sleepsense.bluetooth.tracker;
 import com.beddit.analysis.TimeValueFragment;
 import com.beddit.analysis.TimeValueTrackFragment;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,12 +19,11 @@ import java.util.Map;
 
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.services.log.SSLog;
-import rx.Observer;
 
 /**
  * Created by neal on 20/04/2016.
  */
-public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
+public class TrackingSessionDataWriter implements Subscriber<TimeValueFragment> {
 
     private long mStartTime;
     private long mEndTime;
@@ -35,11 +37,13 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
         mSessionDirectory = SleepService.instance().getSessionOutputDirectory(mStartTime);
     }
 
-    /**
-     *
-     */
     @Override
-    public void onCompleted() {
+    public void onSubscribe(Subscription s) {
+
+    }
+
+    @Override
+    public void onComplete() {
 
         mEndTime = System.currentTimeMillis();
 
@@ -66,9 +70,6 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
 
     }
 
-    /**
-     * @param e
-     */
     @Override
     public void onError(Throwable e) {
 
@@ -76,11 +77,11 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
 
         try {
             writeError(e);
-//            FirebaseCrash.log("Error thrown during sleep session capture...");
+//            FirebaseCrash.log("BaseError thrown during sleep session capture...");
 //            FirebaseCrash.report(e);
-            SSLog.e("Error during sleep session capture: %s", e);
+            SSLog.e("BaseError during sleep session capture: %s", e);
         } catch (IOException ioe) {
-            SSLog.e("Error writing session data: %s",ioe);
+            SSLog.e("BaseError writing session data: %s",ioe);
         }
 
         try {
@@ -102,14 +103,11 @@ public class TrackingSessionDataWriter implements Observer<TimeValueFragment> {
             }
 
         } catch (java.io.IOException ioe) {
-            SSLog.e("Error closing session: %s",ioe);
+            SSLog.e("BaseError closing session: %s",ioe);
         }
 
     }
 
-    /**
-     * @param timeValueFragment
-     */
     @Override
     public void onNext(TimeValueFragment timeValueFragment) {
 

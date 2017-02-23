@@ -19,10 +19,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import au.com.ahbeard.sleepsense.services.log.SSLog;
-import rx.Observer;
-import rx.functions.Action0;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
+import io.reactivex.functions.Consumer;
+import io.reactivex.processors.PublishProcessor;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Listener for a SensorSession. There is one of these created per sensor session.
@@ -52,8 +51,8 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
     // Create a publish subject to stream the sensor data to, so we can process it in order and off the
     // receiving thread.
     //
-    private PublishSubject<SensorData> mSensorDataObservable = PublishSubject.create();
-    private PublishSubject<TimeValueFragment> mTimeValueTrackFragmentPublishSubject = PublishSubject.create();
+    private PublishProcessor<SensorData> mSensorDataObservable = PublishProcessor.create();
+    private PublishProcessor<TimeValueFragment> mTimeValueTrackFragmentPublishSubject = PublishProcessor.create();
 
     public TrackingSessionAnalyser(TrackerDevice trackerDevice) {
 
@@ -62,19 +61,9 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
         // Subscribe to the raw sensor data on a computation thread.
         mSensorDataObservable.onBackpressureBuffer()
                 .observeOn(Schedulers.computation())
-                .subscribe(new Observer<SensorData>() {
+                .subscribe(new Consumer<SensorData>() {
             @Override
-            public void onCompleted() {
-                endSensorSession();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                errorSensorSession(e);
-            }
-
-            @Override
-            public void onNext(SensorData sensorData) {
+            public void accept(SensorData sensorData) {
                 mTrackerDevice.logPacket();
                 processSensorData(sensorData);
             }
@@ -128,7 +117,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
             SSLog.d("onSensorSessionFinished: " + accounting.totalNumberOfPaddedSamples + " : " + accounting.totalNumberOfPaddingEvents);
 
             // Once again, shift this over to a computation thread.
-            mSensorDataObservable.onCompleted();
+            mSensorDataObservable.onComplete();
         } else {
             mTrackerDevice.setTrackerState(TrackerDevice.TrackerState.Error);
 
@@ -188,9 +177,9 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
             mStreamingAnalysis = new StreamingAnalysis(inputSpec);
 
 
-            Schedulers.computation().createWorker().schedule(new Action0() {
+            Schedulers.computation().createWorker().schedule(new Runnable() {
                 @Override
-                public void call() {
+                public void run() {
                     //Since we perform a delay when starting the stream
                     //the session could error out and calling startStreaming will fail
                     //so we need to check if its safe to start streaming
@@ -292,7 +281,7 @@ public class TrackingSessionAnalyser implements SensorSession.Listener {
                     mTimeValueTrackFragmentPublishSubject.onNext(timeValueFragment);
                 }
 
-                mTimeValueTrackFragmentPublishSubject.onCompleted();
+                mTimeValueTrackFragmentPublishSubject.onComplete();
             }
 
         } catch (AnalysisException e) {

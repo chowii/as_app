@@ -4,15 +4,15 @@ import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothOperation;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothUtils;
-import au.com.ahbeard.sleepsense.bluetooth.CharacteristicWriteOperation;
 import au.com.ahbeard.sleepsense.bluetooth.Device;
 import au.com.ahbeard.sleepsense.bluetooth.ValueChangeEvent;
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by neal on 4/03/2016.
@@ -28,7 +28,7 @@ public class BaseDevice extends Device {
             BluetoothUtils.uuidFrom16BitUuid(0xffe0),
     };
 
-    private Subscription mBaseStatusSubscription;
+    private Disposable mBaseStatusSubscription;
     private PublishSubject<BaseStatusEvent> mBaseEventPublishSubject = PublishSubject.create();
 
     private boolean mMassageAlterState;
@@ -59,9 +59,9 @@ public class BaseDevice extends Device {
     public BaseDevice() {
         super();
 
-        mBaseEventPublishSubject.subscribe(new Action1<BaseStatusEvent>() {
+        mBaseEventPublishSubject.subscribe(new Consumer<BaseStatusEvent>() {
             @Override
-            public void call(BaseStatusEvent baseStatusEvent) {
+            public void accept(BaseStatusEvent baseStatusEvent) {
                 if (baseStatusEvent.isHeadMotorRunning() || baseStatusEvent.isFootMotorRunning()) {
                     mLastActiveTime = System.currentTimeMillis();
                 } else if (System.currentTimeMillis() - mLastActiveTime > DISCONNECT_AFTER) {
@@ -84,16 +84,15 @@ public class BaseDevice extends Device {
 
         mBaseStatusSubscription = getNotifyEventObservable()
                 .subscribeOn(Schedulers.computation())
-                .onBackpressureBuffer()
-                .map(new Func1<ValueChangeEvent, byte[]>() {
+                .map(new Function<ValueChangeEvent, byte[]>() {
                     @Override
-                    public byte[] call(ValueChangeEvent valueChangeEvent) {
+                    public byte[] apply(@NonNull ValueChangeEvent valueChangeEvent) throws Exception {
                         return valueChangeEvent.getValue();
                     }
                 })
-                .subscribe(new Action1<byte[]>() {
+                .subscribe(new Consumer<byte[]>() {
                     @Override
-                    public void call(byte[] value) {
+                    public void accept(byte[] value) {
                         BaseStatusEvent baseStatusEvent = BaseStatusEvent.safeInstance(value);
                         if (baseStatusEvent != null) {
                             mBaseEventPublishSubject.onNext(baseStatusEvent);
@@ -105,7 +104,7 @@ public class BaseDevice extends Device {
     @Override
     protected void onDisconnect() {
         if (mBaseStatusSubscription != null) {
-            mBaseStatusSubscription.unsubscribe();
+            mBaseStatusSubscription.dispose();
             mBaseStatusSubscription = null;
         }
 

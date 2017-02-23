@@ -16,6 +16,8 @@ import com.beddit.analysis.TimeValueFragment;
 import com.beddit.analysis.TimeValueTrackFragment;
 import com.beddit.analysis.TrackFragment;
 
+import org.reactivestreams.Subscriber;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,7 +27,6 @@ import java.io.ObjectInputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -38,20 +39,18 @@ import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerUtils;
 import au.com.ahbeard.sleepsense.model.AggregateStatistics;
-import au.com.ahbeard.sleepsense.model.Firmness;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepProperty;
 import au.com.ahbeard.sleepsense.model.beddit.TrackData;
 import au.com.ahbeard.sleepsense.services.log.SSLog;
 import au.com.ahbeard.sleepsense.utils.OptimalBedtimeCalculator;
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Action0;
-import rx.schedulers.Schedulers;
-import rx.subjects.BehaviorSubject;
-import rx.subjects.PublishSubject;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Service to save the sleep data.
@@ -101,10 +100,9 @@ public class SleepService {
             e.printStackTrace();
         }
 
-        Schedulers.computation().createWorker().schedule(new Action0() {
+        Schedulers.computation().createWorker().schedule(new Runnable() {
             @Override
-            public void call() {
-
+            public void run() {
                 Sleep sleep = runBatchAnalysis(Calendar.getInstance());
 
                 if ( sleep != null ) {
@@ -638,14 +636,14 @@ public class SleepService {
 
     private static <T> Observable<T> makeObservable(final Callable<T> func) {
         return Observable.create(
-                new Observable.OnSubscribe<T>() {
+                new ObservableOnSubscribe<T>() {
                     @Override
-                    public void call(Subscriber<? super T> subscriber) {
+                    public void subscribe(ObservableEmitter<T> e) throws Exception {
                         try {
-                            subscriber.onNext(func.call());
-                            subscriber.onCompleted();
+                            e.onNext(func.call());
+                            e.onComplete();
                         } catch (Exception ex) {
-                            subscriber.onError(ex);
+                            e.onError(ex);
                         }
                     }
                 });
@@ -743,9 +741,9 @@ public class SleepService {
 
         if (!mAggregateStatisticsCalculated) {
             mAggregateStatisticsCalculated = true;
-            Schedulers.computation().createWorker().schedule(new Action0() {
+            Schedulers.computation().createWorker().schedule(new Runnable() {
                 @Override
-                public void call() {
+                public void run() {
                     updateAggregateStatistics();
                 }
             });

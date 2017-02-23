@@ -4,9 +4,7 @@ package au.com.ahbeard.sleepsense.fragments;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -16,23 +14,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Calendar;
-
-import au.com.ahbeard.sleepsense.BuildConfig;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.ContactUsActivity;
 import au.com.ahbeard.sleepsense.activities.DebugActivity;
 import au.com.ahbeard.sleepsense.activities.HelpActivity;
-import au.com.ahbeard.sleepsense.activities.HomeActivity;
 import au.com.ahbeard.sleepsense.activities.PreferenceActivity;
 import au.com.ahbeard.sleepsense.activities.ProfileActivity;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
-import au.com.ahbeard.sleepsense.services.SleepService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.functions.Action0;
-import rx.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.

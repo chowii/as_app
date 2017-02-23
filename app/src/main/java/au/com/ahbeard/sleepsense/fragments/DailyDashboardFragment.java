@@ -1,7 +1,6 @@
 package au.com.ahbeard.sleepsense.fragments;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -22,7 +21,6 @@ import java.util.Map;
 import java.util.Random;
 
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.activities.HelpActivity;
 import au.com.ahbeard.sleepsense.model.Firmness;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
 import au.com.ahbeard.sleepsense.model.beddit.SleepStage;
@@ -32,12 +30,10 @@ import au.com.ahbeard.sleepsense.utils.StringUtils;
 import au.com.ahbeard.sleepsense.widgets.LabelThingy;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,8 +80,8 @@ public class DailyDashboardFragment extends Fragment {
     private StatisticsUtils.StatisticViewHolder mTimesOutOfBed;
     private StatisticsUtils.StatisticViewHolder mMattressFirmness;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
-    private CompositeSubscription mViewCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
+    private CompositeDisposable mViewCompositeSubscription = new CompositeDisposable();
 
     public DailyDashboardFragment() {
         // Required empty public constructor
@@ -107,9 +103,9 @@ public class DailyDashboardFragment extends Fragment {
 
         }
 
-        mCompositeSubscription.add(SleepService.instance().getSleepIdSelectedObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+        mCompositeSubscription.add(SleepService.instance().getSleepIdSelectedObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
             @Override
-            public void call(Integer sleepId) {
+            public void accept(Integer sleepId) {
                 Log.d("DAILYDASHBOARDFRAGMENT", "sleepId selected called..." + sleepId);
                 jumpToSleepId(sleepId);
             }
@@ -174,14 +170,14 @@ public class DailyDashboardFragment extends Fragment {
                 // Count back the number of pages.
                 calendar.add(Calendar.DAY_OF_YEAR, position - 1023);
 
-                Schedulers.computation().createWorker().schedule(new Action0() {
+                Schedulers.computation().createWorker().schedule(new Runnable() {
                     @Override
-                    public void call() {
+                    public void run() {
                         final Sleep sleep = SleepService.instance().getSleepFromDatabase(SleepService.getSleepId(calendar));
 
-                        AndroidSchedulers.mainThread().createWorker().schedule(new Action0() {
+                        AndroidSchedulers.mainThread().createWorker().schedule(new Runnable() {
                             @Override
-                            public void call() {
+                            public void run() {
 
                                 if (sleep != null) {
 
@@ -249,9 +245,9 @@ public class DailyDashboardFragment extends Fragment {
         String[] sleepTips = getResources().getStringArray(R.array.sleep_tips);
         mSleepTipText.setText(sleepTips[new Random().nextInt(sleepTips.length)]);
 
-        mViewCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+        mViewCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
             @Override
-            public void call(Integer sleepId) {
+            public void accept(Integer sleepId) {
                 Log.d("DAILYDASHBOARDFRAGMENT", "change observable..." + sleepId);
                 if (mGraphViewPager != null) {
                     mGraphViewPager.getAdapter().notifyDataSetChanged();

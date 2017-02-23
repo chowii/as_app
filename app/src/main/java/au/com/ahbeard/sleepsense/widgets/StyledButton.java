@@ -5,23 +5,18 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.StateSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.widget.Button;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.services.TypefaceService;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by neal on 30/03/2016.
@@ -82,15 +77,15 @@ public class StyledButton extends Button {
         invalidate();
     }
 
-    private Subscription mPulseTimerSubscription;
+    private Disposable mPulseTimerSubscription;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         if ( event.getAction() == MotionEvent.ACTION_DOWN ) {
-            mPulseTimerSubscription = AndroidSchedulers.mainThread().createWorker().schedulePeriodically(new Action0() {
+            mPulseTimerSubscription = AndroidSchedulers.mainThread().createWorker().schedulePeriodically(new Runnable() {
                 @Override
-                public void call() {
+                public void run() {
                     if (mOnPressPulseListener!=null) {
                         mOnPressPulseListener.onPressPulse(StyledButton.this);
                     }
@@ -99,7 +94,7 @@ public class StyledButton extends Button {
 
         } else if (event.getAction() == MotionEvent.ACTION_UP ) {
             if ( mPulseTimerSubscription != null ) {
-                mPulseTimerSubscription.unsubscribe();
+                mPulseTimerSubscription.dispose();
                 mPulseTimerSubscription = null;
             }
         }
