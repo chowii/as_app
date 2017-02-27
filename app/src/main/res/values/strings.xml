@@ -253,4 +253,21 @@
     <string name="sleep_target_desc">For most adults 6-9 hours is ideal</string>
     <string name="not_sure_title">Not sure what mattress\nsize you have?</string>
     <string name="not_sure_desc">Refer to the tag at the end on\nthe mattress</string>
+    <string name="set_up_later">Set up later</string>
+
+    <string name="onboarding_error_title_pump_not_found">Oh no! We couldn\'t find a\nSleepsense pump in the room</string>
+    <string name="onboarding_error_desc_pump_not_found">Try double checking that it\'s plugged in</string>
+    <string name="onboarding_error_title_pump_cant_connect">Oh no! Can\'t connect to the sleepsense pump</string>
+    <string name="onboarding_error_desc_pump_cant_connect">Try double checking that it\'s plugged in</string>
+    <string name="onboarding_error_title_tracker_not_found">Uh oh, no sensor found!</string>
+    <string name="onboarding_error_desc_tracker_not_found">We couldn\'t detect a sensor nearby</string>
+    <string name="onboarding_error_title_tracker_not_found_two">Uh oh, only one sensor found!</string>
+    <string name="onboarding_error_desc_tracker_not_found_two">We found one sleep tracking sensor, but we need two to set up your sleep tracking</string>
+    <string name="onboarding_error_title_tracker_lost_connection">Uh oh, lost connection to one of the trackers!</string>
+    <string name="onboarding_error_desc_tracker_lost_connection">Try double checking that it\'s plugged in</string>
+    <string name="onboarding_error_title_base_not_found">Can\'t seem to find your base!</string>
+    <string name="onboarding_error_desc_base_not_found">We couldn’t detect a base nearby. Try checking that it is plugged in</string>
+    <string name="onboarding_error_title_base_not_found_two">Uh oh, only one base found!</string>
+    <string name="onboarding_error_desc_base_not_found_two">We found one base, but we need two to set up your side of the bed.</string>
+
 </resources>

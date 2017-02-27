@@ -131,7 +131,8 @@ public class SleepSenseDeviceService {
                         }
                         return array;
                     }
-                });
+                })
+                .toObservable();
     }
 
     public Observable<SleepSenseDeviceAquisition> scanDevices() {

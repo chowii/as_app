@@ -6,16 +6,14 @@ import android.view.View
 import android.widget.RelativeLayout
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService
-import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice
 import au.com.ahbeard.sleepsense.hardware.PumpHardware
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingErrorPumpCantConnect
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingErrorPumpNotFound
 import au.com.ahbeard.sleepsense.ui.onboarding.views.SSNotSureOverlayView
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
-import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 
 /**
 * Created by luisramos on 23/01/2017.
@@ -89,18 +87,26 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
                         Observable.just(it[0])
                     }
                 }
-                .flatMap { it.connect().toObservable() }
+                .flatMap {
+                    it.connect().toObservable()
+                        .onErrorResumeNext { error: Throwable ->
+                            Observable.error<PumpHardware> { OnboardingErrorPumpCantConnect() }
+                        }
+                }
                 .subscribe({
-                    SSLog.d("IM CONNECTED")
+
+                    state.selectedPump = it
+
                     connecting = false
                     onboardingActivity.hideLoading({
                         presentNextOnboardingFragment()
                     })
-                }, {
-                    //TODO: Error handling!
-                    SSLog.e("No devices found!")
+                }, { error ->
+                    SSLog.e("Error finding pump")
                     connecting = false
-                    onboardingActivity.hideLoading {  }
+                    onboardingActivity.hideLoading {
+                        handleError(error)
+                    }
                 })
 
         //FIXME Actually connect to device
@@ -125,7 +131,3 @@ class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
             get() = this == KING_SPLIT
     }
 }
-
-open class OnboardingError: Throwable()
-
-class OnboardingErrorPumpNotFound: OnboardingError()

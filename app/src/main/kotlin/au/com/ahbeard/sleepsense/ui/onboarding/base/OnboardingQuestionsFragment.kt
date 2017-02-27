@@ -1,6 +1,8 @@
 package au.com.ahbeard.sleepsense.ui.onboarding.base
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.annotation.StringRes
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -13,6 +15,9 @@ import android.widget.RelativeLayout
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment.OnboardingQuestionsAdapter.OnItemClickListener
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.*
+import au.com.ahbeard.sleepsense.ui.onboarding.views.SSErrorHandlingOverlayView
+import kotlinx.android.synthetic.main.fragment_onboarding_desc.view.*
 import kotterknife.bindView
 
 /**
@@ -68,6 +73,53 @@ abstract class OnboardingQuestionsFragment : OnboardingBaseFragment() {
     fun configureQuestions(@StringRes title: Int, vararg @StringRes strings: Int) {
         titleRes = title
         data = strings.map { QuestionViewModel(getString(it)) }
+    }
+
+    val errorOverlayView : SSErrorHandlingOverlayView by lazy {
+        val layoutParams = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT)
+
+        val errorView = SSErrorHandlingOverlayView(view!!.context)
+        errorView.layoutParams = layoutParams
+        errorView.visibility = View.INVISIBLE
+
+        containerView.addView(errorView)
+
+        errorView
+    }
+
+    fun handleError(error: Throwable) {
+        when (error) {
+            is OnboardingErrorPumpNotFound -> showErrorOverlay(
+                    R.string.onboarding_error_title_pump_not_found, R.string.onboarding_error_desc_pump_not_found)
+            is OnboardingErrorPumpCantConnect -> showErrorOverlay(
+                    R.string.onboarding_error_title_pump_cant_connect, R.string.onboarding_error_desc_pump_cant_connect)
+            is OnboardingErrorTrackerNotFound -> showErrorOverlay(
+                    R.string.onboarding_error_title_tracker_not_found, R.string.onboarding_error_desc_tracker_not_found)
+            is OnboardingErrorTrackerNotFoundTwo -> showErrorOverlay(
+                    R.string.onboarding_error_title_tracker_not_found_two, R.string.onboarding_error_desc_tracker_not_found_two)
+            is OnboardingErrorTrackerLostConnection -> showErrorOverlay(
+                    R.string.onboarding_error_title_tracker_lost_connection, R.string.onboarding_error_desc_tracker_lost_connection)
+            is OnboardingErrorBaseNotFound -> showErrorOverlay(
+                    R.string.onboarding_error_title_base_not_found, R.string.onboarding_error_desc_base_not_found)
+            is OnboardingErrorBaseNotFoundTwo -> showErrorOverlay(
+                    R.string.onboarding_error_title_base_not_found_two, R.string.onboarding_error_desc_base_not_found_two)
+        }
+    }
+
+    fun showErrorOverlay(titleRes: Int, descRes: Int) {
+        Handler(Looper.getMainLooper()).post {
+            errorOverlayView.titleTextView.setText(titleRes)
+            errorOverlayView.descTextView.setText(descRes)
+            errorOverlayView.animateEntry(view!!)
+        }
+    }
+
+    fun hideErrorOverlay() {
+        Handler(Looper.getMainLooper()).post {
+            errorOverlayView.animateExit()
+        }
     }
 
     class OnboardingQuestionsAdapter(var data: List<QuestionViewModel>) : RecyclerView.Adapter<OnboardingQuestionsAdapter.ViewHolder>() {

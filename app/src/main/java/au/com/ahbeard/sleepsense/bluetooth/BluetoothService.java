@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.reactivestreams.Subscriber;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,12 +20,17 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.Observer;
+import io.reactivex.Single;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 /**
@@ -142,17 +148,14 @@ public class BluetoothService extends BluetoothGattCallback {
         });
     }
 
-    Observable<List<BluetoothEvent.PacketEvent>> scanForBLEDevices(long timeoutMilis, Predicate<BluetoothEvent> predicate) {
+    public Single<List<BluetoothEvent.PacketEvent>> scanForBLEDevices(long timeoutMilis, Predicate<BluetoothEvent> predicate) {
         return BluetoothService.instance()
                 .startScanning()
-                // IMPORTANT!
-                // all BLE code needs to run on uiThread for some android devices
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.computation())
                 .filter(predicate)
                 .cast(BluetoothEvent.PacketEvent.class)
                 .take(timeoutMilis, TimeUnit.MILLISECONDS)
-                .toList()
-                .toObservable();
+                .toList();
     }
 
     private void _scan(final boolean enable) {

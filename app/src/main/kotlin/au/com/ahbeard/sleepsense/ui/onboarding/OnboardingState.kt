@@ -1,6 +1,7 @@
 package au.com.ahbeard.sleepsense.ui.onboarding
 
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice
+import au.com.ahbeard.sleepsense.hardware.PumpHardware
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress.PickMattressOnboardingFragment
 
 /**
@@ -9,6 +10,7 @@ import au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress.PickMattressOn
 data class OnboardingState(
     var mattressLine: PickMattressOnboardingFragment.MattressLine = PickMattressOnboardingFragment.MattressLine.LONG_SINGLE,
     var pumpSide: PumpDevice.Side = PumpDevice.Side.Left,
+    var selectedPump: PumpHardware? = null,
     var heightInCm: Int? = null,
     var weightInKg: Int? = null,
     var isMale: Boolean? = null,

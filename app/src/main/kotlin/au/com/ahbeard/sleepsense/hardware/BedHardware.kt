@@ -43,7 +43,7 @@ abstract class BedHardware(
             Handler(Looper.getMainLooper()).post {
                 mBluetoothGatt = bluetoothDevice.connectGatt(mContext, false, mBluetoothGattProcessor)
             }
-            
+
             if (mBluetoothGatt == null) {
                 mBluetoothGattProcessor.waitForConnection(firstConnectionTimeout)
                         .map { this@BedHardware as T }

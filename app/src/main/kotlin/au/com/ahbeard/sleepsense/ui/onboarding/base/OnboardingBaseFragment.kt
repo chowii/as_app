@@ -11,12 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.RelativeLayout
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.ui.onboarding.MainOnboardingActivity
 import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
 import au.com.ahbeard.sleepsense.ui.onboarding.animations.OnboardingTransitionAnimatable
 import au.com.ahbeard.sleepsense.ui.onboarding.animations.OnboardingTransitionAnimator
+import au.com.ahbeard.sleepsense.ui.onboarding.views.SSErrorHandlingOverlayView
+import au.com.ahbeard.sleepsense.ui.onboarding.views.SSNotSureOverlayView
 import com.trello.rxlifecycle2.LifecycleProvider
 import com.trello.rxlifecycle2.LifecycleTransformer
 import com.trello.rxlifecycle2.RxLifecycle
@@ -38,12 +41,11 @@ abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, Onboardi
 
     var backgroundGradient: BackgroundGradient = BackgroundGradient.MATTRESS
 
+    @StringRes var titleRes: Int? = null
+    val titleTextView: TextView? by bindOptionalView(R.id.titleTextView)
     val backButton: ImageButton? by bindOptionalView(R.id.backButton)
     val continueButton: Button? by bindOptionalView(R.id.continueButton)
     val skipButton: Button? by bindOptionalView(R.id.skipButton)
-
-    @StringRes var titleRes: Int? = null
-    val titleTextView: TextView? by bindOptionalView(R.id.titleTextView)
 
     abstract fun getViewLayoutId() : Int
 
