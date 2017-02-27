@@ -202,4 +202,72 @@
     <string name="set_up_completed_mattress_pump">Mattress pump</string>
     <string name="set_up_completed_adjustable_base">Adjustable base</string>
 
+    <string name="onboarding_pickMattress_long_single">Long Single</string>
+    <string name="onboarding_pickMattress_king_single">King Single</string>
+    <string name="onboarding_pickMattress_double">Double</string>
+    <string name="onboarding_pickMattress_queen">Queen</string>
+    <string name="onboarding_pickMattress_king">King</string>
+    <string name="onboarding_pickMattress_super_king">Split King</string>
+    <string name="onboarding_pickMattress_kingSplit">Super King</string>
+    <string name="onboarding_what_size_is_your_mattress">What size is your mattress?</string>
+
+    <string name="not_sure">Not sure?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="onboarding_pick_base_title">Did you purchase an adjustable base?</string>
+    <string name="onboarding_pickMattress_title">What size is your mattress?</string>
+    <string name="onboarding_pick_tracker_title">Did you purchase built in sleep tracking?</string>
+    <string name="connected">Connected!</string>
+
+    <string name="onboarding_connecting_mattress">Connecting with your\nmattress pump</string>
+    <string name="onboarding_debug_picker_title">Pick a starting place!</string>
+    <string name="debug_pick_mattress">Pick Mattress</string>
+    <string name="onboarding_which_side_of_the_pump">Which side of the pump did\nyou plug the air hose into?</string>
+    <string name="onboarding_left_side">Left Side</string>
+    <string name="onboarding_right_side">Right side</string>
+    <string name="content_desc_pump_help_image">Pump Help Image</string>
+    <string name="onboarding_tracker_setup_1_title">Don\'t just track your sleep\nAct on it</string>
+    <string name="onboarding_tracker_setup_1_desc">Learn from your sleep score and\nadjust your mattress to improve\nyour sleep one night at a time</string>
+    <string name="onboarding_tracker_setup_2_title">Let\'s get to\nknow each other</string>
+    <string name="onboarding_tracker_setup_2_desc">This will make sure we get better\nand personalized results</string>
+    <string name="onboarding_tracker_desc_1_title_double">There are 2 trackers\ninside your mattress</string>
+    <string name="onboarding_tracker_desc_1_desc_double">Your smartbed tracks your sleep during the night using built in sensors that are in line with your heart</string>
+    <string name="onboarding_tracker_desc_1_title_single">Your mattress is designed\nto be smart</string>
+    <string name="onboarding_tracker_desc_1_desc_single">Your smartbed tracks your sleep during the night using built in sensors that are in line with your heart</string>
+    <string name="onboarding_tracker_desc_2_title_double">Lay down on your side\n of the bed</string>
+    <string name="onboarding_tracker_desc_2_desc_double">To track your sleep accurately we need to connect with the tracker on the side of the bed that you sleep on most</string>
+    <string name="onboarding_tracker_desc_2_title_single">Lay down on your bed</string>
+    <string name="onboarding_tracker_desc_2_desc_single">To track your sleep accurately, we need to sync to the right sensor with the strongest signal</string>
+
+    <string name="cm">cm</string>
+    <string name="onboarding_height_title">How tall are you?</string>
+    <string name="onboarding_weight_title">How much do you weigh?</string>
+    <string name="kg">kg</string>
+    <string name="onboarding_gender_title">What\'s your gender?</string>
+    <string name="onboarding_nr_people_title">How do you usually sleep?</string>
+    <string name="by_myself">By myself</string>
+    <string name="with_a_partner">With a partner</string>
+    <string name="onboarding_sync_tracker_title">Breathe deeply while laying\non your side of the bed</string>
+    <string name="onboarding_age_title">How old are you?</string>
+    <string name="onboarding_sleep_target_title">Choose your sleep target</string>
+    <string name="sleep_target_desc">For most adults 6-9 hours is ideal</string>
+    <string name="not_sure_title">Not sure what mattress\nsize you have?</string>
+    <string name="not_sure_desc">Refer to the tag at the end on\nthe mattress</string>
+    <string name="set_up_later">Set up later</string>
+
+    <string name="onboarding_error_title_pump_not_found">Oh no! We couldn\'t find a\nSleepsense pump in the room</string>
+    <string name="onboarding_error_desc_pump_not_found">Try double checking that it\'s plugged in</string>
+    <string name="onboarding_error_title_pump_cant_connect">Oh no! Can\'t connect to the sleepsense pump</string>
+    <string name="onboarding_error_desc_pump_cant_connect">Try double checking that it\'s plugged in</string>
+    <string name="onboarding_error_title_tracker_not_found">Uh oh, no sensor found!</string>
+    <string name="onboarding_error_desc_tracker_not_found">We couldn\'t detect a sensor nearby</string>
+    <string name="onboarding_error_title_tracker_not_found_two">Uh oh, only one sensor found!</string>
+    <string name="onboarding_error_desc_tracker_not_found_two">We found one sleep tracking sensor, but we need two to set up your sleep tracking</string>
+    <string name="onboarding_error_title_tracker_lost_connection">Uh oh, lost connection to one of the trackers!</string>
+    <string name="onboarding_error_desc_tracker_lost_connection">Try double checking that it\'s plugged in</string>
+    <string name="onboarding_error_title_base_not_found">Can\'t seem to find your base!</string>
+    <string name="onboarding_error_desc_base_not_found">We couldn’t detect a base nearby. Try checking that it is plugged in</string>
+    <string name="onboarding_error_title_base_not_found_two">Uh oh, only one base found!</string>
+    <string name="onboarding_error_desc_base_not_found_two">We found one base, but we need two to set up your side of the bed.</string>
+
 </resources>

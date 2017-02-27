@@ -29,9 +29,9 @@ import au.com.ahbeard.sleepsense.widgets.SleepScoreView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by neal on 12/03/2016.
@@ -79,7 +79,7 @@ public class DailyGraphFragment extends Fragment {
 
     private Sleep mSleep;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,9 +102,9 @@ public class DailyGraphFragment extends Fragment {
 
         updateData();
 
-        mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+        mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
             @Override
-            public void call(Integer sleepId) {
+            public void accept(Integer sleepId) {
                 updateData();
             }
         }));

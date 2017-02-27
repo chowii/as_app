@@ -18,15 +18,15 @@ import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  */
 public class OnBoardingSearchingFragment  extends OnBoardingFragment {
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     @Bind(R.id.on_board_button_continue)
     Button mContinueButton;
@@ -113,9 +113,9 @@ public class OnBoardingSearchingFragment  extends OnBoardingFragment {
         mDevicesLayout.setVisibility(View.INVISIBLE);
         mContinueButton.setAlpha(0.0f);
 
-        mCompositeSubscription.add(((NewOnBoardActivity) getActivity()).getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<OnBoardingState>() {
+        mCompositeSubscription.add(((NewOnBoardActivity) getActivity()).getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<OnBoardingState>() {
             @Override
-            public void call(OnBoardingState onBoardingState) {
+            public void accept(OnBoardingState onBoardingState) {
                 currentState = onBoardingState;
                 if (onBoardingState.state == OnBoardingState.State.Acquiring) {
                     PulseAnimator.startAnimation(pulses, getContext(), callback);

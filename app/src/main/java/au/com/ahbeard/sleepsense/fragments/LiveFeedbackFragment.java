@@ -19,10 +19,10 @@ import au.com.ahbeard.sleepsense.widgets.LiveFeedbackGraph;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by neal on 22/06/2016.
@@ -33,7 +33,7 @@ public class LiveFeedbackFragment extends Fragment {
     private LiveFeedbackTrackerDevice mLeftTrackingDevice;
     private LiveFeedbackTrackerDevice mRightTrackingDevice;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     @Bind(R.id.live_feedback_graph)
     LiveFeedbackGraph mLiveFeedbackGraph;
@@ -58,19 +58,10 @@ public class LiveFeedbackFragment extends Fragment {
 
         if (mLeftTrackingDevice != null && !mLeftTrackingDevice.isTracking()) {
             mCompositeSubscription.add(mLeftTrackingDevice.startSession()
-                    .observeOn(AndroidSchedulers.mainThread()).onBackpressureDrop().subscribe(new Observer<byte[]>() {
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .onBackpressureDrop().subscribe(new Consumer<byte[]>() {
                         @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onNext(byte[] bytes) {
+                        public void accept(@NonNull byte[] bytes) throws Exception {
                             mLiveFeedbackGraph.addToLeftChannel(bytesToAverage(bytes));
                         }
                     }));
@@ -78,19 +69,9 @@ public class LiveFeedbackFragment extends Fragment {
 
         if (mRightTrackingDevice != null && !mRightTrackingDevice.isTracking()) {
             mCompositeSubscription.add(mRightTrackingDevice.startSession()
-                    .observeOn(AndroidSchedulers.mainThread()).onBackpressureDrop().subscribe(new Observer<byte[]>() {
+                    .observeOn(AndroidSchedulers.mainThread()).onBackpressureDrop().subscribe(new Consumer<byte[]>() {
                         @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onNext(byte[] bytes) {
+                        public void accept(@NonNull byte[] bytes) throws Exception {
                             mLiveFeedbackGraph.addToRightChannel(bytesToAverage(bytes));
                         }
                     }));
@@ -170,18 +151,18 @@ public class LiveFeedbackFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         if ( mLeftTrackingDevice != null ) {
-            mCompositeSubscription.add(mLeftTrackingDevice.getDeviceEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device.DeviceEvent>() {
+            mCompositeSubscription.add(mLeftTrackingDevice.getDeviceEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Device.DeviceEvent>() {
                 @Override
-                public void call(Device.DeviceEvent deviceEvent) {
+                public void accept(Device.DeviceEvent deviceEvent) {
                     setButtons();
                 }
             }));
         }
 
         if ( mRightTrackingDevice != null ) {
-            mCompositeSubscription.add(mRightTrackingDevice.getDeviceEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device.DeviceEvent>() {
+            mCompositeSubscription.add(mRightTrackingDevice.getDeviceEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Device.DeviceEvent>() {
                 @Override
-                public void call(Device.DeviceEvent deviceEvent) {
+                public void accept(Device.DeviceEvent deviceEvent) {
                     setButtons();
                 }
             }));
@@ -207,7 +188,7 @@ public class LiveFeedbackFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        mCompositeSubscription.unsubscribe();
+        mCompositeSubscription.dispose();
         ButterKnife.unbind(this);
         super.onDestroyView();
     }

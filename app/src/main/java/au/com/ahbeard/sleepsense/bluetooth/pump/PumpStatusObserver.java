@@ -2,18 +2,21 @@ package au.com.ahbeard.sleepsense.bluetooth.pump;
 
 import java.util.regex.Pattern;
 
-import rx.Observer;
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+
 
 /**
  * Created by neal on 8/03/2016.
  */
-public class PumpStatusObserver implements Observer<byte[]> {
+public class PumpStatusObserver implements Consumer<byte[]> {
 
     private Observer<PumpEvent> mPumpStatusEventObserver;
     private Pattern mAdvancePumpEventPattern = Pattern.compile("EX\\d{12}[\\da-f]{4}");
 
-    int bufferPointer = -1;
-    char[] buffer = new char[128];
+    private int bufferPointer = -1;
+    private char[] buffer = new char[128];
 
     public PumpStatusObserver(
             Observer<PumpEvent> pumpStatusEventObserver) {
@@ -21,28 +24,17 @@ public class PumpStatusObserver implements Observer<byte[]> {
     }
 
     @Override
-    public void onCompleted() {
-
-    }
-
-    @Override
-    public void onError(Throwable e) {
-
-    }
-
-    @Override
-    public void onNext(byte[] bytes) {
-
-        for (int i = 0; i < bytes.length; i++) {
+    public void accept(@NonNull byte[] bytes) throws Exception {
+        for (byte aByte : bytes) {
 
             if (bufferPointer >= 0 && bufferPointer < 18) {
                 // We have already found an 'EX', record
-                buffer[bufferPointer++] = (char) bytes[i];
+                buffer[bufferPointer++] = (char) aByte;
             }
 
-            if (bufferPointer <= 0 && bytes[i] == 'E') {
+            if (bufferPointer <= 0 && aByte == 'E') {
                 bufferPointer = 0;
-                buffer[bufferPointer++] = (char) bytes[i];
+                buffer[bufferPointer++] = (char) aByte;
             }
 
             // Do this last, so we catch a complete mStatus.
@@ -59,7 +51,5 @@ public class PumpStatusObserver implements Observer<byte[]> {
             }
 
         }
-
     }
-
 }

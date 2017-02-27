@@ -24,9 +24,9 @@ import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -175,7 +175,7 @@ public class BaseTestFragment extends Fragment {
     }
 
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     public BaseTestFragment() {
         // Required empty public constructor
@@ -203,9 +203,9 @@ public class BaseTestFragment extends Fragment {
         updateControls(false);
 
         SleepSenseDeviceService.instance().getEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Action1<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
+                new Consumer<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
                     @Override
-                    public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent message) {
+                    public void accept(SleepSenseDeviceService.SleepSenseDeviceServiceEvent message) {
                        attachToBase();
                     }
                 });
@@ -318,17 +318,17 @@ public class BaseTestFragment extends Fragment {
                             .subscribeOn(AndroidSchedulers.mainThread())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
-                                    new Action1<String>() {
+                                    new Consumer<String>() {
                                         @Override
-                                        public void call(String message) {
+                                        public void accept(String message) {
                                             mLogAdapter.log(message);
                                         }
                                     }));
 
             mCompositeSubscription.add(mBaseDevice.getDeviceEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
-                    new Action1<Device.DeviceEvent>() {
+                    new Consumer<Device.DeviceEvent>() {
                         @Override
-                        public void call(Device.DeviceEvent deviceEvent) {
+                        public void accept(Device.DeviceEvent deviceEvent) {
                             if (deviceEvent instanceof Device.DeviceConnectedEvent) {
                                 updateControls(true);
                             } else if (deviceEvent instanceof Device.DeviceDisconnectedEvent) {

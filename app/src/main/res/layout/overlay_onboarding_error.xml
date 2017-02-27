@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="LinearLayout"
+    tools:orientation="vertical"
+    tools:background="@color/onboarding_not_sure_background">
+    <au.com.ahbeard.sleepsense.widgets.SSTextView
+        android:id="@+id/titleTextView"
+        style="@style/OnboardingText.Title"
+        android:text="@string/onboarding_error_title_pump_not_found"
+        />
+    <au.com.ahbeard.sleepsense.widgets.SSTextView
+        android:id="@+id/descTextView"
+        style="@style/OnboardingText.Desc"
+        android:text="@string/onboarding_error_desc_pump_not_found"
+        />
+    <Button
+        android:id="@+id/tryAgainButton"
+        style="@style/OnboardingButton"
+        android:text="@string/try_again"
+        />
+    <Button
+        android:id="@+id/helpMeButton"
+        style="@style/OnboardingButton.Text"
+        android:text="@string/help_me_text"
+        />
+    <Button
+        android:id="@+id/setUpLaterButton"
+        style="@style/OnboardingButton.Text"
+        android:text="@string/set_up_later"
+        />
+</merge>

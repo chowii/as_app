@@ -12,7 +12,7 @@ import android.widget.TextView;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.services.SharedPreferencesStore;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
-import au.com.ahbeard.sleepsense.widgets.ScaleView;
+import au.com.ahbeard.sleepsense.widgets.SSRulerView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,12 +27,12 @@ public class WeightActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weight);
         ButterKnife.bind(this);
-        final ScaleView rulerViewMm = (ScaleView) findViewById(R.id.weight_scale);
+        final SSRulerView rulerViewMm = (SSRulerView) findViewById(R.id.weight_scale);
         rulerViewMm.setRotation(90);
         rulerViewMm.setStartingPoint(7);
         rulerViewMm.setRulerPointer(200);
         setTextValue((Math.round((7 * 10f))) + " kg");
-        rulerViewMm.setUpdateListener(new ScaleView.onViewUpdateListener() {
+        rulerViewMm.setUpdateListener(new SSRulerView.onViewUpdateListener() {
             @Override
             public void onViewUpdate(float result) {
                 setTextValue(Math.round((result * 10f)) + " kg");

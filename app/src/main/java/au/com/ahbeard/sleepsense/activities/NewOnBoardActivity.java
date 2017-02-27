@@ -32,12 +32,14 @@ import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingState;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
 
 public class NewOnBoardActivity extends BaseActivity implements
         OnBoardingBluetoothFragment.OnActionListener,
@@ -65,7 +67,7 @@ public class NewOnBoardActivity extends BaseActivity implements
         finish();
     }
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     private PublishSubject<OnBoardingState> mOnBoardingEventPublishSubject = PublishSubject.create();
 
@@ -277,10 +279,14 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     public void findInitialDevices() {
 
-        SleepSenseDeviceService.instance().newAcquireDevices(2500).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
+        SleepSenseDeviceService.instance().scanDevices().subscribe(new Observer<SleepSenseDeviceAquisition>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
 
             @Override
-            public void onCompleted() {
+            public void onComplete() {
 
                 if (mAquiredDevices == null) {
                     // EPIC FAIL
@@ -331,10 +337,12 @@ public class NewOnBoardActivity extends BaseActivity implements
 
     public void acquireDevices() {
 
-        SleepSenseDeviceService.instance().newAcquireDevices(5000).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
+        SleepSenseDeviceService.instance().scanDevices().subscribe(new Observer<SleepSenseDeviceAquisition>() {
+            @Override
+            public void onSubscribe(Disposable d) {}
 
             @Override
-            public void onCompleted() {
+            public void onComplete() {
 
                 if (mAquiredDevices == null) {
 
@@ -415,9 +423,9 @@ public class NewOnBoardActivity extends BaseActivity implements
 
             PumpDevice pumpDevice = SleepSenseDeviceService.instance().getPumpDevice();
 
-            pumpDevice.getChangeObservable().onBackpressureBuffer().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
+            pumpDevice.getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Device>() {
                 @Override
-                public void call(Device device) {
+                public void accept(@NonNull Device device) throws Exception {
                     if (mOnBoardingState.state == OnBoardingState.State.RequiredDevicesFound && device.isDisconnected() && device.getLastConnectionStatus() != 0) {
                         // We had an error connecting to the pump.
                         mOnBoardingState.state = OnBoardingState.State.InflationError;
@@ -426,13 +434,12 @@ public class NewOnBoardActivity extends BaseActivity implements
                 }
             });
 
-            pumpDevice.getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
+            pumpDevice.getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<PumpEvent>() {
 
                 long mStartedInflatingAt;
 
                 @Override
-                public void call(PumpEvent pumpEvent) {
-
+                public void accept(@NonNull PumpEvent pumpEvent) throws Exception {
                     if (pumpEvent.isAdjustingOrCheckingPressure() && mOnBoardingState.state ==
                             OnBoardingState.State.RequiredDevicesFound) {
                         mStartedInflatingAt = System.currentTimeMillis();

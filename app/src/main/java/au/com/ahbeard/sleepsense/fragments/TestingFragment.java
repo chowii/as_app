@@ -19,8 +19,6 @@ import au.com.ahbeard.sleepsense.adapters.SimpleItemAnimator;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * A simple {@link Fragment} subclass.

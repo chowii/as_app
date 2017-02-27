@@ -13,11 +13,14 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 import au.com.ahbeard.sleepsense.services.log.SSLog;
-import rx.Observable;
-import rx.Observer;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.processors.PublishProcessor;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by neal on 29/12/2015.
@@ -94,14 +97,14 @@ public class Device extends BluetoothGattCallback {
 
     private PublishSubject<CharacteristicWriteOperation> mBluetoothCommandSubject = PublishSubject.create();
     private PublishSubject<DeviceEvent> mDeviceEventSubject = PublishSubject.create();
-    private PublishSubject<ValueChangeEvent> mNotifyEventSubject = PublishSubject.create();
+    private PublishProcessor<ValueChangeEvent> mNotifyEventSubject = PublishProcessor.create();
 
     private BluetoothDevice mBluetoothDevice;
     private BluetoothGatt mBluetoothGatt;
 
-    private CompositeSubscription mBluetoothOperationQueueSubscription = new CompositeSubscription();
+    private CompositeDisposable mBluetoothOperationQueueSubscription = new CompositeDisposable();
 
-    private PublishSubject<Device> mChangeSubject = PublishSubject.create();
+    private PublishProcessor<Device> mChangeSubject = PublishProcessor.create();
 
     private Context mContext;
 
@@ -259,28 +262,16 @@ public class Device extends BluetoothGattCallback {
             if (service != null) {
 
                 mBluetoothOperationQueueSubscription.add(
-                        mBluetoothOperationQueue.observe().observeOn(Schedulers.computation()).subscribe(
-                                new Observer<BluetoothOperation>() {
+                        mBluetoothOperationQueue.observe()
+                                .observeOn(Schedulers.computation()).subscribe(
+                                new Consumer<BluetoothOperation>() {
                                     @Override
-                                    public void onCompleted() {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                    }
-
-                                    @Override
-                                    public void onNext(BluetoothOperation bluetoothOperation) {
-
+                                    public void accept(@NonNull BluetoothOperation bluetoothOperation) throws Exception {
                                         if (bluetoothOperation.perform(mBluetoothGatt) ) {
                                             mBluetoothOperationQueue.completeOperation(bluetoothOperation);
                                         }
-
                                     }
                                 }
-
                         ));
 
                 if (getSetupNotifications()) {
@@ -358,12 +349,12 @@ public class Device extends BluetoothGattCallback {
         return mDeviceEventSubject;
     }
 
-    public Observable<Device> getChangeObservable() {
-        return mChangeSubject.asObservable().onBackpressureBuffer();
+    public Flowable<Device> getChangeObservable() {
+        return mChangeSubject.hide().onBackpressureBuffer();
     }
 
-    public Observable<ValueChangeEvent> getNotifyEventObservable() {
-        return mNotifyEventSubject;
+    public Flowable<ValueChangeEvent> getNotifyEventObservable() {
+        return mNotifyEventSubject.hide().onBackpressureBuffer();
     }
 
     /**

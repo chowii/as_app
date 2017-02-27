@@ -26,9 +26,9 @@ import au.com.ahbeard.sleepsense.widgets.StyledTextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * The pump controls, excluding left and right selection, but this control does know about left and right.
@@ -86,7 +86,7 @@ public class FirmnessControlFragment extends Fragment {
         mFirmnessRightTextView.setVisibility(View.VISIBLE);
     }
 
-    private CompositeSubscription mSubscriptions = new CompositeSubscription();
+    private CompositeDisposable mSubscriptions = new CompositeDisposable();
 
     public FirmnessControlFragment() {
         // Required empty public constructor
@@ -121,7 +121,6 @@ public class FirmnessControlFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_firmness, container, false);
 
         ButterKnife.bind(this, view);
-        bind(view);
 
         if ("left".equalsIgnoreCase(mSide)) {
             setLeftSideActive();
@@ -181,9 +180,9 @@ public class FirmnessControlFragment extends Fragment {
 
         if (SleepSenseDeviceService.instance().getPumpDevice() != null) {
 
-            mSubscriptions.add(SleepSenseDeviceService.instance().getPumpDevice().getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<PumpEvent>() {
+            mSubscriptions.add(SleepSenseDeviceService.instance().getPumpDevice().getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<PumpEvent>() {
                 @Override
-                public void call(PumpEvent pumpEvent) {
+                public void accept(PumpEvent pumpEvent) {
 
                     mFirmnessControlLeftView.setActualValue(Firmness.getControlValueForPressure(pumpEvent.getLeftPressure()));
                     mFirmnessControlRightView.setActualValue(Firmness.getControlValueForPressure(pumpEvent.getRightPressure()));
@@ -203,17 +202,17 @@ public class FirmnessControlFragment extends Fragment {
                 }
             }));
 
-            mSubscriptions.add(SleepSenseDeviceService.instance().getPumpDevice().getChangeObservable().onBackpressureBuffer().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Device>() {
+            mSubscriptions.add(SleepSenseDeviceService.instance().getPumpDevice().getChangeObservable().onBackpressureBuffer().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Device>() {
                 @Override
-                public void call(Device device) {
+                public void accept(Device device) {
                     if (device.getConnectionState() == Device.CONNECTION_STATE_CONNECTING && device.getElapsedConnectingTime() > 250) {
                         startProgress();
                         mFirmnessRightTextView.setText("Connecting");
                     } else if (device.getConnectionState() == Device.CONNECTION_STATE_DISCONNECTED && device.getLastConnectionStatus() > 0) {
                         stopProgress();
-                        showToast("Connection timeout", "Try again", new Action1<Void>() {
+                        showToast("Connection timeout", "Try again", new Runnable() {
                             @Override
-                            public void call(Void aVoid) {
+                            public void run() {
                                 connectPump();
                             }
 
@@ -256,12 +255,12 @@ public class FirmnessControlFragment extends Fragment {
     @Bind(R.id.progress_layout_text_view_action)
     protected TextView mActionTextView;
 
-    private Action1<Void> mAction;
+    private Runnable mAction;
 
     @OnClick(R.id.progress_layout_text_view_action)
     protected void progressAction() {
         if (mAction != null) {
-            mAction.call(null);
+            mAction.run();
             mLayout.setVisibility(View.GONE);
         }
     }
@@ -286,15 +285,11 @@ public class FirmnessControlFragment extends Fragment {
         }
     }
 
-    protected void bind(View view) {
-        ButterKnife.bind(this, view);
-    }
-
     protected void unbind() {
         ButterKnife.unbind(this);
     }
 
-    protected void showToast(String message, String actionText, Action1<Void> action) {
+    protected void showToast(String message, String actionText, Runnable action) {
 
         mAction = action;
 

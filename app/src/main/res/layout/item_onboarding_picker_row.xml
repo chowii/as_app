@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/onboarding_picker_line_height"
+    tools:background="@drawable/onboarding_debug_gradient">
+
+    <au.com.ahbeard.sleepsense.widgets.SSTextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/onboarding_title_text"
+        android:textSize="30sp"
+        app:font="AvertaBold"
+        android:textAlignment="center"
+        android:layout_centerInParent="true"
+        tools:text="45"
+        />
+</RelativeLayout>

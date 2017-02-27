@@ -1,14 +1,12 @@
 package au.com.ahbeard.sleepsense.bluetooth;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import org.reactivestreams.Subscriber;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Action0;
-import rx.subscriptions.Subscriptions;
+import java.util.ArrayList;
+import java.util.UUID;
+
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * The purpose of this class it to abstract away the concept of queue that contains operations. It basically provides
@@ -19,25 +17,12 @@ import rx.subscriptions.Subscriptions;
  */
 public class BluetoothOperationQueue {
 
-    private final Map<Subscriber<? super BluetoothOperation>, Boolean> subscribers = new ConcurrentHashMap<>();
-    private final Observable<BluetoothOperation> mObservable = Observable.create(
-            new Observable.OnSubscribe<BluetoothOperation>() {
-                @Override
-                public void call(final Subscriber<? super BluetoothOperation> subscriber) {
-                    subscribers.put(subscriber, Boolean.TRUE);
-                    subscriber.add(Subscriptions.create(new Action0() {
-                        @Override
-                        public void call() {
-                            subscribers.remove(subscriber);
-                        }
-                    }));
-                }
-            });
+    private final PublishSubject<BluetoothOperation> mPublishSubject = PublishSubject.create();
     private final ArrayList<BluetoothOperation> mBluetoothOperations = new ArrayList<>(2048);
     private boolean mIsRunning = false;
 
     public Observable<BluetoothOperation> observe() {
-        return mObservable;
+        return mPublishSubject.hide();
     }
 
     public void start() {
@@ -125,9 +110,7 @@ public class BluetoothOperationQueue {
             if (mBluetoothOperations.get(0).getStatus() == BluetoothOperation.Status.Queued) {
                 mBluetoothOperations.get(0).setStatus(BluetoothOperation.Status.Running);
                 BluetoothOperation bluetoothOperation = mBluetoothOperations.get(0);
-                for (Subscriber<? super BluetoothOperation> subscriber : subscribers.keySet()) {
-                    subscriber.onNext(bluetoothOperation);
-                }
+                mPublishSubject.onNext(bluetoothOperation);
                 break;
             } else if (mBluetoothOperations.get(0).getStatus() == BluetoothOperation.Status.Running) {
                 break;

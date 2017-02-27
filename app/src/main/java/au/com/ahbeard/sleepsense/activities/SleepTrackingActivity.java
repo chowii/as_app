@@ -35,18 +35,18 @@ import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 public class SleepTrackingActivity extends BaseActivity {
 
-    private Subscription mClockSubscription;
+    private Disposable mClockSubscription;
 
     @Bind(R.id.sleep_tracking_text_view_clock_time)
     TextView mClockTimeTextView;
@@ -80,7 +80,7 @@ public class SleepTrackingActivity extends BaseActivity {
     private boolean mIgnoreStateUpdate;
 
     private PublishSubject<TrackerDevice.TrackerState> mStateSubject;
-    private Subscription mTrackerSubscription;
+    private Disposable mTrackerSubscription;
 
     int mHours;
     int mMinutes;
@@ -100,9 +100,9 @@ public class SleepTrackingActivity extends BaseActivity {
         mStateSubject
                 .compose(this.<TrackerDevice.TrackerState>bindToLifecycle())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<TrackerDevice.TrackerState>() {
+                .subscribe(new Consumer<TrackerDevice.TrackerState>() {
                     @Override
-                    public void call(TrackerDevice.TrackerState trackerState) {
+                    public void accept(TrackerDevice.TrackerState trackerState) {
                         if (mIgnoreStateUpdate) return;
                         switch (trackerState) {
                             case Connecting:
@@ -137,9 +137,9 @@ public class SleepTrackingActivity extends BaseActivity {
         // fields to get the alignment to work correctly.
         updateClockText();
         mClockSubscription = Observable.interval(0, 50, TimeUnit.MILLISECONDS)
-                .filter(new Func1<Long, Boolean>() {
+                .filter(new Predicate<Long>() {
                     @Override
-                    public Boolean call(Long elapsedTime) {
+                    public boolean test(@NonNull Long aLong) throws Exception {
                         mCalendar.setTimeInMillis(System.currentTimeMillis());
                         if (mMinutes != mCalendar.get(Calendar.MINUTE)) {
                             mHours = mCalendar.get(Calendar.HOUR);
@@ -155,9 +155,9 @@ public class SleepTrackingActivity extends BaseActivity {
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Long>() {
+                .subscribe(new Consumer<Long>() {
                     @Override
-                    public void call(Long elapsedTime) {
+                    public void accept(Long elapsedTime) {
                         updateClockText();
                     }
                 });
@@ -166,7 +166,7 @@ public class SleepTrackingActivity extends BaseActivity {
     @Override
     protected void onStop() {
         if (mClockSubscription != null) {
-            mClockSubscription.unsubscribe();
+            mClockSubscription.dispose();
             mClockSubscription = null;
         }
         super.onStop();
@@ -202,9 +202,9 @@ public class SleepTrackingActivity extends BaseActivity {
                 public void onClick(DialogInterface dialog, int id) {
                     mIgnoreStateUpdate = true;
                     AnalyticsService.instance().logSleepScreenStopTracking();
-                    Schedulers.computation().createWorker().schedule(new Action0() {
+                    Schedulers.computation().createWorker().schedule(new Runnable() {
                         @Override
-                        public void call() {
+                        public void run() {
                             if (SleepSenseDeviceService.instance().getTrackerDevice() != null)
                                 SleepSenseDeviceService.instance().getTrackerDevice().stopSensorSession();
                         }
@@ -223,9 +223,9 @@ public class SleepTrackingActivity extends BaseActivity {
     private void connectToTracker() {
         BluetoothService.instance().waitForPowerOn()
                 .compose(this.<BluetoothEvent>bindToLifecycle())
-                .subscribe(new Action1<BluetoothEvent>() {
+                .subscribe(new Consumer<BluetoothEvent>() {
                     @Override
-                    public void call(BluetoothEvent bluetoothEvent) {
+                    public void accept(BluetoothEvent bluetoothEvent) {
                         setupTracker();
                     }
                 });
@@ -248,15 +248,15 @@ public class SleepTrackingActivity extends BaseActivity {
             //Clean up previous subscription to tracker state
             //Link tracker state to state subject
             if (mTrackerSubscription != null) {
-                mTrackerSubscription.unsubscribe();
+                mTrackerSubscription.dispose();
                 mTrackerSubscription = null;
             }
             mTrackerSubscription = trackerDevice.getTrackingStateObservable()
                     .compose(this.<TrackerDevice.TrackerState>bindToLifecycle())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<TrackerDevice.TrackerState>() {
+                    .subscribe(new Consumer<TrackerDevice.TrackerState>() {
                         @Override
-                        public void call(TrackerDevice.TrackerState trackerState) {
+                        public void accept(TrackerDevice.TrackerState trackerState) {
                             mStateSubject.onNext(trackerState);
                         }
                     });
@@ -337,7 +337,7 @@ public class SleepTrackingActivity extends BaseActivity {
     private Long animationDuration = 5500L;
     private ArrayList<ImageView> mZedsPool = new ArrayList<>();
     private Random r = new Random();
-    private Subscription mZedsSubscription;
+    private Disposable mZedsSubscription;
 
     private void prefillZedsPool() {
         for (int i = 0; i < 20; i++){ //prefill zed pool
@@ -347,7 +347,7 @@ public class SleepTrackingActivity extends BaseActivity {
 
     private void turnOnZepSpawner() {
         if (mZedsSubscription != null) {
-            mZedsSubscription.unsubscribe();
+            mZedsSubscription.dispose();
             mZedsSubscription = null;
         }
 
@@ -357,9 +357,9 @@ public class SleepTrackingActivity extends BaseActivity {
                     .getPacketCountObservable()
                     .sample(500, TimeUnit.MILLISECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<Integer>() {
+                    .subscribe(new Consumer<Integer>() {
                         @Override
-                        public void call(Integer packetCount) {
+                        public void accept(Integer packetCount) {
                             mSampleCountTextView.setText(String.format(Locale.ENGLISH, "%d", packetCount));
 
                             if (!mIsPaused && spawnerCounter % 2 == 0) {

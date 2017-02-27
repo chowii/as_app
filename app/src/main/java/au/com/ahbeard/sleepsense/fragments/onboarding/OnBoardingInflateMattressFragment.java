@@ -1,10 +1,8 @@
 package au.com.ahbeard.sleepsense.fragments.onboarding;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +15,9 @@ import au.com.ahbeard.sleepsense.activities.NewOnBoardActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  */
@@ -27,7 +25,7 @@ public class OnBoardingInflateMattressFragment  extends OnBoardingFragment {
 
     private OnActionListener mOnActionListener;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     @Bind(R.id.on_board_button_continue)
     Button mContinueButton;
@@ -81,9 +79,9 @@ public class OnBoardingInflateMattressFragment  extends OnBoardingFragment {
 
         mContinueButton.setAlpha(0.0f);
 
-        mCompositeSubscription.add(((NewOnBoardActivity)getActivity()).getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<OnBoardingState>() {
+        mCompositeSubscription.add(((NewOnBoardActivity)getActivity()).getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<OnBoardingState>() {
             @Override
-            public void call(OnBoardingState onBoardingState) {
+            public void accept(OnBoardingState onBoardingState) {
                 if ( onBoardingState.state == OnBoardingState.State.Inflating ) {
                     mMattressHappyImageView.setAlpha(0.0f);
                     mMattressAnimatedImageView.setAlpha(1.0f);

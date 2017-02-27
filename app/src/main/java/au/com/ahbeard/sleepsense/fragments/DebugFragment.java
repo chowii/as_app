@@ -18,7 +18,7 @@ import au.com.ahbeard.sleepsense.adapters.SimpleItemAnimator;
 import au.com.ahbeard.sleepsense.services.log.SSLog;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,7 +30,7 @@ public class DebugFragment extends Fragment {
     @Bind(R.id.debug_recycler_view_log)
     RecyclerView mLogRecyclerView;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     public DebugFragment() {
         // Required empty public constructor

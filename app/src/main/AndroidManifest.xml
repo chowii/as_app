@@ -27,13 +27,19 @@
             android:name="io.fabric.ApiKey"
             android:value="d340877592487019d618eada69d27ba7f41dad0f" />
 
+        <activity android:name=".ui.onboarding.MainOnboardingActivity"
+            android:screenOrientation="userPortrait"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".activities.MattressSizeActivity"
             android:screenOrientation="userPortrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activities.ConnectingPumpActivity"
@@ -61,16 +67,17 @@
             android:screenOrientation="userPortrait" />
         <activity
             android:name=".activities.TrackerInfoActivity"
-            android:screenOrientation="userPortrait"/>
+            android:screenOrientation="userPortrait" />
         <activity
             android:name=".activities.SleepOnYourSideActivity"
-            android:screenOrientation="userPortrait"/>
+            android:screenOrientation="userPortrait" />
         <activity
             android:name=".activities.ConnectingAdjustableBaseActivity"
-            android:screenOrientation="userPortrait"/>
+            android:screenOrientation="userPortrait" />
         <activity
             android:name=".activities.SetupCompletedActivity"
             android:screenOrientation="userPortrait" />
+
     </application>
 
 </manifest>

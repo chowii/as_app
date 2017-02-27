@@ -1,7 +1,6 @@
 package au.com.ahbeard.sleepsense.fragments.onboarding;
 
 import android.content.Context;
-import android.media.Image;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
-import rx.functions.Action1;
 
 /**
  * Created by luisramos on 5/07/16.

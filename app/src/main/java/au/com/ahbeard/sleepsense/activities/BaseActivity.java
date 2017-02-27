@@ -13,33 +13,29 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
-import com.trello.rxlifecycle.LifecycleProvider;
-import com.trello.rxlifecycle.LifecycleTransformer;
-import com.trello.rxlifecycle.RxLifecycle;
-import com.trello.rxlifecycle.android.ActivityEvent;
-import com.trello.rxlifecycle.android.RxLifecycleAndroid;
+import com.trello.rxlifecycle2.LifecycleProvider;
+import com.trello.rxlifecycle2.LifecycleTransformer;
+import com.trello.rxlifecycle2.RxLifecycle;
+import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.trello.rxlifecycle2.android.RxLifecycleAndroid;
 
 import au.com.ahbeard.sleepsense.SleepSenseApplication;
-import au.com.ahbeard.sleepsense.bluetooth.BluetoothEvent;
-import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
-import au.com.ahbeard.sleepsense.services.log.SSLog;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.subjects.BehaviorSubject;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.subjects.BehaviorSubject;
 
 /**
  * Created by neal on 3/03/2016.
  */
-public class BaseActivity extends AppCompatActivity implements LifecycleProvider<ActivityEvent>{
+public class BaseActivity extends AppCompatActivity implements LifecycleProvider<ActivityEvent> {
 
     private static final int PERMISSIONS_REQUEST_COARSE_LOCATION = 123;
 
     private boolean mCallOnScanningPermissionGranted;
 
     private final BehaviorSubject<ActivityEvent> lifecycleSubject = BehaviorSubject.create();
+
+    protected Boolean hasScanPermissions = false;
 
     public void openSleepScoreBreakdown(int sleepId) {
 
@@ -105,7 +101,7 @@ public class BaseActivity extends AppCompatActivity implements LifecycleProvider
         }
     }
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,31 +112,6 @@ public class BaseActivity extends AppCompatActivity implements LifecycleProvider
     @Override
     protected void onStart() {
         super.onStart();
-//        if(!isBluetoothEnabled()) showBluetoothOffAlertView();
-//        mCompositeSubscription.add(BluetoothService.instance().getBluetoothEventObservable()
-//                .onBackpressureBuffer()
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .onErrorReturn(new Func1<Throwable, BluetoothEvent>() {
-//                    @Override
-//                    public BluetoothEvent call(Throwable throwable) {
-//                        SSLog.d("Error on bluetoothEvent" + throwable.getMessage());
-//                        return null;
-//                    }
-//                })
-//                .filter(new Func1<BluetoothEvent, Boolean>() {
-//                    @Override
-//                    public Boolean call(BluetoothEvent bluetoothEvent) {
-//                        return bluetoothEvent != null;
-//                    }
-//                })
-//                .subscribe(new Action1<BluetoothEvent>() {
-//            @Override
-//            public void call(BluetoothEvent bluetoothEvent) {
-//                if ( bluetoothEvent instanceof BluetoothEvent.BluetoothUseWhileDisabledEvent ) {
-//                    showBluetoothOffAlertView();
-//                }
-//            }
-//        }));
         lifecycleSubject.onNext(ActivityEvent.START);
     }
 
@@ -189,7 +160,7 @@ public class BaseActivity extends AppCompatActivity implements LifecycleProvider
     }
 
     public void onScanningPermissionGranted() {
-
+        hasScanPermissions = true;
     }
 
     @Override
@@ -216,7 +187,7 @@ public class BaseActivity extends AppCompatActivity implements LifecycleProvider
     @NonNull
     @CheckResult
     public final Observable<ActivityEvent> lifecycle() {
-        return lifecycleSubject.asObservable();
+        return lifecycleSubject.hide();
     }
 
     @Override
@@ -232,4 +203,5 @@ public class BaseActivity extends AppCompatActivity implements LifecycleProvider
     public final <T> LifecycleTransformer<T> bindToLifecycle() {
         return RxLifecycleAndroid.bindActivity(lifecycleSubject);
     }
+
 }

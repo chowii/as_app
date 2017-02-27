@@ -2,31 +2,28 @@ package au.com.ahbeard.sleepsense.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.os.Bundle;
-import android.view.KeyEvent;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceAquisition;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.fragments.onboarding.ConnectingFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.ConnectionFailedFragment;
-import au.com.ahbeard.sleepsense.fragments.onboarding.HelpWebViewFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingFragment;
 import au.com.ahbeard.sleepsense.fragments.onboarding.OnBoardingState;
 import au.com.ahbeard.sleepsense.fragments.onboarding.QuestionnaireFragment;
 import au.com.ahbeard.sleepsense.services.SharedPreferencesStore;
 import au.com.ahbeard.sleepsense.utils.GlobalVars;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
 
 public class ConnectingPumpActivity  extends BaseActivity implements
         QuestionnaireFragment.OnActionListener,
@@ -37,7 +34,7 @@ public class ConnectingPumpActivity  extends BaseActivity implements
     protected SleepSenseDeviceAquisition mAquiredDevices;
     private GlobalVars.MattressType mattressType;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
     private PublishSubject<OnBoardingState> mOnBoardingEventPublishSubject = PublishSubject.create();
 
     @Override
@@ -129,9 +126,9 @@ public class ConnectingPumpActivity  extends BaseActivity implements
     }
 
     private void subscribeToDeviceFinder() {
-        mCompositeSubscription.add(getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<OnBoardingState>() {
+        mCompositeSubscription.add(getOnBoardingObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<OnBoardingState>() {
             @Override
-            public void call(OnBoardingState onBoardingState) {
+            public void accept(OnBoardingState onBoardingState) {
                 if (onBoardingState.state == OnBoardingState.State.ChoosingDevices) {
                     parseDeviceFinderResult();
                 }
@@ -195,9 +192,10 @@ public class ConnectingPumpActivity  extends BaseActivity implements
 
     public void findPumpDevice() {
 
-        SleepSenseDeviceService.instance().newAcquireDevices(2500).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SleepSenseDeviceAquisition>() {
+        SleepSenseDeviceService.instance().scanDevices().subscribe(new Consumer<SleepSenseDeviceAquisition>() {
             @Override
-            public void onCompleted() {
+            public void accept(@NonNull SleepSenseDeviceAquisition sleepSenseDeviceAquisition) throws Exception {
+                mAquiredDevices = sleepSenseDeviceAquisition;
 
                 if (mAquiredDevices == null) {
                     // EPIC FAIL
@@ -209,17 +207,6 @@ public class ConnectingPumpActivity  extends BaseActivity implements
                     mOnBoardingEventPublishSubject.onNext(mOnBoardingState);
                 }
             }
-
-            @Override
-            public void onError(Throwable e) {
-                showHelpBottomFragment();
-            }
-
-            @Override
-            public void onNext(SleepSenseDeviceAquisition sleepSenseDeviceAquisition) {
-                mAquiredDevices = sleepSenseDeviceAquisition;
-            }
-
         });
     }
 

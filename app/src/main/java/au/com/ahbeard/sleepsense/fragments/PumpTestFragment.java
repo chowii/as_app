@@ -20,9 +20,9 @@ import au.com.ahbeard.sleepsense.services.log.SSLog;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,7 +75,7 @@ public class PumpTestFragment extends Fragment {
     @Bind(R.id.pump_test_button_toggle_right)
     Button mToggleRightButton;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     public PumpTestFragment() {
         // Required empty public constructor
@@ -99,9 +99,9 @@ public class PumpTestFragment extends Fragment {
         updateControls(false);
 
         SleepSenseDeviceService.instance().getEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
-                new Action1<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
+                new Consumer<SleepSenseDeviceService.SleepSenseDeviceServiceEvent>() {
                     @Override
-                    public void call(SleepSenseDeviceService.SleepSenseDeviceServiceEvent message) {
+                    public void accept(SleepSenseDeviceService.SleepSenseDeviceServiceEvent message) {
                        attachToPump();
                     }
                 });
@@ -155,9 +155,9 @@ public class PumpTestFragment extends Fragment {
             updateControls(mPumpDevice.isConnected());
 
             mCompositeSubscription.add(mPumpDevice.getDeviceEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
-                    new Action1<Device.DeviceEvent>() {
+                    new Consumer<Device.DeviceEvent>() {
                         @Override
-                        public void call(Device.DeviceEvent deviceEvent) {
+                        public void accept(Device.DeviceEvent deviceEvent) {
                             if (deviceEvent instanceof Device.DeviceConnectedEvent) {
                                 updateControls(true);
                             } else if (deviceEvent instanceof Device.DeviceDisconnectedEvent) {
@@ -167,9 +167,9 @@ public class PumpTestFragment extends Fragment {
                     }));
 
             mCompositeSubscription.add(mPumpDevice.getPumpEventObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(
-                    new Action1<PumpEvent>() {
+                    new Consumer<PumpEvent>() {
                         @Override
-                        public void call(PumpEvent pumpEvent) {
+                        public void accept(PumpEvent pumpEvent) {
                             SSLog.d("PUMP EVENT: " + pumpEvent.toString());
                         }
                     }));

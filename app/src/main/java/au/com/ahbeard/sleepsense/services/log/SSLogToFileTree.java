@@ -37,7 +37,7 @@ public class SSLogToFileTree extends Timber.DebugTree {
                 logFile.createNewFile();
             }
         } catch (IOException e) {
-            //Error file not created
+            //BaseError file not created
             e.printStackTrace();
         }
     }

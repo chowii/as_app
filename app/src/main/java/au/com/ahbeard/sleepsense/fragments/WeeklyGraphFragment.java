@@ -18,9 +18,9 @@ import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.widgets.WeeklyGraphView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by neal on 12/03/2016.
@@ -32,7 +32,7 @@ public class WeeklyGraphFragment extends Fragment {
 
     private int mWeeksBeforeThisWeek;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,9 +67,9 @@ public class WeeklyGraphFragment extends Fragment {
             sleepIds[i] = sleepIdList.get(i);
         }
 
-        mCompositeSubscription.add(SleepService.instance().readSleepScoresAsync(startSleepId, endSleepId).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Float[]>() {
+        mCompositeSubscription.add(SleepService.instance().readSleepScoresAsync(startSleepId, endSleepId).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Float[]>() {
             @Override
-            public void call(Float[] sleepScores) {
+            public void accept(Float[] sleepScores) {
                 mGraphView.setValues(sleepScores, labels, sleepIds, 20, 100);
                 mGraphView.setOnClickListener(new WeeklyGraphView.OnClickListener() {
                     @Override

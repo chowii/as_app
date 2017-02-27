@@ -84,4 +84,14 @@
     <color name="scroll_view_blur">#FFFFFFFF</color>
     <color name="scroll_view_highlight">#40FFFFFF</color>
 
+    <color name="onboarding_gradient_1_top">#23315E</color>
+    <color name="onboarding_gradient_1_bottom">#2A588A</color>
+    <color name="onboarding_gradient_2_top">#237AFB</color>
+    <color name="onboarding_gradient_2_bottom">#4DA7FC</color>
+    <color name="onboarding_gradient_3_top">#536DF4</color>
+    <color name="onboarding_gradient_3_bottom">#62AAF8</color>
+    <color name="onboarding_title_text">#fff</color>
+    <color name="ruler_line_background">#4cffffff</color>
+
+    <color name="onboarding_not_sure_background">#2E73FF</color>
 </resources>

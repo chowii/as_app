@@ -10,7 +10,6 @@ import au.com.ahbeard.sleepsense.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.functions.Action1;
 
 /**
  * THIS CLASS WAS DEPRECATED AND CODE WAS COPIED INTO SUBCLASSES BECAUSE BUTTERKNIFE DOESN'T HANDLE INJECTION
@@ -33,12 +32,12 @@ public class ControlFragment extends Fragment {
     @Bind(R.id.progress_layout_text_view_action)
     protected TextView mActionTextView;
 
-    private Action1<Void> mAction;
+    private Runnable mAction;
 
     @OnClick(R.id.progress_layout_text_view_action)
     protected void progressAction() {
         if (mAction != null) {
-            mAction.call(null);
+            mAction.run();
             mLayout.setVisibility(View.GONE);
         }
     }
@@ -71,7 +70,7 @@ public class ControlFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    protected void showToast(String message, String actionText, Action1<Void> action) {
+    protected void showToast(String message, String actionText, Runnable action) {
 
         mAction = action;
 
