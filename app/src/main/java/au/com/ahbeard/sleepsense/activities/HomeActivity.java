@@ -61,14 +61,6 @@ public class HomeActivity extends BaseActivity {
 
         super.onCreate(savedInstanceState);
 
-        if (PreferenceService.instance().requiresOnBoarding()) {
-            Intent intent = new Intent(this, NewOnBoardActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-            return;
-        }
-
         setContentView(R.layout.activity_home);
 
         ButterKnife.bind(this);

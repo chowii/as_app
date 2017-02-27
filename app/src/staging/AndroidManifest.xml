@@ -8,6 +8,17 @@
         android:icon="@drawable/launcher_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".activities.SplashActivity"
+            android:screenOrientation="userPortrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".activities.NewOnBoardActivity"
             android:screenOrientation="userPortrait">
@@ -40,14 +51,9 @@
             android:name=".activities.ContactUsActivity"
             android:screenOrientation="userPortrait">
         </activity>
-        <activity android:name=".ui.onboarding.MainOnboardingActivity"
-            android:screenOrientation="userPortrait"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity
+            android:name=".ui.onboarding.MainOnboardingActivity"
+            android:screenOrientation="userPortrait">
         </activity>
 
     </application>
