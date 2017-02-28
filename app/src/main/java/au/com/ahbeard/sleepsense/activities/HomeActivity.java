@@ -19,6 +19,7 @@ import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MoreFragment;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
+import au.com.ahbeard.sleepsense.fragments.settings.SettingsFragments;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.services.SleepService;
@@ -158,6 +159,16 @@ public class HomeActivity extends BaseActivity {
         }
 
         mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance(), new Runnable() {
+            @Override
+            public void run() {
+                AnalyticsService.instance().logDashboardViewSettings();
+            }
+        });
+
+        /***
+         * chowii block
+         */
+        mDashboardPagerAdapter.addTab("Settings",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, new SettingsFragments(), new Runnable() {
             @Override
             public void run() {
                 AnalyticsService.instance().logDashboardViewSettings();

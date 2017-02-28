@@ -31,7 +31,7 @@ import au.com.ahbeard.sleepsense.widgets.SimpleTabStrip;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
+import rx.android.scheduler.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
