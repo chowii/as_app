@@ -18,7 +18,6 @@ import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.DashboardNoSleepsFragment;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
-import au.com.ahbeard.sleepsense.fragments.InStoreHelpFragment;
 import au.com.ahbeard.sleepsense.fragments.InStoreMoreFragment;
 import au.com.ahbeard.sleepsense.fragments.LiveFeedbackFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
@@ -31,9 +30,10 @@ import au.com.ahbeard.sleepsense.widgets.SimpleTabStrip;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.scheduler.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by neal on 3/03/2016.
@@ -44,7 +44,7 @@ public class InStoreHomeActivity extends BaseActivity {
 
     private HomeFragmentPagerAdapter mDashboardPagerAdapter;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
     @Bind(R.id.dashboard_view_pager)
     ViewPager mViewPager;
@@ -122,9 +122,9 @@ public class InStoreHomeActivity extends BaseActivity {
             }
         });
 
-        mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Integer>() {
+        mCompositeSubscription.add(SleepService.instance().getChangeObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
             @Override
-            public void call(Integer sleepId) {
+            public void accept(@NonNull Integer integer) throws Exception {
                 if (mHasRecordedASleep != PreferenceService.instance().getHasRecordedASleep()) {
                     setupTabs();
                 }
@@ -153,14 +153,14 @@ public class InStoreHomeActivity extends BaseActivity {
                 mDashboardPagerAdapter.addTab("Dashboard", R.drawable.tab_dashboard_unselected, R.drawable.tab_dashboard_selected, DashboardFragment.newInstance(), new Runnable() {
                     @Override
                     public void run() {
-                        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_TRACKING);
+                        AnalyticsService.instance().logDashboardViewTracking();
                     }
                 });
             } else {
                 mDashboardPagerAdapter.addTab("Dashboard", R.drawable.tab_dashboard_unselected, R.drawable.tab_dashboard_selected, DashboardNoSleepsFragment.newInstance(), new Runnable() {
                     @Override
                     public void run() {
-                        AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_TRACKING);
+                        AnalyticsService.instance().logDashboardViewTracking();
                     }
                 });
             }
@@ -170,7 +170,7 @@ public class InStoreHomeActivity extends BaseActivity {
             mDashboardPagerAdapter.addTab("Firmness", R.drawable.tab_firmness_unselected, R.drawable.tab_firmness_selected, FirmnessControlFragment.newInstance(), new Runnable() {
                 @Override
                 public void run() {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_MATTRESS);
+                    AnalyticsService.instance().logDashboardViewMattress();
                 }
             });
         }
@@ -179,13 +179,13 @@ public class InStoreHomeActivity extends BaseActivity {
             mDashboardPagerAdapter.addTab("Position", R.drawable.tab_position_unselected, R.drawable.tab_position_selected, PositionControlFragment.newInstance(), new Runnable() {
                 @Override
                 public void run() {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_POSITION);
+                    AnalyticsService.instance().logDashboardViewPosition();
                 }
             });
             mDashboardPagerAdapter.addTab("Massage", R.drawable.tab_massage_unselected, R.drawable.tab_massage_selected, MassageControlFragment.newInstance(), new Runnable() {
                 @Override
                 public void run() {
-                    AnalyticsService.instance().logEvent(AnalyticsService.EVENT_DASHBOARD_VIEW_MASSAGE);
+                    AnalyticsService.instance().logDashboardViewMassage();
                 }
             });
         }

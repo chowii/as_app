@@ -1,38 +1,27 @@
 package au.com.ahbeard.sleepsense.ui.onboarding.base
 
-import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
-import android.widget.RelativeLayout
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.fragments.BaseFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.MainOnboardingActivity
 import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
 import au.com.ahbeard.sleepsense.ui.onboarding.animations.OnboardingTransitionAnimatable
 import au.com.ahbeard.sleepsense.ui.onboarding.animations.OnboardingTransitionAnimator
-import au.com.ahbeard.sleepsense.ui.onboarding.views.SSErrorHandlingOverlayView
-import au.com.ahbeard.sleepsense.ui.onboarding.views.SSNotSureOverlayView
-import com.trello.rxlifecycle2.LifecycleProvider
-import com.trello.rxlifecycle2.LifecycleTransformer
-import com.trello.rxlifecycle2.RxLifecycle
-import com.trello.rxlifecycle2.android.FragmentEvent
-import com.trello.rxlifecycle2.android.RxLifecycleAndroid
-import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
 import kotterknife.bindOptionalView
 
 /**
 * Created by luisramos on 23/01/2017.
 */
-abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, OnboardingTransitionAnimatable, LifecycleProvider<FragmentEvent> {
+abstract class OnboardingBaseFragment : BaseFragment(), OnboardingFragment, OnboardingTransitionAnimatable {
 
     var state = OnboardingState()
 
@@ -49,15 +38,7 @@ abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, Onboardi
 
     abstract fun getViewLayoutId() : Int
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        lifecycleSubject.onNext(FragmentEvent.ATTACH)
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        lifecycleSubject.onNext(FragmentEvent.CREATE)
-    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater?.inflate(getViewLayoutId(), container, false)!!
@@ -65,7 +46,6 @@ abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, Onboardi
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lifecycleSubject.onNext(FragmentEvent.CREATE_VIEW)
 
         setGradient()
 
@@ -84,41 +64,6 @@ abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, Onboardi
         skipButton?.setOnClickListener { skipToNextOnboardingFragment() }
 
 //        prepareViewsForEntryAnim()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        lifecycleSubject.onNext(FragmentEvent.START)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        lifecycleSubject.onNext(FragmentEvent.RESUME)
-    }
-
-    override fun onPause() {
-        lifecycleSubject.onNext(FragmentEvent.PAUSE)
-        super.onPause()
-    }
-
-    override fun onStop() {
-        lifecycleSubject.onNext(FragmentEvent.STOP)
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        lifecycleSubject.onNext(FragmentEvent.DESTROY_VIEW)
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        lifecycleSubject.onNext(FragmentEvent.DESTROY)
-        super.onDestroy()
-    }
-
-    override fun onDetach() {
-        lifecycleSubject.onNext(FragmentEvent.DETACH)
-        super.onDetach()
     }
 
     open fun presentNextOnboardingFragment() {
@@ -147,15 +92,5 @@ abstract class OnboardingBaseFragment : Fragment(), OnboardingFragment, Onboardi
         BASE(R.color.onboarding_gradient_3_top, R.color.onboarding_gradient_3_bottom)
     }
 
-    private val lifecycleSubject = BehaviorSubject.create<FragmentEvent>()
 
-    override fun <T : Any?> bindToLifecycle(): LifecycleTransformer<T> {
-        return RxLifecycleAndroid.bindFragment(lifecycleSubject)
-    }
-
-    override fun <T : Any?> bindUntilEvent(event: FragmentEvent): LifecycleTransformer<T> {
-        return RxLifecycle.bindUntilEvent(lifecycleSubject, event)
-    }
-
-    override fun lifecycle(): Observable<FragmentEvent> = lifecycleSubject.hide()
 }

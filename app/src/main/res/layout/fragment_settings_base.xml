@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="au.com.ahbeard.sleepsense.fragments.settings.SettingsFragments">
+    tools:context="au.com.ahbeard.sleepsense.fragments.settings.SettingsBaseFragment">
 
     <LinearLayout
-        android:id="@+id/container"
+        android:id="@+id/container_settings_base"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"

@@ -21,7 +21,7 @@ import java.util.List;
  * Created by sabbib on 28/02/2017.
  */
 
-public class SettingsFragments extends Fragment {
+public class SettingsBaseFragment extends Fragment {
 
     private RecyclerView settingsView;
     private RecyclerView.Adapter adapter;
