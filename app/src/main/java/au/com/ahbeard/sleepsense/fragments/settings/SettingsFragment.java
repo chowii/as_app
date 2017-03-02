@@ -1,4 +1,4 @@
-package au.com.ahbeard.sleepsense.fragments.settings_wth_factory;
+package au.com.ahbeard.sleepsense.fragments.settings;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -20,6 +20,8 @@ import au.com.ahbeard.sleepsense.fragments.settings.SettingsAdapter;
 import au.com.ahbeard.sleepsense.fragments.settings.SettingsBaseFragment;
 import au.com.ahbeard.sleepsense.fragments.settings.SettingsListItem;
 
+import static au.com.ahbeard.sleepsense.fragments.settings.SettingsFragment.frag;
+
 /**
  * Created by sabbib on 1/03/2017.
  */
@@ -30,8 +32,9 @@ class SettingsFragmentFactory {
 //        ...
 //    }
 
-    static au.com.ahbeard.sleepsense.fragments.settings_wth_factory.SettingsFragment createSettingsFragment(final Activity activity) {
-        au.com.ahbeard.sleepsense.fragments.settings_wth_factory.SettingsFragment frag = new au.com.ahbeard.sleepsense.fragments.settings_wth_factory.SettingsFragment();
+    static SettingsFragment createSettingsFragment(final int layout) {
+//        SettingsFragment frag = new SettingsFragment();
+
 
         ArrayList<SettingsListItem> settingsList = new ArrayList<>();
         settingsList.add(new SettingsListItem("My Devices", "Device Info"));
@@ -41,34 +44,34 @@ class SettingsFragmentFactory {
         settingsList.add(new SettingsListItem("Privacy Policy", "Our secret"));
         settingsList.add(new SettingsListItem("Terms of Service", "The do's and don'ts"));
 
-        frag.configure(R.layout.item_settings, settingsList, new au.com.ahbeard.sleepsense.fragments.settings_wth_factory.SettingsFragment.SettingsAdapterOnItemClickListener() {
+        frag.configure(layout, settingsList, new SettingsFragment.SettingsAdapterOnItemClickListener() {
             @Override
-            public void onItemClick(String buttonTitle) {
+            public void onItemClick(String s, int position) {
                 switch(s) {
 
                     case "My Devices":
-                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
 //                        act.getSupportFragmentManager().beginTransaction().replace(R.id.container, new DeviceFragments()).commit();
                         break;
                     case "My Profile":
-                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
-                        mBaseFragment.replaceFragment(new ProfileFragment());
+//                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
+//                        mBaseFragment.replaceFragment(new ProfileFragment());
                         break;
                     case "Support":
-                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
 //                        act.getSupportFragmentManager().beginTransaction().replace(R.id.container, new SupportFragment()).commit();
                         break;
                     case "Six Week Sleep Challenge":
-                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
 //                        act.getSupportFragmentManager().beginTransaction().replace(R.id.container, new SWSCFragments()).commit();
                         break;
                     case "Privacy Policy":
-                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
 //                        act.startActivity(HelpActivity.getIntent(act.getApplicationContext(),"Privacy Policy","http://www.ahbeard.com.au/privacypolicy"));
 //                act.getSupportFragmentManager().beginTransaction().replace(R.id.settings_txt, new PrivacyFragment()).commit();
                         break;
                     case "Terms of Service":
-                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(, "unavailable now " + s, Toast.LENGTH_SHORT).show();
 //                        act.getSupportFragmentManager().beginTransaction().replace(R.id.container, new ToSFragments()).commit();
                         break;
 
@@ -95,7 +98,8 @@ public class SettingsFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {;
+
         View v = inflater.inflate(layoutId, container, false);
 
         createSettings(v);
@@ -103,12 +107,22 @@ public class SettingsFragment extends BaseFragment {
         return v;
     }
 
+    static SettingsFragment frag;
+
+    public static SettingsFragment newInstance(SettingsBaseFragment baseFragment){
+        frag = new SettingsFragment();
+        frag.mBaseFragment = baseFragment;
+        return frag;
+    }
+
+    public static SettingsFragment getInstance(){ return frag;}
+
     private void createSettings(View v){
         settingsView = (RecyclerView) v.findViewById(R.id.settings_txt);
         settingsView.setHasFixedSize(true);
         settingsView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        settingsList = new ArrayList<>();
+
 
         adapter = new SettingsAdapter(settingsList, getActivity());
         settingsView.setAdapter(adapter);
@@ -117,17 +131,9 @@ public class SettingsFragment extends BaseFragment {
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Log.v(SettingsAdapter.class.getSimpleName(),"You clicked " + adapter.settingsItems.get(position).getHead());
-                AppCompatActivity act = (AppCompatActivity) v.getContext();
-
-                /***
-                 * Still need to modularize this section
-                 * Decouple switch
-                 */
-
-
-                String s = adapter.getSettingsItem().get(adapter.getPosition()).getHead().toString();
-                clickListener.onItemClick(s);
+                int position = adapter.getPosition();
+                String s = adapter.getSettingsItem().get(position).getHead().toString();
+                clickListener.onItemClick(s, adapter.position);
             }
         });
 
@@ -139,11 +145,8 @@ public class SettingsFragment extends BaseFragment {
         clickListener = itemClicked;
     }
 
-    //abstract protected void preparedData();
-    //abstract protected int getLayoutResId();
-    //abstract protected void onItemClicked(String buttonTitle);
 
     interface SettingsAdapterOnItemClickListener{
-        void onItemClick(String buttonTitle);
+        void onItemClick(String buttonTitle, int position);
     }
 }

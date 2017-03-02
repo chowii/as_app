@@ -6,7 +6,7 @@
     android:id="@+id/fragment">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/my_profile_card"
+            android:id="@+id/my_profile_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

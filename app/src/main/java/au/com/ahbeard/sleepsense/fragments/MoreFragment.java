@@ -79,7 +79,7 @@ public class MoreFragment extends Fragment {
                 startActivity(HelpActivity.getIntent(getContext(),"FAQs","https://www.sleepsense.com.au/faq"));
             }
         });
-        Log.v(TAG, "added faqs");
+
         add(inflater, mItemsLayout, "About A.H. Beard", null, new Runnable() {
             @Override
             public void run() {
@@ -87,7 +87,7 @@ public class MoreFragment extends Fragment {
                 startActivity(HelpActivity.getIntent(getContext(),"About AH Beard","http://www.ahbeard.com.au/ourcompany"));
             }
         });
-        Log.v(TAG, "added Contact us");
+
         add(inflater, mItemsLayout, "Contact us", null, new Runnable() {
             @Override
             public void run() {
@@ -95,7 +95,7 @@ public class MoreFragment extends Fragment {
                 startActivity(new Intent(getActivity(), ContactUsActivity.class));
             }
         });
-        Log.v(TAG, "added Improve Your sleep");
+
         add(inflater, mItemsLayout, "Improve your sleep", null, new Runnable() {
             @Override
             public void run() {
@@ -103,7 +103,7 @@ public class MoreFragment extends Fragment {
                 startActivity(HelpActivity.getIntent(getContext(),"Improve your sleep","http://www.ahbeard.com.au/sleepchallenge"));
             }
         });
-        Log.v(TAG, "added Preferences");
+
         add(inflater, mItemsLayout, "Preferences", null, new Runnable() {
             @Override
             public void run() {
@@ -111,7 +111,7 @@ public class MoreFragment extends Fragment {
                 startActivity(new Intent(getActivity(), PreferenceActivity.class));
             }
         });
-        Log.v(TAG, "added My Profile");
+
         addSpacer(mItemsLayout);
         add(inflater, mItemsLayout, "My Profile", null, new Runnable() {
             @Override
@@ -120,7 +120,7 @@ public class MoreFragment extends Fragment {
                 startActivity(new Intent(getActivity(), ProfileActivity.class));
             }
         });
-        Log.v(TAG, "added ToS");
+
         addSpacer(mItemsLayout);
         add(inflater, mItemsLayout, "Terms of Service", null, new Runnable() {
             @Override
@@ -129,7 +129,7 @@ public class MoreFragment extends Fragment {
                 startActivity(HelpActivity.getIntent(getContext(),"Terms of Service","https://sleepsense.com.au/terms-of-service"));
             }
         });
-        Log.v(TAG, "added Privacy Policy");
+
         add(inflater, mItemsLayout, "Privacy Policy", null, new Runnable() {
             @Override
             public void run() {
