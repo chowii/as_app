@@ -17,7 +17,7 @@ import au.com.ahbeard.sleepsense.R;
  * Created by sabbib on 28/02/2017.
  */
 
-public class ProfileFragments extends Fragment {
+public class ProfileFragment extends Fragment {
 
     private RecyclerView profileSettings;
     private RecyclerView.Adapter adapter;
