@@ -10,6 +10,6 @@
     <dimen name="settings_text_padding_regular">10dp</dimen>
     <dimen name="settings_text_padding_large_regular">25dp</dimen>
 
-    <dimen name="settings_text_size">18sp</dimen>
+    <dimen name="settings_text_size">16sp</dimen>
 
 </resources>

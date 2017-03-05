@@ -1,24 +1,20 @@
 package au.com.ahbeard.sleepsense.fragments.settings;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.fragments.BaseFragment;
-import au.com.ahbeard.sleepsense.fragments.settings.SettingsAdapter;
-import au.com.ahbeard.sleepsense.fragments.settings.SettingsBaseFragment;
-import au.com.ahbeard.sleepsense.fragments.settings.SettingsListItem;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 
 import static au.com.ahbeard.sleepsense.fragments.settings.SettingsFragment.frag;
 
@@ -28,21 +24,38 @@ import static au.com.ahbeard.sleepsense.fragments.settings.SettingsFragment.frag
 
 class SettingsFragmentFactory {
 
-//    static SettingsFragment createMyProfileFragment() {
-//        ...
-//    }
+    static SettingsFragment createMyProfileFragment(final int lay){
+        List<SettingsListItem> settingsList = new ArrayList<>();
+
+        settingsList.add(new SettingsListItem("Sleep Target"));
+        settingsList.add(new SettingsListItem("Weight"));
+        settingsList.add(new SettingsListItem("Height"));
+        settingsList.add(new SettingsListItem("Age"));
+        settingsList.add(new SettingsListItem("Gender"));
+
+
+
+        frag.configure(lay, settingsList, new SettingsFragment.SettingsAdapterOnItemClickListener() {
+            @Override
+            public void onItemClick(String buttonTitle, int position) {
+                SSLog.e("profile clicked " + buttonTitle + " at " + position);
+
+            }
+        });
+        return frag;
+    }
+
 
     static SettingsFragment createSettingsFragment(final int layout) {
-//        SettingsFragment frag = new SettingsFragment();
-
 
         ArrayList<SettingsListItem> settingsList = new ArrayList<>();
-        settingsList.add(new SettingsListItem("My Devices", "Device Info"));
-        settingsList.add(new SettingsListItem("My Profile", "Profile Info"));
-        settingsList.add(new SettingsListItem("Support", "Assisting you"));
-        settingsList.add(new SettingsListItem("Six Week Sleep Challenge", "Sleep Coach"));
-        settingsList.add(new SettingsListItem("Privacy Policy", "Our secret"));
-        settingsList.add(new SettingsListItem("Terms of Service", "The do's and don'ts"));
+
+        settingsList.add(new SettingsListItem("My Devices"));
+        settingsList.add(new SettingsListItem("My Profile"));
+        settingsList.add(new SettingsListItem("Support"));
+        settingsList.add(new SettingsListItem("Six Week Sleep Challenge"));
+        settingsList.add(new SettingsListItem("Privacy Policy"));
+        settingsList.add(new SettingsListItem("Terms of Service"));
 
         frag.configure(layout, settingsList, new SettingsFragment.SettingsAdapterOnItemClickListener() {
             @Override
@@ -50,29 +63,24 @@ class SettingsFragmentFactory {
                 switch(s) {
 
                     case "My Devices":
-//                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
 //                        act.getSupportFragmentManager().beginTransaction().replace(R.id.container, new DeviceFragments()).commit();
                         break;
                     case "My Profile":
-//                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
-//                        mBaseFragment.replaceFragment(new ProfileFragment());
+                        frag.mBaseFragment.replaceFragment(new ProfileFragment());
                         break;
                     case "Support":
-//                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
 //                        act.getSupportFragmentManager().beginTransaction().replace(R.id.container, new SupportFragment()).commit();
                         break;
                     case "Six Week Sleep Challenge":
-//                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
 //                        act.getSupportFragmentManager().beginTransaction().replace(R.id.container, new SWSCFragments()).commit();
                         break;
                     case "Privacy Policy":
-//                        Toast.makeText(getActivity(), "unavailable now " + s, Toast.LENGTH_SHORT).show();
-//                        act.startActivity(HelpActivity.getIntent(act.getApplicationContext(),"Privacy Policy","http://www.ahbeard.com.au/privacypolicy"));
-//                act.getSupportFragmentManager().beginTransaction().replace(R.id.settings_txt, new PrivacyFragment()).commit();
+                        frag.buttonTitle = s;
+                        frag.mBaseFragment.replaceFragment(new AssistFragment());
                         break;
                     case "Terms of Service":
-//                        Toast.makeText(, "unavailable now " + s, Toast.LENGTH_SHORT).show();
-//                        act.getSupportFragmentManager().beginTransaction().replace(R.id.container, new ToSFragments()).commit();
+                        frag.buttonTitle = s;
+                        frag.mBaseFragment.replaceFragment(new AssistFragment());
                         break;
 
                 }
@@ -81,6 +89,9 @@ class SettingsFragmentFactory {
 
         return frag;
     }
+
+
+
 }
 
 public class SettingsFragment extends BaseFragment {
@@ -90,24 +101,27 @@ public class SettingsFragment extends BaseFragment {
     protected RecyclerView settingsView;
     protected SettingsAdapter adapter;
 
-    private int layoutId;
+    private int layoutName;
     private SettingsAdapterOnItemClickListener clickListener;
 
     List<SettingsListItem> settingsList;
 
+    String buttonTitle;
+
+    static SettingsFragment frag;
+
+    public SettingsFragment(){}
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {;
+        View v = inflater.inflate(layoutName, container, false);
 
-        View v = inflater.inflate(layoutId, container, false);
-
-        createSettings(v);
+        createSettings(v, R.id.settings_txt);
 
         return v;
     }
 
-    static SettingsFragment frag;
 
     public static SettingsFragment newInstance(SettingsBaseFragment baseFragment){
         frag = new SettingsFragment();
@@ -117,17 +131,12 @@ public class SettingsFragment extends BaseFragment {
 
     public static SettingsFragment getInstance(){ return frag;}
 
-    private void createSettings(View v){
-        settingsView = (RecyclerView) v.findViewById(R.id.settings_txt);
+    public void createSettings(View v, int settingsText){
+        settingsView = (RecyclerView) v.findViewById(settingsText);
         settingsView.setHasFixedSize(true);
         settingsView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
-
         adapter = new SettingsAdapter(settingsList, getActivity());
         settingsView.setAdapter(adapter);
-
-
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,11 +149,13 @@ public class SettingsFragment extends BaseFragment {
     }
 
     public void configure(int layoutId, List<SettingsListItem> items, SettingsAdapterOnItemClickListener itemClicked) {
-        this.layoutId = layoutId;
+        this.layoutName = layoutId;
         settingsList = items;
         clickListener = itemClicked;
     }
 
+
+    public int getLayout(){ return layoutName; }
 
     interface SettingsAdapterOnItemClickListener{
         void onItemClick(String buttonTitle, int position);

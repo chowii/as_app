@@ -2,6 +2,7 @@ package au.com.ahbeard.sleepsense.fragments.settings;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import au.com.ahbeard.sleepsense.R;
-
-import au.com.ahbeard.sleepsense.fragments.*;
 
 import java.util.List;
 
@@ -37,10 +36,11 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.v("Settings", "" + viewType);
         return new ViewHolder(
                 LayoutInflater.from(
                         parent.getContext())
-                        .inflate(R.layout.settings_view, parent, false));
+                        .inflate(R.layout.item_settings, parent, false));
     }
 
     @Override

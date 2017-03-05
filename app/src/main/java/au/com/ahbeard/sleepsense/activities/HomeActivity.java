@@ -160,12 +160,12 @@ public class HomeActivity extends BaseActivity {
             });
         }
 
-        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance(), new Runnable() {
-            @Override
-            public void run() {
-                AnalyticsService.instance().logDashboardViewSettings();
-            }
-        });
+//        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance(), new Runnable() {
+//            @Override
+//            public void run() {
+//                AnalyticsService.instance().logDashboardViewSettings();
+//            }
+//        });
 
         /***
          * chowii block

@@ -6,25 +6,11 @@ package au.com.ahbeard.sleepsense.fragments.settings;
 public class SettingsListItem {
 
     private String head;
-    private String desc;
 
-
-    public SettingsListItem(String head, String desc) {
-        this.head = head;
-        this.desc = desc;
-    }
-
-    public SettingsListItem() {}
+    public SettingsListItem(String head) { this.head = head; }
 
     public String getHead() {
         return head;
     }
-
-    public String getDesc() {
-        return desc;
-    }
-
-
-
 
 }
