@@ -269,5 +269,7 @@
     <string name="onboarding_error_desc_base_not_found">We couldn’t detect a base nearby. Try checking that it is plugged in</string>
     <string name="onboarding_error_title_base_not_found_two">Uh oh, only one base found!</string>
     <string name="onboarding_error_desc_base_not_found_two">We found one base, but we need two to set up your side of the bed.</string>
+    <string name="settings_more_title">More</string>
+    <string name="settings_profile_title">My Profile</string>
 
 </resources>

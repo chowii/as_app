@@ -6,26 +6,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/linearLayout"
-    android:background="@color/settings_fragment_background_item"
+    android:background="@null"
 
-    android:layout_marginLeft="@dimen/settings_text_padding_left"
-    android:layout_marginRight="@dimen/settings_text_padding_right"
-    android:layout_marginTop="@dimen/settings_text_padding_left"
-    android:layout_marginBottom="@dimen/settings_text_padding_regular"
+    android:paddingLeft="@dimen/settings_text_padding_left"
+    android:paddingRight="@dimen/settings_text_padding_right"
+    android:paddingBottom="10dp"
 
     android:weightSum="4">
 
 
-    <TextView
+    <au.com.ahbeard.sleepsense.widgets.SSTextView
         android:id="@+id/head"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="70dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         tools:text="My Profile"
         android:padding="@dimen/settings_text_padding_regular"
         android:textSize="@dimen/settings_text_size"
 
         android:textColor="@color/settings_fragment_background_item_text"
+        app:font="AvertaRegular"
 
         android:paddingRight="@dimen/settings_text_padding_right"
         android:paddingLeft="@dimen/settings_text_padding_left"
@@ -35,10 +35,12 @@
         android:drawableEnd="@drawable/more_chevron_normal"
         android:drawableRight="@drawable/more_chevron_normal"
 
+        android:paddingEnd="26dp"
+
 
         android:gravity="center|left"
 
-        android:background="@drawable/shadow_settings_2"
+        android:background="@drawable/settings_background_button"
 
         />
 

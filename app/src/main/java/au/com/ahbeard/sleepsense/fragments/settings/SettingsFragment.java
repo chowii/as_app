@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ class SettingsFragmentFactory {
 
 
 
-        frag.configure(lay, settingsList, new SettingsFragment.SettingsAdapterOnItemClickListener() {
+        frag.configure(R.string.settings_profile_title, lay, settingsList, new SettingsFragment.SettingsAdapterOnItemClickListener() {
             @Override
             public void onItemClick(String buttonTitle, int position) {
                 SSLog.e("profile clicked " + buttonTitle + " at " + position);
@@ -57,7 +58,7 @@ class SettingsFragmentFactory {
         settingsList.add(new SettingsListItem("Privacy Policy"));
         settingsList.add(new SettingsListItem("Terms of Service"));
 
-        frag.configure(layout, settingsList, new SettingsFragment.SettingsAdapterOnItemClickListener() {
+        frag.configure(R.string.settings_more_title, layout, settingsList, new SettingsFragment.SettingsAdapterOnItemClickListener() {
             @Override
             public void onItemClick(String s, int position) {
                 switch(s) {
@@ -98,9 +99,11 @@ public class SettingsFragment extends BaseFragment {
 
     protected SettingsBaseFragment mBaseFragment;
 
+    protected TextView titleTextView;
     protected RecyclerView settingsView;
     protected SettingsAdapter adapter;
 
+    protected int titleRes;
     private int layoutName;
     private SettingsAdapterOnItemClickListener clickListener;
 
@@ -122,6 +125,13 @@ public class SettingsFragment extends BaseFragment {
         return v;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        titleTextView = (TextView) view.findViewById(R.id.titleTextView);
+        titleTextView.setText(titleRes);
+    }
 
     public static SettingsFragment newInstance(SettingsBaseFragment baseFragment){
         frag = new SettingsFragment();
@@ -148,7 +158,8 @@ public class SettingsFragment extends BaseFragment {
 
     }
 
-    public void configure(int layoutId, List<SettingsListItem> items, SettingsAdapterOnItemClickListener itemClicked) {
+    public void configure(int titleRes, int layoutId, List<SettingsListItem> items, SettingsAdapterOnItemClickListener itemClicked) {
+        this.titleRes = titleRes;
         this.layoutName = layoutId;
         settingsList = items;
         clickListener = itemClicked;

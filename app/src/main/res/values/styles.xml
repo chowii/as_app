@@ -168,4 +168,8 @@
         <item name="android:layout_width">11dp</item>
     </style>
 
+    <style name="SettingsText">
+
+    </style>
+
 </resources>

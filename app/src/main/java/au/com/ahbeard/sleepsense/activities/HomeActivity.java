@@ -184,6 +184,7 @@ public class HomeActivity extends BaseActivity {
 
     }
 
+
     class HomeFragmentPagerAdapter extends FragmentStatePagerAdapter implements SimpleTabStrip.TabProvider {
 
         private List<String> mTabNames = new ArrayList<>();
