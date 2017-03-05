@@ -15,9 +15,12 @@ import au.com.ahbeard.sleepsense.fragments.BaseFragment;
  * Created by sabbib on 1/03/2017.
  */
 
-public class AssistFragment extends SettingsFragment {
+public class AssistFragment extends BaseFragment {
 
-    WebView webView;
+    protected WebView webView;
+
+    protected String url;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -25,17 +28,16 @@ public class AssistFragment extends SettingsFragment {
 
         webView = (WebView) view.findViewById(R.id.privacy_policy_webview);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadUrl(url);
 
-        switch(frag.buttonTitle) {
-            case "Privacy Policy":
-                webView.loadUrl("http://www.ahbeard.com.au/privacypolicy");
-                break;
-            case "Terms of Service":
-                webView.loadUrl("https://sleepsense.com.au/terms-of-service");
-                break;
-        }
         return view;
     }
+
+    public void configure(String url) {
+        this.url = url;
+    }
+
+
 
     public void onBackPressed(){
         if(webView.canGoBack()){

@@ -3,7 +3,6 @@ package au.com.ahbeard.sleepsense.fragments.settings;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +34,7 @@ public class SettingsBaseFragment extends BaseFragment {
     }
 
     private void showFirstFragment() {
-        SettingsFragment settingsFragment = SettingsFragment.newInstance(this);
-        SettingsFragmentFactory.createSettingsFragment(R.layout.fragment_settings);
+        SettingsListFragment settingsFragment = SettingsFragmentFactory.createSettingsFragment(this);
         getChildFragmentManager().beginTransaction().add(R.id.container_settings_base, settingsFragment).addToBackStack("back-first").commit();
 
     }

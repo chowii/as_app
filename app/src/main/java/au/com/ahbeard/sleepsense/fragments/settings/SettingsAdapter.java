@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Sabbib on 28/02/2017.
  */
 
-public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHolder> implements SettingsFragment.SettingsAdapterOnItemClickListener{
+public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHolder> implements SettingsListFragment.SettingsAdapterOnItemClickListener{
 
     List<SettingsListItem> settingsItems;
     Context context;
