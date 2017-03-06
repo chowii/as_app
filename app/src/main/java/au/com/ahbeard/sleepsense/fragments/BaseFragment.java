@@ -104,4 +104,20 @@ public class BaseFragment extends Fragment implements LifecycleProvider<Fragment
         mLifecycleSubject.onNext(FragmentEvent.DETACH);
         super.onDetach();
     }
+
+    /**
+     * Back button was pressed in the parent activity,
+     * checks if the childFragmentManager has any fragments to pop
+     * and pops does popBackStack() if it finds any
+     *
+     * @return true if the action was handled, false if not
+     */
+    public boolean onBackPressed() {
+        int backStackCount = getChildFragmentManager().getBackStackEntryCount();
+        if (backStackCount > 0) {
+            getChildFragmentManager().popBackStack();
+            return true;
+        }
+        return false;
+    }
 }

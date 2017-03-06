@@ -13,6 +13,7 @@ import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
+import au.com.ahbeard.sleepsense.fragments.BaseFragment;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.DashboardNoSleepsFragment;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
@@ -180,8 +181,23 @@ public class HomeActivity extends BaseActivity {
         mViewPager.setAdapter(mDashboardPagerAdapter);
 
         mSimpleTabStrip.setViewPager(mViewPager);
+    }
 
+    @Override
+    public void onBackPressed() {
 
+        // Since our fragments might have fragments in them,
+        // delegate the onBackPressed
+        int currentItem = mViewPager.getCurrentItem();
+        Fragment currFrag = mDashboardPagerAdapter.getItem(currentItem);
+        if (currFrag instanceof BaseFragment) {
+            BaseFragment baseFragment = (BaseFragment) currFrag;
+            if (baseFragment.onBackPressed()) {
+                return;
+            }
+        }
+
+        super.onBackPressed();
     }
 
 
