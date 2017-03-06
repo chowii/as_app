@@ -8,9 +8,6 @@
     android:id="@+id/linearLayout"
     android:background="@null"
 
-    android:paddingLeft="@dimen/settings_text_padding_left"
-    android:paddingRight="@dimen/settings_text_padding_right"
-    android:paddingBottom="10dp"
 
     android:weightSum="4">
 
@@ -21,7 +18,7 @@
         android:layout_height="70dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         tools:text="My Profile"
-        android:padding="@dimen/settings_text_padding_regular"
+
         android:textSize="@dimen/settings_text_size"
 
         android:textColor="@color/settings_fragment_background_item_text"

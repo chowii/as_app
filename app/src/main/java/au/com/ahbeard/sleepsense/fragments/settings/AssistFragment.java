@@ -38,12 +38,4 @@ public class AssistFragment extends BaseFragment {
     }
 
 
-
-    public void onBackPressed(){
-        if(webView.canGoBack()){
-            webView.goBack();
-            return;
-        }
-//        super.onBackPressed();
-    }
 }
