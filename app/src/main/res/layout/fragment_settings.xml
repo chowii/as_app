@@ -8,42 +8,19 @@
     android:background="@color/settings_fragment_background"
     android:id="@+id/fragment">
 
-    <LinearLayout
-        android:id="@+id/headerView"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
-        android:background="@color/settings_header_background">
-        <au.com.ahbeard.sleepsense.widgets.SSTextView
-            android:id="@+id/titleTextView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:font="AvertaBold"
-            android:textSize="14sp"
-            android:textColor="@color/settings_header_title_text_color"
-            tools:text="More"
-            android:gravity="center"/>
-    </LinearLayout>
+    <include android:id="@+id/settings_toolbar_header"
+        layout="@layout/settings_toolbar" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/settings_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/headerView"
         android:paddingTop="14dp"
+        android:layout_marginTop="50dp"
+        android:layout_below="@id/settings_toolbar_header"
         android:clipToPadding="false">
 
     </android.support.v7.widget.RecyclerView>
-
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Version"-->
-        <!--android:visibility="visible"-->
-        <!--android:id="@+id/textView2"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--/>-->
 
 
 </RelativeLayout>

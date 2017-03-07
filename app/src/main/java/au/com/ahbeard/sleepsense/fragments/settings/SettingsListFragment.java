@@ -42,20 +42,13 @@ public class SettingsListFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {;
         View v = inflater.inflate(layoutName, container, false);
-
-        Log.v("TAG-s", "settings_txt 1: " + viewContainerId);
-        Log.v("TAG-s", "settings_txt 2: " + R.id.settings_txt);
-
-
         createSettings(v, viewContainerId);
-
         return v;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         titleTextView.setText(titleRes);
     }
@@ -90,11 +83,6 @@ public class SettingsListFragment extends BaseFragment {
     }
 
     public int getLayout(){ return layoutName; }
-
-    interface SettingsAdapterLayoutId{
-        int getLayoutId();
-    }
-
 
     interface SettingsAdapterOnItemClickListener{
         void onItemClick(String buttonTitle, int position);

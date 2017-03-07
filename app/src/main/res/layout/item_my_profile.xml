@@ -7,41 +7,23 @@
     android:layout_height="wrap_content"
     android:id="@+id/linearLayout"
     android:background="@null"
-
-
     android:weightSum="4"
     >
 
-
     <au.com.ahbeard.sleepsense.widgets.SSTextView
         android:id="@+id/head"
-        tools:text="Heading"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-
-        android:textSize="@dimen/settings_text_size"
-
-        android:textColor="@color/settings_fragment_background_item_text"
-        app:font="AvertaRegular"
+        tools:text="Heading"
 
         android:paddingRight="@dimen/settings_text_padding_right"
         android:paddingLeft="@dimen/settings_text_padding_left"
-        android:paddingStart="@dimen/settings_text_padding_left"
-
-        android:drawableEnd="@drawable/more_chevron_normal"
-        android:drawableRight="@drawable/more_chevron_normal"
-
         android:paddingBottom="0dp"
+        android:paddingStart="@dimen/settings_text_padding_left"
         android:paddingEnd="26dp"
 
-
         android:gravity="center|left"
-        android:background="@drawable/settings_background_button"
-
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="0dp"
-        android:padding="0dp" />
-
+        style="@style/SettingsFragmentRpw"
+        />
 
 </LinearLayout>

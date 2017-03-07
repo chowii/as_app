@@ -1,13 +1,9 @@
 package au.com.ahbeard.sleepsense.fragments.settings;
 
-import android.util.Log;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.services.log.SSLog;
 
 /**
  * Created by sabbib on 6/03/2017.
@@ -28,8 +24,8 @@ class SettingsFragmentFactory {
 
         frag.configure(baseFragment,
                 R.string.settings_profile_title, /* Fragment Title  */
-                R.layout.fragment_my_profile,    /* Fragment Layout */
-                R.id.my_profile_txt,             /* RecyclerView    */
+                R.layout.fragment_settings,    /* Fragment Layout */
+                R.id.settings_txt,             /* RecyclerView    */
                 R.layout.item_my_profile,        /* Item TextView   */
                 profileList,
                 new SettingsListFragment.SettingsAdapterOnItemClickListener() {
@@ -75,7 +71,8 @@ class SettingsFragmentFactory {
                                 break;
                             case "Contact Us":
 //                                SettingsListFragment contactUsFragment = createContactUsFragment(baseFragment);
-//                                baseFragment.replaceFragment(contactUsFragment);
+                                baseFragment.replaceFragment(
+                                        new ContactUsFragment(baseFragment));
                                 break;
                             case "Update App":
                                 //TODO handle Update App
@@ -143,7 +140,8 @@ class SettingsFragmentFactory {
 
     static SettingsListFragment createContactUsFragment(final SettingsBaseFragment baseFragment) {
         SettingsListFragment contactUsFragment = new SettingsListFragment();
-        //TODO handle Contact Us
+        List<SettingsListItem> contactUsList = new ArrayList<SettingsListItem>();
+
         return contactUsFragment;
     }
 
@@ -194,8 +192,8 @@ class SettingsFragmentFactory {
         return frag;
     }
 
-    public static AssistFragment createWebViewFragment(String buttonTitle) {
-        AssistFragment frag = new AssistFragment();
+    public static CustomerInformationFragment createWebViewFragment(String buttonTitle) {
+        CustomerInformationFragment frag = new CustomerInformationFragment();
 
         switch(buttonTitle) {
             case "Privacy Policy":

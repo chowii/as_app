@@ -276,5 +276,11 @@
     <string name="settings_support_title">Support</string>
     <string name="settings_troubleshooting_title">Troubleshooting</string>
     <string name="settings_send_feedback_title" >Send Feedback</string>
+    <string name="contact_us_availability_desc_text">A.H. Beard’s Support team is here to help 8:00AM to 8:00PM EST, Monday through Friday</string>
+    <string name="contact_us_find_out_title_text">Find out more about A.H. Beard</string>
+    <string name="contact_us_find_out_description_text">100% Australian and New Zealand made mattresses for over 150 years</string>
+    <string name="font">AvertaRegular</string>
+    <string name="contact_us_number">1300001150</string>
+    <string name="contact_us_web_url">http://www.ahbeard.com.au/</string>
 
 </resources>
