@@ -25,7 +25,7 @@
         android:drawableRight="@drawable/more_chevron_normal"
 
         android:gravity="center|left"
-        style="@style/SettingsFragmentRpw"
+        style="@style/SettingsFragmentRow"
         />
 
 </LinearLayout>

@@ -100,6 +100,10 @@
     <color name="settings_header_background">#fff</color>
     <color name="contact_us_background">#2A81FB</color>
 
+    <color name="device_fragment_item_text_black">#405154</color>
+    <color name="device_fragment_item_text_blue">#2482FF</color>
+
+
 
     <color name="onboarding_not_sure_background">#2E73FF</color>
 </resources>

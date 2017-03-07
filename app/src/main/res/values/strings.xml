@@ -282,5 +282,6 @@
     <string name="font">AvertaRegular</string>
     <string name="contact_us_number">1300001150</string>
     <string name="contact_us_web_url">http://www.ahbeard.com.au/</string>
+    <string name="contact_us_availability_title_text">Want to get in touch?</string>
 
 </resources>

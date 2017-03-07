@@ -70,9 +70,7 @@ class SettingsFragmentFactory {
                                 baseFragment.replaceFragment(sendFeedbackFragment);
                                 break;
                             case "Contact Us":
-//                                SettingsListFragment contactUsFragment = createContactUsFragment(baseFragment);
-                                baseFragment.replaceFragment(
-                                        new ContactUsFragment(baseFragment));
+                                baseFragment.replaceFragment(new ContactUsFragment(baseFragment));
                                 break;
                             case "Update App":
                                 //TODO handle Update App
@@ -122,7 +120,7 @@ class SettingsFragmentFactory {
 
         sendFeedbackFragment.configure(
                 baseFragment,
-                R.string.settings_send_feedback_title,  /* Fragment Title   */
+                R.string.settings_send_feedback_title,                        /* Fragment Title   */
                 R.layout.fragment_settings,             /* Fragment Layout  */
                 R.id.settings_txt,                      /* RecyclerView     */
                 R.layout.item_settings,                 /* Item TextView    */
@@ -137,15 +135,6 @@ class SettingsFragmentFactory {
         );
         return sendFeedbackFragment;
     }
-
-    static SettingsListFragment createContactUsFragment(final SettingsBaseFragment baseFragment) {
-        SettingsListFragment contactUsFragment = new SettingsListFragment();
-        List<SettingsListItem> contactUsList = new ArrayList<SettingsListItem>();
-
-        return contactUsFragment;
-    }
-
-
 
     static SettingsListFragment createSettingsFragment(final SettingsBaseFragment baseFragment) {
         ArrayList<SettingsListItem> settingsList = new ArrayList<>();

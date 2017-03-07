@@ -181,11 +181,14 @@
 
     <style name="ContactUsTitle">
         <item name="android:textColor">#49484A</item>
-        <item name="android:textSize">16sp</item>
+        <item name="font">AvertaBold</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="ContactUsText">
         <item name="android:textColor">#9E9B9B</item>
+        <item name="android:textAlignment">center</item>
+        <item name="font">AvertaRegular</item>
     </style>
 
     <style name="SettingsFragment">
@@ -201,7 +204,7 @@
     </style>
 
 
-    <style name="SettingsFragmentRpw">
+    <style name="SettingsFragmentRow">
         <item name="android:textSize">@dimen/settings_text_size</item>
         <item name="android:textColor">@color/settings_fragment_background_item_text</item>
         <item name="android:clipToPadding">false</item>
@@ -211,5 +214,31 @@
         <item name="android:background">@drawable/settings_background_button</item>
         <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Large</item>
     </style>
+
+
+    <style name="DeviceFragmentRowTitle">
+        <item name="android:textSize">@dimen/settings_title_text_size</item>
+        <item name="android:textColor">@color/device_fragment_item_text_black</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="font">Averta Regular</item>>
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Large</item>
+    </style>
+
+    <style name="DeviceFragmentRowBlack">
+        <item name="android:textSize">@dimen/settings_text_size</item>
+        <item name="android:textColor">@color/device_fragment_item_text_black</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="font">Averta Regular</item>>
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Large</item>
+    </style>
+
+    <style name="DeviceFragmentRowBlue">
+        <item name="android:textSize">@dimen/settings_text_size</item>
+        <item name="android:textColor">@color/device_fragment_item_text_blue</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="font">Averta Regular</item>>
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Large</item>
+    </style>
+
 
 </resources>
