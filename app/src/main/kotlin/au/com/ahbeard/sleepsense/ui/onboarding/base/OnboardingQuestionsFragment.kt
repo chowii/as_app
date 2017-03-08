@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment.OnboardingQuestionsAdapter.OnItemClickListener
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.*
@@ -23,7 +24,7 @@ import kotterknife.bindView
 /**
  * Created by luisramos on 23/01/2017.
  */
-abstract class OnboardingQuestionsFragment : OnboardingBaseFragment() {
+abstract class OnboardingQuestionsFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
 
     class QuestionViewModel(val title: String, val isTextButton: Boolean) {
         constructor(title: String) : this(title, false)

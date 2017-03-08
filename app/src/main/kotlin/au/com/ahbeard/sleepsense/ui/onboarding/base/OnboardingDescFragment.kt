@@ -3,25 +3,23 @@ package au.com.ahbeard.sleepsense.ui.onboarding.base
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import kotterknife.bindView
 
 /**
  * Created by luisramos on 30/01/2017.
  */
-open class OnboardingDescFragment : OnboardingBaseFragment() {
+open class OnboardingDescFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
 
     val imageView: ImageView by bindView(R.id.imageView)
     val descTextView: TextView by bindView(R.id.descTextView)
 
-    @DrawableRes var imageRes: Int? = null
-    @StringRes var descRes: Int? = null
+    var imageRes: Int? = null
+    var descRes: Int? = null
 
     override fun viewsToAnimate(): List<View> {
         return arrayListOf(imageView, titleTextView!!, descTextView, continueButton!!)

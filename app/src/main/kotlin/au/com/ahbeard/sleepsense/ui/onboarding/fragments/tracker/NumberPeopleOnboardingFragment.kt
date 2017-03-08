@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingBaseFragment
 
 /**
  * Created by luisramos on 16/02/2017.
  */
-class NumberPeopleOnboardingFragment : OnboardingBaseFragment() {
+class NumberPeopleOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
 
     override fun viewsToAnimate(): List<View> {
         return arrayListOf()

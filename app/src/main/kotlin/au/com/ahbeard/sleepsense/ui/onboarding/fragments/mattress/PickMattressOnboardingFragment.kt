@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService
+import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.hardware.PumpHardware
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
@@ -18,7 +19,7 @@ import io.reactivex.Observable
 /**
 * Created by luisramos on 23/01/2017.
 */
-class PickMattressOnboardingFragment : OnboardingQuestionsFragment() {
+class PickMattressOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingQuestionsFragment(coordinator) {
 
     var connecting = false
 

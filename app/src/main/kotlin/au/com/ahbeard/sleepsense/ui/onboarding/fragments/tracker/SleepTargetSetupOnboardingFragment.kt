@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingPickerBaseFragment
 import kotterknife.bindView
@@ -11,7 +12,7 @@ import kotterknife.bindView
 /**
  * Created by luisramos on 20/02/2017.
  */
-class SleepTargetSetupOnboardingFragment : OnboardingPickerBaseFragment() {
+class SleepTargetSetupOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingPickerBaseFragment(coordinator) {
 
     private val minSleepTarget = 2
     private val maxSleepTarget = 16
