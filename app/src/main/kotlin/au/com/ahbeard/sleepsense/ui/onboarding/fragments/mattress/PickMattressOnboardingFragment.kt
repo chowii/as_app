@@ -109,11 +109,6 @@ class PickMattressOnboardingFragment(coordinator: OnboardingCoordinator) : Onboa
                         handleError(error)
                     }
                 })
-
-        //FIXME Actually connect to device
-//        view?.postDelayed({
-
-//        }, 2000)
     }
 
     enum class MattressLine(@IntegerRes val nameRes: Int) {

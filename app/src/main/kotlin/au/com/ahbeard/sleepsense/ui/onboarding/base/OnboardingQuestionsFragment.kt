@@ -38,6 +38,10 @@ abstract class OnboardingQuestionsFragment(coordinator: OnboardingCoordinator) :
     var layoutManager : LinearLayoutManager? = null
     var adapter : OnboardingQuestionsAdapter? = null
 
+    val errorOverlayView : SSErrorHandlingOverlayView by lazy {
+        createErrorView()
+    }
+
     override fun viewsToAnimate(): List<View> {
         val firstChildPos = layoutManager?.findFirstVisibleItemPosition()
         val lastChildPos = layoutManager?.findLastVisibleItemPosition()
@@ -76,20 +80,6 @@ abstract class OnboardingQuestionsFragment(coordinator: OnboardingCoordinator) :
         data = strings.map { QuestionViewModel(getString(it)) }
     }
 
-    val errorOverlayView : SSErrorHandlingOverlayView by lazy {
-        val layoutParams = RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT)
-
-        val errorView = SSErrorHandlingOverlayView(view!!.context)
-        errorView.layoutParams = layoutParams
-        errorView.visibility = View.INVISIBLE
-
-        containerView.addView(errorView)
-
-        errorView
-    }
-
     fun handleError(error: Throwable) {
         when (error) {
             is OnboardingErrorPumpNotFound -> showErrorOverlay(
@@ -121,6 +111,20 @@ abstract class OnboardingQuestionsFragment(coordinator: OnboardingCoordinator) :
         Handler(Looper.getMainLooper()).post {
             errorOverlayView.animateExit()
         }
+    }
+
+    private fun createErrorView(): SSErrorHandlingOverlayView {
+        val layoutParams = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT)
+
+        val errorView = SSErrorHandlingOverlayView(view!!.context)
+        errorView.layoutParams = layoutParams
+        errorView.visibility = View.INVISIBLE
+
+        containerView.addView(errorView)
+
+        return errorView
     }
 
     class OnboardingQuestionsAdapter(var data: List<QuestionViewModel>) : RecyclerView.Adapter<OnboardingQuestionsAdapter.ViewHolder>() {

@@ -19,6 +19,7 @@ import au.com.ahbeard.sleepsense.ui.onboarding.MainOnboardingActivity
 import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
 import au.com.ahbeard.sleepsense.ui.onboarding.animations.OnboardingTransitionAnimatable
 import au.com.ahbeard.sleepsense.ui.onboarding.animations.OnboardingTransitionAnimator
+import au.com.ahbeard.sleepsense.ui.onboarding.views.SSBaseOverlayView
 import au.com.ahbeard.sleepsense.ui.onboarding.views.SSErrorHandlingOverlayView
 import au.com.ahbeard.sleepsense.ui.onboarding.views.SSNotSureOverlayView
 import com.trello.rxlifecycle2.LifecycleProvider
@@ -33,26 +34,19 @@ import kotterknife.bindOptionalView
 /**
 * Created by luisramos on 23/01/2017.
 */
-abstract class OnboardingBaseFragment(
-        val coordinator: OnboardingCoordinator
-) :
-        Fragment(), OnboardingTransitionAnimatable,
-        LifecycleProvider<FragmentEvent>
-{
+abstract class LifecycleFragment: Fragment(), LifecycleProvider<FragmentEvent> {
 
-    val onboardingActivity: MainOnboardingActivity
-        get() = (activity as MainOnboardingActivity)
+    private val lifecycleSubject = BehaviorSubject.create<FragmentEvent>()
 
-    var state = OnboardingState()
+    override fun <T : Any?> bindToLifecycle(): LifecycleTransformer<T> {
+        return RxLifecycleAndroid.bindFragment(lifecycleSubject)
+    }
 
-    var backgroundGradient: BackgroundGradient = BackgroundGradient.MATTRESS
-    var titleRes: Int? = null
-    val titleTextView: TextView? by bindOptionalView(R.id.titleTextView)
-    val backButton: ImageButton? by bindOptionalView(R.id.backButton)
-    val continueButton: Button? by bindOptionalView(R.id.continueButton)
-    val skipButton: Button? by bindOptionalView(R.id.skipButton)
+    override fun <T : Any?> bindUntilEvent(event: FragmentEvent): LifecycleTransformer<T> {
+        return RxLifecycle.bindUntilEvent(lifecycleSubject, event)
+    }
 
-    abstract fun getViewLayoutId() : Int
+    override fun lifecycle(): Observable<FragmentEvent> = lifecycleSubject.hide()
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -64,34 +58,9 @@ abstract class OnboardingBaseFragment(
         lifecycleSubject.onNext(FragmentEvent.CREATE)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(getViewLayoutId(), container, false)!!
-    }
-
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycleSubject.onNext(FragmentEvent.CREATE_VIEW)
-
-        setGradient()
-
-        titleRes?.let { titleTextView?.text = getString(it) }
-
-        if (coordinator.canPopBackStack()) {
-            backButton?.animate()?.alpha(1f)?.setDuration(500L)?.start()
-        }
-        backButton?.setOnClickListener {
-            presentPreviousOnboardingFragment()
-        }
-
-        continueButton?.setOnClickListener {
-            presentNextOnboardingFragment()
-        }
-        skipButton?.visibility = View.INVISIBLE
-        skipButton?.setOnClickListener {
-            skipToNextOnboardingFragment()
-        }
-
-//        prepareViewsForEntryAnim()
     }
 
     override fun onStart() {
@@ -128,6 +97,58 @@ abstract class OnboardingBaseFragment(
         lifecycleSubject.onNext(FragmentEvent.DETACH)
         super.onDetach()
     }
+}
+
+abstract class OnboardingBaseFragment(
+        val coordinator: OnboardingCoordinator
+) :
+        LifecycleFragment(), OnboardingTransitionAnimatable
+{
+
+    val onboardingActivity: MainOnboardingActivity
+        get() = (activity as MainOnboardingActivity)
+
+    var state = OnboardingState()
+
+    var backgroundGradient: BackgroundGradient = BackgroundGradient.MATTRESS
+    var titleRes: Int? = null
+    val titleTextView: TextView? by bindOptionalView(R.id.titleTextView)
+    val backButton: ImageButton? by bindOptionalView(R.id.backButton)
+    val continueButton: Button? by bindOptionalView(R.id.continueButton)
+    val skipButton: Button? by bindOptionalView(R.id.skipButton)
+
+    val overlayView: SSBaseOverlayView? = null
+
+    abstract fun getViewLayoutId() : Int
+
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater?.inflate(getViewLayoutId(), container, false)!!
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setGradient()
+
+        titleRes?.let { titleTextView?.text = getString(it) }
+
+        if (coordinator.canPopBackStack()) {
+            backButton?.animate()?.alpha(1f)?.setDuration(500L)?.start()
+        }
+        backButton?.setOnClickListener {
+            presentPreviousOnboardingFragment()
+        }
+
+        continueButton?.setOnClickListener {
+            presentNextOnboardingFragment()
+        }
+        skipButton?.visibility = View.INVISIBLE
+        skipButton?.setOnClickListener {
+            skipToNextOnboardingFragment()
+        }
+
+//        prepareViewsForEntryAnim()
+    }
 
     open fun presentPreviousOnboardingFragment() {
         coordinator.presentNextOnboardingFragment()
@@ -160,15 +181,5 @@ abstract class OnboardingBaseFragment(
         BASE(R.color.onboarding_gradient_3_top, R.color.onboarding_gradient_3_bottom)
     }
 
-    private val lifecycleSubject = BehaviorSubject.create<FragmentEvent>()
 
-    override fun <T : Any?> bindToLifecycle(): LifecycleTransformer<T> {
-        return RxLifecycleAndroid.bindFragment(lifecycleSubject)
-    }
-
-    override fun <T : Any?> bindUntilEvent(event: FragmentEvent): LifecycleTransformer<T> {
-        return RxLifecycle.bindUntilEvent(lifecycleSubject, event)
-    }
-
-    override fun lifecycle(): Observable<FragmentEvent> = lifecycleSubject.hide()
 }
