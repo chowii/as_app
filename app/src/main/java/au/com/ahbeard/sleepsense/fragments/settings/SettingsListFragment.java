@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +29,12 @@ public class SettingsListFragment extends BaseFragment {
 
     protected int titleRes;
     private int layoutName;
+
+    protected int viewContainerId;
     private SettingsAdapterOnItemClickListener clickListener;
 
     List<SettingsListItem> settingsList;
+    private int viewItemId;
 
     public SettingsListFragment(){}
 
@@ -38,16 +42,13 @@ public class SettingsListFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {;
         View v = inflater.inflate(layoutName, container, false);
-
-        createSettings(v, R.id.settings_txt);
-
+        createSettings(v, viewContainerId);
         return v;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         titleTextView.setText(titleRes);
     }
@@ -56,7 +57,7 @@ public class SettingsListFragment extends BaseFragment {
         settingsView = (RecyclerView) v.findViewById(settingsText);
         settingsView.setHasFixedSize(true);
         settingsView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new SettingsAdapter(settingsList, getActivity());
+        adapter = new SettingsAdapter(settingsList, getActivity(), viewItemId);
         settingsView.setAdapter(adapter);
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,14 +70,17 @@ public class SettingsListFragment extends BaseFragment {
 
     }
 
-    public void configure(SettingsBaseFragment baseFragment, int titleRes, int layoutId, List<SettingsListItem> items, SettingsAdapterOnItemClickListener itemClicked) {
+    public void configure(SettingsBaseFragment baseFragment, int titleRes, int layoutId, int viewContainerId,
+                          int viewItemId, List<SettingsListItem> items, SettingsAdapterOnItemClickListener itemClicked) {
         this.mBaseFragment = baseFragment;
         this.titleRes = titleRes;
         this.layoutName = layoutId;
+        this.viewContainerId = viewContainerId;
+        this.viewItemId = viewItemId;
+        settingsList = items;
         settingsList = items;
         clickListener = itemClicked;
     }
-
 
     public int getLayout(){ return layoutName; }
 

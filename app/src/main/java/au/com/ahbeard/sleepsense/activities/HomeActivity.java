@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -196,7 +197,6 @@ public class HomeActivity extends BaseActivity {
                 return;
             }
         }
-
         super.onBackPressed();
     }
 

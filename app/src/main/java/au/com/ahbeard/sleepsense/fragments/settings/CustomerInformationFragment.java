@@ -15,11 +15,17 @@ import au.com.ahbeard.sleepsense.fragments.BaseFragment;
  * Created by sabbib on 1/03/2017.
  */
 
-public class AssistFragment extends BaseFragment {
+public class CustomerInformationFragment extends BaseFragment {
 
     protected WebView webView;
 
     protected String url;
+
+    public CustomerInformationFragment(){}
+
+    public CustomerInformationFragment(String url){
+        configure(url);
+    }
 
     @Nullable
     @Override
@@ -37,13 +43,4 @@ public class AssistFragment extends BaseFragment {
         this.url = url;
     }
 
-
-
-    public void onBackPressed(){
-        if(webView.canGoBack()){
-            webView.goBack();
-            return;
-        }
-//        super.onBackPressed();
-    }
 }
