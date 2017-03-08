@@ -6,7 +6,7 @@
         <shape android:shape="rectangle" >
             <corners android:bottomLeftRadius="@dimen/settings_row_button_corner_radius"
                 android:bottomRightRadius="@dimen/settings_row_button_corner_radius"/>
-            <solid android:color="@color/settings_fragment_background_item"/>
+            <solid android:color="@color/settings_background_item"/>
         </shape>
     </item>
 </layer-list>

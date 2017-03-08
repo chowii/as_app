@@ -70,7 +70,9 @@ class SettingsFragmentFactory {
                                 baseFragment.replaceFragment(sendFeedbackFragment);
                                 break;
                             case "Contact Us":
-                                baseFragment.replaceFragment(new ContactUsFragment(baseFragment));
+                                ContactUsFragment contactUsFragment = createContactUsFragment(baseFragment);
+
+                                baseFragment.replaceFragment(contactUsFragment);
                                 break;
                             case "Update App":
                                 //TODO handle Update App
@@ -80,6 +82,10 @@ class SettingsFragmentFactory {
                 });
 
         return listFragment;
+    }
+
+    private static ContactUsFragment createContactUsFragment(SettingsBaseFragment baseFragment) {
+        return new ContactUsFragment(baseFragment);
     }
 
     static SettingsListFragment createTroubleshootingFragment(final SettingsBaseFragment baseFragment) {
@@ -120,7 +126,7 @@ class SettingsFragmentFactory {
 
         sendFeedbackFragment.configure(
                 baseFragment,
-                R.string.settings_send_feedback_title,                        /* Fragment Title   */
+                R.string.settings_send_feedback_title,  /* Fragment Title   */
                 R.layout.fragment_settings,             /* Fragment Layout  */
                 R.id.settings_txt,                      /* RecyclerView     */
                 R.layout.item_settings,                 /* Item TextView    */
@@ -136,6 +142,52 @@ class SettingsFragmentFactory {
         return sendFeedbackFragment;
     }
 
+    static SettingsListFragment createDeviceFragment(final SettingsBaseFragment baseFragment){
+        SettingsListFragment deviceFragment = new SettingsListFragment();
+
+        List<SettingsListItem> deviceItemList = new ArrayList<>();
+
+        deviceItemList.add(new SettingsListItem("Mattress", "Strong", "Today 12:30pm", true));
+
+
+//        if(deviceItemList.size() <= 1)
+        deviceFragment.configure(
+                baseFragment,
+                R.string.settings_device_title,
+                R.layout.fragment_device,
+                R.id.device_txt,
+                R.layout.item_devices_connected,
+                deviceItemList,
+                new SettingsListFragment.SettingsAdapterOnItemClickListener() {
+                    @Override
+                    public void onItemClick(String buttonTitle, int position) {
+                        //TODO handle clickListeners
+                    }
+                }
+        );
+//        else if(deviceItemList.size() >1)
+
+        deviceItemList.add(new SettingsListItem("Adjustable Base", null, null, true));
+        deviceItemList.add(new SettingsListItem("Sleep Tracker", null, null, true));
+        deviceFragment.configure(
+                baseFragment,
+                R.string.settings_device_title,
+                R.layout.fragment_device,
+                R.id.device_txt,
+                R.layout.item_devices_disconnected,
+                deviceItemList,
+                new SettingsListFragment.SettingsAdapterOnItemClickListener() {
+                    @Override
+                    public void onItemClick(String buttonTitle, int position) {
+
+                    }
+                }
+        );
+
+
+        return deviceFragment;
+    }
+
     static SettingsListFragment createSettingsFragment(final SettingsBaseFragment baseFragment) {
         ArrayList<SettingsListItem> settingsList = new ArrayList<>();
         final SettingsListFragment frag = new SettingsListFragment();
@@ -146,6 +198,7 @@ class SettingsFragmentFactory {
         settingsList.add(new SettingsListItem("Six Week Sleep Challenge"));
         settingsList.add(new SettingsListItem("Privacy Policy"));
         settingsList.add(new SettingsListItem("Terms of Service"));
+        settingsList.add(new SettingsListItem("Version"));
 
         frag.configure(
                 baseFragment,
@@ -159,7 +212,8 @@ class SettingsFragmentFactory {
             public void onItemClick(String s, int position) {
                 switch(s) {
                     case "My Devices":
-//                        act.getSupportFragmentManager().beginTransaction().replace(R.id.container, new DeviceFragments()).commit();
+                        SettingsListFragment deviceFragment = createDeviceFragment(baseFragment);
+                        baseFragment.replaceFragment(deviceFragment);
                         break;
                     case "My Profile":
                         SettingsListFragment myProfileFrag = createMyProfileFragment(baseFragment);
@@ -182,20 +236,20 @@ class SettingsFragmentFactory {
     }
 
     public static CustomerInformationFragment createWebViewFragment(String buttonTitle) {
-        CustomerInformationFragment frag = new CustomerInformationFragment();
+        CustomerInformationFragment customerInformationFragment = new CustomerInformationFragment();
 
         switch(buttonTitle) {
             case "Privacy Policy":
-                frag.configure("http://www.ahbeard.com.au/privacypolicy");
+                customerInformationFragment.configure("http://www.ahbeard.com.au/privacypolicy");
                 break;
             case "Terms of Service":
-                frag.configure("https://sleepsense.com.au/terms-of-service");
+                customerInformationFragment.configure("https://sleepsense.com.au/terms-of-service");
                 break;
             case "Six Week Sleep Challenge":
-                frag.configure("http://www.ahbeard.com.au/sleepchallenge");
+                customerInformationFragment.configure("http://www.ahbeard.com.au/sleepchallenge");
         }
 
-        return frag;
+        return customerInformationFragment;
     }
 
 

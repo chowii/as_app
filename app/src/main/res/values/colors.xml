@@ -93,17 +93,22 @@
     <color name="onboarding_title_text">#fff</color>
     <color name="ruler_line_background">#4cffffff</color>
 
-    <color name="settings_fragment_background">#F1F5F7</color>
-    <color name="settings_fragment_background_item">#FFF</color>
-    <color name="settings_fragment_background_item_text">#566567</color>
-    <color name="settings_header_title_text_color">#49484A</color>
+    <color name="settings_background">#F1F5F7</color>
+    <color name="settings_background_item">#FFF</color>
+    <color name="settings_background_item_text">#566567</color>
+
+    <color name="settings_text">#415154</color>
+    <color name="settings_header_text">#49484A</color>
+    <color name="settings_text_dark">#405154</color>
+
     <color name="settings_header_background">#fff</color>
-    <color name="contact_us_background">#2A81FB</color>
 
-    <color name="device_fragment_item_text_black">#405154</color>
     <color name="device_fragment_item_text_blue">#2482FF</color>
+    <color name="device_fragment_item_button_blue">#1d61f1</color>
 
+    <color name="dark_divider">#77bcc1c2</color>
 
+    <color name="primary_button_background">#2A81FB</color>
 
     <color name="onboarding_not_sure_background">#2E73FF</color>
 </resources>

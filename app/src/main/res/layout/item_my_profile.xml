@@ -23,7 +23,7 @@
         android:paddingEnd="26dp"
 
         android:gravity="center|left"
-        style="@style/SettingsFragmentRow"
+        style="@style/SettingsText.Row"
         />
 
 </LinearLayout>

@@ -7,6 +7,9 @@
     android:layout_height="wrap_content"
     android:id="@+id/linearLayout"
     android:background="@null"
+    android:paddingLeft="@dimen/settings_text_padding_left"
+    android:paddingRight="@dimen/settings_text_padding_right"
+    android:paddingBottom="10dp"
     android:weightSum="4"
     >
 
@@ -25,7 +28,7 @@
         android:drawableRight="@drawable/more_chevron_normal"
 
         android:gravity="center|left"
-        style="@style/SettingsFragmentRow"
+        style="@style/SettingsText.Row"
         />
 
 </LinearLayout>

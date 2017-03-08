@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/settings_fragment_background"
+    android:background="@color/settings_background"
     android:id="@+id/fragment">
 
     <include android:id="@+id/settings_toolbar_header"
