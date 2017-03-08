@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
 
     <application
         android:name=".SleepSenseApplication"
@@ -27,14 +29,19 @@
             android:name="io.fabric.ApiKey"
             android:value="d340877592487019d618eada69d27ba7f41dad0f" />
 
-        <activity android:name=".ui.onboarding.MainOnboardingActivity"
-            android:screenOrientation="userPortrait"
-            >
+        <activity
+            android:name=".activities.SplashActivity"
+            android:screenOrientation="userPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.onboarding.MainOnboardingActivity"
+            android:screenOrientation="userPortrait">
         </activity>
 
         <activity
