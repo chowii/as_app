@@ -32,5 +32,6 @@
     <dimen name="onboarding_leading_margin">16dp</dimen>
     <dimen name="settings_row_button_corner_radius">2dp</dimen>
     <dimen name="settings_my_devices_margin_bottom">24dp</dimen>
+    <dimen name="settings_background_shadow_left_padding">7dp</dimen>
 
 </resources>

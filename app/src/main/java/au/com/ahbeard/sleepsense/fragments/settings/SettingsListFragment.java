@@ -53,21 +53,24 @@ public class SettingsListFragment extends BaseFragment {
         titleTextView.setText(titleRes);
     }
 
-    public void createSettings(View v, int settingsText){
+    protected void createSettings(View v, int settingsText){
         settingsView = (RecyclerView) v.findViewById(settingsText);
         settingsView.setHasFixedSize(true);
         settingsView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new SettingsAdapter(settingsList, getActivity(), viewItemId);
+        setupAdapter();
         settingsView.setAdapter(adapter);
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = adapter.getPosition();
-                String s = adapter.getSettingsItem().get(position).getHead().toString();
+                String s = adapter.getSettingsItem().get(position).getHead();
                 clickListener.onItemClick(s, adapter.position);
             }
         });
+    }
 
+    protected void setupAdapter() {
+        adapter = new SettingsAdapter(settingsList, getActivity(), viewItemId);
     }
 
     public void configure(SettingsBaseFragment baseFragment, int titleRes, int layoutId, int viewContainerId,

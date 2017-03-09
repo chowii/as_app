@@ -194,11 +194,11 @@
     </style>
 
     <style name="SettingsText.Row">
-        <item name="android:paddingRight">@dimen/settings_text_padding_right</item>
         <item name="android:paddingLeft">@dimen/settings_text_padding_left</item>
-        <item name="android:paddingBottom">@dimen/settings_text_padding_regular</item>
         <item name="android:paddingStart">@dimen/settings_text_padding_left</item>
-        <item name="android:paddingEnd">26dp</item>
+        <item name="android:paddingRight">@dimen/settings_text_padding_right</item>
+        <item name="android:paddingEnd">@dimen/settings_text_padding_right</item>
+        <item name="android:paddingBottom">@dimen/settings_text_padding_regular</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:drawableEnd">@drawable/more_chevron_normal</item>
         <item name="android:drawableRight">@drawable/more_chevron_normal</item>

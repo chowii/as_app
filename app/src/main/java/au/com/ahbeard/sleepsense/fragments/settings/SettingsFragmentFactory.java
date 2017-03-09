@@ -19,7 +19,7 @@ class SettingsFragmentFactory {
         profileList.add(new SettingsListItem("Age"));
         profileList.add(new SettingsListItem("Gender"));
 
-        SettingsListFragment frag = new SettingsListFragment();
+        SettingsListFragment frag = new MyProfileSettingsFragment();
 
 
         frag.configure(baseFragment,

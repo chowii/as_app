@@ -6,7 +6,7 @@
 
     <!--settings dimensions-->
     <dimen name="settings_text_padding_left">20dp</dimen>
-    <dimen name="settings_text_padding_right">12dp</dimen>
+    <dimen name="settings_text_padding_right">20dp</dimen>
     <dimen name="settings_text_padding_regular">10dp</dimen>
     <dimen name="settings_text_padding_large_regular">25dp</dimen>
 
