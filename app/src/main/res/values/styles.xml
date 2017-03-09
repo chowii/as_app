@@ -171,11 +171,13 @@
     </style>
 
     <style name="SettingsText">
-        <item name="android:textAlignment">center</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center|left</item>
+        <item name="android:textAlignment">textStart</item>
         <item name="font">AvertaRegular</item>
         <item name="android:textSize">@dimen/settings_text_size</item>
         <item name="android:textColor">@color/settings_background_item_text</item>
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Large</item>
     </style>
 
     <style name="SettingsTitle">
@@ -187,40 +189,41 @@
     <style name="SettingsText.Toolbar">
         <item name="android:textSize">@dimen/settings_title_text_size</item>
         <item name="android:textColor">@color/settings_header_text</item>
+        <item name="android:textAlignment">center</item>
         <item name="font">AvertaBold</item>
     </style>
 
     <style name="SettingsText.Row">
-        <item name="android:clipToPadding">false</item>
+        <item name="android:paddingRight">@dimen/settings_text_padding_right</item>
+        <item name="android:paddingLeft">@dimen/settings_text_padding_left</item>
+        <item name="android:paddingBottom">@dimen/settings_text_padding_regular</item>
+        <item name="android:paddingStart">@dimen/settings_text_padding_left</item>
+        <item name="android:paddingEnd">26dp</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:drawableEnd">@drawable/more_chevron_normal</item>
         <item name="android:drawableRight">@drawable/more_chevron_normal</item>
         <item name="android:background">@drawable/settings_background_button</item>
     </style>
 
-
-    <style name="SettingsTitle.DeviceTitle">
-        <item name="android:textColor">@color/settings_text_dark</item>
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Large</item>
+    <style name="SettingsText.Row.NoBackground">
+        <item name="android:background">@null</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 
-    <style name="SettingsText.DeviceTextDark">
-        <item name="android:textAlignment">textStart</item>
-        <item name="android:textColor">@color/settings_text_dark</item>
-        <item name="font">AvertaRegular</item>>
-    </style>
-
-    <style name="SettingsText.DeviceBlue">
+    <style name="SettingsText.Blue">
         <item name="android:textColor">@color/device_fragment_item_text_blue</item>
-        <item name="android:clipToPadding">false</item>
     </style>
 
 
-    <style name="SettingsPrimaryButton">
+    <style name="SettingsButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">57dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/settings_text_size</item>
         <item name="android:textColor">#FFF</item>
         <item name="android:background">@drawable/contact_us_button</item>
         <item name="font">AvertaBold</item>>
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Large</item>
     </style>
 
 

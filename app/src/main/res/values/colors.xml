@@ -99,7 +99,6 @@
 
     <color name="settings_text">#415154</color>
     <color name="settings_header_text">#49484A</color>
-    <color name="settings_text_dark">#405154</color>
 
     <color name="settings_header_background">#fff</color>
 
@@ -108,7 +107,7 @@
 
     <color name="dark_divider">#77bcc1c2</color>
 
-    <color name="primary_button_background">#2A81FB</color>
+    <color name="settings_button_blue_background">#2A81FB</color>
 
     <color name="onboarding_not_sure_background">#2E73FF</color>
 </resources>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+       <RelativeLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent">
+
+           <FrameLayout
+               android:layout_width="match_parent"
+               android:layout_height="232dp"
+               android:background="@drawable/background_ahb_contact_us"
+               android:id="@+id/lg_container">
+
+               <ImageView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:background="@drawable/ic_ahb_logo"
+                   android:id="@+id/ic_ahb_lg_container"
+                   />
+           </FrameLayout>
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical"
+               android:layout_below="@id/lg_container">
+
+               <au.com.ahbeard.sleepsense.widgets.SSTextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="@string/contact_us_availability_title_text"
+                   android:layout_gravity="center"
+                   android:paddingTop="20dp"
+
+                   style="@style/SettingsTitle"
+                   />
+
+               <au.com.ahbeard.sleepsense.widgets.SSTextView
+                   android:layout_width="240dp"
+                   android:layout_height="wrap_content"
+                   android:text="@string/contact_us_availability_desc_text"
+                   android:layout_gravity="center"
+                   android:textAlignment="center"
+                   android:paddingTop="20dp"
+
+                   style="@style/SettingsText"
+                   />
+
+               <au.com.ahbeard.sleepsense.widgets.SSButton
+                   android:id="@+id/contact_us_button_call_us"
+                   android:layout_width="250dp"
+                   android:layout_height="wrap_content"
+                   android:text="Call Us"
+                   android:layout_gravity="center"
+                   android:layout_marginTop="20dp"
+
+                   style="@style/SettingsButton"
+                   />
+
+               <au.com.ahbeard.sleepsense.widgets.SSTextView
+                   android:id="@+id/SSTextView2"
+                   android:layout_width="240dp"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:paddingTop="25dp"
+
+                   style="@style/SettingsTitle"
+
+                   android:text="@string/contact_us_find_out_title_text"
+                   android:textAlignment="center" />
+
+
+               <au.com.ahbeard.sleepsense.widgets.SSTextView
+                   android:layout_width="240dp"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:paddingTop="20dp"
+                   android:text="@string/contact_us_find_out_description_text"
+
+                   style="@style/SettingsText"
+                   />
+
+               <au.com.ahbeard.sleepsense.widgets.SSButton
+                   android:id="@+id/contact_us_button_visit_web"
+                   android:layout_width="250dp"
+                   android:layout_height="wrap_content"
+                   android:text="Visit Website"
+                   android:layout_gravity="center"
+                   android:layout_marginTop="20dp"
+                   android:layout_marginBottom="40dp"
+
+                   style="@style/SettingsButton"
+                   />
+
+           </LinearLayout>
+
+       </RelativeLayout>
+    </ScrollView>
+</LinearLayout>

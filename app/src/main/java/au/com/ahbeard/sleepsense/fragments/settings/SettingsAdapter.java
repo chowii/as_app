@@ -5,13 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.services.log.SSLog;
-
 import java.util.List;
+
+import au.com.ahbeard.sleepsense.R;
 
 /**
  * Created by Sabbib on 28/02/2017.
@@ -28,7 +28,6 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 
     public List<SettingsListItem> getSettingsItem(){ return settingsItems; }
     public int getPosition() { return position; }
-    public String getButtonTitle(){ return button; }
 
 
     public SettingsAdapter(List<SettingsListItem> listItems, Context context, int viewItemId) {
@@ -39,60 +38,23 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType == R.layout.item_devices_connected) {
-            SSLog.d("TAG_DEV con viewType: " + viewType);
-        }
-        if(viewType == R.layout.item_devices_disconnected) {
-            SSLog.d("TAG_DEV dis viewType: " + viewType);
-        }
-        SSLog.d("TAG_DEV dis viewType: " + parent.getId());
-
-
-        if(
-                (parent.findViewById(R.id.head) == null)
-                        &&
-                (parent.findViewById(R.id.device_title) == null))
-        {
-            return new ViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
-        }
-        else if(
-                ((parent.findViewById(R.id.device_subhead_1) != null)
-                        &&
-                (parent.findViewById(R.id.device_title) != null))
-                        &&
-                (parent.findViewById(R.id.device_subhead_1).getId() == R.id.device_subhead_1))
-        {
-            return new ViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.item_devices_connected, parent, false));
-        }
-        else if(
-                (parent.findViewById(R.id.device_title) != null)
-                        &&
-                (parent.findViewById(R.id.device_subhead_1) == null))
-        {
-            return new ViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.item_devices_disconnected, parent, false));
-        }
-
-
-
+        if(viewType == R.layout.item_devices_connected)
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_devices_connected, parent, false));
+        if(viewType == R.layout.item_devices_disconnected)
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_devices_disconnected, parent, false));
         return new ViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
+                LayoutInflater.from(parent.getContext()).inflate(viewItemId, parent, false));
     }
 
     @Override
     public void onBindViewHolder(final SettingsAdapter.ViewHolder holder, final int position) {
-        SSLog.d("TAG_TAG A " + settingsItems.size());
         holder.linearLayout.setOnClickListener(new View.OnClickListener(){
-
             @Override
             public void onClick(View v) {
                 onItemClick(holder.textViewHead.getText().toString(), position);
                 mListener.onClick(v);
             }
         });
-
         if(     (holder.textViewTitle == null)
                         &&
                 (holder.textViewHead != null))
@@ -110,26 +72,24 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
                 (holder.textViewHead == null))
         {
             holder.textViewTitle.setText(settingsItems.get(position).getTitle());
-            holder.textViewWarningMessage.setText("You currently don’t have a Sleep Tracker set up");
+
+            String message = (String) holder.textViewTitle.getText();
+            String[] messageValues = message.split(" ");
+            if(messageValues[0].equalsIgnoreCase("Adjustable"))
+                message = messageValues[1];
+            holder.textViewWarningMessage.setText("You currently don’t have a " + message.toLowerCase() + " set up");
+            holder.setUpDeviceButton.setText("Set up " + message);
         }
-
-//
-//        if(holder.textViewSubHead_1 == null
-//                &&
-//                holder.textViewTitle == null) {
-//            SSLog.d("TAG_TAG B " + settingsItems.size());
-//
-//        } else {
-//            SSLog.d("TAG_TAG C " + settingsItems.size());
-//
-//        }
-
     }
 
     @Override
     public int getItemViewType(int position) {
         SettingsListItem item = settingsItems.get(position);
-        return item.isTextRow() ? R.layout.item_devices_connected : R.layout.item_settings;
+        if(item.isTextRow() == true && item.getSubHead1() == null)
+            return R.layout.item_devices_disconnected;
+        else if(item.isTextRow() == true && item.getSubHead1() != null)
+            return R.layout.item_devices_connected;
+        else return R.layout.item_settings;
     }
 
     @Override
@@ -154,15 +114,15 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 
         public TextView textViewTitle;
         public TextView textViewWarningMessage;
+        public Button setUpDeviceButton;
 
         LinearLayout linearLayout;
         public ViewHolder(View itemView) {
             super(itemView);
-
             if(
                     (itemView.findViewById(R.id.device_title) == null)
                             &&
-                            (itemView.findViewById(R.id.head).getId() == R.id.head))
+                            (itemView.findViewById(R.id.head) != null))
             {
                 textViewHead = (TextView) itemView.findViewById(R.id.head);
                 linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
@@ -170,9 +130,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
             else if(
                     ((itemView.findViewById(R.id.device_subhead_1) != null)
                                         &&
-                    (itemView.findViewById(R.id.device_title) != null))
-                                        &&
-                    (itemView.findViewById(R.id.device_subhead_1).getId() == R.id.device_subhead_1))
+                    (itemView.findViewById(R.id.device_title) != null)))
             {
                 linearLayout = (LinearLayout) itemView.findViewById(R.id.device_linear_layout);
                 textViewTitle = (TextView) itemView.findViewById(R.id.device_title);
@@ -186,6 +144,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
                 linearLayout = (LinearLayout) itemView.findViewById(R.id.device_linear_layout_disconnected);
                 textViewTitle = (TextView) itemView.findViewById(R.id.device_title);
                 textViewWarningMessage = (TextView) itemView.findViewById(R.id.devices_warning_message);
+                setUpDeviceButton = (Button) itemView.findViewById(R.id.set_up_device);
             }
         }
     }
