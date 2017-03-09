@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment.OnboardingQuestionsAdapter.OnItemClickListener
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.*
@@ -23,7 +24,7 @@ import kotterknife.bindView
 /**
  * Created by luisramos on 23/01/2017.
  */
-abstract class OnboardingQuestionsFragment : OnboardingBaseFragment() {
+abstract class OnboardingQuestionsFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
 
     class QuestionViewModel(val title: String, val isTextButton: Boolean) {
         constructor(title: String) : this(title, false)
@@ -36,6 +37,10 @@ abstract class OnboardingQuestionsFragment : OnboardingBaseFragment() {
     val shadowView: ImageView by bindView(R.id.shadowImage)
     var layoutManager : LinearLayoutManager? = null
     var adapter : OnboardingQuestionsAdapter? = null
+
+    val errorOverlayView : SSErrorHandlingOverlayView by lazy {
+        createErrorView()
+    }
 
     override fun viewsToAnimate(): List<View> {
         val firstChildPos = layoutManager?.findFirstVisibleItemPosition()
@@ -75,20 +80,6 @@ abstract class OnboardingQuestionsFragment : OnboardingBaseFragment() {
         data = strings.map { QuestionViewModel(getString(it)) }
     }
 
-    val errorOverlayView : SSErrorHandlingOverlayView by lazy {
-        val layoutParams = RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT)
-
-        val errorView = SSErrorHandlingOverlayView(view!!.context)
-        errorView.layoutParams = layoutParams
-        errorView.visibility = View.INVISIBLE
-
-        containerView.addView(errorView)
-
-        errorView
-    }
-
     fun handleError(error: Throwable) {
         when (error) {
             is OnboardingErrorPumpNotFound -> showErrorOverlay(
@@ -120,6 +111,20 @@ abstract class OnboardingQuestionsFragment : OnboardingBaseFragment() {
         Handler(Looper.getMainLooper()).post {
             errorOverlayView.animateExit()
         }
+    }
+
+    private fun createErrorView(): SSErrorHandlingOverlayView {
+        val layoutParams = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT)
+
+        val errorView = SSErrorHandlingOverlayView(view!!.context)
+        errorView.layoutParams = layoutParams
+        errorView.visibility = View.INVISIBLE
+
+        containerView.addView(errorView)
+
+        return errorView
     }
 
     class OnboardingQuestionsAdapter(var data: List<QuestionViewModel>) : RecyclerView.Adapter<OnboardingQuestionsAdapter.ViewHolder>() {

@@ -2,13 +2,14 @@ package au.com.ahbeard.sleepsense.ui.onboarding.fragments.tracker
 
 import android.os.Bundle
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingPickerBaseFragment
 
 /**
  * Created by luisramos on 16/02/2017.
  */
-class AgeSetupOnboardingFragment : OnboardingPickerBaseFragment() {
+class AgeSetupOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingPickerBaseFragment(coordinator) {
 
     private val minAge = 3
     private val maxAge = 120

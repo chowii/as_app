@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import kotterknife.bindOptionalView
 import kotterknife.bindView
 
@@ -21,7 +22,7 @@ import kotterknife.bindView
  * Usage in this project is done by subclassing and overriding [onCreate],
  * calling [configureRuler] with the specified fields.
  */
-open class OnboardingRulerFragment : OnboardingBaseFragment() {
+open class OnboardingRulerFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
 
     var orientation: Orientation = Orientation.VERTICAL
 
