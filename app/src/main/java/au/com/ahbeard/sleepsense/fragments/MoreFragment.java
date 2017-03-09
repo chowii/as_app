@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import butterknife.OnClick;
  */
 public class MoreFragment extends Fragment {
 
+    private static final String TAG = MoreFragment.class.getSimpleName();
     @Bind(R.id.more_layout_items)
     ViewGroup mItemsLayout;
 
@@ -77,6 +79,7 @@ public class MoreFragment extends Fragment {
                 startActivity(HelpActivity.getIntent(getContext(),"FAQs","https://www.sleepsense.com.au/faq"));
             }
         });
+
         add(inflater, mItemsLayout, "About A.H. Beard", null, new Runnable() {
             @Override
             public void run() {
@@ -84,6 +87,7 @@ public class MoreFragment extends Fragment {
                 startActivity(HelpActivity.getIntent(getContext(),"About AH Beard","http://www.ahbeard.com.au/ourcompany"));
             }
         });
+
         add(inflater, mItemsLayout, "Contact us", null, new Runnable() {
             @Override
             public void run() {
@@ -91,6 +95,7 @@ public class MoreFragment extends Fragment {
                 startActivity(new Intent(getActivity(), ContactUsActivity.class));
             }
         });
+
         add(inflater, mItemsLayout, "Improve your sleep", null, new Runnable() {
             @Override
             public void run() {
@@ -98,6 +103,7 @@ public class MoreFragment extends Fragment {
                 startActivity(HelpActivity.getIntent(getContext(),"Improve your sleep","http://www.ahbeard.com.au/sleepchallenge"));
             }
         });
+
         add(inflater, mItemsLayout, "Preferences", null, new Runnable() {
             @Override
             public void run() {
@@ -105,6 +111,7 @@ public class MoreFragment extends Fragment {
                 startActivity(new Intent(getActivity(), PreferenceActivity.class));
             }
         });
+
         addSpacer(mItemsLayout);
         add(inflater, mItemsLayout, "My Profile", null, new Runnable() {
             @Override
@@ -113,6 +120,7 @@ public class MoreFragment extends Fragment {
                 startActivity(new Intent(getActivity(), ProfileActivity.class));
             }
         });
+
         addSpacer(mItemsLayout);
         add(inflater, mItemsLayout, "Terms of Service", null, new Runnable() {
             @Override
@@ -121,6 +129,7 @@ public class MoreFragment extends Fragment {
                 startActivity(HelpActivity.getIntent(getContext(),"Terms of Service","https://sleepsense.com.au/terms-of-service"));
             }
         });
+
         add(inflater, mItemsLayout, "Privacy Policy", null, new Runnable() {
             @Override
             public void run() {

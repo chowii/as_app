@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,5 +105,21 @@ public class BaseFragment extends Fragment implements LifecycleProvider<Fragment
     public void onDetach() {
         mLifecycleSubject.onNext(FragmentEvent.DETACH);
         super.onDetach();
+    }
+
+    /**
+     * Back button was pressed in the parent activity,
+     * checks if the childFragmentManager has any fragments to pop
+     * and pops does popBackStack() if it finds any
+     *
+     * @return true if the action was handled, false if not
+     */
+    public boolean onBackPressed() {
+        int backStackCount = getChildFragmentManager().getBackStackEntryCount();
+        if (backStackCount > 0) {
+            getChildFragmentManager().popBackStack();
+            return true;
+        }
+        return false;
     }
 }

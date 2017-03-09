@@ -95,7 +95,7 @@ dependencies {
     compile "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rxLifecycleVersion"
     compile 'jp.wasabeef:blurry:2.1.0'
 
-    compile 'com.google.android.gms:play-services-base:10.0.1'
+    compile 'com.google.android.gms:play-services-base:10.2.0'
     compile 'com.google.firebase:firebase-core:10.0.0'
     compile 'io.lqd:liquid-android:2.+@aar'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.0@aar') {
@@ -105,6 +105,7 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.3.0'
 
     testCompile 'junit:junit:4.12'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
 }
 

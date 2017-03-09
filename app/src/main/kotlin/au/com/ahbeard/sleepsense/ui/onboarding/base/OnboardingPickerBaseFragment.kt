@@ -11,13 +11,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import kotterknife.bindView
 
 /**
  * Created by luisramos on 16/02/2017.
  */
-open class OnboardingPickerBaseFragment : OnboardingBaseFragment() {
+open class OnboardingPickerBaseFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
 
     private var minValue = 3
     private var maxValue = 120
