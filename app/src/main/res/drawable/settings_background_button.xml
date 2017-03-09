@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/settings_button_shadow"
-        />
+    <!--Add missing 9patch that where causing issues -->
+    <item android:drawable="@color/green" />
     <item>
         <shape android:shape="rectangle" >
             <corners android:radius="@dimen/settings_row_button_corner_radius"/>
-            <solid android:color="@color/settings_fragment_background_item"/>
+            <solid android:color="@color/settings_background_item"/>
         </shape>
     </item>
 </layer-list>

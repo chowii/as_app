@@ -283,5 +283,10 @@
     <string name="contact_us_number">1300001150</string>
     <string name="contact_us_web_url">http://www.ahbeard.com.au/</string>
     <string name="contact_us_availability_title_text">Want to get in touch?</string>
+    <string name="settings_device_title">Devices</string>
+    <string name="device_last_seen_title">Last seen</string>
+    <string name="device_signal_strength">Signal Strength</string>
+    <string name="device_connect_again_button">Connect Again</string>
+    <string name="device_signal_unavailable">You currently don’t have an adjustable base set up</string>
 
 </resources>
