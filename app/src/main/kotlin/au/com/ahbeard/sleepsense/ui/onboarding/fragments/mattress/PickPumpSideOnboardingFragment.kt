@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice
+import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingBaseFragment
 import au.com.ahbeard.sleepsense.widgets.SSButton
 import kotterknife.bindView
@@ -14,7 +15,7 @@ import kotterknife.bindView
 /**
  * Created by luisramos on 30/01/2017.
  */
-class PickPumpSideOnboardingFragment : OnboardingBaseFragment() {
+class PickPumpSideOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
 
     val imageView: ImageView by bindView(R.id.imageView)
     val leftButton: SSButton by bindView(R.id.leftButton)

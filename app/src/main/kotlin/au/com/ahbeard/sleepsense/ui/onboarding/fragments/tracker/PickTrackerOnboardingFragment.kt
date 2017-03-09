@@ -2,12 +2,13 @@ package au.com.ahbeard.sleepsense.ui.onboarding.fragments.tracker
 
 import android.os.Bundle
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
 
 /**
  * Created by luisramos on 23/01/2017.
  */
-class PickTrackerOnboardingFragment: OnboardingQuestionsFragment() {
+class PickTrackerOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingQuestionsFragment(coordinator) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
