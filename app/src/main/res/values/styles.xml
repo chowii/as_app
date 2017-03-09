@@ -180,6 +180,11 @@
         <item name="android:textColor">@color/settings_background_item_text</item>
     </style>
 
+    <style name="SettingsText.WeightedText">
+        <item name="android:layout_weight">2</item>
+    </style>
+
+
     <style name="SettingsTitle">
         <item name="android:textColor">@color/settings_header_text</item>
         <item name="font">AvertaBold</item>
@@ -211,6 +216,8 @@
     </style>
 
     <style name="SettingsText.Blue">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/device_fragment_item_text_blue</item>
     </style>
 

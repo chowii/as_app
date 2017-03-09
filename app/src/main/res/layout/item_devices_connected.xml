@@ -43,23 +43,15 @@
 
             <!--Item Head-->
             <au.com.ahbeard.sleepsense.widgets.SSTextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_weight="2"
                 android:text="@string/device_signal_strength"
-
-                style="@style/SettingsText"
+                style="@style/SettingsText.WeightedText"
                 />
 
             <!--Item Subhead-->
             <au.com.ahbeard.sleepsense.widgets.SSTextView
                 android:id="@+id/device_subhead_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:paddingRight="30dp"
                 tools:text="Strong"
-                android:gravity="right"
                 style="@style/SettingsText.Blue"
                 />
 
@@ -87,11 +79,8 @@
             <!--Item Subhead-->
             <au.com.ahbeard.sleepsense.widgets.SSTextView
                 android:id="@+id/device_subhead_2"
-                style="@style/SettingsText.Blue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 tools:text="Today 12:30pm"
-
+                style="@style/SettingsText.Blue"
                 />
 
         </LinearLayout>
