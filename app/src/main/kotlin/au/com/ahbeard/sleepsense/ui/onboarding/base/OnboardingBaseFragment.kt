@@ -105,5 +105,4 @@ abstract class OnboardingBaseFragment(
         BASE(R.color.onboarding_gradient_3_top, R.color.onboarding_gradient_3_bottom)
     }
 
-
 }
