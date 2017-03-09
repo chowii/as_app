@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -13,12 +14,16 @@ import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
+import au.com.ahbeard.sleepsense.fragments.BaseFragment;
 import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.DashboardNoSleepsFragment;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MoreFragment;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
+
+import au.com.ahbeard.sleepsense.fragments.settings.SettingsBaseFragment;
+
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.services.SleepService;
@@ -157,7 +162,17 @@ public class HomeActivity extends BaseActivity {
             });
         }
 
-        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance(), new Runnable() {
+//        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance(), new Runnable() {
+//            @Override
+//            public void run() {
+//                AnalyticsService.instance().logDashboardViewSettings();
+//            }
+//        });
+
+        /***
+         * chowii block
+         */
+        mDashboardPagerAdapter.addTab("Settings",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, new SettingsBaseFragment(), new Runnable() {
             @Override
             public void run() {
                 AnalyticsService.instance().logDashboardViewSettings();
@@ -167,9 +182,24 @@ public class HomeActivity extends BaseActivity {
         mViewPager.setAdapter(mDashboardPagerAdapter);
 
         mSimpleTabStrip.setViewPager(mViewPager);
-
-
     }
+
+    @Override
+    public void onBackPressed() {
+
+        // Since our fragments might have fragments in them,
+        // delegate the onBackPressed
+        int currentItem = mViewPager.getCurrentItem();
+        Fragment currFrag = mDashboardPagerAdapter.getItem(currentItem);
+        if (currFrag instanceof BaseFragment) {
+            BaseFragment baseFragment = (BaseFragment) currFrag;
+            if (baseFragment.onBackPressed()) {
+                return;
+            }
+        }
+        super.onBackPressed();
+    }
+
 
     class HomeFragmentPagerAdapter extends FragmentStatePagerAdapter implements SimpleTabStrip.TabProvider {
 
