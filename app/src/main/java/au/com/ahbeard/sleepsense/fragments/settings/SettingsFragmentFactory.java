@@ -84,7 +84,7 @@ class SettingsFragmentFactory {
         return listFragment;
     }
 
-    private static ContactUsFragment createContactUsFragment(SettingsBaseFragment baseFragment) {
+    static ContactUsFragment createContactUsFragment(SettingsBaseFragment baseFragment) {
         return new ContactUsFragment(baseFragment);
     }
 
@@ -126,7 +126,7 @@ class SettingsFragmentFactory {
 
         sendFeedbackFragment.configure(
                 baseFragment,
-                R.string.settings_send_feedback_title,  /* Fragment Title   */
+                R.string.settings_send_feedback_title,                        /* Fragment Title   */
                 R.layout.fragment_settings,             /* Fragment Layout  */
                 R.id.settings_txt,                      /* RecyclerView     */
                 R.layout.item_settings,                 /* Item TextView    */
@@ -148,15 +148,15 @@ class SettingsFragmentFactory {
         List<SettingsListItem> deviceItemList = new ArrayList<>();
 
         deviceItemList.add(new SettingsListItem("Mattress", "Strong", "Today 12:30pm", true));
+        deviceItemList.add(new SettingsListItem("Sleep Tracker", null, null, true));
+        deviceItemList.add(new SettingsListItem("Adjustable Base", null, null, true));
 
-
-//        if(deviceItemList.size() <= 1)
         deviceFragment.configure(
                 baseFragment,
-                R.string.settings_device_title,
-                R.layout.fragment_device,
-                R.id.device_txt,
-                R.layout.item_devices_connected,
+                R.string.settings_device_title,                               /* Fragment Title   */
+                R.layout.fragment_device,                /* Fragment Layout  */
+                R.id.device_txt,                         /* RecyclerView     */
+                R.layout.item_devices_connected,         /* Item TextView    */
                 deviceItemList,
                 new SettingsListFragment.SettingsAdapterOnItemClickListener() {
                     @Override
@@ -165,26 +165,6 @@ class SettingsFragmentFactory {
                     }
                 }
         );
-//        else if(deviceItemList.size() >1)
-
-        deviceItemList.add(new SettingsListItem("Adjustable Base", null, null, true));
-        deviceItemList.add(new SettingsListItem("Sleep Tracker", null, null, true));
-        deviceFragment.configure(
-                baseFragment,
-                R.string.settings_device_title,
-                R.layout.fragment_device,
-                R.id.device_txt,
-                R.layout.item_devices_disconnected,
-                deviceItemList,
-                new SettingsListFragment.SettingsAdapterOnItemClickListener() {
-                    @Override
-                    public void onItemClick(String buttonTitle, int position) {
-
-                    }
-                }
-        );
-
-
         return deviceFragment;
     }
 
@@ -235,7 +215,7 @@ class SettingsFragmentFactory {
         return frag;
     }
 
-    public static CustomerInformationFragment createWebViewFragment(String buttonTitle) {
+    static CustomerInformationFragment createWebViewFragment(String buttonTitle) {
         CustomerInformationFragment customerInformationFragment = new CustomerInformationFragment();
 
         switch(buttonTitle) {
@@ -251,7 +231,4 @@ class SettingsFragmentFactory {
 
         return customerInformationFragment;
     }
-
-
-
 }
