@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/device_linear_layout_disconnected"
+    android:id="@+id/device_disconnected_layout"
     android:layout_width="match_parent"
     android:layout_height="236dp"
     android:orientation="vertical"
@@ -25,34 +25,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:layout_marginTop="20dp"
-
             android:layout_marginLeft="10dp"
-            tools:text="Mattress"
-            />
+
+            android:layout_marginTop="20dp"
+            tools:text="Mattress" />
 
         <!--Item Head-->
         <au.com.ahbeard.sleepsense.widgets.SSTextView
+
             android:id="@+id/devices_warning_message"
             style="@style/SettingsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingEnd="20dp"
-
             android:layout_marginLeft="10dp"
-            android:text="@string/device_signal_unavailable"
-            />
+
+            android:paddingEnd="20dp"
+            android:text="@string/device_signal_unavailable" />
 
         <au.com.ahbeard.sleepsense.widgets.SSButton
             android:id="@+id/set_up_device_button"
             style="@style/SettingsButton.Blue"
 
             android:layout_marginBottom="45dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="30dp"
-            tools:text="Set up sleep tracker"
-            android:layout_marginLeft="10dp"
-            />
+            tools:text="Set up sleep tracker" />
     </LinearLayout>
 </LinearLayout>
 

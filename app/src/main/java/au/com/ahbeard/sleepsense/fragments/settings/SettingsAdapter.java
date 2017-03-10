@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 
 /**
  * Created by Sabbib on 28/02/2017.
@@ -25,8 +26,9 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
     String button;
     int position;
     int viewItemId;
+	private int viewType;
 
-    public List<SettingsListItem> getSettingsItem(){ return settingsItems; }
+	public List<SettingsListItem> getSettingsItem(){ return settingsItems; }
     public int getPosition() { return position; }
 
 
@@ -38,58 +40,36 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType == R.layout.item_devices_connected)
-            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_devices_connected, parent, false));
-        if(viewType == R.layout.item_devices_disconnected)
-            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_devices_disconnected, parent, false));
-        return new ViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(viewItemId, parent, false));
+	    this.viewType = viewType;
+	    if(viewType == R.layout.item_settings)
+		    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_settings, parent, false));
+	    else if(viewType == R.layout.settings_version)
+		    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.settings_version, parent, false));
+	    return new ViewHolder(
+			    LayoutInflater.from(parent.getContext()).inflate(viewItemId, parent, false));
     }
 
     @Override
     public void onBindViewHolder(final SettingsAdapter.ViewHolder holder, final int position) {
-        holder.linearLayout.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                onItemClick(holder.textViewHead.getText().toString(), position);
-                mListener.onClick(v);
-            }
-        });
-        if(     (holder.textViewTitle == null)
-                        &&
-                (holder.textViewHead != null))
-        {
-            holder.textViewHead.setText(settingsItems.get(position).getHead());
-        }else if((holder.textViewTitle != null)
-                        &&
-                (holder.textViewHead != null))
-        {
-            holder.textViewTitle.setText(settingsItems.get(position).getTitle());
-            holder.textViewHead.setText(settingsItems.get(position).getHead());
-            holder.textViewSubHead_1.setText(settingsItems.get(position).getSubHead1());
-        }else if((holder.textViewTitle != null)
-                        &&
-                (holder.textViewHead == null))
-        {
-            holder.textViewTitle.setText(settingsItems.get(position).getTitle());
+	    holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+			    onItemClick(holder.textViewHead.getText().toString(), position);
+			    mListener.onClick(v);
+		    }
+	    });
 
-            String message = (String) holder.textViewTitle.getText();
-            String[] messageValues = message.split(" ");
-            if(messageValues[0].equalsIgnoreCase("Adjustable"))
-                message = messageValues[1];
-            holder.textViewWarningMessage.setText("You currently don’t have a " + message.toLowerCase() + " set up");
-            holder.setUpDeviceButton.setText("Set up " + message);
-        }
+	    if(viewType == R.layout.settings_version){
+		    holder.textViewVersion.setText(settingsItems.get(position).getHead());
+	    }else holder.textViewHead.setText(settingsItems.get(position).getHead());
     }
 
-    @Override
+
+	@Override
     public int getItemViewType(int position) {
-        SettingsListItem item = settingsItems.get(position);
-        if(item.isTextRow() == true && item.getSubHead1() == null)
-            return R.layout.item_devices_disconnected;
-        else if(item.isTextRow() == true && item.getSubHead1() != null)
-            return R.layout.item_devices_connected;
-        else return R.layout.item_settings;
+		SettingsListItem item = settingsItems.get(position);
+		if(item.isTextRow())  return R.layout.settings_version;
+		return R.layout.item_settings;
     }
 
     @Override
@@ -109,24 +89,15 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView textViewHead;
-        public TextView textViewSubHead_1;
-
-        public TextView textViewTitle;
-        public TextView textViewWarningMessage;
-        public Button setUpDeviceButton;
-
+	    public TextView textViewVersion;
+	    public TextView textViewHead;
         LinearLayout linearLayout;
+
         public ViewHolder(View itemView) {
             super(itemView);
-
             textViewHead = (TextView) itemView.findViewById(R.id.head);
-            linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
-
+	        textViewVersion = (TextView) itemView.findViewById(R.id.settings_version);
+	        linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
         }
     }
-
-
-
-
 }

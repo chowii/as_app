@@ -1,5 +1,7 @@
 package au.com.ahbeard.sleepsense.fragments.settings;
 
+import android.view.View;
+
 /**
  * Created by sabbib on 9/03/2017.
  */
@@ -36,5 +38,6 @@ class DeviceListItem {
     public void setConnected(boolean isConnected) { this.isConnected = isConnected; }
 
     public interface DeviceAdapterOnItemOnClickListener {
+        void onItemClick(View view);
     }
 }
