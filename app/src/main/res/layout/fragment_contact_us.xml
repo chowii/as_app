@@ -53,7 +53,7 @@
                    android:textAlignment="center"
                    android:paddingTop="20dp"
 
-                   style="@style/SettingsText"
+                   style="@style/SettingsText.GrayedOut"
                    />
 
                <au.com.ahbeard.sleepsense.widgets.SSButton
@@ -87,7 +87,7 @@
                    android:paddingTop="20dp"
                    android:text="@string/contact_us_find_out_description_text"
 
-                   style="@style/SettingsText"
+                   style="@style/SettingsText.GrayedOut"
                    />
 
                <au.com.ahbeard.sleepsense.widgets.SSButton

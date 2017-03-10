@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/device_linear_layout_disconnected"
     android:layout_width="match_parent"
-    android:layout_height="226dp"
+    android:layout_height="236dp"
     android:orientation="vertical"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
@@ -13,11 +13,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/settings_background_button"
         android:orientation="vertical"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp"
 
-        android:background="@drawable/settings_background_button">
+        android:paddingRight="20dp">
 
         <au.com.ahbeard.sleepsense.widgets.SSTextView
             android:id="@+id/device_title"
@@ -26,7 +26,10 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:layout_marginTop="20dp"
-            tools:text="Mattress" />
+
+            android:layout_marginLeft="10dp"
+            tools:text="Mattress"
+            />
 
         <!--Item Head-->
         <au.com.ahbeard.sleepsense.widgets.SSTextView
@@ -35,16 +38,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingEnd="20dp"
-            android:text="@string/device_signal_unavailable" />
+
+            android:layout_marginLeft="10dp"
+            android:text="@string/device_signal_unavailable"
+            />
 
         <au.com.ahbeard.sleepsense.widgets.SSButton
-            android:id="@+id/set_up_device"
-            style="@style/SettingsButton"
+            android:id="@+id/set_up_device_button"
+            style="@style/SettingsButton.Blue"
 
-            android:layout_marginBottom="35dp"
+            android:layout_marginBottom="45dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="40dp"
-            tools:text="Set up sleep tracker" />
+            android:layout_marginTop="30dp"
+            tools:text="Set up sleep tracker"
+            android:layout_marginLeft="10dp"
+            />
     </LinearLayout>
 </LinearLayout>
 

@@ -19,12 +19,14 @@
         android:text="Mattress"
         android:textColor="#3C709C"
         android:textSize="15sp"
-        app:typeface="OpenSansSemiBold"/>
+        app:typeface="OpenSansSemiBold"
+        />
 
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        />
 
     <au.com.ahbeard.sleepsense.widgets.StyledTextView
         android:id="@+id/more_text_view_detail"

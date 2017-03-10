@@ -119,33 +119,10 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
         LinearLayout linearLayout;
         public ViewHolder(View itemView) {
             super(itemView);
-            if(
-                    (itemView.findViewById(R.id.device_title) == null)
-                            &&
-                            (itemView.findViewById(R.id.head) != null))
-            {
-                textViewHead = (TextView) itemView.findViewById(R.id.head);
-                linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
-            }
-            else if(
-                    ((itemView.findViewById(R.id.device_subhead_1) != null)
-                                        &&
-                    (itemView.findViewById(R.id.device_title) != null)))
-            {
-                linearLayout = (LinearLayout) itemView.findViewById(R.id.device_linear_layout);
-                textViewTitle = (TextView) itemView.findViewById(R.id.device_title);
-                textViewHead = (TextView) itemView.findViewById(R.id.device_subhead_1);
-                textViewSubHead_1 = (TextView) itemView.findViewById(R.id.device_subhead_2);
 
-            }else if((itemView.findViewById(R.id.device_title) != null)
-                                        &&
-                    (itemView.findViewById(R.id.device_subhead_1) == null))
-            {
-                linearLayout = (LinearLayout) itemView.findViewById(R.id.device_linear_layout_disconnected);
-                textViewTitle = (TextView) itemView.findViewById(R.id.device_title);
-                textViewWarningMessage = (TextView) itemView.findViewById(R.id.devices_warning_message);
-                setUpDeviceButton = (Button) itemView.findViewById(R.id.set_up_device);
-            }
+            textViewHead = (TextView) itemView.findViewById(R.id.head);
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayout);
+
         }
     }
 

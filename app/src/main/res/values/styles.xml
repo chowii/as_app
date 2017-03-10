@@ -180,6 +180,16 @@
         <item name="android:textColor">@color/settings_background_item_text</item>
     </style>
 
+    <style name="SettingsText.GrayedOut">
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/settings_text_greyed_out</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="SettingsText.ResetDevice">
+        <item name="android:textAlignment">center</item>
+    </style>
+
     <style name="SettingsText.WeightedText">
         <item name="android:layout_weight">2</item>
     </style>
@@ -211,6 +221,7 @@
     </style>
 
     <style name="SettingsText.Row.NoBackground">
+        <item name="android:layout_height">match_parent</item>
         <item name="android:background">@null</item>
         <item name="android:paddingBottom">0dp</item>
     </style>
@@ -231,6 +242,11 @@
         <item name="android:textColor">#FFF</item>
         <item name="android:background">@drawable/contact_us_button</item>
         <item name="font">AvertaBold</item>>
+    </style>
+
+    <style name="SettingsButton.Blue">
+        <item name="android:background">@drawable/settings_button_blue</item>
+
     </style>
 
 

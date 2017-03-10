@@ -142,23 +142,24 @@ class SettingsFragmentFactory {
         return sendFeedbackFragment;
     }
 
-    static SettingsListFragment createDeviceFragment(final SettingsBaseFragment baseFragment){
-        SettingsListFragment deviceFragment = new SettingsListFragment();
+    static DeviceListFragment createDeviceFragment(final SettingsBaseFragment baseFragment){
+        DeviceListFragment deviceFragment = new DeviceListFragment();
 
-        List<SettingsListItem> deviceItemList = new ArrayList<>();
+        List<DeviceListItem> deviceItemList = new ArrayList<>();
 
-        deviceItemList.add(new SettingsListItem("Mattress", "Strong", "Today 12:30pm", true));
-        deviceItemList.add(new SettingsListItem("Sleep Tracker", null, null, true));
-        deviceItemList.add(new SettingsListItem("Adjustable Base", null, null, true));
+        deviceItemList.add(new DeviceListItem("Mattress", "Strong", "Today 12:30pm", true, false));
+        deviceItemList.add(new DeviceListItem("Sleep Tracker", null, null, false, false));
+        deviceItemList.add(new DeviceListItem("Adjustable Base", null, null, false, false));
+        deviceItemList.add(new DeviceListItem("Reset Device", null, null, false, true));
 
-        deviceFragment.configure(
+        deviceFragment.configureDevice(
                 baseFragment,
                 R.string.settings_device_title,                               /* Fragment Title   */
                 R.layout.fragment_device,                /* Fragment Layout  */
                 R.id.device_txt,                         /* RecyclerView     */
                 R.layout.item_devices_connected,         /* Item TextView    */
                 deviceItemList,
-                new SettingsListFragment.SettingsAdapterOnItemClickListener() {
+                new DeviceListFragment.DeviceAdapterOnItemClickListener() {
                     @Override
                     public void onItemClick(String buttonTitle, int position) {
                         //TODO handle clickListeners
@@ -182,7 +183,7 @@ class SettingsFragmentFactory {
 
         frag.configure(
                 baseFragment,
-                R.string.settings_more_title,   /* Fragment Title   */
+                R.string.settings_more_title,                         /* Fragment Title   */
                 R.layout.fragment_settings,     /* Fragment Layout  */
                 R.id.settings_txt,              /* RecyclerView     */
                 R.layout.item_settings,         /* Item TextView    */
@@ -192,7 +193,7 @@ class SettingsFragmentFactory {
             public void onItemClick(String s, int position) {
                 switch(s) {
                     case "My Devices":
-                        SettingsListFragment deviceFragment = createDeviceFragment(baseFragment);
+                        DeviceListFragment deviceFragment = createDeviceFragment(baseFragment);
                         baseFragment.replaceFragment(deviceFragment);
                         break;
                     case "My Profile":
