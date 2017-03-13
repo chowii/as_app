@@ -7,10 +7,7 @@ import com.beddit.sensor.SensorManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import au.com.ahbeard.sleepsense.SleepSenseApplication;
 import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
@@ -18,20 +15,16 @@ import au.com.ahbeard.sleepsense.bluetooth.bleService.SleepsenseScanningFilter;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 import au.com.ahbeard.sleepsense.hardware.BedHardware;
-import au.com.ahbeard.sleepsense.hardware.PumpHardware;
+import au.com.ahbeard.sleepsense.hardware.pump.PumpHardware;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.services.log.SSLog;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 /**
