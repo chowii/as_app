@@ -1,5 +1,7 @@
 package au.com.ahbeard.sleepsense.coordinator.onboardingFlow
 
+import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
+
 /**
  * Created by luisramos on 8/03/2017.
  */
@@ -12,11 +14,12 @@ abstract class OnboardingFlow {
         return screenOrder[checkPos]
     }
 
-    fun nextFragmentType(type: OnboardingFragmentType) : OnboardingFragmentType {
+    open fun nextFragmentType(type: OnboardingFragmentType, state: OnboardingState?) : OnboardingFragmentType {
         return typeForPos(screenOrder.indexOf(type) + 1)
     }
 
     fun prevFragmentType(type: OnboardingFragmentType) : OnboardingFragmentType {
         return typeForPos(screenOrder.indexOf(type) - 1)
     }
+
 }

@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.coordinator.onboardingFlow.OnboardingFlow
 import au.com.ahbeard.sleepsense.coordinator.onboardingFlow.OnboardingFragmentType
+import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingBaseFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.base.PickBaseOnboardingFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress.PickMattressOnboardingFragment
@@ -43,7 +44,9 @@ class OnboardingCoordinator(
     fun presentNextOnboardingFragment() {
         if (!canPopBackStack()) return
 
-        currFragmentType = flow.nextFragmentType(currFragmentType)
+        val state = (currFragment as? OnboardingBaseFragment)?.state
+
+        currFragmentType = flow.nextFragmentType(currFragmentType, state)
         transitionToFragment(factory(currFragmentType))
     }
 
