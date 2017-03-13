@@ -88,13 +88,13 @@ abstract class OnboardingQuestionsFragment(coordinator: OnboardingCoordinator) :
                     R.string.onboarding_error_title_pump_cant_connect, R.string.onboarding_error_desc_pump_cant_connect)
             is OnboardingErrorTrackerNotFound -> showErrorOverlay(
                     R.string.onboarding_error_title_tracker_not_found, R.string.onboarding_error_desc_tracker_not_found)
-            is OnboardingErrorTrackerNotFoundTwo -> showErrorOverlay(
+            is OnboardingErrorTrackerOnlyFoundOne -> showErrorOverlay(
                     R.string.onboarding_error_title_tracker_not_found_two, R.string.onboarding_error_desc_tracker_not_found_two)
             is OnboardingErrorTrackerLostConnection -> showErrorOverlay(
                     R.string.onboarding_error_title_tracker_lost_connection, R.string.onboarding_error_desc_tracker_lost_connection)
             is OnboardingErrorBaseNotFound -> showErrorOverlay(
                     R.string.onboarding_error_title_base_not_found, R.string.onboarding_error_desc_base_not_found)
-            is OnboardingErrorBaseNotFoundTwo -> showErrorOverlay(
+            is OnboardingErrorBaseOnlyFoundOne -> showErrorOverlay(
                     R.string.onboarding_error_title_base_not_found_two, R.string.onboarding_error_desc_base_not_found_two)
         }
     }

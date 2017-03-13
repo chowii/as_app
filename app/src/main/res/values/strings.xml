@@ -220,6 +220,7 @@
     <string name="connected">Connected!</string>
 
     <string name="onboarding_connecting_mattress">Connecting with your\nmattress pump</string>
+    <string name="onboarding_connecting_base">Connecting with your\nbase</string>
     <string name="onboarding_debug_picker_title">Pick a starting place!</string>
     <string name="debug_pick_mattress">Pick Mattress</string>
     <string name="onboarding_which_side_of_the_pump">Which side of the pump did\nyou plug the air hose into?</string>
