@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/settings_button_shadow_no_bottom_no_top" />
+    <!--Add background shadow -->
     <item>
         <shape android:shape="rectangle" >
-            <solid android:color="@color/settings_background_item"/>
+            <corners android:radius="5dp"/>
+            <solid android:color="@color/settings_button_blue_background"/>
         </shape>
     </item>
 </layer-list>

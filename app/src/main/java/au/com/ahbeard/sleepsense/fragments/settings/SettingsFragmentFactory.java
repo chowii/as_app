@@ -1,9 +1,20 @@
 package au.com.ahbeard.sleepsense.fragments.settings;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import au.com.ahbeard.sleepsense.BuildConfig;
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.activities.NewOnBoardActivity;
+import au.com.ahbeard.sleepsense.activities.PreferenceActivity;
+import au.com.ahbeard.sleepsense.services.AnalyticsService;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 
 /**
  * Created by sabbib on 6/03/2017.
@@ -19,19 +30,19 @@ class SettingsFragmentFactory {
         profileList.add(new SettingsListItem("Age"));
         profileList.add(new SettingsListItem("Gender"));
 
-        SettingsListFragment frag = new SettingsListFragment();
+        SettingsListFragment frag = new MyProfileSettingsFragment();
 
 
         frag.configure(baseFragment,
-                R.string.settings_profile_title, /* Fragment Title  */
-                R.layout.fragment_settings,    /* Fragment Layout */
-                R.id.settings_txt,             /* RecyclerView    */
-                R.layout.item_my_profile,        /* Item TextView   */
+                R.string.settings_profile_title,    /* Fragment Title  */
+                R.layout.fragment_settings,         /* Fragment Layout */
+                R.id.settings_txt,                  /* RecyclerView    */
+                R.layout.item_my_profile,           /* Item TextView   */
                 profileList,
                 new SettingsListFragment.SettingsAdapterOnItemClickListener() {
-                @Override
-                public void onItemClick(String buttonTitle, int position) {
-                    //TODO complete profile item clicklistener
+                    @Override
+                    public void onItemClick(String buttonTitle, int position) {
+                        //TODO complete profile item clicklistener
                     }
                 });
         return frag;
@@ -142,26 +153,42 @@ class SettingsFragmentFactory {
         return sendFeedbackFragment;
     }
 
-    static SettingsListFragment createDeviceFragment(final SettingsBaseFragment baseFragment){
-        SettingsListFragment deviceFragment = new SettingsListFragment();
+    static DeviceListFragment createDeviceFragment(final SettingsBaseFragment baseFragment){
+        final DeviceListFragment deviceFragment = new DeviceListFragment();
 
-        List<SettingsListItem> deviceItemList = new ArrayList<>();
+        final List<DeviceListItem> deviceItemList = new ArrayList<>();
 
-        deviceItemList.add(new SettingsListItem("Mattress", "Strong", "Today 12:30pm", true));
-        deviceItemList.add(new SettingsListItem("Sleep Tracker", null, null, true));
-        deviceItemList.add(new SettingsListItem("Adjustable Base", null, null, true));
+        deviceItemList.add(new DeviceListItem("Mattress", "Strong", "Today 12:30pm", true, false));
+        deviceItemList.add(new DeviceListItem("Sleep Tracker", null, null, false, false));
+        deviceItemList.add(new DeviceListItem("Adjustable Base", null, null, false, false));
+        deviceItemList.add(new DeviceListItem("Reset Device", null, null, false, true));
 
-        deviceFragment.configure(
+        deviceFragment.configureDevice(
                 baseFragment,
                 R.string.settings_device_title,                               /* Fragment Title   */
                 R.layout.fragment_device,                /* Fragment Layout  */
                 R.id.device_txt,                         /* RecyclerView     */
                 R.layout.item_devices_connected,         /* Item TextView    */
                 deviceItemList,
-                new SettingsListFragment.SettingsAdapterOnItemClickListener() {
+                new DeviceListFragment.DeviceAdapterOnItemClickListener() {
                     @Override
-                    public void onItemClick(String buttonTitle, int position) {
-                        //TODO handle clickListeners
+                    public void onItemClick(View view) {
+                        /**
+                         * TODO: 9/03/2017
+                         * add logic to set up device
+                         */
+                        if (view.getId() == R.id.device_reset_layout) {
+                            AnalyticsService.instance().logPreferencesResetApp();
+                            deviceFragment.resetDevices(view);
+                        }else{
+                            Button setUpButton = (Button) view.findViewById(R.id.set_up_device_button);
+	                        String setUpButtonText = setUpButton.getText().toString();
+                            if(setUpButton != null && setUpButtonText.contains("base")) {
+                                new AlertDialog.Builder(view.getContext()).setTitle("Devices").setMessage("Set up Adjustable Base clicked").show();
+                            }else if(setUpButton != null && setUpButtonText.contains("tracker")){
+                                new AlertDialog.Builder(view.getContext()).setTitle("Devices").setMessage("Set up Sleep Tracker clicked").show();
+                            }
+                        }
                     }
                 }
         );
@@ -178,39 +205,39 @@ class SettingsFragmentFactory {
         settingsList.add(new SettingsListItem("Six Week Sleep Challenge"));
         settingsList.add(new SettingsListItem("Privacy Policy"));
         settingsList.add(new SettingsListItem("Terms of Service"));
-        settingsList.add(new SettingsListItem("Version"));
+        settingsList.add(new SettingsListItem("SleepSense " + BuildConfig.VERSION_NAME, true));
 
         frag.configure(
                 baseFragment,
-                R.string.settings_more_title,   /* Fragment Title   */
+                R.string.settings_more_title,                         /* Fragment Title   */
                 R.layout.fragment_settings,     /* Fragment Layout  */
                 R.id.settings_txt,              /* RecyclerView     */
                 R.layout.item_settings,         /* Item TextView    */
                 settingsList,
                 new SettingsListFragment.SettingsAdapterOnItemClickListener() {
-            @Override
-            public void onItemClick(String s, int position) {
-                switch(s) {
-                    case "My Devices":
-                        SettingsListFragment deviceFragment = createDeviceFragment(baseFragment);
-                        baseFragment.replaceFragment(deviceFragment);
-                        break;
-                    case "My Profile":
-                        SettingsListFragment myProfileFrag = createMyProfileFragment(baseFragment);
-                        baseFragment.replaceFragment(myProfileFrag);
-                        break;
-                    case "Support":
-                        SettingsListFragment supportFragment = createSupportFragment(baseFragment);
-                        baseFragment.replaceFragment(supportFragment);
-                        break;
-                    case "Six Week Sleep Challenge":
-                    case "Privacy Policy":
-                    case "Terms of Service":
-                        baseFragment.replaceFragment(createWebViewFragment(s));
-                        break;
-                }
-            }
-        });
+                    @Override
+                    public void onItemClick(String s, int position) {
+                        switch(s) {
+                            case "My Devices":
+                                DeviceListFragment deviceFragment = createDeviceFragment(baseFragment);
+                                baseFragment.replaceFragment(deviceFragment);
+                                break;
+                            case "My Profile":
+                                SettingsListFragment myProfileFrag = createMyProfileFragment(baseFragment);
+                                baseFragment.replaceFragment(myProfileFrag);
+                                break;
+                            case "Support":
+                                SettingsListFragment supportFragment = createSupportFragment(baseFragment);
+                                baseFragment.replaceFragment(supportFragment);
+                                break;
+                            case "Six Week Sleep Challenge":
+                            case "Privacy Policy":
+                            case "Terms of Service":
+                                baseFragment.replaceFragment(createWebViewFragment(s));
+                                break;
+                        }
+                    }
+                });
 
         return frag;
     }

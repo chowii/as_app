@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/device_linear_layout"
+    android:id="@+id/device_connected_layout"
     android:layout_width="match_parent"
-    android:layout_height="190dp"
+    android:layout_height="201dp"
     android:orientation="vertical"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
@@ -15,10 +15,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-
         android:background="@drawable/settings_background_button"
-        >
+
+        android:orientation="vertical"
+        android:paddingBottom="20dp">
+
         <au.com.ahbeard.sleepsense.widgets.SSTextView
             android:id="@+id/device_title"
             style="@style/SettingsTitle"
@@ -26,42 +27,30 @@
             android:layout_height="wrap_content"
 
             android:paddingBottom="30dp"
-            android:paddingTop="20dp"
             android:paddingLeft="20dp"
+            android:paddingTop="20dp"
 
-            tools:text="Mattress"
-            />
+            tools:text="Mattress" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:paddingBottom="10dp"
             android:orientation="horizontal"
-            android:paddingLeft="20dp"
-            >
+            android:paddingLeft="20dp">
 
 
             <!--Item Head-->
             <au.com.ahbeard.sleepsense.widgets.SSTextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_weight="2"
-                android:text="@string/device_signal_strength"
-
-                style="@style/SettingsText"
-                />
+                style="@style/SettingsText.WeightedText"
+                android:text="@string/device_signal_strength" />
 
             <!--Item Subhead-->
             <au.com.ahbeard.sleepsense.widgets.SSTextView
-                android:id="@+id/device_subhead_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="30dp"
-                tools:text="Strong"
-                android:gravity="right"
+                android:id="@+id/device_head"
                 style="@style/SettingsText.Blue"
-                />
+                android:paddingRight="30dp"
+                tools:text="Strong" />
 
         </LinearLayout>
 
@@ -69,11 +58,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingRight="30dp"
-            android:paddingLeft="20dp"
-
             android:orientation="horizontal"
-            android:paddingBottom="20dp">
+            android:paddingBottom="20dp"
+
+            android:paddingLeft="20dp"
+            android:paddingRight="30dp">
 
             <!--Item Head-->
             <au.com.ahbeard.sleepsense.widgets.SSTextView
@@ -81,30 +70,26 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="@string/device_last_seen_title"
 
-                />
+                android:text="@string/device_last_seen_title" />
             <!--Item Subhead-->
             <au.com.ahbeard.sleepsense.widgets.SSTextView
-                android:id="@+id/device_subhead_2"
+                android:id="@+id/device_subhead"
                 style="@style/SettingsText.Blue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Today 12:30pm"
-
-                />
+                tools:text="Today 12:30pm" />
 
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:paddingBottom="12dp"
-            android:background="@color/dark_divider" />
+            android:background="@color/dark_divider"
+            android:paddingBottom="12dp" />
 
         <au.com.ahbeard.sleepsense.widgets.SSTextView
-            android:id="@+id/SSTextView"
+            android:id="@+id/reconnect_device_button"
             style="@style/SettingsText.Row.NoBackground"
+            android:paddingTop="5dp"
             android:text="@string/device_connect_again_button"
             />
     </LinearLayout>
