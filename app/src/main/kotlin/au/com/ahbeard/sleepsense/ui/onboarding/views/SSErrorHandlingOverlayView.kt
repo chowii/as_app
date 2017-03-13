@@ -32,6 +32,7 @@ class SSErrorHandlingOverlayView : SSBaseOverlayView {
 
         tryAgainButton.setOnClickListener {
             SSLog.d("====> TRY AGAIN")
+            animateExit()
         }
         helpMeButton.setOnClickListener {
             SSLog.d("====> HELP ME")
