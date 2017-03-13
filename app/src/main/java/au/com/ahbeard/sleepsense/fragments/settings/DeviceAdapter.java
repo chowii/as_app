@@ -51,6 +51,12 @@ class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder>
             holder.textViewTitle.setText(deviceItems.get(position).getTitle());
             holder.textViewHead.setText(deviceItems.get(position).getHead());
             holder.textViewSubHead.setText(deviceItems.get(position).getSubHead());
+            holder.reConnectDeviceButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    listener.onClick(v);
+                }
+            });
         }else if(viewType == R.layout.item_devices_disconnected){
             holder.textViewTitle.setText(deviceItems.get(position).getTitle());
             String message = holder.textViewTitle.getText().toString();
@@ -83,8 +89,6 @@ class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder>
         return message.toLowerCase();
     }
 
-    public List<DeviceListItem> getDeviceItems(){ return deviceItems; }
-
     public void onItemClick(View v){
         this.view = v;
     }
@@ -112,7 +116,7 @@ class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder>
         public TextView textViewSubHead;
         public TextView textViewWarningMessage;
         public Button setUpDeviceButton;
-        public Button reConnectDeviceButton;
+        public TextView reConnectDeviceButton;
 
 
         public ViewHolder(View itemView) {
@@ -129,7 +133,7 @@ class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder>
                 linearLayout = (LinearLayout) itemView.findViewById(R.id.device_connected_layout);
                 textViewTitle = (TextView) itemView.findViewById(R.id.device_title);
                 textViewSubHead = (TextView) itemView.findViewById(R.id.device_subhead);
-                reConnectDeviceButton = (Button) itemView.findViewById(R.id.set_up_device_button);
+                reConnectDeviceButton = (TextView) itemView.findViewById(R.id.reconnect_device_button);
             }
         }
     }
