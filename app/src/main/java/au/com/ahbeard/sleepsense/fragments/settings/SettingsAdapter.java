@@ -26,7 +26,6 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
     String button;
     int position;
     int viewItemId;
-	private int viewType;
 
 	public List<SettingsListItem> getSettingsItem(){ return settingsItems; }
     public int getPosition() { return position; }
@@ -40,13 +39,8 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-	    this.viewType = viewType;
-	    if(viewType == R.layout.item_settings)
-		    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_settings, parent, false));
-	    else if(viewType == R.layout.settings_version)
-		    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.settings_version, parent, false));
 	    return new ViewHolder(
-			    LayoutInflater.from(parent.getContext()).inflate(viewItemId, parent, false));
+			    LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
     }
 
     @Override
@@ -58,10 +52,9 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 			    mListener.onClick(v);
 		    }
 	    });
-
-	    if(viewType == R.layout.settings_version){
+	    if(getItemViewType(position) == R.layout.settings_version)
 		    holder.textViewVersion.setText(settingsItems.get(position).getHead());
-	    }else holder.textViewHead.setText(settingsItems.get(position).getHead());
+	    else holder.textViewHead.setText(settingsItems.get(position).getHead());
     }
 
 
@@ -88,7 +81,6 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-
 	    public TextView textViewVersion;
 	    public TextView textViewHead;
         LinearLayout linearLayout;
