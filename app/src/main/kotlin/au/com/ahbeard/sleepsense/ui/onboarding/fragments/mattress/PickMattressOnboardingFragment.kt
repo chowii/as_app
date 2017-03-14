@@ -95,9 +95,7 @@ class PickMattressOnboardingFragment(coordinator: OnboardingCoordinator) : Onboa
                         }
                 }
                 .subscribe({
-
                     state.selectedPump = it
-
                     connecting = false
                     onboardingActivity.hideLoading({
                         presentNextOnboardingFragment()
@@ -105,7 +103,7 @@ class PickMattressOnboardingFragment(coordinator: OnboardingCoordinator) : Onboa
                 }, { error ->
                     SSLog.e("Error finding pump")
                     connecting = false
-                    onboardingActivity.hideLoading {
+                    onboardingActivity.hideLoadingWhenAnError {
                         handleError(error)
                     }
                 })
