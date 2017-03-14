@@ -8,12 +8,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 import kotterknife.bindView
 
 /**
  * Created by luisramos on 30/01/2017.
  */
-open class OnboardingDescFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
+open class OnboardingDescFragment(listener: OnboardingFragmentListener) : OnboardingBaseFragment(listener) {
 
     val imageView: ImageView by bindView(R.id.imageView)
     val descTextView: TextView by bindView(R.id.descTextView)

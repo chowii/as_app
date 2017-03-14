@@ -8,13 +8,14 @@ import au.com.ahbeard.sleepsense.hardware.bedBase.BedBaseHardware
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingErrorBaseNotFound
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingErrorBaseOnlyFoundOne
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.Observable
 
 /**
  * Created by luisramos on 24/01/2017.
  */
-class PickBaseOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingQuestionsFragment(coordinator) {
+class PickBaseOnboardingFragment(listener: OnboardingFragmentListener) : OnboardingQuestionsFragment(listener) {
 
     private var connecting = false
 
@@ -27,7 +28,10 @@ class PickBaseOnboardingFragment(coordinator: OnboardingCoordinator) : Onboardin
     }
 
     override fun didSelectOption(index: Int) {
-        scanForBases()
+        when (index) {
+            0 -> scanForBases() //Yes
+            else -> presentNextOnboardingFragment()
+        }
     }
 
     fun scanForBases() {

@@ -33,7 +33,7 @@ class DefaultOnboardingFlow : OnboardingFlow() {
     )
 
     override fun getFirstFragmentType(): OnboardingFragmentType {
-        return OnboardingFragmentType.PICK_TRACKER
+        return OnboardingFragmentType.SLEEP_TARGET_SELECT
     }
 
     override fun nextFragmentType(type: OnboardingFragmentType, state: OnboardingState?): OnboardingFragmentType {

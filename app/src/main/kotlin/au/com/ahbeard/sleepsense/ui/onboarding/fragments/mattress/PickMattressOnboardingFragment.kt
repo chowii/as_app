@@ -11,6 +11,7 @@ import au.com.ahbeard.sleepsense.hardware.pump.PumpHardware
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingErrorPumpCantConnect
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingErrorPumpNotFound
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 import au.com.ahbeard.sleepsense.ui.onboarding.views.SSNotSureOverlayView
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.Observable
@@ -18,7 +19,7 @@ import io.reactivex.Observable
 /**
 * Created by luisramos on 23/01/2017.
 */
-class PickMattressOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingQuestionsFragment(coordinator) {
+class PickMattressOnboardingFragment(listener: OnboardingFragmentListener) : OnboardingQuestionsFragment(listener) {
 
     var connecting = false
 
@@ -106,7 +107,7 @@ class PickMattressOnboardingFragment(coordinator: OnboardingCoordinator) : Onboa
                 }
                 .flatMap {
                     it.connect().toObservable()
-                            .onErrorResumeNext { error: Throwable ->
+                            .onErrorResumeNext { _: Throwable ->
                                 Observable.error<PumpHardware> { OnboardingErrorPumpCantConnect() }
                             }
                 }

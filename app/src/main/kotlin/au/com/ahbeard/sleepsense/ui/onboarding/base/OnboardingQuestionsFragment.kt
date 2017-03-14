@@ -24,7 +24,7 @@ import kotterknife.bindView
 /**
  * Created by luisramos on 23/01/2017.
  */
-abstract class OnboardingQuestionsFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
+abstract class OnboardingQuestionsFragment(listener: OnboardingFragmentListener) : OnboardingBaseFragment(listener) {
 
     class QuestionViewModel(val title: String, val isTextButton: Boolean) {
         constructor(title: String) : this(title, false)

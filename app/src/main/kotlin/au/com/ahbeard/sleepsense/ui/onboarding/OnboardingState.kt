@@ -21,6 +21,6 @@ data class OnboardingState(
         var weightInKg: Int? = null,
         var isMale: Boolean? = null,
         var age: Int? = null,
-        var sleepTarget: Int = 0,
-        var numberOfPeopleInBed: Int = 1
+        var sleepTarget: Int? = null,
+        var numberOfPeopleInBed: Int? = null
 )

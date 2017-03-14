@@ -4,11 +4,12 @@ import android.os.Bundle
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingDescFragment
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 
 /**
  * Created by luisramos on 16/02/2017.
  */
-class TrackerDescSecondOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingDescFragment(coordinator) {
+class TrackerDescSecondOnboardingFragment(listener: OnboardingFragmentListener) : OnboardingDescFragment(listener) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

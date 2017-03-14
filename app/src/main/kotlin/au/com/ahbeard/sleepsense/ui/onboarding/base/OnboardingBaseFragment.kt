@@ -16,6 +16,7 @@ import au.com.ahbeard.sleepsense.ui.onboarding.MainOnboardingActivity
 import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
 import au.com.ahbeard.sleepsense.ui.onboarding.animations.OnboardingTransitionAnimatable
 import au.com.ahbeard.sleepsense.ui.onboarding.animations.OnboardingTransitionAnimator
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 import au.com.ahbeard.sleepsense.ui.onboarding.views.SSBaseOverlayView
 import kotterknife.bindOptionalView
 
@@ -24,7 +25,7 @@ import kotterknife.bindOptionalView
 */
 
 abstract class OnboardingBaseFragment(
-        val coordinator: OnboardingCoordinator
+        internal val listener: OnboardingFragmentListener
 ) :
         BaseFragment(), OnboardingTransitionAnimatable
 {
@@ -56,7 +57,7 @@ abstract class OnboardingBaseFragment(
 
         titleRes?.let { titleTextView?.text = getString(it) }
 
-        if (coordinator.canPopBackStack()) {
+        if (listener.shouldShowBackButton(this)) {
             backButton?.animate()?.alpha(1f)?.setDuration(500L)?.start()
         }
         backButton?.setOnClickListener {
@@ -75,16 +76,16 @@ abstract class OnboardingBaseFragment(
     }
 
     open fun presentPreviousOnboardingFragment() {
-        coordinator.presentPreviousOnboardingFragment()
+        listener.presentPreviousOnboardingFragment()
     }
 
     open fun presentNextOnboardingFragment() {
-        coordinator.presentNextOnboardingFragment()
+        listener.presentNextOnboardingFragment()
     }
 
     // This method exists to enable us to skip screens without saving anything
     open fun skipToNextOnboardingFragment() {
-        coordinator.presentNextOnboardingFragment()
+        listener.presentNextOnboardingFragment()
     }
 
     private fun setGradient() {

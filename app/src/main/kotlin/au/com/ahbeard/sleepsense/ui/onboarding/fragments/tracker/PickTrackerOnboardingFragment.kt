@@ -8,13 +8,14 @@ import au.com.ahbeard.sleepsense.hardware.tracker.TrackerHardware
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingErrorTrackerNotFound
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingErrorTrackerOnlyFoundOne
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.Observable
 
 /**
  * Created by luisramos on 23/01/2017.
  */
-class PickTrackerOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingQuestionsFragment(coordinator) {
+class PickTrackerOnboardingFragment(listener: OnboardingFragmentListener) : OnboardingQuestionsFragment(listener) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +38,8 @@ class PickTrackerOnboardingFragment(coordinator: OnboardingCoordinator) : Onboar
         if (connecting) return
         connecting = true
 
-        onboardingActivity.showLoading(R.string.onboarding_connecting_mattress)
+        onboardingActivity.showLoading(R.string.onboarding_connecting_tracker)
 
-        //FIXME Actually connect to device
         getScanTrackersObservable()
                 .subscribe({
                     state.trackers = it
@@ -54,12 +54,6 @@ class PickTrackerOnboardingFragment(coordinator: OnboardingCoordinator) : Onboar
                         handleError(error)
                     }
                 })
-
-        view?.postDelayed({
-            onboardingActivity.hideLoading({
-                presentNextOnboardingFragment()
-            })
-        }, 2000)
     }
 
     private fun getScanTrackersObservable() : Observable<List<TrackerHardware>> {

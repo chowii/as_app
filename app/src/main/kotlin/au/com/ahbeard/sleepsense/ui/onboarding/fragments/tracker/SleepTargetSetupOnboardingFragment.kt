@@ -7,12 +7,13 @@ import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingPickerBaseFragment
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 import kotterknife.bindView
 
 /**
  * Created by luisramos on 20/02/2017.
  */
-class SleepTargetSetupOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingPickerBaseFragment(coordinator) {
+class SleepTargetSetupOnboardingFragment(listener: OnboardingFragmentListener) : OnboardingPickerBaseFragment(listener) {
 
     private val minSleepTarget = 2
     private val maxSleepTarget = 16
@@ -33,7 +34,7 @@ class SleepTargetSetupOnboardingFragment(coordinator: OnboardingCoordinator) : O
     }
 
     override fun presentNextOnboardingFragment() {
-        state.sleepTarget = getSelectedValue()
+        state.sleepTarget = pickerView.getSelectedValue()
         SSLog.d("SELECTED SLEEP TARGET ${state.sleepTarget}")
         super.presentNextOnboardingFragment()
     }

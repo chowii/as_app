@@ -6,13 +6,12 @@
     tools:background="@drawable/onboarding_debug_gradient"
     >
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <au.com.ahbeard.sleepsense.ui.onboarding.views.SSNumberPickerView
+        android:id="@+id/pickerView"
         android:layout_width="match_parent"
         android:layout_height="170dp"
         android:layout_centerVertical="true"
-        style="@style/OnboardingQuestionsView"
-        />
+        style="@style/OnboardingQuestionsView"/>
 
     <include layout="@layout/onboarding_header" />
 
