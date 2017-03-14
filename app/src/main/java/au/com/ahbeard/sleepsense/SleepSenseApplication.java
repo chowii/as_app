@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import com.crashlytics.android.Crashlytics;
 
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
+import au.com.ahbeard.sleepsense.bluetooth.SSBluetoothManager;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
@@ -63,6 +64,7 @@ public class SleepSenseApplication extends Application {
 
         // Initialize these later.
         BluetoothService.initialize(this);
+        SSBluetoothManager.initialize(this);
         SleepSenseDeviceService.initialize(this);
         SleepService.initialize(this);
         RemoteSleepDataService.initialize(this);

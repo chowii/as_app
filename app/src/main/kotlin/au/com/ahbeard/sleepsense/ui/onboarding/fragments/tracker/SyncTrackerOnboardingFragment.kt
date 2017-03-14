@@ -5,11 +5,12 @@ import android.view.View
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingBaseFragment
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 
 /**
  * Created by luisramos on 16/02/2017.
  */
-class SyncTrackerOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
+class SyncTrackerOnboardingFragment(listener: OnboardingFragmentListener) : OnboardingBaseFragment(listener) {
 
     override fun viewsToAnimate(): List<View> {
         return arrayListOf()

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_marginEnd="20dp"
+    android:layout_marginStart="12dp"
+    android:background="@color/settings_background"
+    android:id="@+id/device_reset_layout"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="@drawable/settings_background_button"
+        android:gravity="center"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_reset_button"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center"
+            android:paddingRight="13dp"
+            />
+
+
+        <au.com.ahbeard.sleepsense.widgets.SSTextView
+            android:id="@+id/SSButton"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center"
+            style="@style/SettingsText.ResetDevice"
+            android:text="Reset All Devices"
+
+            />
+    </LinearLayout>
+
+    <au.com.ahbeard.sleepsense.widgets.SSTextView
+        android:id="@+id/SSTextView"
+        style="@style/SettingsText.GrayedOut"
+        android:layout_height="wrap_content"
+        android:paddingTop="7dp"
+        android:text="You will not lose any sleep data" />
+</LinearLayout>

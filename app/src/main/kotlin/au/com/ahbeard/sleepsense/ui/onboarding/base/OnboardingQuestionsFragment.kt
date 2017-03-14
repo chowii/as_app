@@ -28,7 +28,7 @@ import kotterknife.bindView
 /**
  * Created by luisramos on 23/01/2017.
  */
-abstract class OnboardingQuestionsFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
+abstract class OnboardingQuestionsFragment(listener: OnboardingFragmentListener) : OnboardingBaseFragment(listener) {
 
     class QuestionViewModel(val title: String, val isTextButton: Boolean) {
         constructor(title: String) : this(title, false)
@@ -113,13 +113,13 @@ abstract class OnboardingQuestionsFragment(coordinator: OnboardingCoordinator) :
                     R.string.onboarding_error_title_pump_cant_connect, R.string.onboarding_error_desc_pump_cant_connect)
             is OnboardingErrorTrackerNotFound -> showErrorOverlay(
                     R.string.onboarding_error_title_tracker_not_found, R.string.onboarding_error_desc_tracker_not_found)
-            is OnboardingErrorTrackerNotFoundTwo -> showErrorOverlay(
+            is OnboardingErrorTrackerOnlyFoundOne -> showErrorOverlay(
                     R.string.onboarding_error_title_tracker_not_found_two, R.string.onboarding_error_desc_tracker_not_found_two)
             is OnboardingErrorTrackerLostConnection -> showErrorOverlay(
                     R.string.onboarding_error_title_tracker_lost_connection, R.string.onboarding_error_desc_tracker_lost_connection)
             is OnboardingErrorBaseNotFound -> showErrorOverlay(
                     R.string.onboarding_error_title_base_not_found, R.string.onboarding_error_desc_base_not_found)
-            is OnboardingErrorBaseNotFoundTwo -> showErrorOverlay(
+            is OnboardingErrorBaseOnlyFoundOne -> showErrorOverlay(
                     R.string.onboarding_error_title_base_not_found_two, R.string.onboarding_error_desc_base_not_found_two)
         }
     }

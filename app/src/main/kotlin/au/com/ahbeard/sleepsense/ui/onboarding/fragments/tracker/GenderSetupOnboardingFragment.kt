@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingBaseFragment
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 
 /**
  * Created by luisramos on 1/02/2017.
  */
-class GenderSetupOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
+class GenderSetupOnboardingFragment(listener: OnboardingFragmentListener) : OnboardingBaseFragment(listener) {
 
     override fun viewsToAnimate(): List<View> {
         return arrayListOf()

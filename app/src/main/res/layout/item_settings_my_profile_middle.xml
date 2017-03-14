@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:id="@+id/linearLayout"
+    android:background="@null"
+    android:paddingLeft="@dimen/settings_text_padding_left"
+    android:paddingRight="@dimen/settings_text_padding_right"
+    android:weightSum="1"
+    >
+
+    <au.com.ahbeard.sleepsense.widgets.SSTextView
+        android:id="@+id/head"
+        tools:text="My Profile"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        style="@style/SettingsText.Row"
+        android:background="@drawable/settings_background_button_no_top_no_bottom"
+        android:paddingBottom="0dp"
+        />
+
+    <View
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="@dimen/settings_background_shadow_left_padding"
+        android:layout_marginRight="@dimen/settings_background_shadow_left_padding"
+        android:background="@color/dark_divider" />
+
+</LinearLayout>

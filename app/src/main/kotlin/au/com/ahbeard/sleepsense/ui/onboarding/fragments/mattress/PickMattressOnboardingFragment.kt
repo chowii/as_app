@@ -7,11 +7,11 @@ import android.widget.RelativeLayout
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService
 import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
-import au.com.ahbeard.sleepsense.hardware.PumpHardware
-import au.com.ahbeard.sleepsense.services.log.SSLog
+import au.com.ahbeard.sleepsense.hardware.pump.PumpHardware
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingErrorPumpCantConnect
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingErrorPumpNotFound
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 import au.com.ahbeard.sleepsense.ui.onboarding.views.SSNotSureOverlayView
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.Observable
@@ -19,7 +19,7 @@ import io.reactivex.Observable
 /**
 * Created by luisramos on 23/01/2017.
 */
-class PickMattressOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingQuestionsFragment(coordinator) {
+class PickMattressOnboardingFragment(listener: OnboardingFragmentListener) : OnboardingQuestionsFragment(listener) {
 
     var connecting = false
 
@@ -79,7 +79,23 @@ class PickMattressOnboardingFragment(coordinator: OnboardingCoordinator) : Onboa
         connecting = true
         onboardingActivity.showLoading(R.string.onboarding_connecting_mattress)
 
-        SleepSenseDeviceService.instance().scanPumps()
+        getScanPumpObservable()
+                .subscribe({
+                    state.selectedPump = it
+                    connecting = false
+                    onboardingActivity.hideLoading({
+                        presentNextOnboardingFragment()
+                    })
+                }, { error ->
+                    connecting = false
+                    onboardingActivity.hideLoadingWhenAnError {
+                        handleError(error)
+                    }
+                })
+    }
+
+    private fun getScanPumpObservable() : Observable<PumpHardware> {
+        return SleepSenseDeviceService.instance().scanPumps()
                 .bindToLifecycle(this)
                 .flatMap {
                     if (it.size <= 0) {
@@ -90,23 +106,10 @@ class PickMattressOnboardingFragment(coordinator: OnboardingCoordinator) : Onboa
                 }
                 .flatMap {
                     it.connect().toObservable()
-                        .onErrorResumeNext { error: Throwable ->
-                            Observable.error<PumpHardware> { OnboardingErrorPumpCantConnect() }
-                        }
+                            .onErrorResumeNext { _: Throwable ->
+                                Observable.error<PumpHardware> { OnboardingErrorPumpCantConnect() }
+                            }
                 }
-                .subscribe({
-                    state.selectedPump = it
-                    connecting = false
-                    onboardingActivity.hideLoading({
-                        presentNextOnboardingFragment()
-                    })
-                }, { error ->
-                    SSLog.e("Error finding pump")
-                    connecting = false
-                    onboardingActivity.hideLoadingWhenAnError {
-                        handleError(error)
-                    }
-                })
     }
 
     enum class MattressLine(@IntegerRes val nameRes: Int) {

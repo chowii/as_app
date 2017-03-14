@@ -30,7 +30,7 @@ class MainOnboardingActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (coordinator.canPopBackStack()) {
+        if (supportFragmentManager.backStackEntryCount > 0) {
             coordinator.presentPreviousOnboardingFragment()
         } else {
             super.onBackPressed()
