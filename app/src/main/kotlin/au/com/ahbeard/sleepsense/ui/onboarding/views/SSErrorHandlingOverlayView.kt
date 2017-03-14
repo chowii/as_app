@@ -13,7 +13,7 @@ import kotterknife.bindView
 /**
  * Created by luisramos on 24/02/2017.
  */
-class SSErrorHandlingOverlayView : SSBaseOverlayView {
+class SSErrorHandlingOverlayView : SSBaseOverlayView  {
 
     val tryAgainButton: Button by bindView(R.id.tryAgainButton)
     val helpMeButton: Button by bindView(R.id.helpMeButton)
@@ -36,9 +36,24 @@ class SSErrorHandlingOverlayView : SSBaseOverlayView {
         }
         helpMeButton.setOnClickListener {
             SSLog.d("====> HELP ME")
+            animateExit()
+            onTroubleshootingClickListener?.onTroubleshootingClick()
         }
         setUpButton.setOnClickListener {
             SSLog.d("====> SET UP")
+            animateExit()
+            onSetupLaterClickListener?.onSetUpLaterClick()
         }
     }
+
+    interface OnSetupLaterClickListener {
+        fun onSetUpLaterClick()
+    }
+    var onSetupLaterClickListener: OnSetupLaterClickListener? = null
+
+    interface OnTroubleshootingClickListener {
+        fun onTroubleshootingClick()
+    }
+    var onTroubleshootingClickListener: OnTroubleshootingClickListener? = null
+
 }
