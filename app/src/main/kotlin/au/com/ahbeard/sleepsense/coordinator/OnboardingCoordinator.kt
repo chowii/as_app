@@ -25,6 +25,10 @@ class OnboardingCoordinator(
     val currFragment : Fragment
         get() = fragmentManager.fragments[fragmentManager.backStackEntryCount]
 
+    init {
+        currFragmentType = flow.getFirstFragmentType()
+    }
+
     fun startOnboarding() {
         val fragment = factory(currFragmentType)
         fragmentManager.beginTransaction()
@@ -37,13 +41,13 @@ class OnboardingCoordinator(
     }
 
     fun presentPreviousOnboardingFragment() {
+        if (!canPopBackStack()) return
+
         fragmentManager.popBackStack()
         currFragmentType = flow.prevFragmentType(currFragmentType)
     }
 
     fun presentNextOnboardingFragment() {
-        if (!canPopBackStack()) return
-
         val state = (currFragment as? OnboardingBaseFragment)?.state
 
         currFragmentType = flow.nextFragmentType(currFragmentType, state)

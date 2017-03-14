@@ -14,6 +14,8 @@ abstract class OnboardingFlow {
         return screenOrder[checkPos]
     }
 
+    abstract fun getFirstFragmentType() : OnboardingFragmentType
+
     open fun nextFragmentType(type: OnboardingFragmentType, state: OnboardingState?) : OnboardingFragmentType {
         return typeForPos(screenOrder.indexOf(type) + 1)
     }

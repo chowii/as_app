@@ -75,7 +75,7 @@ abstract class OnboardingBaseFragment(
     }
 
     open fun presentPreviousOnboardingFragment() {
-        coordinator.presentNextOnboardingFragment()
+        coordinator.presentPreviousOnboardingFragment()
     }
 
     open fun presentNextOnboardingFragment() {

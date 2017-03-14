@@ -32,6 +32,10 @@ class DefaultOnboardingFlow : OnboardingFlow() {
             OnboardingFragmentType.ALL_DONE
     )
 
+    override fun getFirstFragmentType(): OnboardingFragmentType {
+        return OnboardingFragmentType.PICK_TRACKER
+    }
+
     override fun nextFragmentType(type: OnboardingFragmentType, state: OnboardingState?): OnboardingFragmentType {
         if (state != null) {
             when (type) {
