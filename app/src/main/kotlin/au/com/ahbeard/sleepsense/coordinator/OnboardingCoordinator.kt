@@ -5,7 +5,9 @@ import android.support.v4.app.FragmentManager
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.coordinator.onboardingFlow.OnboardingFlow
 import au.com.ahbeard.sleepsense.coordinator.onboardingFlow.OnboardingFragmentType
+import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingBaseFragment
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.base.PickBaseOnboardingFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress.PickMattressOnboardingFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress.PickPumpSideOnboardingFragment
@@ -14,15 +16,19 @@ import au.com.ahbeard.sleepsense.ui.onboarding.fragments.tracker.*
 /**
  * Created by luisramos on 8/03/2017.
  */
-class OnboardingCoordinator(
+open class OnboardingCoordinator(
         val fragmentManager: FragmentManager,
         val flow: OnboardingFlow
-) {
-
-    private var currFragmentType = OnboardingFragmentType.PICK_MATTRESS
+) : OnboardingFragmentListener {
 
     val currFragment : Fragment
-        get() = fragmentManager.fragments[fragmentManager.backStackEntryCount]
+        get() = fragmentManager.fragments[fragmentManager.backStackEntryCount - 1]
+
+    private var currFragmentType: OnboardingFragmentType
+
+    init {
+        currFragmentType = flow.getFirstFragmentType()
+    }
 
     fun startOnboarding() {
         val fragment = factory(currFragmentType)
@@ -31,19 +37,21 @@ class OnboardingCoordinator(
                 .commit()
     }
 
-    fun canPopBackStack() : Boolean {
+    override fun shouldShowBackButton(fragment: OnboardingBaseFragment): Boolean {
         return fragmentManager.backStackEntryCount > 0
     }
 
-    fun presentPreviousOnboardingFragment() {
+    override fun presentPreviousOnboardingFragment() {
+        if (fragmentManager.backStackEntryCount <= 0) return
+
         fragmentManager.popBackStack()
         currFragmentType = flow.prevFragmentType(currFragmentType)
     }
 
-    fun presentNextOnboardingFragment() {
-        if (!canPopBackStack()) return
+    override fun presentNextOnboardingFragment() {
+        val state = (currFragment as? OnboardingBaseFragment)?.state
 
-        currFragmentType = flow.nextFragmentType(currFragmentType)
+        currFragmentType = flow.nextFragmentType(currFragmentType, state)
         transitionToFragment(factory(currFragmentType))
     }
 
