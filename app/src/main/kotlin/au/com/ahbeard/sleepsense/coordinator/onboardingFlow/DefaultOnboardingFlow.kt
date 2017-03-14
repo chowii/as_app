@@ -8,9 +8,9 @@ import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
 class DefaultOnboardingFlow : OnboardingFlow() {
 
     override var screenOrder: List<OnboardingFragmentType> = arrayListOf(
-            OnboardingFragmentType.DEBUG_PICKER,
-            OnboardingFragmentType.APP_TOUR,
-            OnboardingFragmentType.READY_TO_START,
+//            OnboardingFragmentType.DEBUG_PICKER,
+//            OnboardingFragmentType.APP_TOUR,
+//            OnboardingFragmentType.READY_TO_START,
             OnboardingFragmentType.PICK_MATTRESS,
             OnboardingFragmentType.PICK_PUMP_SIDE,
             OnboardingFragmentType.PICK_TRACKER,
@@ -33,7 +33,7 @@ class DefaultOnboardingFlow : OnboardingFlow() {
     )
 
     override fun getFirstFragmentType(): OnboardingFragmentType {
-        return OnboardingFragmentType.SLEEP_TARGET_SELECT
+        return OnboardingFragmentType.PICK_MATTRESS
     }
 
     override fun nextFragmentType(type: OnboardingFragmentType, state: OnboardingState?): OnboardingFragmentType {

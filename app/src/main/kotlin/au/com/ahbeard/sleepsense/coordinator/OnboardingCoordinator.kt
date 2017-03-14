@@ -22,7 +22,7 @@ open class OnboardingCoordinator(
 ) : OnboardingFragmentListener {
 
     val currFragment : Fragment
-        get() = fragmentManager.fragments[fragmentManager.backStackEntryCount - 1]
+        get() = fragmentManager.fragments[fragmentManager.backStackEntryCount]
 
     private var currFragmentType: OnboardingFragmentType
 
