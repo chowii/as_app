@@ -1,7 +1,10 @@
 package au.com.ahbeard.sleepsense.fragments.settings;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,10 +13,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.nio.Buffer;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import au.com.ahbeard.sleepsense.BuildConfig;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.fragments.BaseFragment;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
+
+import static io.reactivex.BackpressureStrategy.BUFFER;
 
 /**
  * Created by sabbib on 1/03/2017.
@@ -43,7 +58,8 @@ public class SettingsListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {;
         View v = inflater.inflate(layoutName, container, false);
         createSettings(v, viewContainerId);
-        return v;
+	    return v;
+
     }
 
     @Override
@@ -51,6 +67,17 @@ public class SettingsListFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         titleTextView.setText(titleRes);
+	    titleTextView.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+			    String deviceInfo = "MODEL: " + Build.MODEL;
+			    deviceInfo += "\nRELEASE: " + Build.VERSION.RELEASE + "\nSDK_INT: " + Build.VERSION.SDK_INT;
+			    deviceInfo += "\nAPP V_NAME: " + BuildConfig.VERSION_NAME + "\nAPP V_CODE: " + BuildConfig.VERSION_CODE;
+			    deviceInfo += "\nDIR: " +Environment.getExternalStorageDirectory();
+			    new AlertDialog.Builder(getContext()).setTitle("Device Details").setMessage(deviceInfo).show();
+
+		    }
+	    });
     }
 
     protected void createSettings(View v, int settingsText){

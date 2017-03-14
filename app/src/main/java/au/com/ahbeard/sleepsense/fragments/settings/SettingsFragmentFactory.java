@@ -78,7 +78,7 @@ class SettingsFragmentFactory {
                                 break;
                             case "Send Feedback":
                                 SettingsListFragment sendFeedbackFragment = createSendFeedbackFragment(baseFragment);
-                                baseFragment.replaceFragment(sendFeedbackFragment);
+                                baseFragment.replaceFragment(new SendFeedbackFragment());
                                 break;
                             case "Contact Us":
                                 ContactUsFragment contactUsFragment = createContactUsFragment(baseFragment);
@@ -153,23 +153,10 @@ class SettingsFragmentFactory {
         return sendFeedbackFragment;
     }
 
-    static DeviceListFragment createDeviceFragment(final SettingsBaseFragment baseFragment){
+    static DeviceListFragment createDeviceFragment(){
         final DeviceListFragment deviceFragment = new DeviceListFragment();
 
-        final List<DeviceListItem> deviceItemList = new ArrayList<>();
-
-        deviceItemList.add(new DeviceListItem("Mattress", "Strong", "Today 12:30pm", true, false));
-        deviceItemList.add(new DeviceListItem("Sleep Tracker", null, null, false, false));
-        deviceItemList.add(new DeviceListItem("Adjustable Base", null, null, false, false));
-        deviceItemList.add(new DeviceListItem("Reset Device", null, null, false, true));
-
-        deviceFragment.configureDevice(
-                baseFragment,
-                R.string.settings_device_title,                               /* Fragment Title   */
-                R.layout.fragment_device,                /* Fragment Layout  */
-                R.id.device_txt,                         /* RecyclerView     */
-                R.layout.item_devices_connected,         /* Item TextView    */
-                deviceItemList,
+        deviceFragment.setDeviceOnClickListener(
                 new DeviceListFragment.DeviceAdapterOnItemClickListener() {
                     @Override
                     public void onItemClick(View view) {
@@ -207,6 +194,7 @@ class SettingsFragmentFactory {
         settingsList.add(new SettingsListItem("Terms of Service"));
         settingsList.add(new SettingsListItem("SleepSense " + BuildConfig.VERSION_NAME, true));
 
+
         frag.configure(
                 baseFragment,
                 R.string.settings_more_title,                         /* Fragment Title   */
@@ -219,7 +207,7 @@ class SettingsFragmentFactory {
                     public void onItemClick(String s, int position) {
                         switch(s) {
                             case "My Devices":
-                                DeviceListFragment deviceFragment = createDeviceFragment(baseFragment);
+                                DeviceListFragment deviceFragment = createDeviceFragment();
                                 baseFragment.replaceFragment(deviceFragment);
                                 break;
                             case "My Profile":

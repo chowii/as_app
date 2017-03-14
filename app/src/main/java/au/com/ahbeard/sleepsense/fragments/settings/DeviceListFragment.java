@@ -1,6 +1,5 @@
 package au.com.ahbeard.sleepsense.fragments.settings;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,12 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import au.com.ahbeard.sleepsense.R;
-import au.com.ahbeard.sleepsense.activities.NewOnBoardActivity;
-import au.com.ahbeard.sleepsense.activities.PreferenceActivity;
 import au.com.ahbeard.sleepsense.fragments.BaseFragment;
+import au.com.ahbeard.sleepsense.services.PreferenceService;
+import au.com.ahbeard.sleepsense.services.log.SSLog;
 import au.com.ahbeard.sleepsense.ui.onboarding.MainOnboardingActivity;
 
 /**
@@ -29,7 +29,6 @@ import au.com.ahbeard.sleepsense.ui.onboarding.MainOnboardingActivity;
 public class DeviceListFragment extends BaseFragment{
 
 
-    protected SettingsBaseFragment mBaseFragment;
     private int titleRes;
     private int layoutName;
     private int viewContainerId;
@@ -43,18 +42,20 @@ public class DeviceListFragment extends BaseFragment{
 
     public DeviceListFragment()
     { // TODO: 10/03/2017 add reset button to list in constructor and edit configureDevices().method to add list then changing reference to param list
+	    configureDevice();
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_device, container, false);
+        View view = inflater.inflate(layoutName, container, false);
         createDeviceViews(view, viewContainerId);
         return view;
     }
 
     private void createDeviceViews(View view, int viewContainerId) {
-        deviceView = (RecyclerView) view.findViewById(R.id.device_txt);
+        deviceView = (RecyclerView) view.findViewById(viewContainerId);
         deviceView.setHasFixedSize(true);
         deviceView.setLayoutManager(new LinearLayoutManager(getActivity()));
         deviceAdapter = new DeviceAdapter(deviceList, getActivity(), viewItemId);
@@ -74,22 +75,72 @@ public class DeviceListFragment extends BaseFragment{
         titleTextView.setText(titleRes);
     }
 
-    public void configureDevice(SettingsBaseFragment baseFragment, int titleRes, int layoutId, int viewContainerId,
-                                int viewItemId, List<DeviceListItem> deviceItems, DeviceAdapterOnItemClickListener itemClicked){
-        this.mBaseFragment = baseFragment;
-        this.titleRes = titleRes;                /* Fragment Title   */
-        this.layoutName = layoutId;              /* Fragment Layout  */
-        this.viewContainerId = viewContainerId;  /* RecyclerView     */
-        this.viewItemId = viewItemId;            /* Item TextView    */
-        this.deviceList = deviceItems;
-        deviceButtonClickListener = itemClicked;
+    public void setDeviceOnClickListener(DeviceAdapterOnItemClickListener itemClicked){
+        this.deviceButtonClickListener = itemClicked;
     }
 
-	/***
+    public void configureDevice(){
+        this.titleRes = R.string.settings_device_title;                /* Fragment Title   */
+        this.layoutName = R.layout.fragment_device;                    /* Fragment Layout  */
+        this.viewContainerId = R.id.device_txt;                        /* RecyclerView     */
+        this.viewItemId = R.layout.item_devices_connected;             /* Item TextView    */
+        this.deviceList = populateDevices();
+    }
+
+
+    private List<DeviceListItem> populateDevices(){
+        final List<DeviceListItem> deviceItemList = new ArrayList<>();
+
+        String[] deviceList = new String[3];
+        deviceList[0] = PreferenceService.instance().getPumpDeviceAddress();    //Mattress
+        deviceList[1] = PreferenceService.instance().getBaseDeviceAddress();    //Adjustable Base
+        deviceList[2] = PreferenceService.instance().getTrackerDeviceAddress(); //Sleep Tracker
+
+
+	    if(deviceList[0] != null)
+	    	deviceItemList.add(new DeviceListItem("Mattress", deviceList[0], deviceList[0], getDeviceStatus(deviceList[0]), false));
+	    else
+		    deviceItemList.add(new DeviceListItem("Mattress", null, null, getDeviceStatus(deviceList[0]), false));
+
+	    if(deviceList[1] != null)
+		    deviceItemList.add(new DeviceListItem("Adjustable Tracker", deviceList[1], deviceList[1], getDeviceStatus(deviceList[1]), false));
+	    else deviceItemList.add(new DeviceListItem("Adjustable Tracker", null, null, getDeviceStatus(deviceList[1]), false));
+
+	    if(deviceList[1] != null)
+	    	deviceItemList.add(new DeviceListItem("Sleep Tracker", deviceList[2], deviceList[2], getDeviceStatus(deviceList[2]), false));
+		else deviceItemList.add(new DeviceListItem("Sleep Tracker", null, null, getDeviceStatus(deviceList[2]), false));
+
+        deviceItemList.add(new DeviceListItem("Reset Device", null, null, false, true));
+
+//	    deviceItemList.add(new DeviceListItem("Mattress", getDeviceConnectionData(), getDeviceConnectionData(), getDeviceStatus(deviceList), false));
+//	    deviceItemList.add(new DeviceListItem("Adjustable Tracker", getDeviceConnectionData(), getDeviceConnectionData(), getDeviceStatus(deviceList), false));
+//	    deviceItemList.add(new DeviceListItem("Sleep Tracker", getDeviceConnectionData(), getDeviceConnectionData(), getDeviceStatus(deviceList), false));
+
+
+	    return deviceItemList;
+    }
+
+	private String[] getDeviceConnectionData(String... connectedDevice){
+		// TODO: 13/03/2017 get device connection info from Device Address and return connection values
+		return connectedDevice;
+    }
+
+
+    private boolean getDeviceStatus(String deviceAddress){
+        if(deviceAddress == null) {
+            getDeviceConnectionData(deviceAddress);
+            return false;
+        }
+        else{
+            getDeviceConnectionData(deviceAddress);
+            return true;
+        }
+    }
+
+    /***
 	 * Disconnects connections with all devices, and Navigates activity to connect with all activities
 	 * @param view
 	 */
-
 	public void resetDevices(final View view){
         new AlertDialog.Builder(view.getContext())
                 .setPositiveButton(view.getResources().getString(R.string.preference_dialog_yes),
