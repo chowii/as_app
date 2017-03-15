@@ -50,7 +50,7 @@ class PickTrackerOnboardingFragment(listener: OnboardingFragmentListener) : Onbo
                     })
                 }, { error ->
                     connecting = false
-                    onboardingActivity.hideLoading {
+                    onboardingActivity.hideLoadingWhenAnError {
                         handleError(error)
                     }
                 })

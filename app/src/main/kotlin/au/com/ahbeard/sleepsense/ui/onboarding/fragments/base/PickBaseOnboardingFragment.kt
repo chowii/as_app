@@ -57,7 +57,7 @@ class PickBaseOnboardingFragment(listener: OnboardingFragmentListener) : Onboard
                     })
                 }, { error ->
                     connecting = false
-                    onboardingActivity.hideLoading {
+                    onboardingActivity.hideLoadingWhenAnError {
                         handleError(error)
                     }
                 })

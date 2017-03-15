@@ -81,15 +81,29 @@ abstract class OnboardingQuestionsFragment(listener: OnboardingFragmentListener)
         }
 
         errorOverlayView?.onTroubleshootingClickListener =   object : SSErrorHandlingOverlayView.OnTroubleshootingClickListener{
-            override fun onTroubleshootingClick() {
-                showTroubleshootingPage()
+            override fun onTroubleshootingClick(errorTitle: String) {
+                showTroubleshootingPage(errorTitle)
             }
         }
     }
 
-    fun showTroubleshootingPage() {
+    fun showTroubleshootingPage(errorTitle: String ) {
         val customerInfoFragment = CustomerInformationFragment()
-        customerInfoFragment.configure("file:///android_asset/pumpHelp.html")
+        val troubleShootingUrl: String?
+        if(errorTitle.equals(getString(R.string.onboarding_error_title_pump_not_found))
+                || errorTitle.equals(getString(R.string.onboarding_error_title_pump_cant_connect))){
+            troubleShootingUrl  =   "file:///android_asset/pumpHelp.html";
+        }
+        else if(errorTitle.equals(getString(R.string.onboarding_error_title_tracker_not_found))
+                || errorTitle.equals(getString(R.string.onboarding_error_title_tracker_not_found_two))
+                || errorTitle.equals(getString(R.string.onboarding_error_title_tracker_lost_connection))
+                     ){
+            troubleShootingUrl  =   "file:///android_asset/trackerHelp.html";
+        }
+        else {
+            troubleShootingUrl  =   "file:///android_asset/baseHelp.html";
+        }
+        customerInfoFragment.configure(troubleShootingUrl)
         fragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
                 .add(R.id.fragmentContainer, customerInfoFragment)
