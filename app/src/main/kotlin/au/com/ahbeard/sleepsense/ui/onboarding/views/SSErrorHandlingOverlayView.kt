@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.services.log.SSLog
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.ErrorHandlingViewListener
 import kotterknife.bindView
 
 /**
@@ -39,23 +40,15 @@ class SSErrorHandlingOverlayView : SSBaseOverlayView  {
         helpMeButton.setOnClickListener {
             SSLog.d("====> HELP ME ")
             animateExit()
-            onTroubleshootingClickListener?.onTroubleshootingClick(titleTextView?.text.toString())
+            onErrorHandlingClickListener?.onTroubleshootingClick(titleTextView?.text.toString())
         }
         setUpButton.setOnClickListener {
             SSLog.d("====> SET UP")
             animateExit()
-            onSetupLaterClickListener?.onSetUpLaterClick()
+            onErrorHandlingClickListener?.onSetUpLaterClick()
         }
     }
 
-    interface OnSetupLaterClickListener {
-        fun onSetUpLaterClick()
-    }
-    var onSetupLaterClickListener: OnSetupLaterClickListener? = null
-
-    interface OnTroubleshootingClickListener {
-        fun onTroubleshootingClick(errorTitle: String)
-    }
-    var onTroubleshootingClickListener: OnTroubleshootingClickListener? = null
+    var onErrorHandlingClickListener: ErrorHandlingViewListener? = null
 
 }

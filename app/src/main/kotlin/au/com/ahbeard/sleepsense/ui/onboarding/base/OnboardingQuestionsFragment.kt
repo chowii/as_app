@@ -74,15 +74,16 @@ abstract class OnboardingQuestionsFragment(listener: OnboardingFragmentListener)
             }
         }
 
-        errorOverlayView?.onSetupLaterClickListener   = object  : SSErrorHandlingOverlayView.OnSetupLaterClickListener {
+        errorOverlayView?.onErrorHandlingClickListener   = object  : ErrorHandlingViewListener {
             override fun onSetUpLaterClick() {
                 skipToNextOnboardingFragment()
             }
-        }
 
-        errorOverlayView?.onTroubleshootingClickListener =   object : SSErrorHandlingOverlayView.OnTroubleshootingClickListener{
             override fun onTroubleshootingClick(errorTitle: String) {
                 showTroubleshootingPage(errorTitle)
+            }
+
+            override fun onTryAgainClick() {
             }
         }
     }
