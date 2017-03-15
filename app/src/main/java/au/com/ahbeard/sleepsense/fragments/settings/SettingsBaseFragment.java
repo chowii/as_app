@@ -27,12 +27,12 @@ public class SettingsBaseFragment extends BaseFragment {
     }
 
     public void replaceFragment(Fragment newFrag) {
-        getChildFragmentManager().beginTransaction().replace(R.id.container_settings_base, newFrag).addToBackStack("child-fragments").commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.fragmentContainer, newFrag).addToBackStack("child-fragments").commit();
     }
 
     private void showFirstFragment() {
         SettingsListFragment settingsFragment = SettingsFragmentFactory.createSettingsFragment(this);
-        getChildFragmentManager().beginTransaction().add(R.id.container_settings_base, settingsFragment).addToBackStack("first-fragment").commit();
+        getChildFragmentManager().beginTransaction().add(R.id.fragmentContainer, settingsFragment).addToBackStack("first-fragment").commit();
 
     }
 }

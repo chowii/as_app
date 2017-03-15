@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
-
     <application
         android:name=".SleepSenseApplication"
         android:allowBackup="true"
@@ -41,13 +40,12 @@
 
         <activity
             android:name=".ui.onboarding.MainOnboardingActivity"
-            android:screenOrientation="userPortrait">
-        </activity>
-
+            android:screenOrientation="userPortrait" />
+        <activity android:name=".activities.HomeActivity"
+            android:screenOrientation="userPortrait" />
         <activity
             android:name=".activities.MattressSizeActivity"
-            android:screenOrientation="userPortrait">
-        </activity>
+            android:screenOrientation="userPortrait"/>
         <activity
             android:name=".activities.ConnectingPumpActivity"
             android:screenOrientation="userPortrait" />
@@ -84,6 +82,25 @@
         <activity
             android:name=".activities.SetupCompletedActivity"
             android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activities.SleepTrackingActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activities.HelpActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activities.PreferenceActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activities.DebugActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activities.ContactUsActivity"
+            android:screenOrientation="userPortrait" />
+
 
     </application>
 

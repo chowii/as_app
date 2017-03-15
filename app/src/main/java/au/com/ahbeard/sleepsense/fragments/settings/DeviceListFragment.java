@@ -87,7 +87,6 @@ public class DeviceListFragment extends BaseFragment{
         this.deviceList = populateDevices();
     }
 
-
     private List<DeviceListItem> populateDevices(){
         final List<DeviceListItem> deviceItemList = new ArrayList<>();
 
@@ -112,6 +111,7 @@ public class DeviceListFragment extends BaseFragment{
 
         deviceItemList.add(new DeviceListItem("Reset Device", null, null, false, true));
 
+      
 //	    deviceItemList.add(new DeviceListItem("Mattress", getDeviceConnectionData(), getDeviceConnectionData(), getDeviceStatus(deviceList), false));
 //	    deviceItemList.add(new DeviceListItem("Adjustable Tracker", getDeviceConnectionData(), getDeviceConnectionData(), getDeviceStatus(deviceList), false));
 //	    deviceItemList.add(new DeviceListItem("Sleep Tracker", getDeviceConnectionData(), getDeviceConnectionData(), getDeviceStatus(deviceList), false));

@@ -50,7 +50,7 @@ abstract class SSBaseOverlayView : FrameLayout {
         View.inflate(context, getResLayoutId(), blueContainerView)
 
         //intercep all events
-        backgroundFadeView.setOnTouchListener { view, motionEvent -> true }
+        backgroundFadeView.setOnTouchListener { _, _ -> true }
     }
 
     fun animateEntry(viewToBlur: View) {

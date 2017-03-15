@@ -8,7 +8,7 @@ import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
 /**
  * Created by luisramos on 30/01/2017.
  */
-class DebugPickerOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingQuestionsFragment(coordinator) {
+class DebugPickerOnboardingFragment(listener: OnboardingFragmentListener) : OnboardingQuestionsFragment(listener) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -2,6 +2,9 @@ package au.com.ahbeard.sleepsense.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.BoolRes;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 
 /**
  * Created by neal on 4/03/2016.
@@ -9,6 +12,23 @@ import android.content.SharedPreferences;
 public class PreferenceService {
 
     private static PreferenceService sPreferenceService;
+
+    private static final String HAS_RECORDED_FIRST_SLEEP = "hasRecordedFirstSleep";
+    private static final String PUMP_DEVICE_ADDRESS = "pumpDeviceAddress";
+    private static final String BASE_DEVICE_ADDRESS = "baseDeviceAddress";
+    private static final String TRACKER_DEVICE_ADDRESS = "trackerDeviceAddress";
+    private static final String TRACKER_DEVICE_NAME = "trackerDeviceName";
+    private static final String ALT_TRACKER_DEVICE_ADDRESS = "altTrackerDeviceAddress";
+    private static final String ALT_TRACKER_DEVICE_NAME = "altTrackerDeviceName";
+    private static final String SLEEP_TARGET_TIME = "sleepTargetTime";
+    private static final String SIDE_OF_BED = "sideOfBed";
+    private static final String PROFILE_SEX = "profile_sex";
+    private static final String PROFILE_AGE = "profile_age";
+    private static final String PROFILE_EMAIL = "profile_emailAddress";
+    private static final String USER_WEIGHT = "userWeight";
+    private static final String USER_HEIGHT = "userHeight";
+    private static final String PEOPLE_IN_BED = "peopleInBed";
+    private static final String MATTRESS_LINE = "mattressLine";
 
     public static void initialize(Context context) {
         sPreferenceService = new PreferenceService(context);
@@ -28,126 +48,164 @@ public class PreferenceService {
         return getPumpDeviceAddress()==null&&getBaseDeviceAddress()==null&&getTrackerDeviceAddress()==null;
     }
 
-    public void setHasRecordedASleep(boolean hasRecordedFirstSleep) {
-        getSharedPreferences().edit().putBoolean("hasRecordedFirstSleep", hasRecordedFirstSleep).commit();
+    void setHasRecordedASleep(boolean hasRecordedFirstSleep) {
+        putBoolean(HAS_RECORDED_FIRST_SLEEP, hasRecordedFirstSleep);
     }
 
     public boolean getHasRecordedASleep() {
-        return getSharedPreferences().getBoolean("hasRecordedFirstSleep",false);
+        return getBoolean(HAS_RECORDED_FIRST_SLEEP,false);
     }
 
     public void setPumpDeviceAddress(String address) {
-        getSharedPreferences().edit().putString("pumpDeviceAddress", address).commit();
+        putString(PUMP_DEVICE_ADDRESS, address);
     }
 
     public String getPumpDeviceAddress() {
-        return getSharedPreferences().getString("pumpDeviceAddress",null);
+        return getString(PUMP_DEVICE_ADDRESS,null);
     }
 
     public void clearPumpDeviceAddress() {
-        getSharedPreferences().edit().remove("pumpDeviceAddress").commit();
+        remove(PUMP_DEVICE_ADDRESS);
     }
 
     public void setBaseDeviceAddress(String address) {
-        getSharedPreferences().edit().putString("baseDeviceAddress", address).commit();
+        putString(BASE_DEVICE_ADDRESS, address);
     }
 
     public String getBaseDeviceAddress() {
-        return getSharedPreferences().getString("baseDeviceAddress",null);
+        return getString(BASE_DEVICE_ADDRESS,null);
     }
 
     public void clearBaseDeviceAddress() {
-        getSharedPreferences().edit().remove("baseDeviceAddress").commit();
+        remove(BASE_DEVICE_ADDRESS);
     }
 
     public void setTrackerDeviceAddress(String address) {
-        getSharedPreferences().edit().putString("trackerDeviceAddress", address).commit();
+        putString(TRACKER_DEVICE_ADDRESS, address);
     }
 
     public String getTrackerDeviceAddress() {
-        return getSharedPreferences().getString("trackerDeviceAddress",null);
+        return getString(TRACKER_DEVICE_ADDRESS,null);
     }
 
     public void clearTrackerDeviceAddress() {
-        getSharedPreferences().edit().remove("trackerDeviceAddress").commit();
+        remove(TRACKER_DEVICE_ADDRESS);
     }
 
     public void setTrackerDeviceName(String address) {
-        getSharedPreferences().edit().putString("trackerDeviceName", address).commit();
+        putString(TRACKER_DEVICE_NAME, address);
     }
 
     public String getTrackerDeviceName() {
-        return getSharedPreferences().getString("trackerDeviceName",null);
+        return getString(TRACKER_DEVICE_NAME,null);
     }
 
     public void clearTrackerDeviceName() {
-        getSharedPreferences().edit().remove("trackerDeviceName").commit();
+        remove(TRACKER_DEVICE_NAME);
     }
 
     public void setAltTrackerDeviceAddress(String address) {
-        getSharedPreferences().edit().putString("altTrackerDeviceAddress", address).commit();
+        putString(ALT_TRACKER_DEVICE_ADDRESS, address);
     }
 
     public String getAltTrackerDeviceAddress() {
-        return getSharedPreferences().getString("altTrackerDeviceAddress",null);
+        return getString(ALT_TRACKER_DEVICE_ADDRESS,null);
     }
 
     public void clearAltTrackerDeviceAddress() {
-        getSharedPreferences().edit().remove("altTrackerDeviceAddress").commit();
+        remove(ALT_TRACKER_DEVICE_ADDRESS);
     }
 
     public void setAltTrackerDeviceName(String address) {
-        getSharedPreferences().edit().putString("altTrackerDeviceName", address).commit();
+        putString(ALT_TRACKER_DEVICE_NAME, address);
     }
 
     public String getAltTrackerDeviceName() {
-        return getSharedPreferences().getString("altTrackerDeviceName",null);
+        return getString(ALT_TRACKER_DEVICE_NAME,null);
     }
 
     public void clearAltTrackerDeviceName() {
-        getSharedPreferences().edit().remove("altTrackerDeviceName").commit();
+        remove(ALT_TRACKER_DEVICE_NAME);
     }
 
     public float getSleepTargetTime() {
-        return getSharedPreferences().getFloat("sleepTargetTime",8.0f);
+        return getFloat(SLEEP_TARGET_TIME,8.0f);
     }
 
     public void setSleepTargetTime(float sleepTargetTime) {
         AnalyticsService.instance().setSleepGoal(sleepTargetTime);
-        getSharedPreferences().edit().putFloat("sleepTargetTime",sleepTargetTime).commit();
+        putFloat(SLEEP_TARGET_TIME,sleepTargetTime);
     }
 
     public String getSideOfBed() {
-        return getSharedPreferences().getString("sideOfBed","LEFT");
+        return getString(SIDE_OF_BED,"LEFT");
     }
 
     public void setSideOfBed(String sideOfBed) {
-        getSharedPreferences().edit().putString("sideOfBed",sideOfBed).commit();
+        putString(SIDE_OF_BED, sideOfBed);
     }
 
     public void setProfile(String sex, Integer age, String emailAddress) {
-
         AnalyticsService.instance().setProfile(sex,age,emailAddress);
 
-        SharedPreferences.Editor edit = getSharedPreferences().edit();
+        setProfileSex(sex);
+        setProfileAge("" + age);
+        putString(PROFILE_EMAIL, emailAddress);
+    }
 
-        edit.putString("profile_sex", sex);
-        edit.putString("profile_age", age.toString());
-        edit.putString("profile_emailAddress", emailAddress);
+    public void setProfileSex(String sex) {
+        putString(PROFILE_SEX, sex);
+    }
 
-        edit.commit();
+    public void setProfileAge(String age) {
+        putString(PROFILE_AGE, age);
     }
 
     public String getProfileSex() {
-        return getSharedPreferences().getString("profile_sex",null);
+        return getString(PROFILE_SEX,null);
     }
 
     public String getProfileAge() {
-        return getSharedPreferences().getString("profile_age",null);
+        return getString(PROFILE_AGE,null);
     }
 
     public String getProfileEmailAddress() {
-        return getSharedPreferences().getString("profile_emailAddress",null);
+        return getString(PROFILE_EMAIL,null);
+    }
+
+    public void setUserWeight(Integer weight) {
+        putInt(USER_WEIGHT, weight == null ? -1 : weight);
+    }
+
+    public Integer getUserWeight() {
+        int value = getInt(USER_WEIGHT, -1);
+        return value == -1 ? null : value;
+    }
+
+    public void setUserHeight(Integer height) {
+        putInt(USER_HEIGHT, height == null ? -1 : height);
+    }
+
+    public Integer getUserHeight() {
+        int value = getInt(USER_HEIGHT, -1);
+        return value == -1 ? null : value;
+    }
+
+    public void setPeopleInBed(Integer value) {
+        putInt(PEOPLE_IN_BED, value);
+    }
+
+    public Integer getPeopleInBed() {
+        return getInt(PEOPLE_IN_BED, 1);
+    }
+
+    public void setMattressLine(int mattressLine) {
+        String s = mContext.getString(mattressLine);
+        putString(MATTRESS_LINE, s);
+    }
+
+    public String getMattressLine() {
+        return getString(MATTRESS_LINE, null);
     }
 
 
@@ -155,6 +213,40 @@ public class PreferenceService {
         return mContext.getSharedPreferences("preferences.dat", Context.MODE_PRIVATE);
     }
 
+    private void remove(String key) {
+        getSharedPreferences().edit().remove(key).apply();
+    }
 
+    private void putString(String key, String value) {
+        getSharedPreferences().edit().putString(key, value).apply();
+    }
+
+    private void putFloat(String key, Float value) {
+        getSharedPreferences().edit().putFloat(key, value).apply();
+    }
+
+    private void putBoolean(String key, Boolean value) {
+        getSharedPreferences().edit().putBoolean(key, value).apply();
+    }
+
+    private void putInt(String key, Integer value) {
+        getSharedPreferences().edit().putInt(key, value).apply();
+    }
+
+    private String getString(String key, String defaultValue) {
+        return getSharedPreferences().getString(key, defaultValue);
+    }
+
+    private Float getFloat(String key, Float defaultValue) {
+        return getSharedPreferences().getFloat(key, defaultValue);
+    }
+
+    private Boolean getBoolean(String key, Boolean defaultValue) {
+        return getSharedPreferences().getBoolean(key, defaultValue);
+    }
+
+    private int getInt(String key, int defaultValue) {
+        return getSharedPreferences().getInt(key, defaultValue);
+    }
 
 }

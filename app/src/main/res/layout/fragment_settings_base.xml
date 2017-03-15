@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="au.com.ahbeard.sleepsense.fragments.settings.SettingsBaseFragment"
-    android:id="@+id/container_settings_base"
+    android:id="@+id/fragmentContainer"
     android:orientation="vertical"
     >
 

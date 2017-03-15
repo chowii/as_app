@@ -9,13 +9,14 @@ import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice
 import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingBaseFragment
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 import au.com.ahbeard.sleepsense.widgets.SSButton
 import kotterknife.bindView
 
 /**
  * Created by luisramos on 30/01/2017.
  */
-class PickPumpSideOnboardingFragment(coordinator: OnboardingCoordinator) : OnboardingBaseFragment(coordinator) {
+class PickPumpSideOnboardingFragment(listener: OnboardingFragmentListener) : OnboardingBaseFragment(listener) {
 
     val imageView: ImageView by bindView(R.id.imageView)
     val leftButton: SSButton by bindView(R.id.leftButton)

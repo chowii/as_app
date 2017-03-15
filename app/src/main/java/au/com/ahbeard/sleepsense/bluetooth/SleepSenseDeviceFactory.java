@@ -12,7 +12,7 @@ import au.com.ahbeard.sleepsense.bluetooth.base.BaseDevice;
 import au.com.ahbeard.sleepsense.bluetooth.pump.PumpDevice;
 import au.com.ahbeard.sleepsense.bluetooth.tracker.TrackerDevice;
 import au.com.ahbeard.sleepsense.hardware.BedHardware;
-import au.com.ahbeard.sleepsense.hardware.PumpHardware;
+import au.com.ahbeard.sleepsense.hardware.pump.PumpHardware;
 
 /**
  * Created by neal on 4/03/2016.

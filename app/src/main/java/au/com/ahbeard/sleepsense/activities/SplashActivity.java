@@ -17,9 +17,9 @@ public class SplashActivity extends AppCompatActivity {
 //        if (PreferenceService.instance().requiresOnBoarding()) {
 //            goToOnboarding();
 //        } else {
-//            goToDashboard();
+            goToDashboard();
 //        }
-        goToDashboard();
+//        goToDashboard();
     }
 
     private void goToDashboard() {
