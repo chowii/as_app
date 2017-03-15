@@ -57,6 +57,8 @@ class PickMattressOnboardingFragment(listener: OnboardingFragmentListener) : Onb
         }
     }
 
+
+
     override fun didSelectOption(index: Int) {
         if (index == data.size - 1) {
             showNotSureOverlay()

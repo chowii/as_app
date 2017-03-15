@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:background="@drawable/onboarding_debug_gradient">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_onboarding" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/content_desc_setup_not_completed"
+        android:src="@drawable/ic_error_on_boarding" />
+
+    <au.com.ahbeard.sleepsense.widgets.SSTextView
+        android:id="@+id/titleTextView"
+        style="@style/OnboardingText.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/onboarding_setup_not_completed" />
+
+    <au.com.ahbeard.sleepsense.widgets.SSButton
+        android:id="@+id/rightButton"
+        style="@style/OnboardingButton"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/onboarding_leading_margin"
+        android:layout_marginTop="80dp"
+        android:text="@string/onboarding_setup_again" />
+</LinearLayout>

@@ -106,5 +106,4 @@ abstract class SSBaseOverlayView : FrameLayout {
         }
         anim.start()
     }
-
 }
