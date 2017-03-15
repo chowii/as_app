@@ -29,7 +29,6 @@ import au.com.ahbeard.sleepsense.ui.onboarding.MainOnboardingActivity;
 public class DeviceListFragment extends BaseFragment{
 
 
-    protected SettingsBaseFragment mBaseFragment;
     private int titleRes;
     private int layoutName;
     private int viewContainerId;
@@ -43,19 +42,20 @@ public class DeviceListFragment extends BaseFragment{
 
     public DeviceListFragment()
     { // TODO: 10/03/2017 add reset button to list in constructor and edit configureDevices().method to add list then changing reference to param list
+	    configureDevice();
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_device, container, false);
-        configureDevice(this.deviceButtonClickListener);
+        View view = inflater.inflate(layoutName, container, false);
         createDeviceViews(view, viewContainerId);
         return view;
     }
 
     private void createDeviceViews(View view, int viewContainerId) {
-        deviceView = (RecyclerView) view.findViewById(R.id.device_txt);
+        deviceView = (RecyclerView) view.findViewById(viewContainerId);
         deviceView.setHasFixedSize(true);
         deviceView.setLayoutManager(new LinearLayoutManager(getActivity()));
         deviceAdapter = new DeviceAdapter(deviceList, getActivity(), viewItemId);
@@ -79,16 +79,13 @@ public class DeviceListFragment extends BaseFragment{
         this.deviceButtonClickListener = itemClicked;
     }
 
-    public void configureDevice(DeviceAdapterOnItemClickListener itemClicked){
-//        this.mBaseFragment = baseFragment;
+    public void configureDevice(){
         this.titleRes = R.string.settings_device_title;                /* Fragment Title   */
-        this.layoutName = R.layout.fragment_device;              /* Fragment Layout  */
-        this.viewContainerId = R.id.device_txt;  /* RecyclerView     */
-        this.viewItemId = R.layout.item_devices_connected;            /* Item TextView    */
+        this.layoutName = R.layout.fragment_device;                    /* Fragment Layout  */
+        this.viewContainerId = R.id.device_txt;                        /* RecyclerView     */
+        this.viewItemId = R.layout.item_devices_connected;             /* Item TextView    */
         this.deviceList = populateDevices();
-        deviceButtonClickListener = itemClicked;
     }
-
 
     private List<DeviceListItem> populateDevices(){
         final List<DeviceListItem> deviceItemList = new ArrayList<>();
@@ -113,7 +110,8 @@ public class DeviceListFragment extends BaseFragment{
 		else deviceItemList.add(new DeviceListItem("Sleep Tracker", null, null, getDeviceStatus(deviceList[2]), false));
 
         deviceItemList.add(new DeviceListItem("Reset Device", null, null, false, true));
-//
+
+      
 //	    deviceItemList.add(new DeviceListItem("Mattress", getDeviceConnectionData(), getDeviceConnectionData(), getDeviceStatus(deviceList), false));
 //	    deviceItemList.add(new DeviceListItem("Adjustable Tracker", getDeviceConnectionData(), getDeviceConnectionData(), getDeviceStatus(deviceList), false));
 //	    deviceItemList.add(new DeviceListItem("Sleep Tracker", getDeviceConnectionData(), getDeviceConnectionData(), getDeviceStatus(deviceList), false));

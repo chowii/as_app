@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+
+
+    <include android:id="@+id/settings_toolbar_header"
+             layout="@layout/settings_toolbar"
+        />
+    <TextView
+        android:id="@+id/cancel_sending_feedback_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        style="@style/SettingsText.Blue"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="11dp"
+        />
+
+
+    <TextView
+        android:id="@+id/send_feedback_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send"
+        style="@style/SettingsText.Blue"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        />
+
+
+
+    <EditText
+        android:id="@+id/email_body"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="Feedback Description"
+        android:gravity="top"
+        android:layout_marginTop="49dp"
+        android:layout_below="@id/settings_toolbar_header"
+        />
+
+</RelativeLayout>
