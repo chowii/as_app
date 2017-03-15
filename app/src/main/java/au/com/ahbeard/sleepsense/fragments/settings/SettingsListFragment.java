@@ -67,17 +67,6 @@ public class SettingsListFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         titleTextView.setText(titleRes);
-	    titleTextView.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View v) {
-			    String deviceInfo = "MODEL: " + Build.MODEL;
-			    deviceInfo += "\nRELEASE: " + Build.VERSION.RELEASE + "\nSDK_INT: " + Build.VERSION.SDK_INT;
-			    deviceInfo += "\nAPP V_NAME: " + BuildConfig.VERSION_NAME + "\nAPP V_CODE: " + BuildConfig.VERSION_CODE;
-			    deviceInfo += "\nDIR: " +Environment.getExternalStorageDirectory();
-			    new AlertDialog.Builder(getContext()).setTitle("Device Details").setMessage(deviceInfo).show();
-
-		    }
-	    });
     }
 
     protected void createSettings(View v, int settingsText){

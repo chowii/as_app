@@ -77,8 +77,7 @@ class SettingsFragmentFactory {
                                 baseFragment.replaceFragment(troubleshootingFragment);
                                 break;
                             case "Send Feedback":
-                                SettingsListFragment sendFeedbackFragment = createSendFeedbackFragment(baseFragment);
-                                baseFragment.replaceFragment(new SendFeedbackFragment());
+                                baseFragment.replaceFragment(SendFeedbackFragment.newInstance());
                                 break;
                             case "Contact Us":
                                 ContactUsFragment contactUsFragment = createContactUsFragment(baseFragment);

@@ -56,8 +56,6 @@ public class SendFeedbackFragment extends Fragment implements View.OnClickListen
         int permissionCheck = ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) sendFeedback();
 
-
-
         TextView sendFeedbackButton = (TextView) v.findViewById(R.id.send_feedback_button);
         TextView cancelFeedbackButton = (TextView) v.findViewById(R.id.cancel_sending_feedback_action);
         sendFeedbackButton.setOnClickListener(this);
@@ -103,5 +101,12 @@ public class SendFeedbackFragment extends Fragment implements View.OnClickListen
         else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1234);
         }
+    }
+
+    public static Fragment newInstance() {
+        SendFeedbackFragment fragment = new SendFeedbackFragment();
+        Bundle agrs = new Bundle();
+        fragment.setArguments(agrs);
+        return fragment;
     }
 }
