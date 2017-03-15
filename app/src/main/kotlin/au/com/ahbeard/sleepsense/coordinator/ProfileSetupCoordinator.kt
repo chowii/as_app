@@ -8,7 +8,6 @@ import au.com.ahbeard.sleepsense.fragments.BaseFragment
 import au.com.ahbeard.sleepsense.services.PreferenceService
 import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingBaseFragment
-import au.com.ahbeard.sleepsense.ui.onboarding.fragments.tracker.SleepTargetSetupOnboardingFragment
 
 /**
  * Created by luisramos on 14/03/2017.
@@ -16,21 +15,15 @@ import au.com.ahbeard.sleepsense.ui.onboarding.fragments.tracker.SleepTargetSetu
 class ProfileSetupCoordinator(fragmentManager: FragmentManager, flow: OnboardingFlow) : OnboardingCoordinator(fragmentManager, flow) {
 
     companion object {
-        @JvmStatic
-        fun newInstance(fragmentManager: FragmentManager, type: OnboardingFragmentType) : BaseFragment {
-            return when (type) {
-                OnboardingFragmentType.SLEEP_TARGET_SELECT -> {
-                    val flow = ProfileSetupFlow(arrayListOf(OnboardingFragmentType.SLEEP_TARGET_SELECT))
-                    val coordinator = ProfileSetupCoordinator(fragmentManager, flow)
-                    SleepTargetSetupOnboardingFragment(coordinator)
-                }
-                else -> {
-                    val flow = ProfileSetupFlow(arrayListOf(OnboardingFragmentType.SLEEP_TARGET_SELECT))
-                    val coordinator = ProfileSetupCoordinator(fragmentManager, flow)
-                    SleepTargetSetupOnboardingFragment(coordinator)
-                }
-            }
+        @JvmStatic fun newInstance(fragmentManager: FragmentManager, type: OnboardingFragmentType) : BaseFragment {
+            val flow = ProfileSetupFlow(arrayListOf(type))
+            val coordinator = ProfileSetupCoordinator(fragmentManager, flow)
+            return coordinator.createFirstFragment()
         }
+    }
+
+    fun createFirstFragment() : BaseFragment {
+        return factory(currFragmentType)
     }
 
     override fun presentNextOnboardingFragment() {

@@ -102,6 +102,7 @@
     <color name="settings_header_text">#49484A</color>
     <color name="settings_header_background">#fff</color>
     <color name="settings_button_blue_background">#2A81FB</color>
+    <color name="settings_text_profile_desc">#9E9B9B</color>
 
 
     <color name="device_fragment_item_text_blue">#2482FF</color>

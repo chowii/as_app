@@ -1,5 +1,6 @@
 package au.com.ahbeard.sleepsense.fragments.settings;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +10,8 @@ import java.util.List;
 
 import au.com.ahbeard.sleepsense.BuildConfig;
 import au.com.ahbeard.sleepsense.R;
+import au.com.ahbeard.sleepsense.coordinator.ProfileSetupCoordinator;
+import au.com.ahbeard.sleepsense.coordinator.onboardingFlow.OnboardingFragmentType;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 
 /**
@@ -16,30 +19,38 @@ import au.com.ahbeard.sleepsense.services.AnalyticsService;
  */
 class SettingsFragmentFactory {
 
-    static SettingsListFragment createMyProfileFragment(SettingsBaseFragment baseFragment){
-        List<SettingsListItem> profileList = new ArrayList<>();
+    static Fragment createMyProfileFragment(final SettingsBaseFragment baseFragment){
+        MyProfileSettingsFragment frag = new MyProfileSettingsFragment();
 
-        profileList.add(new SettingsListItem("Sleep Target"));
-        profileList.add(new SettingsListItem("Weight"));
-        profileList.add(new SettingsListItem("Height"));
-        profileList.add(new SettingsListItem("Age"));
-        profileList.add(new SettingsListItem("Gender"));
+        frag.setOnItemClickListener(new MyProfileSettingsFragment.ItemClickListener() {
+            @Override
+            public void onItemClick(int titleRes) {
+                OnboardingFragmentType type;
+                switch (titleRes) {
+                    case R.string.settings_profile_sleep_target:
+                        type = OnboardingFragmentType.SLEEP_TARGET_SELECT;
+                        break;
+                    case R.string.settings_profile_weight:
+                        type = OnboardingFragmentType.WEIGHT_SELECT;
+                        break;
+                    case R.string.settings_profile_height:
+                        type = OnboardingFragmentType.HEIGHT_SELECT;
+                        break;
+                    case R.string.settings_profile_age:
+                        type = OnboardingFragmentType.AGE_SELECT;
+                        break;
+                    case R.string.settings_profile_gender:
+                        type = OnboardingFragmentType.GENDER_SELECT;
+                        break;
+                    default:
+                        type = OnboardingFragmentType.AGE_SELECT;
+                        break;
+                }
+                Fragment frag = ProfileSetupCoordinator.newInstance(baseFragment.getChildFragmentManager(), type);
+                baseFragment.replaceFragment(frag);
+            }
+        });
 
-        SettingsListFragment frag = new MyProfileSettingsFragment();
-
-
-        frag.configure(baseFragment,
-                R.string.settings_profile_title,    /* Fragment Title  */
-                R.layout.fragment_settings,         /* Fragment Layout */
-                R.id.settings_txt,                  /* RecyclerView    */
-                R.layout.item_my_profile,           /* Item TextView   */
-                profileList,
-                new SettingsListFragment.SettingsAdapterOnItemClickListener() {
-                    @Override
-                    public void onItemClick(String buttonTitle, int position) {
-                        //TODO complete profile item clicklistener
-                    }
-                });
         return frag;
     }
 
@@ -58,7 +69,7 @@ class SettingsFragmentFactory {
         listFragment.configure(baseFragment,
                 R.string.settings_support_title,    /* Fragment Title  */
                 R.layout.fragment_settings,         /* Fragment Layout */
-                R.id.settings_txt,                  /* RecyclerView    */
+                R.id.recyclerView,                  /* RecyclerView    */
                 R.layout.item_settings,             /* Item TextView   */
                 supportList,
                 new SettingsListFragment.SettingsAdapterOnItemClickListener() {
@@ -107,7 +118,7 @@ class SettingsFragmentFactory {
                 baseFragment,
                 R.string.settings_troubleshooting_title,
                 R.layout.fragment_settings,
-                R.id.settings_txt,
+                R.id.recyclerView,
                 R.layout.item_settings,
                 troubleshootingList,
                 new SettingsListFragment.SettingsAdapterOnItemClickListener(){
@@ -133,7 +144,7 @@ class SettingsFragmentFactory {
                 baseFragment,
                 R.string.settings_send_feedback_title,                        /* Fragment Title   */
                 R.layout.fragment_settings,             /* Fragment Layout  */
-                R.id.settings_txt,                      /* RecyclerView     */
+                R.id.recyclerView,                      /* RecyclerView     */
                 R.layout.item_settings,                 /* Item TextView    */
                 sendFeedbackList,
                 new SettingsListFragment.SettingsAdapterOnItemClickListener(){
@@ -193,7 +204,7 @@ class SettingsFragmentFactory {
                 baseFragment,
                 R.string.settings_more_title,                         /* Fragment Title   */
                 R.layout.fragment_settings,     /* Fragment Layout  */
-                R.id.settings_txt,              /* RecyclerView     */
+                R.id.recyclerView,              /* RecyclerView     */
                 R.layout.item_settings,         /* Item TextView    */
                 settingsList,
                 new SettingsListFragment.SettingsAdapterOnItemClickListener() {
@@ -205,7 +216,7 @@ class SettingsFragmentFactory {
                                 baseFragment.replaceFragment(deviceFragment);
                                 break;
                             case "My Profile":
-                                SettingsListFragment myProfileFrag = createMyProfileFragment(baseFragment);
+                                Fragment myProfileFrag = createMyProfileFragment(baseFragment);
                                 baseFragment.replaceFragment(myProfileFrag);
                                 break;
                             case "Support":

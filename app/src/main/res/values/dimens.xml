@@ -41,8 +41,9 @@
     <dimen name="header_bottom_padding">0dp</dimen>
 
     <!--settings dimensions-->
+    <dimen name="settings_row_size">80dp</dimen>
     <dimen name="settings_text_padding_left">20dp</dimen>
-    <dimen name="settings_text_padding_right">12dp</dimen>
+    <dimen name="settings_text_padding_right">20dp</dimen>
     <dimen name="settings_text_padding_regular">10dp</dimen>
     <dimen name="settings_text_padding_large_regular">25dp</dimen>
 

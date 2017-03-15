@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.coordinator.onboardingFlow.OnboardingFlow
 import au.com.ahbeard.sleepsense.coordinator.onboardingFlow.OnboardingFragmentType
-import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingBaseFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.base.PickBaseOnboardingFragment
@@ -24,7 +23,7 @@ open class OnboardingCoordinator(
     val currFragment : Fragment
         get() = fragmentManager.fragments[fragmentManager.backStackEntryCount]
 
-    private var currFragmentType: OnboardingFragmentType
+    protected var currFragmentType: OnboardingFragmentType
 
     init {
         currFragmentType = flow.getFirstFragmentType()
@@ -71,7 +70,7 @@ open class OnboardingCoordinator(
                 .commit()
     }
 
-    private fun factory(type: OnboardingFragmentType) : OnboardingBaseFragment = when (type){
+    protected fun factory(type: OnboardingFragmentType) : OnboardingBaseFragment = when (type){
         OnboardingFragmentType.PICK_MATTRESS -> PickMattressOnboardingFragment(this)
         OnboardingFragmentType.PICK_PUMP_SIDE -> PickPumpSideOnboardingFragment(this)
         OnboardingFragmentType.PICK_TRACKER -> PickTrackerOnboardingFragment(this)
