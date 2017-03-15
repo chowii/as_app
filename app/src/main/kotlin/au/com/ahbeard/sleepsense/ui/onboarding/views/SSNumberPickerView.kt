@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.ui.extensions.getVisibleViews
 import au.com.ahbeard.sleepsense.ui.onboarding.base.RecyclerWithMarginsAdapter
 import kotterknife.bindView
 
@@ -21,9 +22,10 @@ class SSNumberPickerView : RecyclerView {
 
     private var minValue = 3
     private var maxValue = 120
+    private var defaultValue = 36
     var data : List<RowViewModel> = arrayListOf()
 
-    var linearLayoutManager : LinearLayoutManager? = null
+    var linearLayoutManager : LinearLayoutManager = LinearLayoutManager(context)
     var pickerRowAdapter : PickerRowAdapter? = null
     var snapHelper: SnapHelper = LinearSnapHelper()
 
@@ -32,11 +34,6 @@ class SSNumberPickerView : RecyclerView {
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
     init {
-        setup()
-    }
-
-    private fun setup() {
-        linearLayoutManager = LinearLayoutManager(context)
         layoutManager = linearLayoutManager
 
         addOnScrollListener(PickerScrollListener())
@@ -48,9 +45,24 @@ class SSNumberPickerView : RecyclerView {
         }
     }
 
-    fun configure(min: Int, max: Int, format: String) {
+    var shouldCenterOnDefault = true
+    override fun onMeasure(widthSpec: Int, heightSpec: Int) {
+        super.onMeasure(widthSpec, heightSpec)
+
+        val spec = MeasureSpec.getMode(heightSpec)
+
+        if (shouldCenterOnDefault && height != 0) {
+            shouldCenterOnDefault = false
+            val rowHeight = resources.getDimension(R.dimen.onboarding_picker_line_height)
+            val offset = (height / 2) - rowHeight
+            linearLayoutManager.scrollToPositionWithOffset(defaultValue - minValue, offset.toInt())
+        }
+    }
+
+    fun configure(min: Int, max: Int, format: String, defaultValue: Int) {
         minValue = min
         maxValue = max
+        this.defaultValue = defaultValue
         data = (min..max).toList().map { RowViewModel(it, java.lang.String.format(format, it)) }
 
         if (adapter == null) {
@@ -64,10 +76,11 @@ class SSNumberPickerView : RecyclerView {
     }
 
     fun getSelectedValue() : Int {
-        val firstChildPos = linearLayoutManager?.findFirstVisibleItemPosition()
-        val lastChildPos = linearLayoutManager?.findLastVisibleItemPosition()
-        if (firstChildPos != null && lastChildPos != null) {
-            val pos = (lastChildPos - firstChildPos) / 2 + firstChildPos
+        val firstChildPos = linearLayoutManager.findFirstVisibleItemPosition()
+        val lastChildPos = linearLayoutManager.findLastVisibleItemPosition()
+//        if (firstChildPos != null && lastChildPos != null) {
+        val pos = (lastChildPos - firstChildPos) / 2 + firstChildPos
+        if (pos >= 0 && pos < data.size) {
             return data[pos].value
         }
         return minValue
@@ -99,12 +112,30 @@ class SSNumberPickerView : RecyclerView {
 
     class PickerScrollListener : RecyclerView.OnScrollListener() {
 
-        var currentOffset = 0
+        var currentOffset: Int = 0
 
         override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
             currentOffset += dy
+
+            val halfHeight = (recyclerView?.height ?: 0) / 2
+
+            recyclerView?.getVisibleViews()?.forEach {
+                val centerTreshold = it.top + it.height / 2
+                val space = if (centerTreshold <= halfHeight) centerTreshold else halfHeight - (centerTreshold - halfHeight)
+                val scalePercentage = (Math.max(space, 20) / halfHeight)
+
+                val minScale = 0.6
+                val scale = (minScale + scalePercentage * (1.0 - minScale)).toFloat()
+
+                val viewHolder = recyclerView.getChildViewHolder(it) as? PickerRowAdapter.ViewHolder
+                viewHolder?.let {
+                    viewHolder.textView.scaleX = scale
+                    viewHolder.textView.scaleY = scale
+//                    viewHolder.textView.alpha = percentage.toFloat()
+                }
+            }
 
 //            recyclerView?.getVisibleViews()?.forEach {
 //

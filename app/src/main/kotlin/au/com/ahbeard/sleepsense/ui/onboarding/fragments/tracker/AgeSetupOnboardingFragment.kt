@@ -2,7 +2,7 @@ package au.com.ahbeard.sleepsense.ui.onboarding.fragments.tracker
 
 import android.os.Bundle
 import au.com.ahbeard.sleepsense.R
-import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
+import au.com.ahbeard.sleepsense.services.PreferenceService
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingPickerBaseFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
@@ -18,7 +18,8 @@ class AgeSetupOnboardingFragment(listener: OnboardingFragmentListener) : Onboard
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        configurePicker(R.string.onboarding_age_title, "%d", minAge, maxAge)
+        val currAge = PreferenceService.instance().profileAge?.toInt() ?: 36
+        configurePicker(R.string.onboarding_age_title, "%d", minAge, maxAge, currAge)
     }
 
     override fun presentNextOnboardingFragment() {

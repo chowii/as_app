@@ -2,17 +2,8 @@ package au.com.ahbeard.sleepsense.ui.onboarding.base
 
 import android.os.Bundle
 import android.support.annotation.StringRes
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearSnapHelper
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SnapHelper
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
-import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
-import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.extensions.getVisibleViews
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 import au.com.ahbeard.sleepsense.ui.onboarding.views.SSNumberPickerView
@@ -26,6 +17,7 @@ open class OnboardingPickerBaseFragment(listener: OnboardingFragmentListener) : 
     private var minValue = 0
     private var maxValue = 0
     private var format = ""
+    private var defaultValue = 0
 
     val pickerView: SSNumberPickerView by bindView(R.id.pickerView)
 
@@ -38,14 +30,15 @@ open class OnboardingPickerBaseFragment(listener: OnboardingFragmentListener) : 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        pickerView.configure(minValue, maxValue, format)
+        pickerView.configure(minValue, maxValue, format, defaultValue)
     }
 
-    fun configurePicker(@StringRes title: Int, format: String, min: Int, max: Int) {
+    fun configurePicker(@StringRes title: Int, format: String, min: Int, max: Int, defaultValue: Int) {
         titleRes = title
         this.format = format
         minValue = min
         maxValue = max
+        this.defaultValue = defaultValue
     }
 
 }
