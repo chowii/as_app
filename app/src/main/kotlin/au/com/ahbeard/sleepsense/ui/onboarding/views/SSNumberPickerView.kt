@@ -98,7 +98,6 @@ class SSNumberPickerView : RecyclerView {
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_onboarding_picker_row, parent, false)
-//            view.setBackgroundColor(R.color.debug2)
             return ViewHolder(view)
         }
 
@@ -112,6 +111,11 @@ class SSNumberPickerView : RecyclerView {
 
     class PickerScrollListener : RecyclerView.OnScrollListener() {
 
+        companion object {
+            val alphaMinThreshold = 0.1f
+            val minScale = 0.45f
+        }
+
         var currentOffset: Int = 0
 
         override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
@@ -123,34 +127,24 @@ class SSNumberPickerView : RecyclerView {
 
             recyclerView?.getVisibleViews()?.forEach {
                 val centerTreshold = it.top + it.height / 2
-                val space = if (centerTreshold <= halfHeight) centerTreshold else halfHeight - (centerTreshold - halfHeight)
-                val scalePercentage = (Math.max(space, 20) / halfHeight)
 
-                val minScale = 0.6
-                val scale = (minScale + scalePercentage * (1.0 - minScale)).toFloat()
+                var percentage = if (centerTreshold > halfHeight)
+                        1 - ((centerTreshold - halfHeight).toFloat() / halfHeight.toFloat())
+                    else
+                        centerTreshold.toFloat() / halfHeight.toFloat()
+                percentage = Math.min(Math.max(0f, percentage), 1f)
+
+                val alpha = (percentage - alphaMinThreshold) / (1f - alphaMinThreshold)
+
+                val scale = minScale + (1f - minScale) * percentage
 
                 val viewHolder = recyclerView.getChildViewHolder(it) as? PickerRowAdapter.ViewHolder
                 viewHolder?.let {
                     viewHolder.textView.scaleX = scale
                     viewHolder.textView.scaleY = scale
-//                    viewHolder.textView.alpha = percentage.toFloat()
+                    viewHolder.textView.alpha = alpha
                 }
             }
-
-//            recyclerView?.getVisibleViews()?.forEach {
-//
-//                val viewHeight = recyclerView.height / 2
-//                val correctedTop = if (it.top <= viewHeight) it.top else (recyclerView.height - it.top)
-//                val offset = correctedTop + it.height / 2
-//
-//                val percentage = offset.toFloat() / viewHeight
-//                it.alpha = Math.max(0f, Math.min(percentage, 1f))
-//
-//                val textView = it.findViewById(R.id.textView) as? TextView
-//                if (textView?.text == "3") {
-//                    SSLog.d("${textView?.text ?: "0"} per: $percentage viewHeight: $viewHeight correctedTop: $correctedTop offset: $offset")
-//                }
-//            }
         }
     }
 
