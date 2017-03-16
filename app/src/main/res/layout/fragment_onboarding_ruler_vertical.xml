@@ -16,13 +16,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/textContainer"
-            android:layout_width="wrap_content"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:paddingBottom="15dp"
-            android:orientation="horizontal">
+            android:gravity="center_horizontal"
+            >
             <au.com.ahbeard.sleepsense.widgets.SSTextView
                 android:id="@+id/valueTextView"
                 style="@style/OnboardingRulerText"
@@ -31,8 +32,10 @@
                 style="@style/OnboardingRulerText.SideLabel"
                 android:layout_marginStart="5dp"
                 android:text="@string/cm"
+                android:layout_toRightOf="@id/valueTextView"
+                android:layout_alignBaseline="@id/valueTextView"
                 />
-        </LinearLayout>
+        </RelativeLayout>
         <au.com.ahbeard.sleepsense.widgets.SSTextView
             android:id="@+id/smallValueTextView"
             style="@style/OnboardingRulerText.Small"
@@ -41,7 +44,7 @@
             android:layout_marginTop="-20dp"
             tools:text="6' 10''"/>
         <View
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="2dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
@@ -50,12 +53,6 @@
             android:background="@drawable/background_white_round_2"
             />
     </RelativeLayout>
-
-    <au.com.ahbeard.sleepsense.widgets.SSButton
-        android:id="@+id/skipButton"
-        style="@style/OnboardingButton.Text.Skip"
-        android:layout_above="@id/continueButton"
-        />
 
     <include layout="@layout/onboarding_header" />
 

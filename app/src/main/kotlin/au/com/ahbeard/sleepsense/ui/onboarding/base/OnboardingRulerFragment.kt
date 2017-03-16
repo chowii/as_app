@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
-import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
 import kotterknife.bindOptionalView
 import kotterknife.bindView
@@ -80,6 +79,9 @@ open class OnboardingRulerFragment(listener: OnboardingFragmentListener) : Onboa
         val lineHeight = context.resources.getDimension(R.dimen.rule_line_size)
         scrollListener = RulerScrollingListener(valueTextView, smallTextView, min, lineHeight, orientation)
         recyclerView.addOnScrollListener(scrollListener)
+
+        //Make skipButton visible
+        skipButton?.visibility = View.VISIBLE
     }
 
     fun configureRuler(@StringRes title: Int, min: Int, max:Int, orientation: Orientation) {
