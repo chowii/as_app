@@ -6,6 +6,7 @@ import android.os.Looper
 import android.support.annotation.StringRes
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +15,12 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
+import au.com.ahbeard.sleepsense.fragments.settings.CustomerInformationFragment
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment.OnboardingQuestionsAdapter.OnItemClickListener
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.*
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress.PickMattressOnboardingFragment
+import au.com.ahbeard.sleepsense.ui.onboarding.views.SSBaseOverlayView
 import au.com.ahbeard.sleepsense.ui.onboarding.views.SSErrorHandlingOverlayView
 import kotlinx.android.synthetic.main.fragment_onboarding_desc.view.*
 import kotterknife.bindView
@@ -69,10 +73,46 @@ abstract class OnboardingQuestionsFragment(listener: OnboardingFragmentListener)
                 didSelectOption(pos)
             }
         }
+
+        errorOverlayView?.onErrorHandlingClickListener   = object  : ErrorHandlingViewListener {
+            override fun onSetUpLaterClick() {
+                skipToNextOnboardingFragment()
+            }
+
+            override fun onTroubleshootingClick(errorTitle: String) {
+                showTroubleshootingPage(errorTitle)
+            }
+
+            override fun onTryAgainClick() {
+            }
+        }
+    }
+
+    fun showTroubleshootingPage(errorTitle: String ) {
+        val customerInfoFragment = CustomerInformationFragment()
+        val troubleShootingUrl: String?
+        if(errorTitle.equals(getString(R.string.onboarding_error_title_pump_not_found))
+                || errorTitle.equals(getString(R.string.onboarding_error_title_pump_cant_connect))){
+            troubleShootingUrl  =   "file:///android_asset/pumpHelp.html";
+        }
+        else if(errorTitle.equals(getString(R.string.onboarding_error_title_tracker_not_found))
+                || errorTitle.equals(getString(R.string.onboarding_error_title_tracker_not_found_two))
+                || errorTitle.equals(getString(R.string.onboarding_error_title_tracker_lost_connection))
+                     ){
+            troubleShootingUrl  =   "file:///android_asset/trackerHelp.html";
+        }
+        else {
+            troubleShootingUrl  =   "file:///android_asset/baseHelp.html";
+        }
+        customerInfoFragment.configure(troubleShootingUrl)
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                .add(R.id.fragmentContainer, customerInfoFragment)
+                .addToBackStack(customerInfoFragment.javaClass.name)
+                .commit()
     }
 
     open fun didSelectOption(index: Int) {
-
     }
 
     fun configureQuestions(@StringRes title: Int, vararg @StringRes strings: Int) {

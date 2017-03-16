@@ -25,6 +25,7 @@ enum class OnboardingFragmentType {
     BASE_SETUP_1,
     BASE_SETUP_2,
     SYNC_BASE,
+    SETUP_NOT_COMPLETED,
     ALL_DONE,
     NOT_SURE
 }

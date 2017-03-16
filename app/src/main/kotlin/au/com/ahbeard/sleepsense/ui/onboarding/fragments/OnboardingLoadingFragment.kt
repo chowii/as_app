@@ -51,6 +51,11 @@ class OnboardingLoadingFragment(val titleText: String, val doneText: String) : F
         doFinishAnimation(onAnimComplete)
     }
 
+    fun stopAnimationsOnError(onAnimComplete: () -> Unit) {
+        shouldStopAnim = true
+        onAnimComplete()
+    }
+
     private fun startLoadingAnimation() {
         doPulseCircleAnim()
         doCircleAnim()

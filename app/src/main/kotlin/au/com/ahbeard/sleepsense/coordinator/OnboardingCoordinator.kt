@@ -8,6 +8,7 @@ import au.com.ahbeard.sleepsense.coordinator.onboardingFlow.OnboardingFragmentTy
 import au.com.ahbeard.sleepsense.ui.onboarding.OnboardingState
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingBaseFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
+import au.com.ahbeard.sleepsense.ui.onboarding.fragments.SetupNotCompletedOnboardingFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.base.PickBaseOnboardingFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress.PickMattressOnboardingFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress.PickPumpSideOnboardingFragment
@@ -87,6 +88,7 @@ open class OnboardingCoordinator(
         OnboardingFragmentType.TRACKER_DESC_1 -> TrackerDescFirstOnboardingFragment(this)
         OnboardingFragmentType.TRACKER_DESC_2 -> TrackerDescSecondOnboardingFragment(this)
         OnboardingFragmentType.SYNC_TRACKER -> SyncTrackerOnboardingFragment(this)
+        OnboardingFragmentType.SETUP_NOT_COMPLETED -> SetupNotCompletedOnboardingFragment(this)
         else -> PickTrackerOnboardingFragment(this)
     }
 

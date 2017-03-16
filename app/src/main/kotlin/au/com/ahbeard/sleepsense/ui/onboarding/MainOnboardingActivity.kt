@@ -62,4 +62,17 @@ class MainOnboardingActivity : BaseActivity() {
             }
         }
     }
+
+    fun hideLoadingWhenAnError(completion: () -> Unit) {
+        Handler(Looper.getMainLooper()).post {
+            val loadingFrag = supportFragmentManager.findFragmentByTag(OnboardingLoadingFragment::class.java.name) as? OnboardingLoadingFragment
+            loadingFrag?.stopAnimationsOnError {
+                supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.alpha_loading_enter, R.anim.alpha_loading_exit)
+                        .remove(loadingFrag)
+                        .commit()
+                completion()
+            }
+        }
+    }
 }

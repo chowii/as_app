@@ -29,6 +29,7 @@ class DefaultOnboardingFlow : OnboardingFlow() {
             OnboardingFragmentType.BASE_SETUP_1,
             OnboardingFragmentType.BASE_SETUP_2,
             OnboardingFragmentType.SYNC_BASE,
+            OnboardingFragmentType.SETUP_NOT_COMPLETED,
             OnboardingFragmentType.ALL_DONE
     )
 

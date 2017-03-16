@@ -241,6 +241,10 @@
     <string name="onboarding_tracker_desc_2_title_single">Lay down on your bed</string>
     <string name="onboarding_tracker_desc_2_desc_single">To track your sleep accurately, we need to sync to the right sensor with the strongest signal</string>
 
+    <string name="content_desc_setup_not_completed">Setup not completed Help Image</string>
+    <string name="onboarding_setup_not_completed">You need to set up at least one device to use the app</string>
+    <string name="onboarding_setup_again">Set up again</string>
+
     <string name="cm">cm</string>
     <string name="onboarding_height_title">How tall are you?</string>
     <string name="onboarding_weight_title">How much do you weigh?</string>

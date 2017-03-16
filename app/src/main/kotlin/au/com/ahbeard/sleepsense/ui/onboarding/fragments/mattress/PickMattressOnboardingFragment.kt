@@ -57,6 +57,8 @@ class PickMattressOnboardingFragment(listener: OnboardingFragmentListener) : Onb
         }
     }
 
+
+
     override fun didSelectOption(index: Int) {
         if (index == data.size - 1) {
             showNotSureOverlay()
@@ -82,14 +84,13 @@ class PickMattressOnboardingFragment(listener: OnboardingFragmentListener) : Onb
         getScanPumpObservable()
                 .subscribe({
                     state.selectedPump = it
-
                     connecting = false
                     onboardingActivity.hideLoading({
                         presentNextOnboardingFragment()
                     })
                 }, { error ->
                     connecting = false
-                    onboardingActivity.hideLoading {
+                    onboardingActivity.hideLoadingWhenAnError {
                         handleError(error)
                     }
                 })
