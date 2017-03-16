@@ -14,6 +14,7 @@ import com.crashlytics.android.Crashlytics;
 import au.com.ahbeard.sleepsense.bluetooth.BluetoothService;
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService;
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
+import au.com.ahbeard.sleepsense.services.DebugEmailService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.services.RemoteSleepDataService;
 import au.com.ahbeard.sleepsense.services.SSActivityCallbacks;
@@ -69,6 +70,8 @@ public class SleepSenseApplication extends Application {
         AnalyticsService.initialize(this);
 
         SSActivityCallbacks.initialize(this, new AppActivityLogger());
+
+        DebugEmailService.cleanUp();
 
 //        try {
 //            AndroidLogger.createInstance(getApplicationContext(),false,true,false,null,0,"fc1fc163-a9c8-4634-bff6-d4b4e577c881", true);

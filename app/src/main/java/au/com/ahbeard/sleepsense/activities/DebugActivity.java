@@ -42,12 +42,17 @@ public class DebugActivity extends AppCompatActivity {
     @OnClick(R.id.debug_button_email_sleep_data)
     void uploadSleepData() {
         SSLog.d("Uploading sleepsense data");
-        Intent emailIntent = DebugEmailService.getDebugEmailIntent(this);
-        if (emailIntent != null) {
-            startActivity(emailIntent);
-        } else {
-            Toast.makeText(this, "Failed to upload sleep data. Please try again later.", Toast.LENGTH_LONG).show();
-        }
+        DebugEmailService.getDebugEmailIntent(this, new DebugEmailService.OnIntentCreatedCallback() {
+            @Override
+            public void onIntentCreated(Intent intent) {
+                if (intent != null) {
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getParent() ,"Failed to upload sleep data. Please try again later.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
     }
 
 }
