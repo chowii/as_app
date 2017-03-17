@@ -87,6 +87,8 @@ open class OnboardingCoordinator(
         OnboardingFragmentType.NUMBER_USERS_SELECT -> NumberPeopleOnboardingFragment(this)
         OnboardingFragmentType.TRACKER_DESC_1 -> TrackerDescFirstOnboardingFragment(this)
         OnboardingFragmentType.TRACKER_DESC_2 -> TrackerDescSecondOnboardingFragment(this)
+        OnboardingFragmentType.BASE_SYNC_DESC_1 -> BaseDescFirstOnboardingFragment(this)
+        OnboardingFragmentType.BASE_SYNC_DESC_2 -> BaseDescSecondOnboardingFragment(this)
         OnboardingFragmentType.SYNC_TRACKER -> SyncTrackerOnboardingFragment(this)
         OnboardingFragmentType.SETUP_NOT_COMPLETED -> SetupNotCompletedOnboardingFragment(this)
         else -> PickTrackerOnboardingFragment(this)

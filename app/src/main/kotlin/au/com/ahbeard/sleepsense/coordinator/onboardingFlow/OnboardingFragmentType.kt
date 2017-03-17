@@ -24,6 +24,8 @@ enum class OnboardingFragmentType {
     PICK_BASE,
     BASE_SETUP_1,
     BASE_SETUP_2,
+    BASE_SYNC_DESC_1,
+    BASE_SYNC_DESC_2,
     SYNC_BASE,
     SETUP_NOT_COMPLETED,
     ALL_DONE,
