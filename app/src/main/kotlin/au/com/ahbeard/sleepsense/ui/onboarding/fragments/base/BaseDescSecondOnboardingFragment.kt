@@ -27,6 +27,8 @@ class BaseDescSecondOnboardingFragment(listener: OnboardingFragmentListener) : O
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        continueButton?.setText(R.string.onboarding_base_sync_2_continue)
+
         val handler = Handler()
         handler.postDelayed({
             val transitionDrawable = imageView.drawable as? TransitionDrawable
