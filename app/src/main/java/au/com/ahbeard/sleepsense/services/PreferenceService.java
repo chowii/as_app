@@ -2,9 +2,6 @@ package au.com.ahbeard.sleepsense.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.BoolRes;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 
 /**
  * Created by neal on 4/03/2016.

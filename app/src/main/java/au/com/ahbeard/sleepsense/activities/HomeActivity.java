@@ -6,8 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +19,14 @@ import au.com.ahbeard.sleepsense.fragments.DashboardFragment;
 import au.com.ahbeard.sleepsense.fragments.DashboardNoSleepsFragment;
 import au.com.ahbeard.sleepsense.fragments.FirmnessControlFragment;
 import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
-import au.com.ahbeard.sleepsense.fragments.MoreFragment;
 import au.com.ahbeard.sleepsense.fragments.PositionControlFragment;
-
 import au.com.ahbeard.sleepsense.fragments.settings.SettingsBaseFragment;
-
 import au.com.ahbeard.sleepsense.services.AnalyticsService;
 import au.com.ahbeard.sleepsense.services.PreferenceService;
 import au.com.ahbeard.sleepsense.services.SleepService;
 import au.com.ahbeard.sleepsense.widgets.SimpleTabStrip;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -46,17 +42,14 @@ public class HomeActivity extends BaseActivity {
 
     private CompositeDisposable mCompositeSubscription = new CompositeDisposable();
 
+    @Bind(R.id.homeFrameLayout)
+    FrameLayout mHomeFrameLayout;
+
     @Bind(R.id.dashboard_view_pager)
     ViewPager mViewPager;
 
-    @Bind(R.id.on_board_complete_dialog_layout)
     View mOnBoardingCompleteDialogLayout;
     private boolean mHasRecordedASleep;
-
-    @OnClick(R.id.on_board_complete_dialog_button)
-    void onClickBoardingComplete() {
-        mOnBoardingCompleteDialogLayout.setVisibility(View.GONE);
-    }
 
     @Bind(R.id.dashboard_simple_tab_strip)
     SimpleTabStrip mSimpleTabStrip;
@@ -71,9 +64,18 @@ public class HomeActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         if ( getIntent().getBooleanExtra(EXTRA_SHOW_ON_BOARDING_COMPLETE_DIALOG, false)) {
+            mOnBoardingCompleteDialogLayout = getLayoutInflater().inflate(R.layout.dialog_onboarding_completed, mHomeFrameLayout, false);
+
             mOnBoardingCompleteDialogLayout.setAlpha(0.0f);
             mOnBoardingCompleteDialogLayout.setVisibility(View.VISIBLE);
             mOnBoardingCompleteDialogLayout.animate().setStartDelay(1000).alpha(1.0f).start();
+
+            mOnBoardingCompleteDialogLayout.findViewById(R.id.on_board_complete_dialog_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnBoardingCompleteDialogLayout.setVisibility(View.GONE);
+                }
+            });
         }
 
         setupTabs();

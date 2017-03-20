@@ -295,5 +295,7 @@
     <string name="settings_profile_height">Height</string>
     <string name="settings_profile_age">Age</string>
     <string name="settings_profile_gender">Gender</string>
+    <string name="dialog_onboarding_complete_title">Congratulations</string>
+    <string name="dialog_onboarding_complete_desc">You have set up Sleepsense</string>
 
 </resources>
