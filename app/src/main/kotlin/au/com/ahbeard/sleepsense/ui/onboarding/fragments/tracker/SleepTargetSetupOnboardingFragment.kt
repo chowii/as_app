@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
-import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
+import au.com.ahbeard.sleepsense.services.PreferenceService
 import au.com.ahbeard.sleepsense.services.log.SSLog
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingPickerBaseFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingFragmentListener
@@ -23,7 +23,8 @@ class SleepTargetSetupOnboardingFragment(listener: OnboardingFragmentListener) :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        configurePicker(R.string.onboarding_sleep_target_title, "%d hours", minSleepTarget, maxSleepTarget)
+        configurePicker(R.string.onboarding_sleep_target_title, "%d hours", minSleepTarget, maxSleepTarget,
+                PreferenceService.instance().sleepTargetTime.toInt())
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {

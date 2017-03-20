@@ -9,6 +9,7 @@
     <include layout="@layout/onboarding_header" />
 
     <au.com.ahbeard.sleepsense.ui.onboarding.views.SSOnboardingRadioControl
+        android:id="@+id/radioControl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/titleTextView"

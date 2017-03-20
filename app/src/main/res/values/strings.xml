@@ -294,5 +294,12 @@
     <string name="device_signal_strength">Signal Strength</string>
     <string name="device_connect_again_button">Connect Again</string>
     <string name="device_signal_unavailable">You currently don’t have an adjustable base set up</string>
+    <string name="settings_profile_sleep_target">Sleep Target</string>
+    <string name="settings_profile_weight">Weight</string>
+    <string name="settings_profile_height">Height</string>
+    <string name="settings_profile_age">Age</string>
+    <string name="settings_profile_gender">Gender</string>
+    <string name="dialog_onboarding_complete_title">Congratulations</string>
+    <string name="dialog_onboarding_complete_desc">You have set up Sleepsense</string>
 
 </resources>

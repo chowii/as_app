@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.RelativeLayout
 import au.com.ahbeard.sleepsense.R
 import au.com.ahbeard.sleepsense.bluetooth.SleepSenseDeviceService
-import au.com.ahbeard.sleepsense.coordinator.OnboardingCoordinator
 import au.com.ahbeard.sleepsense.hardware.pump.PumpHardware
 import au.com.ahbeard.sleepsense.ui.onboarding.base.OnboardingQuestionsFragment
 import au.com.ahbeard.sleepsense.ui.onboarding.fragments.OnboardingErrorPumpCantConnect

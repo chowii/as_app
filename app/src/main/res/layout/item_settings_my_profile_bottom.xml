@@ -12,12 +12,33 @@
     android:weightSum="4"
     >
 
-    <au.com.ahbeard.sleepsense.widgets.SSTextView
-        android:id="@+id/head"
-        tools:text="My Profile"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        style="@style/SettingsText.Row"
+        android:orientation="horizontal"
         android:background="@drawable/settings_background_button_no_top"
-        />
+        android:weightSum="1"
+        android:paddingEnd="@dimen/settings_text_padding_right"
+        android:paddingRight="@dimen/settings_text_padding_right"
+        >
+        <au.com.ahbeard.sleepsense.widgets.SSTextView
+            style="@style/SettingsText.Profile.Title"
+            android:id="@+id/titleTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            tools:text="My Profile"
+            />
+        <au.com.ahbeard.sleepsense.widgets.SSTextView
+            style="@style/SettingsText.Profile.Desc"
+            android:id="@+id/descTextView"
+            android:layout_width="wrap_content"
+            android:gravity="center|right"
+            tools:text="--"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_settings_chevron"/>
+    </LinearLayout>
 
 </LinearLayout>

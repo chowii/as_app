@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import au.com.ahbeard.sleepsense.R
+import au.com.ahbeard.sleepsense.ui.extensions.getVisibleViews
 import au.com.ahbeard.sleepsense.ui.onboarding.base.RecyclerWithMarginsAdapter
 import kotterknife.bindView
 
@@ -21,9 +22,10 @@ class SSNumberPickerView : RecyclerView {
 
     private var minValue = 3
     private var maxValue = 120
+    private var defaultValue = 36
     var data : List<RowViewModel> = arrayListOf()
 
-    var linearLayoutManager : LinearLayoutManager? = null
+    var linearLayoutManager : LinearLayoutManager = LinearLayoutManager(context)
     var pickerRowAdapter : PickerRowAdapter? = null
     var snapHelper: SnapHelper = LinearSnapHelper()
 
@@ -32,11 +34,6 @@ class SSNumberPickerView : RecyclerView {
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
     init {
-        setup()
-    }
-
-    private fun setup() {
-        linearLayoutManager = LinearLayoutManager(context)
         layoutManager = linearLayoutManager
 
         addOnScrollListener(PickerScrollListener())
@@ -48,9 +45,24 @@ class SSNumberPickerView : RecyclerView {
         }
     }
 
-    fun configure(min: Int, max: Int, format: String) {
+    var shouldCenterOnDefault = true
+    override fun onMeasure(widthSpec: Int, heightSpec: Int) {
+        super.onMeasure(widthSpec, heightSpec)
+
+        val spec = MeasureSpec.getMode(heightSpec)
+
+        if (shouldCenterOnDefault && height != 0) {
+            shouldCenterOnDefault = false
+            val rowHeight = resources.getDimension(R.dimen.onboarding_picker_line_height)
+            val offset = (height / 2) - rowHeight
+            linearLayoutManager.scrollToPositionWithOffset(defaultValue - minValue, offset.toInt())
+        }
+    }
+
+    fun configure(min: Int, max: Int, format: String, defaultValue: Int) {
         minValue = min
         maxValue = max
+        this.defaultValue = defaultValue
         data = (min..max).toList().map { RowViewModel(it, java.lang.String.format(format, it)) }
 
         if (adapter == null) {
@@ -64,10 +76,11 @@ class SSNumberPickerView : RecyclerView {
     }
 
     fun getSelectedValue() : Int {
-        val firstChildPos = linearLayoutManager?.findFirstVisibleItemPosition()
-        val lastChildPos = linearLayoutManager?.findLastVisibleItemPosition()
-        if (firstChildPos != null && lastChildPos != null) {
-            val pos = (lastChildPos - firstChildPos) / 2 + firstChildPos
+        val firstChildPos = linearLayoutManager.findFirstVisibleItemPosition()
+        val lastChildPos = linearLayoutManager.findLastVisibleItemPosition()
+//        if (firstChildPos != null && lastChildPos != null) {
+        val pos = (lastChildPos - firstChildPos) / 2 + firstChildPos
+        if (pos >= 0 && pos < data.size) {
             return data[pos].value
         }
         return minValue
@@ -85,7 +98,6 @@ class SSNumberPickerView : RecyclerView {
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent!!.context).inflate(R.layout.item_onboarding_picker_row, parent, false)
-//            view.setBackgroundColor(R.color.debug2)
             return ViewHolder(view)
         }
 
@@ -99,27 +111,40 @@ class SSNumberPickerView : RecyclerView {
 
     class PickerScrollListener : RecyclerView.OnScrollListener() {
 
-        var currentOffset = 0
+        companion object {
+            val alphaMinThreshold = 0.1f
+            val minScale = 0.45f
+        }
+
+        var currentOffset: Int = 0
 
         override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
             currentOffset += dy
 
-//            recyclerView?.getVisibleViews()?.forEach {
-//
-//                val viewHeight = recyclerView.height / 2
-//                val correctedTop = if (it.top <= viewHeight) it.top else (recyclerView.height - it.top)
-//                val offset = correctedTop + it.height / 2
-//
-//                val percentage = offset.toFloat() / viewHeight
-//                it.alpha = Math.max(0f, Math.min(percentage, 1f))
-//
-//                val textView = it.findViewById(R.id.textView) as? TextView
-//                if (textView?.text == "3") {
-//                    SSLog.d("${textView?.text ?: "0"} per: $percentage viewHeight: $viewHeight correctedTop: $correctedTop offset: $offset")
-//                }
-//            }
+            val halfHeight = (recyclerView?.height ?: 0) / 2
+
+            recyclerView?.getVisibleViews()?.forEach {
+                val centerTreshold = it.top + it.height / 2
+
+                var percentage = if (centerTreshold > halfHeight)
+                        1 - ((centerTreshold - halfHeight).toFloat() / halfHeight.toFloat())
+                    else
+                        centerTreshold.toFloat() / halfHeight.toFloat()
+                percentage = Math.min(Math.max(0f, percentage), 1f)
+
+                val alpha = (percentage - alphaMinThreshold) / (1f - alphaMinThreshold)
+
+                val scale = minScale + (1f - minScale) * percentage
+
+                val viewHolder = recyclerView.getChildViewHolder(it) as? PickerRowAdapter.ViewHolder
+                viewHolder?.let {
+                    viewHolder.textView.scaleX = scale
+                    viewHolder.textView.scaleY = scale
+                    viewHolder.textView.alpha = alpha
+                }
+            }
         }
     }
 

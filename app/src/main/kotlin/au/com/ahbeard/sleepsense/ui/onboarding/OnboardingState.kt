@@ -12,11 +12,11 @@ import au.com.ahbeard.sleepsense.ui.onboarding.fragments.mattress.PickMattressOn
 data class OnboardingState(
         var mattressLine: PickMattressOnboardingFragment.MattressLine = PickMattressOnboardingFragment.MattressLine.LONG_SINGLE,
         var pumpSide: PumpDevice.Side = PumpDevice.Side.Left,
-        var selectedPump: PumpHardware? = null,
+        var selectedPump: PumpHardware? = null,                 // This value when going through pump onboarding
         var trackers: List<TrackerHardware> = arrayListOf(),
-        var selectedTracker: TrackerHardware? = null,
+        var selectedTracker: TrackerHardware? = null,           // This value when going through tracker onboarding
         var bases: List<BedBaseHardware> = arrayListOf(),
-        var selectedBase: BedBaseHardware? = null,
+        var selectedBase: BedBaseHardware? = null,              // This value when going through base onboarding
         var heightInCm: Int? = null,
         var weightInKg: Int? = null,
         var isMale: Boolean? = null,
