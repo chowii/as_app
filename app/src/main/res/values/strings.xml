@@ -276,6 +276,12 @@
     <string name="onboarding_error_title_base_not_found_two">Uh oh, only one base found!</string>
     <string name="onboarding_error_desc_base_not_found_two">We found one base, but we need two to set up your side of the bed.</string>
 
+    <string name="onboarding_base_sync_1_title">There are two bases\n with your bed</string>
+    <string name="onboarding_base_sync_1_description">Only one phone can\n connect with one base</string>
+    <string name="onboarding_base_sync_2_title">Lay down on your side\n  of the bed</string>
+    <string name="onboarding_base_sync_2_description">To pair with the correct base we will need\n to test which side of the base is yours</string>
+
+    <string name="onboarding_base_sync_2_continue">Choose my base</string>
 
     <string name="settings_more_title">More</string>
     <string name="settings_profile_title">My Profile</string>
