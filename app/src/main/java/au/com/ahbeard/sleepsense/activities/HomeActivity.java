@@ -1,6 +1,5 @@
 package au.com.ahbeard.sleepsense.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +48,17 @@ public class HomeActivity extends BaseActivity {
     @Bind(R.id.dashboard_view_pager)
     ViewPager mViewPager;
 
-    View mOnBoardingCompleteDialogLayout;
-    private boolean mHasRecordedASleep;
+    @Bind(R.id.viewPagerContainer)
+    FrameLayout mViewPagerContainer;
+
+    @Bind(R.id.dashboardBottomBar)
+    RelativeLayout mDashboardBottomBar;
 
     @Bind(R.id.dashboard_simple_tab_strip)
     SimpleTabStrip mSimpleTabStrip;
+
+    View mOnBoardingCompleteDialogLayout;
+    private boolean mHasRecordedASleep;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,17 +169,7 @@ public class HomeActivity extends BaseActivity {
                 }
             });
         }
-
-//        mDashboardPagerAdapter.addTab("More",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, MoreFragment.newInstance(), new Runnable() {
-//            @Override
-//            public void run() {
-//                AnalyticsService.instance().logDashboardViewSettings();
-//            }
-//        });
-
-        /***
-         * chowii block
-         */
+        
         mDashboardPagerAdapter.addTab("Settings",R.drawable.tab_more_unselected,R.drawable.tab_more_selected, new SettingsBaseFragment(), new Runnable() {
             @Override
             public void run() {
@@ -202,8 +198,26 @@ public class HomeActivity extends BaseActivity {
         super.onBackPressed();
     }
 
+    public void showBottomBar() {
+        doBottomBarAnimation(true);
+    }
 
-    class HomeFragmentPagerAdapter extends FragmentStatePagerAdapter implements SimpleTabStrip.TabProvider {
+    public void hideBottomBar() {
+        doBottomBarAnimation(false);
+    }
+
+    private void doBottomBarAnimation(boolean show) {
+        int bottomPadding = show ? Math.round(getResources().getDimension(R.dimen.dashboard_bottom_bar_size)) : 0;
+        mViewPagerContainer.setPadding(0, 0, 0, bottomPadding);
+
+        int bottomMargin = show ? 0 : -Math.round(getResources().getDimension(R.dimen.dashboard_bottom_bar_size_with_shadow));
+        FrameLayout.LayoutParams bottomLayoutParams = (FrameLayout.LayoutParams) mDashboardBottomBar.getLayoutParams();
+        bottomLayoutParams.bottomMargin = bottomMargin;
+        mDashboardBottomBar.setLayoutParams(bottomLayoutParams);
+    }
+
+
+    private static class HomeFragmentPagerAdapter extends FragmentStatePagerAdapter implements SimpleTabStrip.TabProvider {
 
         private List<String> mTabNames = new ArrayList<>();
         private List<Integer> mTabIconResourceIds = new ArrayList<>();
@@ -211,11 +225,11 @@ public class HomeActivity extends BaseActivity {
         private List<Fragment> mFragments = new ArrayList<>();
         private List<Runnable> mOnClickActions = new ArrayList<>();
 
-        public HomeFragmentPagerAdapter(FragmentManager fm) {
+        HomeFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
-        public void addTab(String name, int iconResource, int selectedIconResource, Fragment fragment, Runnable onClickAction ) {
+        void addTab(String name, int iconResource, int selectedIconResource, Fragment fragment, Runnable onClickAction) {
             mTabNames.add(name);
             mTabIconResourceIds.add(iconResource);
             mSelectedTabIconResourceIds.add(selectedIconResource);
@@ -252,12 +266,6 @@ public class HomeActivity extends BaseActivity {
         public int getSelectedIconResourceId(int position) {
             return mSelectedTabIconResourceIds.get(position);
         }
-    }
-
-    public void doOnboarding() {
-        Intent intent= new Intent(this,NewOnBoardActivity.class);
-        startActivity(intent);
-        finish();
     }
 
 }
