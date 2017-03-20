@@ -10,10 +10,11 @@
 
 
     <FrameLayout
+        android:id="@+id/viewPagerContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="56dp">
+        android:paddingBottom="@dimen/dashboard_bottom_bar_size">
 
         <au.com.ahbeard.sleepsense.widgets.NonSwipeableViewPager
             android:id="@+id/dashboard_view_pager"
@@ -25,8 +26,9 @@
     </FrameLayout>
 
     <RelativeLayout
+        android:id="@+id/dashboardBottomBar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/dashboard_bottom_bar_size_with_shadow"
         android:background="@drawable/tabbar_background"
         android:layout_gravity="bottom">
 
@@ -39,7 +41,7 @@
         <au.com.ahbeard.sleepsense.widgets.SimpleTabStrip
             android:id="@+id/dashboard_simple_tab_strip"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="@dimen/dashboard_bottom_bar_size"
             android:background="@null"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"

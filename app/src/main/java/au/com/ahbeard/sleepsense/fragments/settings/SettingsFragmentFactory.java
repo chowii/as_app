@@ -47,6 +47,7 @@ class SettingsFragmentFactory {
                         break;
                 }
                 Fragment frag = ProfileSetupCoordinator.newInstance(baseFragment.getChildFragmentManager(), type);
+                baseFragment.hideBottomBar();
                 baseFragment.replaceFragment(frag);
             }
         });

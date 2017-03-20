@@ -49,5 +49,7 @@
 
     <dimen name="settings_text_size">14sp</dimen>
     <dimen name="settings_title_text_size">16sp</dimen>
+    <dimen name="dashboard_bottom_bar_size">56dp</dimen>
+    <dimen name="dashboard_bottom_bar_size_with_shadow">60dp</dimen>
 
 </resources>
