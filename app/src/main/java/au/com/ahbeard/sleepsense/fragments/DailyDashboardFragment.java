@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import au.com.ahbeard.sleepsense.BuildConfig;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.model.Firmness;
 import au.com.ahbeard.sleepsense.model.beddit.Sleep;
@@ -178,6 +179,7 @@ public class DailyDashboardFragment extends Fragment {
                         AndroidSchedulers.mainThread().createWorker().schedule(new Runnable() {
                             @Override
                             public void run() {
+
 
                                 if (sleep != null) {
 

@@ -249,6 +249,54 @@
 
     </style>
 
+    <style name="Dashboard">
+
+    </style>
+    <style name="Dashboard.Text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/statisticsItemExpandedTextColor</item>
+        <item name="font">AvertaRegular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:lineSpacingExtra">8dp</item>
+    </style>
+
+    <!--TODO check if circle is redundant-->
+    <style name="Dashboard.Text.Red">
+        <item name="android:textColor">@color/statisticsItemCircleRed</item>
+    </style>
+
+    <style name="Dashboard.TitleBarText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textColor">@color/onBoardHeaderTextColor</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingExtra">5dp</item>
+        <item name="font">AvertaBold</item>>
+        <item name="android:gravity">center</item>>
+    </style>
+
+
+
+    <style name="Dashboard.Text.Title">
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lineSpacingExtra">5dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/control_color</item>
+        <item name="android:textSize">15sp</item>
+        <item name="font">AvertaRegular</item>
+    </style>
+
+    <style name="Dashboard.Text.Title.Grey">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textColor">@color/indicator_color</item>
+    </style>
+
+    <style name="Dashboard.ImageView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 
 
 </resources>

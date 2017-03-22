@@ -56,7 +56,8 @@
                         android:text="SLEEP\nSCORE"
                         android:textColor="#fff"
                         android:textSize="13sp"
-                        app:typeface="RobotoLight"/>
+                        app:typeface="RobotoLight"
+                        />
                 </LinearLayout>
             </FrameLayout>
 
@@ -113,23 +114,22 @@
 
                 <au.com.ahbeard.sleepsense.widgets.StyledTextView
                     android:id="@+id/dashboard_text_view_sleep_tip_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
+                    style="@style/Dashboard.Text.Red"
                     android:text="Sleep Tip"
-                    android:textColor="#FD807B"
-                    android:textSize="13sp"
-                    app:typeface="OpenSansSemiBold"/>
+                    />
 
                 <au.com.ahbeard.sleepsense.widgets.StyledTextView
                     android:id="@+id/dashboard_text_view_sleep_tip_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:lineSpacingExtra="8dp"
+                    style="@style/Dashboard.Text"
                     android:text="Practise a relaxing bedtime ritual - a calming routine activity right before bedtime can help."
-                    android:textColor="#6E788D"
-                    android:textSize="11sp"
-                    app:typeface="OpenSansRegular"/>
+                    />
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:lineSpacingExtra="8dp"-->
+                <!--android:textColor="#da0d3d"-->
+                <!--android:textSize="20sp"-->
+                <!--app:typeface="OpenSansRegular"-->
 
             </LinearLayout>
 
@@ -154,14 +154,14 @@
                 android:paddingBottom="10dp"
                 >
 
-                <au.com.ahbeard.sleepsense.widgets.StyledTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:lineSpacingExtra="8dp"
-                    android:text="Recent Statistics"
-                    android:textColor="#6E788D"
-                    android:textSize="18sp"
-                    app:typeface="OpenSansRegular"/>
+                <!--<au.com.ahbeard.sleepsense.widgets.StyledTextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:lineSpacingExtra="8dp"-->
+                    <!--android:text="Recent Statistics"-->
+                    <!--android:textColor="#6E788D"-->
+                    <!--android:textSize="18sp"-->
+                    <!--app:typeface="OpenSansRegular"/>-->
 
             </LinearLayout>
 

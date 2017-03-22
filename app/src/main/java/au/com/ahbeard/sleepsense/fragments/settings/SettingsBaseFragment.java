@@ -8,8 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import au.com.ahbeard.sleepsense.BuildConfig;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.fragments.BaseFragment;
+import au.com.ahbeard.sleepsense.fragments.DailyDashboardFragment;
+import au.com.ahbeard.sleepsense.fragments.MassageControlFragment;
+import au.com.ahbeard.sleepsense.fragments.WeeklyDashboardFragment;
+
 import java.util.List;
 
 /**
@@ -32,6 +37,8 @@ public class SettingsBaseFragment extends BaseFragment {
 
     private void showFirstFragment() {
         SettingsListFragment settingsFragment = SettingsFragmentFactory.createSettingsFragment(this);
+        if(BuildConfig.DEBUG)
+            getChildFragmentManager().beginTransaction().add(R.id.container_settings_base, new MassageControlFragment()).commit();
         getChildFragmentManager().beginTransaction().add(R.id.container_settings_base, settingsFragment).addToBackStack("first-fragment").commit();
 
     }

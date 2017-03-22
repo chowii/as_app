@@ -76,12 +76,12 @@ public class StatisticsUtils {
 
         }
 
-        if (color != null) {
-            viewHolder.imageView.setVisibility(View.VISIBLE);
-            viewHolder.imageView.setImageDrawable(color);
-        } else {
-            viewHolder.imageView.setVisibility(View.GONE);
-        }
+//        if (color != null) {
+//            viewHolder.imageView.setVisibility(View.VISIBLE);
+//            viewHolder.imageView.setImageDrawable(color);
+//        } else {
+//            viewHolder.imageView.setVisibility(View.GONE);
+//        }
 
         mStatisticsLayout.addView(view);
 
@@ -140,8 +140,8 @@ public class StatisticsUtils {
 
         @Bind(R.id.statistic_layout)
         public View layout;
-        @Bind(R.id.statistic_image_view)
-        public ImageView imageView;
+//        @Bind(R.id.statistic_image_view)
+//        public ImageView imageView;
         @Bind(R.id.statistic_text_view_name)
         public TextView nameTextView;
         @Bind(R.id.statistic_text_view_value)
