@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import au.com.ahbeard.sleepsense.BuildConfig;
 import au.com.ahbeard.sleepsense.R;
 import au.com.ahbeard.sleepsense.activities.HomeActivity;
 import au.com.ahbeard.sleepsense.fragments.BaseFragment;
+import au.com.ahbeard.sleepsense.fragments.DailyDashboardFragment;
 
 /**
  * Created by sabbib on 28/02/2017.
@@ -63,8 +65,12 @@ public class SettingsBaseFragment extends BaseFragment {
 
     private void showFirstFragment() {
         SettingsListFragment settingsFragment = SettingsFragmentFactory.createSettingsFragment(this);
+	    if(BuildConfig.DEBUG)
         getChildFragmentManager().beginTransaction()
-                .add(R.id.fragmentContainer, settingsFragment)
+                .add(R.id.fragmentContainer, new DailyDashboardFragment())
                 .commit();
+	    else getChildFragmentManager().beginTransaction()
+			    .add(R.id.fragmentContainer, settingsFragment)
+			    .commit();
     }
 }

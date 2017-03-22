@@ -41,16 +41,19 @@
         <RelativeLayout
             android:background="#fff"
             android:layout_width="match_parent"
-            android:layout_height="114dp">
+            android:layout_height="114dp"
+            android:paddingBottom="30dp"
+            >
 
             <ImageView
                 android:id='@+id/dashboard_image_view_sleep_tip_phone'
                 android:layout_alignParentBottom="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/sleep_tip_phone"
+                android:src="@drawable/img_sleep_tip_moon"
                 android:layout_marginLeft="21dp"
-                android:layout_marginRight="21dp"/>
+                android:layout_marginRight="21dp"
+                />
 
             <LinearLayout
                 android:orientation="vertical"
